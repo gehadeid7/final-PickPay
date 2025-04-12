@@ -31,7 +31,7 @@ class _SplashViewBodyState extends State<SplashViewBody> {
             style: TextStyle(
               fontSize: 50,
               fontWeight: FontWeight.bold,
-              color: Colors.black,
+              color: Colors.red,
             ),
           ),
           Image.asset(Assets.appLogo, width: 250, height: 250),
