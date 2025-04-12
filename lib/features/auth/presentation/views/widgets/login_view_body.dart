@@ -20,10 +20,11 @@ class LoginViewBody extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(height: 16),
-              Image.asset(Assets.signinImage, height: 200, fit: BoxFit.contain),
-              SizedBox(height: 24),
-
+              // Text('Welcome Back!',
+              //     style: TextStyles.bold16.copyWith(
+              //       fontSize: 24,
+              //     )),
+              SizedBox(height: 50),
               CustomTextFormField(
                 hintText: 'Enter a valid email address',
                 textInputType: TextInputType.emailAddress,
@@ -35,7 +36,6 @@ class LoginViewBody extends StatelessWidget {
                 textInputType: TextInputType.visiblePassword,
               ),
               SizedBox(height: 16),
-
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -48,13 +48,11 @@ class LoginViewBody extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 20),
-              CustomButton(onPressed: () {}, buttonText: 'Login'),
+              CustomButton(onPressed: () {}, buttonText: 'Log In'),
               SizedBox(height: 16),
-
-              DontHaveAccount(),
               SizedBox(height: 20),
               OrDivider(),
-
+              SizedBox(height: 24),
               SocialLoginButton(
                 onPressed: () {},
                 socialButtonIconImage: Assets.googleIcon,
@@ -66,12 +64,8 @@ class LoginViewBody extends StatelessWidget {
                 socialButtonIconImage: Assets.facebookIcon,
                 socialButtonTitle: 'Sign in with facebook',
               ),
-              SizedBox(height: 10),
-              SocialLoginButton(
-                onPressed: () {},
-                socialButtonIconImage: Assets.appleIcon,
-                socialButtonTitle: 'Sign in with Apple',
-              ),
+              SizedBox(height: 24),
+              DontHaveAccount(),
             ],
           ),
         ),
@@ -79,5 +73,3 @@ class LoginViewBody extends StatelessWidget {
     );
   }
 }
-
-

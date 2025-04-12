@@ -18,12 +18,11 @@ class OrDivider extends StatelessWidget {
             textAlign: TextAlign.center,
             style: TextStyles.semiBold16.copyWith(
               color: const Color.fromARGB(255, 86, 86, 86),
-              fontSize: 18,
+              fontSize: 14,
             ),
           ),
         ),
         SizedBox(width: 16),
-
         const Expanded(
           child: Divider(color: Color.fromARGB(255, 170, 170, 170)),
         ),
