@@ -3,7 +3,7 @@ import 'package:pickpay/core/errors/exceptions.dart';
 
 class FirebaseAuthService {
   Future<User> createUserWithEmailAndPassword({
-    required String email,
+    required String email, 
     required String password,
   }) async {
     try {
