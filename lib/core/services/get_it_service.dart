@@ -5,7 +5,7 @@ import 'package:pickpay/features/auth/domain/repos/auth_repo.dart';
 
 final getIt = GetIt.instance;
 
-void setup() {
+void setupGetit() {
   getIt.registerSingleton<FirebaseAuthService>(FirebaseAuthService());
   getIt.registerSingleton<AuthRepo>(AuthRepoImplementation(
     firebaseAuthService: getIt<FirebaseAuthService>(),
