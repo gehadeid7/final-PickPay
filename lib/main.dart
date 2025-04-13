@@ -22,6 +22,7 @@ class pickpay extends StatelessWidget {
         fontFamily: 'Montserrat',
         scaffoldBackgroundColor: Colors.white,
       ),
+      
 
       onGenerateRoute: onGenerateRoute,
       initialRoute: SplashView.routeName,
