@@ -3,7 +3,7 @@ import 'package:pickpay/features/auth/domain/entities/user_entity.dart';
 
 class UserModel extends UserEntity 
 {
-  UserModel({required super.firstName, required super.lastName, required super.email, required super.uId});
+  UserModel({required super.fullName,required super.email, required super.uId});
 
 
 
@@ -12,8 +12,8 @@ class UserModel extends UserEntity
   {
     return UserModel
     (
-      firstName: user.displayName ?? '',
-      lastName: user.displayName ?? '',
+      
+      fullName: user.displayName ?? '',
       email: user.email ?? '',
       uId: user.uid,
     
