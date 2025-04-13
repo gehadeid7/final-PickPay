@@ -16,10 +16,7 @@ class SignUpViewBody extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: KHorizontalPadding),
         child: Column(
           children: [
-            SizedBox(height: 16),
-            Image.asset(Assets.signupImage, height: 200, fit: BoxFit.contain),
-            SizedBox(height: 24),
-
+            SizedBox(height: 50),
             CustomTextFormField(
               hintText: 'Enter your first name',
               textInputType: TextInputType.name,
