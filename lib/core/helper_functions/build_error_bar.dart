@@ -6,3 +6,4 @@ void buildErrorBar(BuildContext context, String message) {
       content: Text(message),
     ));
   }
+  
