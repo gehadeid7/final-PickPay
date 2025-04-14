@@ -14,7 +14,7 @@ class AuthRepoImplementation extends AuthRepo {
 
   AuthRepoImplementation({required this.firebaseAuthService});
   @override
-  Future<Either<Failure, UserEntity>>createUserWithEmailAndPassword(
+  Future<Either<Failure, UserEntity>> createUserWithEmailAndPassword(
       String email, String password, String fullName) async {
     User? user;
     try {
@@ -32,14 +32,14 @@ class AuthRepoImplementation extends AuthRepo {
       );
       return left(
         ServerFailure(
-         'Unexpected error occurred: ${e.toString()}',
+          'Unexpected error occurred: ${e.toString()}',
         ),
       );
     }
   }
 
   @override
-  Future<Either<Failure, UserEntity>>signInWithEmailAndPassword(
+  Future<Either<Failure, UserEntity>> signInWithEmailAndPassword(
       String email, String password) async {
     try {
       var user = await firebaseAuthService.signInWithEmailAndPassword(
@@ -55,8 +55,25 @@ class AuthRepoImplementation extends AuthRepo {
       );
       return left(
         ServerFailure(
-         'try again',
+          'try again',
         ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, UserEntity>>signInWithGoogle() async {
+    try {
+      var user = await firebaseAuthService.signInWithGoogle();
+      return right(
+        UserModel.fromFirebaseUser(user),
+      );
+    }  catch (e) {
+      log(
+        'Exception in AuthRepoImplementaion.signinWithGoogle : ${e.toString()}',
+      );
+      return left(
+        ServerFailure('try again')
       );
     }
   }

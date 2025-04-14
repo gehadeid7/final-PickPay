@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pickpay/core/errors/exceptions.dart';
 
 class FirebaseAuthService {
@@ -44,7 +45,6 @@ class FirebaseAuthService {
     }
   }
 
-
   Future<User> signInWithEmailAndPassword(
       {required String email, required String password}) async {
     try {
@@ -54,25 +54,35 @@ class FirebaseAuthService {
     } on FirebaseAuthException catch (e) {
       log("Exception in FirebaseAuthService.signInWithEmailAndPassword: ${e.toString()} and code is ${e.code}");
       if (e.code == 'user-not-found') {
-        throw CustomException(
-            message: 'incorrect email or password');
+        throw CustomException(message: 'incorrect email or password');
       } else if (e.code == 'wrong-password') {
-        throw CustomException(
-            message: 'incorrect email or password');
+        throw CustomException(message: 'incorrect email or password');
       } else if (e.code == 'invalid-credential') {
-        throw CustomException(
-            message: 'incorrect email or password');
+        throw CustomException(message: 'incorrect email or password');
       } else if (e.code == 'network-request-failed') {
-        throw CustomException(message: 'make sure you are connectd to internet');
-      } else {
         throw CustomException(
-            message: 'try again');
+            message: 'make sure you are connectd to internet');
+      } else {
+        throw CustomException(message: 'try again');
       }
     } catch (e) {
       log("Exception in FirebaseAuthService.signInWithEmailAndPassword: ${e.toString()}");
 
-      throw CustomException(
-          message: 'try again');
+      throw CustomException(message: 'try again');
     }
+  }
+
+  Future<User>signInWithGoogle() async {
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    final GoogleSignInAuthentication? googleAuth =
+        await googleUser?.authentication;
+
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+
+    return( await FirebaseAuth.instance.signInWithCredential(credential)).user!;
   }
 }
