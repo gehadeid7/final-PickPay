@@ -55,24 +55,24 @@ class FirebaseAuthService {
       log("Exception in FirebaseAuthService.signInWithEmailAndPassword: ${e.toString()} and code is ${e.code}");
       if (e.code == 'user-not-found') {
         throw CustomException(
-            message: 'الرقم السري او البريد الالكتروني غير صحيح.');
+            message: 'incorrect email or password');
       } else if (e.code == 'wrong-password') {
         throw CustomException(
-            message: 'الرقم السري او البريد الالكتروني غير صحيح.');
+            message: 'incorrect email or password');
       } else if (e.code == 'invalid-credential') {
         throw CustomException(
-            message: 'الرقم السري او البريد الالكتروني غير صحيح.');
+            message: 'incorrect email or password');
       } else if (e.code == 'network-request-failed') {
-        throw CustomException(message: 'تاكد من اتصالك بالانترنت.');
+        throw CustomException(message: 'make sure you are connectd to internet');
       } else {
         throw CustomException(
-            message: 'لقد حدث خطأ ما. الرجاء المحاولة مرة اخرى.');
+            message: 'try again');
       }
     } catch (e) {
       log("Exception in FirebaseAuthService.signInWithEmailAndPassword: ${e.toString()}");
 
       throw CustomException(
-          message: 'لقد حدث خطأ ما. الرجاء المحاولة مرة اخرى.');
+          message: 'try again');
     }
   }
 }
