@@ -1,6 +1,12 @@
 import 'package:bloc/bloc.dart';
+import 'package:meta/meta.dart';
+import 'package:pickpay/features/auth/domain/entities/user_entity.dart';
+
 import 'package:pickpay/features/auth/domain/repos/auth_repo.dart';
-import 'signup_state.dart';
+
+
+
+part 'signup_state.dart';
 
 class SignupCubit extends Cubit<SignupState> {
   SignupCubit(this.authRepo) : super(SignupInitial());
@@ -8,15 +14,17 @@ class SignupCubit extends Cubit<SignupState> {
   final AuthRepo authRepo;
 
   Future<void> createUserWithEmailAndPassword(
-      String email, String password, String fullName) async {
+      String email, String password, String name) async {
     emit(SignupLoading());
-    final result = await authRepo.createUserWithEmailAndPassword(
-        email, password, fullName);
+    final result =
+        await authRepo.createUserWithEmailAndPassword(email, password, name);
     result.fold(
-        (Failures) => emit(SignupFailure(message: Failures.message)), 
-        
-        (UserEntity) => emit(SignupSuccess(userEntity: UserEntity)),
-        
-        );
+      (failure) => emit(
+        SignupFailure(message: failure.message),
+      ),
+      (userEntity) => emit(
+        SignupSuccess(userEntity: userEntity),
+      ),
+    );
   }
 }

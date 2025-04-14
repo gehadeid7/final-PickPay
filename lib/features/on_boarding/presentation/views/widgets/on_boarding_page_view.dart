@@ -24,7 +24,6 @@ class _OnBoardingPageViewState extends State<OnBoardingPageView> {
           backgroundimage: Assets.pageViewItem1BkColor,
           subTitle:
               'Choose what you love, pay your way, and enjoy the experience—simple as that.',
-
           title: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -34,7 +33,6 @@ class _OnBoardingPageViewState extends State<OnBoardingPageView> {
             ],
           ),
         ),
-
         PageViewItem(
           isVisible: false,
           image: Assets.onBoardingImage2,

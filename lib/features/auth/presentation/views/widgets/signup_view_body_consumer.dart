@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:pickpay/core/helper_functions/build_error_bar.dart';
 import 'package:pickpay/features/auth/presentation/cubits/signup_cubits/signup_cubit.dart';
-import 'package:pickpay/features/auth/presentation/cubits/signup_cubits/signup_state.dart';
 import 'package:pickpay/features/auth/presentation/views/widgets/sign_up_view_body.dart';
 
 class SignupViewBodyBlocConsumer extends StatelessWidget {

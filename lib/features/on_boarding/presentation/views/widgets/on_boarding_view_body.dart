@@ -5,7 +5,7 @@ import 'package:pickpay/constants.dart';
 import 'package:pickpay/core/services/shared_preferences_singletone.dart';
 import 'package:pickpay/core/utils/app_colors.dart';
 import 'package:pickpay/core/widgets/custom_button.dart';
-import 'package:pickpay/features/auth/presentation/views/login_view.dart';
+import 'package:pickpay/features/auth/presentation/views/signin_view.dart';
 import 'package:pickpay/features/on_boarding/presentation/views/widgets/on_boarding_page_view.dart';
 
 class OnBoardingViewBody extends StatefulWidget {
@@ -61,7 +61,7 @@ class _OnBoardingViewBodyState extends State<OnBoardingViewBody> {
             child: CustomButton(
               onPressed: () {
                 Prefs.setBool(KIsOnBoardingViewSeen, true);
-                Navigator.of(context).pushReplacementNamed(LoginView.routeName);
+                Navigator.of(context).pushReplacementNamed(SigninView.routeName);
               },
               buttonText: 'Start Now',
             ),
