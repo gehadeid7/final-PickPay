@@ -11,11 +11,11 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await Prefs.init();
   setupGetit();
-  runApp(const pickpay());
+  runApp(const Pickpay());
 }
 
-class pickpay extends StatelessWidget {
-  const pickpay({super.key});
+class Pickpay extends StatelessWidget {
+  const Pickpay({super.key});
 
   @override
   Widget build(BuildContext context) {

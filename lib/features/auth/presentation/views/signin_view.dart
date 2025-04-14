@@ -4,7 +4,6 @@ import 'package:pickpay/core/services/get_it_service.dart';
 import 'package:pickpay/core/widgets/custom_app.dart';
 import 'package:pickpay/features/auth/domain/repos/auth_repo.dart';
 import 'package:pickpay/features/auth/presentation/cubits/signin_cubit/signin_cubit.dart';
-import 'package:pickpay/features/auth/presentation/views/widgets/signin_view_body.dart';
 import 'package:pickpay/features/auth/presentation/views/widgets/signin_view_body_consumer.dart';
 
 class SigninView extends StatelessWidget {
