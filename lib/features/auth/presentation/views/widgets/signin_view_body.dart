@@ -89,7 +89,9 @@ class _SigninViewBodyState extends State<SigninViewBody> {
               ),
               SizedBox(height: 10),
               SocialLoginButton(
-                onPressed: () {},
+                onPressed: () {
+                  context.read<SigninCubit>().signInWithFacebook();
+                },
                 socialButtonIconImage: Assets.facebookIcon,
                 socialButtonTitle: 'Sign in with facebook',
               ),

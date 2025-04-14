@@ -45,5 +45,49 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+
+
+	<key>GIDClientID</key>
+<string>35186220381-gadi5lmm8vd2647cg9cgs1nct2lfk1g6.apps.googleusercontent.com</string>
+
+
+<key>CFBundleURLTypes</key>
+<array>
+	<dict>
+		<key>CFBundleTypeRole</key>
+		<string>Editor</string>
+		<key>CFBundleURLSchemes</key>
+		<array>
+			
+			<string>com.googleusercontent.apps.35186220381-gadi5lmm8vd2647cg9cgs1nct2lfk1g6</string>
+		</array>
+	</dict>
+</array>
+
+
+
+<key>CFBundleURLTypes</key>
+<array>
+  <dict>
+    <key>CFBundleURLSchemes</key>
+    <array>
+      <string>fb657925437165430</string>
+    </array>
+  </dict>
+</array>
+<key>FacebookAppID</key>
+<string>657925437165430</string>
+<key>FacebookClientToken</key>
+<string>1b9028f21133e6d94acc153fc8621b1d</string>
+<key>FacebookDisplayName</key>
+<string>pickpay</string>
+<key>LSApplicationQueriesSchemes</key>
+<array>
+  <string>fbapi</string>
+  <string>fb-messenger-share-api</string>
+</array>
+
+
+
 </dict>
 </plist>

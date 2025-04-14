@@ -48,6 +48,9 @@ dependencies:
   get_it: ^8.0.3
   modal_progress_hud_nsn: ^0.5.1
   google_sign_in: ^6.3.0
+  flutter_facebook_auth: ^7.1.1
+  sign_in_with_apple: ^7.0.1
+  crypto: ^3.0.6
   
 
 
