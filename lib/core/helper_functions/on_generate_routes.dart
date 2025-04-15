@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:pickpay/features/home/presentation/views/home_view.dart';
 
 import '../../features/auth/presentation/views/signin_view.dart';
 import '../../features/auth/presentation/views/sign_up_view.dart';
@@ -16,6 +17,8 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
     return MaterialPageRoute(builder: (context)=> const SigninView());
    case SignUpView.routeName:
     return MaterialPageRoute(builder: (context)=> const SignUpView());
+    case HomeView.routeName:
+    return MaterialPageRoute(builder: (context)=> const HomeView());
    default:
       return MaterialPageRoute(builder: (context) => const Scaffold());
   }

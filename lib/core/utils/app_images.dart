@@ -2,7 +2,7 @@
 class Assets {
   Assets._();
 
-  static const String appLogo = "assets/images/applogo.png";
+  static const String appLogo = "assets/images/finalLogo.png";
   static const String onBoardingImage1 = "assets/images/onboarding1.png";
   static const String onBoardingImage2 = "assets/images/onboarding2.png";
   static const String pageViewItem1BkColor =

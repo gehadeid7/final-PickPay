@@ -26,12 +26,18 @@ class _SplashViewBodyState extends State<SplashViewBody> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const Text(
+          Text(
             "PickPay",
             style: TextStyle(
               fontSize: 50,
               fontWeight: FontWeight.bold,
-              color: Colors.black,
+              foreground: Paint()
+                ..shader = const LinearGradient(
+                  colors: <Color>[
+                    Color(0xFFFE1679), // pink
+                    Color(0xFF5440B3), // purple
+                  ],
+                ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
             ),
           ),
           Image.asset(Assets.appLogo, width: 250, height: 250),
@@ -42,11 +48,11 @@ class _SplashViewBodyState extends State<SplashViewBody> {
 
   void executeNavigation() {
     bool isOnBoardingViewSeen = Prefs.getBool(KIsOnBoardingViewSeen);
-    Future.delayed(const Duration(seconds:3), () {
+    Future.delayed(const Duration(seconds: 3), () {
       if (isOnBoardingViewSeen) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => const OnBoardingView ()),
+          MaterialPageRoute(builder: (_) => const OnBoardingView()),
         );
       } else {
         Navigator.pushReplacement(
