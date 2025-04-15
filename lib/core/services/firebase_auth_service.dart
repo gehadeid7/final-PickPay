@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'dart:math' as math;
+import 'package:crypto/crypto.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -10,7 +11,12 @@ import 'package:pickpay/core/errors/exceptions.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class FirebaseAuthService {
-  get sha256 => null;
+
+
+  Future deleteUser() async {
+    await FirebaseAuth.instance.currentUser!.delete();
+  }
+
 
   Future<User> createUserWithEmailAndPassword({
     required String email,
@@ -97,7 +103,7 @@ class FirebaseAuthService {
   }
 
 // login with facebook >> firebase
- Future<User> signInWithFacebook() async {
+  Future<User> signInWithFacebook() async {
     final rawNonce = generateNonce();
     final nonce = sha256ofString(rawNonce);
     final LoginResult loginResult =
@@ -144,20 +150,17 @@ class FirebaseAuthService {
   }
 
   /// Returns the sha256 hash of [input] in hex notation.
-  String sha256ofString(String input) {
-    final bytes = utf8.encode(input);
-    final digest = sha256.convert(bytes);
-    return digest.toString();
-  }
-
-
-
+String sha256ofString(String input) {
+  final bytes = utf8.encode(input);
+  final digest = sha256.convert(bytes);
+  return digest.toString();
+}
 
 
 // .......................................................................................................
+// not used :
 
-
-    Future<User> signInWithApple() async {
+  Future<User> signInWithApple() async {
     // To prevent replay attacks with the credential returned from Apple, we
     // include a nonce in the credential request. When signing in with
     // Firebase, the nonce in the id token returned by Apple, is expected to

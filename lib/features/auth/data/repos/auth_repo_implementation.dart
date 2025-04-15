@@ -4,15 +4,19 @@ import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pickpay/core/errors/exceptions.dart';
 import 'package:pickpay/core/errors/failures.dart';
+import 'package:pickpay/core/services/database_services.dart';
 import 'package:pickpay/core/services/firebase_auth_service.dart';
+import 'package:pickpay/core/utils/backend_endpoints.dart';
 import 'package:pickpay/features/auth/data/models/user_model.dart';
 import 'package:pickpay/features/auth/domain/entities/user_entity.dart';
 import 'package:pickpay/features/auth/domain/repos/auth_repo.dart';
 
 class AuthRepoImplementation extends AuthRepo {
   final FirebaseAuthService firebaseAuthService;
+  final DatabaseService databaseService;
 
-  AuthRepoImplementation({required this.firebaseAuthService});
+  AuthRepoImplementation(
+      {required this.databaseService, required this.firebaseAuthService});
   @override
   Future<Either<Failure, UserEntity>> createUserWithEmailAndPassword(
       String email, String password, String fullName) async {
@@ -21,12 +25,16 @@ class AuthRepoImplementation extends AuthRepo {
       user = await firebaseAuthService.createUserWithEmailAndPassword(
           email: email, password: password);
 
-      return right(
-        UserModel.fromFirebaseUser(user),
-      );
+      var userEntity =
+          UserEntity(fullName: fullName, email: email, uId: user.uid);
+
+      await addUserData(user: userEntity);
+
+      return right(userEntity);
     } on CustomException catch (e) {
       return left(ServerFailure(e.message));
     } catch (e) {
+      await DeleteUser(user);
       log(
         'Exception in AuthRepoImpl.createUserWithEmailAndPassword: ${e.toString()}',
       );
@@ -35,6 +43,12 @@ class AuthRepoImplementation extends AuthRepo {
           'Unexpected error occurred: ${e.toString()}',
         ),
       );
+    }
+  }
+
+  Future<void> DeleteUser(User? user) async {
+    if (user != null) {
+      await firebaseAuthService.deleteUser();
     }
   }
 
@@ -62,53 +76,57 @@ class AuthRepoImplementation extends AuthRepo {
   }
 
   @override
-  Future<Either<Failure, UserEntity>>signInWithGoogle() async {
+  Future<Either<Failure, UserEntity>> signInWithGoogle() async {
+    User? user;
     try {
-      var user = await firebaseAuthService.signInWithGoogle();
-      return right(
-        UserModel.fromFirebaseUser(user),
-      );
-    }  catch (e) {
+      user = await firebaseAuthService.signInWithGoogle();
+
+      var userEntity = UserModel.fromFirebaseUser(user);
+
+      await addUserData(user: userEntity);
+
+      return right(userEntity);
+    } catch (e) {
+      await DeleteUser(user);
       log(
         'Exception in AuthRepoImplementaion.signinWithGoogle : ${e.toString()}',
       );
-      return left(
-        ServerFailure('try again')
-      );
+      return left(ServerFailure('try again'));
     }
   }
 
-
-   @override
-  Future<Either<Failure, UserEntity>>signInWithFacebook() async {
+  @override
+  Future<Either<Failure, UserEntity>> signInWithFacebook() async {
+    User? user;
     try {
-      var user = await firebaseAuthService.signInWithFacebook();
-      return right(
-        UserModel.fromFirebaseUser(user),
-      );
-    }  catch (e) {
+      user = await firebaseAuthService.signInWithFacebook();
+
+      var userEntity = UserModel.fromFirebaseUser(user);
+
+      await addUserData(user: userEntity);
+
+      return right(userEntity);
+    } catch (e) {
+      await DeleteUser(user);
       log(
         'Exception in AuthRepoImplementaion.signinWithGoogle : ${e.toString()}',
       );
-      return left(
-        ServerFailure('try again')
+      return left(ServerFailure('try again'));
+    }
+  }
+
+  @override
+  Future addUserData({required UserEntity user}) async {
+    try {
+      await databaseService.addData(
+        path: BackendEndpoints.addUserData,
+        data: user.toMap(),
       );
+    } catch (e) {
+      throw CustomException(message: 'something wrong happened');
     }
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // class BackendAuthRepoImplement extends AuthRepo {
 //   @override
