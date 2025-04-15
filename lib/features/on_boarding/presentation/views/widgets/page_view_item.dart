@@ -31,7 +31,9 @@ class PageViewItem extends StatelessWidget {
           child: Stack(
             children: [
               Positioned.fill(
-                child: SvgPicture.asset(backgroundimage, fit: BoxFit.fill),
+                child: SvgPicture.asset(backgroundimage, 
+                
+                fit: BoxFit.fill),
               ),
               Positioned(
                 bottom: 0,
@@ -41,8 +43,8 @@ class PageViewItem extends StatelessWidget {
               ),
               // Positioned "Skip" text at top-right corner
               Positioned(
-                top: 15, // Distance from top
-                right: 20, // Distance from right
+                top: 15, 
+                right: 20, 
                 child: Visibility(
                   visible: isVisible,
                   child: GestureDetector(
