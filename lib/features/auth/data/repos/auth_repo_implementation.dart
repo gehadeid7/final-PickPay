@@ -34,7 +34,7 @@ class AuthRepoImplementation extends AuthRepo {
     } on CustomException catch (e) {
       return left(ServerFailure(e.message));
     } catch (e) {
-      await DeleteUser(user);
+      await deleteUser(user);
       log(
         'Exception in AuthRepoImpl.createUserWithEmailAndPassword: ${e.toString()}',
       );
@@ -46,7 +46,7 @@ class AuthRepoImplementation extends AuthRepo {
     }
   }
 
-  Future<void> DeleteUser(User? user) async {
+  Future<void> deleteUser(User? user) async {
     if (user != null) {
       await firebaseAuthService.deleteUser();
     }
@@ -58,9 +58,10 @@ class AuthRepoImplementation extends AuthRepo {
     try {
       var user = await firebaseAuthService.signInWithEmailAndPassword(
           email: email, password: password);
-      return right(
-        UserModel.fromFirebaseUser(user),
-      );
+
+      var userEntity = await getUserData(userId: user.uid);
+
+      return right(userEntity);
     } on CustomException catch (e) {
       return left(ServerFailure(e.message));
     } catch (e) {
@@ -83,11 +84,18 @@ class AuthRepoImplementation extends AuthRepo {
 
       var userEntity = UserModel.fromFirebaseUser(user);
 
-      await addUserData(user: userEntity);
+      var isUserExist = await databaseService.ckeckIfDataExists(
+          path: BackendEndpoints.isUserExists, documentId: user.uid);
+
+      if (isUserExist) {
+        await getUserData(userId: user.uid);
+      } else {
+        await addUserData(user: userEntity);
+      }
 
       return right(userEntity);
     } catch (e) {
-      await DeleteUser(user);
+      await deleteUser(user);
       log(
         'Exception in AuthRepoImplementaion.signinWithGoogle : ${e.toString()}',
       );
@@ -103,11 +111,18 @@ class AuthRepoImplementation extends AuthRepo {
 
       var userEntity = UserModel.fromFirebaseUser(user);
 
-      await addUserData(user: userEntity);
+      var isUserExist = await databaseService.ckeckIfDataExists(
+          path: BackendEndpoints.isUserExists, documentId: user.uid);
+
+      if (isUserExist) {
+        await getUserData(userId: user.uid);
+      } else {
+        await addUserData(user: userEntity);
+      }
 
       return right(userEntity);
     } catch (e) {
-      await DeleteUser(user);
+      await deleteUser(user);
       log(
         'Exception in AuthRepoImplementaion.signinWithGoogle : ${e.toString()}',
       );
@@ -121,10 +136,18 @@ class AuthRepoImplementation extends AuthRepo {
       await databaseService.addData(
         path: BackendEndpoints.addUserData,
         data: user.toMap(),
+        documentId: user.uId,
       );
     } catch (e) {
       throw CustomException(message: 'something wrong happened');
     }
+  }
+
+  @override
+  Future<UserEntity> getUserData({required String userId}) async {
+    var userData = await databaseService.getData(
+        path: BackendEndpoints.getUserData, documentId: userId);
+    return UserModel.fromJson(userData);
   }
 }
 

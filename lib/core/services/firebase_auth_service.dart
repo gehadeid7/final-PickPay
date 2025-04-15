@@ -157,8 +157,7 @@ String sha256ofString(String input) {
 }
 
 
-// .......................................................................................................
-// not used :
+// ..........................................................................................................................
 
   Future<User> signInWithApple() async {
     // To prevent replay attacks with the credential returned from Apple, we

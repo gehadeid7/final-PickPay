@@ -16,10 +16,17 @@ class UserModel extends UserEntity
       fullName: user.displayName ?? '',
       email: user.email ?? '',
       uId: user.uid,
-    
-    
      );
   }
+
+ factory UserModel.fromJson(Map<String, dynamic> json){
+  return UserModel(
+    fullName: json['fullName'] , 
+    email: json['email'], 
+    uId: json['uId'],
+    );
+ }
+
 
 }
 

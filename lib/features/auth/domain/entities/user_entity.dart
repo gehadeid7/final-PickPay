@@ -11,7 +11,7 @@ class UserEntity {
 
   toMap() {
     return {
-      'name': fullName, 
+      'fullName': fullName, 
       'email': email, 
       'uId': uId
       };
