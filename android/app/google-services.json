@@ -12,7 +12,20 @@
           "package_name": "com.example.pickpay"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "35186220381-tne371f0l5unf1tjg7oro7bob9i9ubfk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.pickpay",
+            "certificate_hash": "811f546460cb658b820ebbbc7c56b20ad26733a0"
+          }
+        },
+        {
+          "client_id": "35186220381-8f76oho2dkno7qs3pggpck06537rq61e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAlOOt3kAYqF7qda9J582J1vGfsr5sjNKI"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "35186220381-8f76oho2dkno7qs3pggpck06537rq61e.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "35186220381-gadi5lmm8vd2647cg9cgs1nct2lfk1g6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.pickpay"
+              }
+            }
+          ]
         }
       }
     }

@@ -52,7 +52,9 @@ dependencies:
   sign_in_with_apple: ^7.0.1
   crypto: ^3.0.6
   cloud_firestore: ^5.6.6
-  
+  standard_searchbar: ^2.1.1
+  custom_navigation_bar: ^0.8.2
+  carousel_slider: ^5.0.0
 
 
 dev_dependencies:
@@ -79,6 +81,8 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+  - assets/logo/
+  - assets/banners/
   - assets/images/
   - assets/Box-seam.png
   # An image asset can refer to one or more resolution-specific "variants", see

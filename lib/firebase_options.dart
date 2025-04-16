@@ -64,6 +64,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '35186220381',
     projectId: 'pickpay-49b45',
     storageBucket: 'pickpay-49b45.firebasestorage.app',
+    androidClientId: '35186220381-tne371f0l5unf1tjg7oro7bob9i9ubfk.apps.googleusercontent.com',
+    iosClientId: '35186220381-gadi5lmm8vd2647cg9cgs1nct2lfk1g6.apps.googleusercontent.com',
     iosBundleId: 'com.example.pickpay',
   );
 
@@ -73,6 +75,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '35186220381',
     projectId: 'pickpay-49b45',
     storageBucket: 'pickpay-49b45.firebasestorage.app',
+    androidClientId: '35186220381-tne371f0l5unf1tjg7oro7bob9i9ubfk.apps.googleusercontent.com',
+    iosClientId: '35186220381-gadi5lmm8vd2647cg9cgs1nct2lfk1g6.apps.googleusercontent.com',
     iosBundleId: 'com.example.pickpay',
   );
 
@@ -85,4 +89,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'pickpay-49b45.firebasestorage.app',
     measurementId: 'G-WTLF4QZ8L5',
   );
+
 }
