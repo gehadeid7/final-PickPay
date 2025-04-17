@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pickpay/features/checkout/presentation/views/widgets/in_active_step_item.dart';
 import 'package:pickpay/features/checkout/presentation/views/widgets/step_item.dart';
 
 class CheckoutSteps extends StatelessWidget {
@@ -12,20 +11,20 @@ class CheckoutSteps extends StatelessWidget {
         return Expanded(
           child: StepItem(
             isActive: false,
-            index: index.toString(),
+            index: (index + 1).toString(),
             text: getSteps()[index],
           ),
         );
       }),
     );
   }
+}
 
-  List<String> getSteps() {
-    return [
-      'Shipping',
-      'Address',
-      'Payment',
-      'Review',
-    ];
-  }
+List<String> getSteps() {
+  return [
+    'Shipping',
+    'Address',
+    'Payment',
+    'Review',
+  ];
 }
