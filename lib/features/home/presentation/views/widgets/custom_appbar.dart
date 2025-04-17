@@ -1,29 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:pickpay/core/utils/app_images.dart';
+import 'package:pickpay/core/utils/app_text_styles.dart';
 import 'package:pickpay/core/widgets/search_text_field.dart';
-import 'package:standard_searchbar/new/standard_search_anchor.dart';
-import 'package:standard_searchbar/new/standard_search_bar.dart';
-import 'package:standard_searchbar/new/standard_suggestion.dart';
-import 'package:standard_searchbar/new/standard_suggestions.dart';
 
-class CustomAppbar extends StatelessWidget {
-  const CustomAppbar({super.key});
+class CustomHomeAppbar extends StatelessWidget {
+  const CustomHomeAppbar({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 10),
-      child: Row(
-        children: [
-          SizedBox(width: 5),
-          Image.asset(
-            'assets/logo/logo1.png',
-            width: 50, // Width of the image in pixels
-            height: 50, // Height of the image in pixels
-            // fit: BoxFit.contain, // Make sure it fits nicely
-          ),
-          Text('PickPay', style: TextStyle(fontSize: 22)),
-          SizedBox(width: 10),
-          Container(
+      padding: const EdgeInsets.all(12),
+      child: Row(children: [
+        Image.asset(Assets.appLogo, width: 45, height: 45),
+        SizedBox(width: 5),
+        Text('pickpay',
+            style: TextStyles.semiBold16.copyWith(
+              color: Colors.black,
+              fontSize: 18,
+            )),
+        SizedBox(width: 10),
+        Expanded(
+          child: Container(
             width: 260,
             height: 40,
             decoration: BoxDecoration(
@@ -32,8 +29,8 @@ class CustomAppbar extends StatelessWidget {
             ),
             child: SearchTextField(),
           ),
-        ],
-      ),
+        )
+      ]),
     );
   }
 }

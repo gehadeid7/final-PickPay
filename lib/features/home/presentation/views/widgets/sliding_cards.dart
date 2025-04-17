@@ -25,7 +25,7 @@ class SlidingCards extends StatelessWidget {
       itemBuilder: (BuildContext context, int index, int realIndex) {
         return CustomCard(
           image: 'assets/banners/Banner${index + 1}.jpg',
-          text: bannerTexts[index], // <- different text here
+          text: bannerTexts[index], 
         );
       },
     );
