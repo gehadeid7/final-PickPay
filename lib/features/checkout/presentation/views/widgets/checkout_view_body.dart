@@ -16,6 +16,11 @@ class _CheckoutViewBodyState extends State<CheckoutViewBody> {
   @override
   void initState() {
     pageController = PageController();
+    pageController.addListener(() {
+      setState(() {
+        currentPageIndex = pageController.page!.toInt();
+      });
+    });
     super.initState();
   }
 
@@ -25,6 +30,7 @@ class _CheckoutViewBodyState extends State<CheckoutViewBody> {
     super.dispose();
   }
 
+  int currentPageIndex = 0;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -34,22 +40,40 @@ class _CheckoutViewBodyState extends State<CheckoutViewBody> {
           SizedBox(
             height: 20,
           ),
-          CheckoutSteps(),
+          CheckoutSteps(
+            pageController: pageController,
+            currentPageIndex: currentPageIndex,
+          ),
           Expanded(
               child: CheckoutStepsPageView(pageController: pageController)),
           CustomButton(
-              onPressed: () {
-                pageController.nextPage(
-                  duration: Duration(milliseconds: 300),
-                  curve: Curves.easeIn,
-                );
-              },
-              buttonText: 'Next'),
+            onPressed: () {
+              pageController.animateToPage(
+                currentPageIndex + 1,
+                duration: Duration(milliseconds: 300),
+                curve: Curves.easeIn,
+              );
+            },
+            buttonText: getNextButtonText(currentPageIndex),
+          ),
           SizedBox(
             height: 40,
           )
         ],
       ),
     );
+  }
+
+  String getNextButtonText(int currentPageIndex) {
+    switch (currentPageIndex) {
+      case 0:
+        return 'Next';
+      case 1:
+        return 'Next';
+      case 2:
+        return 'Place order';
+      default:
+        return 'Next';
+    }
   }
 }
