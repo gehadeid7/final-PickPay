@@ -4,6 +4,7 @@ import 'package:pickpay/constants.dart';
 import 'package:pickpay/core/services/shared_preferences_singletone.dart';
 import 'package:pickpay/core/utils/app_text_styles.dart';
 import 'package:pickpay/features/auth/presentation/views/signin_view.dart';
+import 'package:pickpay/features/checkout/presentation/views/checkout_view.dart';
 
 class PageViewItem extends StatelessWidget {
   const PageViewItem({
@@ -31,9 +32,7 @@ class PageViewItem extends StatelessWidget {
           child: Stack(
             children: [
               Positioned.fill(
-                child: SvgPicture.asset(backgroundimage, 
-                
-                fit: BoxFit.fill),
+                child: SvgPicture.asset(backgroundimage, fit: BoxFit.fill),
               ),
               Positioned(
                 bottom: 0,
@@ -43,8 +42,8 @@ class PageViewItem extends StatelessWidget {
               ),
               // Positioned "Skip" text at top-right corner
               Positioned(
-                top: 15, 
-                right: 20, 
+                top: 15,
+                right: 20,
                 child: Visibility(
                   visible: isVisible,
                   child: GestureDetector(
@@ -52,7 +51,8 @@ class PageViewItem extends StatelessWidget {
                       Prefs.setBool(KIsOnBoardingViewSeen, true);
                       Navigator.of(
                         context,
-                      ).pushReplacementNamed(SigninView.routeName);
+                      ).pushReplacementNamed(CheckoutView.routeName);
+                      // ).pushReplacementNamed(SigninView.routeName);
                     },
                     child: Text(
                       'Skip',
