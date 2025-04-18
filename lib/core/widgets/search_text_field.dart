@@ -7,7 +7,6 @@ class SearchTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return TextField(
       keyboardType: TextInputType.text,
       decoration: InputDecoration(
@@ -23,6 +22,7 @@ class SearchTextField extends StatelessWidget {
           padding: const EdgeInsets.all(4.0),
           child: Image.asset(
             'assets/icons/search_icon.png',
+            
           ),
         ),
         border: buildBorder(const Color(0xFFE6E9E9)),

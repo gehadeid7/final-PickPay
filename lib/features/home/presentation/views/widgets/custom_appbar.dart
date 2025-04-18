@@ -13,15 +13,10 @@ class CustomHomeAppbar extends StatelessWidget {
       child: Row(children: [
         Image.asset(Assets.appLogo, width: 45, height: 45),
         SizedBox(width: 5),
-        Text(
-          'Pay',
-          style: TextStyle(
-            fontFamily: 'Pseudonym',
-            fontWeight: FontWeight.w500,
-            fontSize: 22,
-            color: Colors.black,
-          ),
-        ),
+        Text('PickPay',
+            style: TextStyles.bold19.copyWith(
+              color: Colors.black,
+            )),
         SizedBox(width: 10),
         Expanded(
           child: Container(

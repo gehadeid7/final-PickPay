@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:pickpay/features/home/domain/entities/bottom_navigation_bar_entity.dart';
+import 'package:pickpay/features/home/presentation/views/widgets/navigation_bar_item.dart';
 
-class CustomBottomNavigationBar extends StatelessWidget {
+class CustomBottomNavigationBar extends StatefulWidget {
   const CustomBottomNavigationBar({super.key});
 
   @override
+  State<CustomBottomNavigationBar> createState() =>
+      _CustomBottomNavigationBarState();
+}
+
+class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
+  int selectedIndex = 0;
+  @override
   Widget build(BuildContext context) {
     return Container(
-      height: 70,
+      width: 300,
+      height: 60,
       decoration: const ShapeDecoration(
         color: Colors.white,
         shape: RoundedRectangleBorder(
@@ -22,51 +31,28 @@ class CustomBottomNavigationBar extends StatelessWidget {
             blurRadius: 25,
             offset: Offset(0, -2),
             spreadRadius: 0,
-          ),
+          )
         ],
       ),
       child: Row(
-        children: bottomNavigationBarItems.map((e) {
-          return NavigationBarItem(
-            isSelected: false,
+        children: bottomNavigationBarItems.asMap().entries.map((e) {
+          var index = e.key;
+          var entity = e.value;
+          return Expanded(
+            flex: index == selectedIndex ? 3 : 2,
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  selectedIndex = index;
+                });
+              },
+              child: NavigationBarItem(
+                  isSelected: selectedIndex == index,
+                  bottomNavigationBarEntity: entity),
+            ),
           );
         }).toList(),
       ),
     );
-  }
-}
-
-class InActiveItem extends StatelessWidget {
-  const InActiveItem({super.key, required this.image});
-
-  final String image;
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(color: Colors.red, child: Image.asset(image)),
-    );
-  }
-}
-
-class NavigationBarItem extends StatelessWidget {
-  const NavigationBarItem({super.key, required this.isSelected});
-
-  final bool isSelected;
-  @override
-  Widget build(BuildContext context) {
-    return isSelected
-        ? ActiveItem()
-        : InActiveItem(
-            image: 'assets/star.png',
-          );
-  }
-}
-
-class ActiveItem extends StatelessWidget {
-  const ActiveItem({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
   }
 }

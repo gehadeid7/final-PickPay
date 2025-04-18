@@ -12,7 +12,7 @@ class RecommendedForuGridView extends StatelessWidget {
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           childAspectRatio: 180 / 230,
-          mainAxisSpacing: 12,
+          mainAxisSpacing: 14,
           crossAxisSpacing: 16,
         ),
         delegate: SliverChildBuilderDelegate(

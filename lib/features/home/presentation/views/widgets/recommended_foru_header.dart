@@ -7,20 +7,23 @@ class RecommendedForuHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Text(
-          'Recommended For You',
-          style: TextStyles.bold16,
-        ),
-        Spacer(),
-        Text(
-          'more',
-          style: TextStyles.regular16.copyWith(
-            color: AppColors.secondColor,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 14),
+      child: Row(
+        children: [
+          Text(
+            'Recommended For You',
+            style: TextStyles.bold16,
           ),
-        )
-      ],
+          Spacer(),
+          Text(
+            'more',
+            style: TextStyles.regular16.copyWith(
+              color: AppColors.secondColor,
+            ),
+          )
+        ],
+      ),
     );
   }
 }

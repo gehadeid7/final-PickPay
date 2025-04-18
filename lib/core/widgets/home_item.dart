@@ -15,28 +15,30 @@ class HomeItem extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // 👇 Stack: Image + Favorite Icon
-          Stack(
-            children: [
-              // Product Image
-              Center(
-                child: Image.asset(
-                  'assets/elecCat/AirPodsPro.png',
-                  height: 130,
-                  fit: BoxFit.contain,
+          Expanded(
+            child: Stack(
+              children: [
+                // Product Image
+                Center(
+                  child: Image.asset(
+                    'assets/elecCat/AirPodsPro.png',
+                    height: 130,
+                    fit: BoxFit.contain,
+                  ),
                 ),
-              ),
-              // Favorite Icon (top right of image)
-              Positioned(
-                top: 0,
-                right: 0,
-                child: IconButton(
-                  icon: const Icon(Icons.favorite_border),
-                  onPressed: () {
-                    // Add to wishlist logic
-                  },
+                // Favorite Icon (top right of image)
+                Positioned(
+                  top: 0,
+                  right: -10,
+                  child: IconButton(
+                    icon: const Icon(Icons.favorite_border),
+                    onPressed: () {
+                      // Add to wishlist logic
+                    },
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           const SizedBox(height: 8),
 
@@ -100,7 +102,7 @@ class HomeItem extends StatelessWidget {
 
               // Plus Button
               CircleAvatar(
-                radius: 19,
+                radius: 15,
                 backgroundColor: Colors.black,
                 child: IconButton(
                   icon: Icon(Icons.add, color: Colors.white, size: 16),

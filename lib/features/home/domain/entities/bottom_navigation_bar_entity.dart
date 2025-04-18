@@ -1,3 +1,5 @@
+import 'package:pickpay/core/utils/app_images.dart';
+
 class BottomNavigationBarEntity {
   final String activeImage, inActiveImage;
   final String name;
@@ -10,19 +12,19 @@ class BottomNavigationBarEntity {
 
 List<BottomNavigationBarEntity> get bottomNavigationBarItems => [
       BottomNavigationBarEntity(
-          activeImage: 'assets/icons/home(1).png',
-          inActiveImage: 'assets/icons/home.png',
+          activeImage: Assets.navHomeIcon,
+          inActiveImage: Assets.navUnFillHomeIcon,
           name: 'Home'),
       BottomNavigationBarEntity(
-          activeImage: 'assets/icons/categories(1).png',
-          inActiveImage: 'assets/icons/categories.png',
+          activeImage: Assets.navCategoriesIcon,
+          inActiveImage: Assets.navUnFillCategoriesIcon,
           name: 'Categories'),
       BottomNavigationBarEntity(
-          activeImage: 'assets/icons/shopping-cart(1).png',
-          inActiveImage: 'assets/icons/shopping-cart.png',
+          activeImage: Assets.navCartIcon,
+          inActiveImage: Assets.navUnFillCartIcon,
           name: 'Cart'),
       BottomNavigationBarEntity(
-          activeImage: 'assets/icons/user_filled.png',
-          inActiveImage: 'assets/icons/user_unfilled.png',
+          activeImage: Assets.navAccountIcon,
+          inActiveImage: Assets.navUnFillAccountIcon,
           name: 'Profile'),
     ];
