@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pickpay/features/home/presentation/views/widgets/custom_appbar.dart';
+import 'package:pickpay/features/home/presentation/views/widgets/sliding_featured_list.dart';
 
 class HomeViewBody extends StatelessWidget {
   const HomeViewBody({super.key});
@@ -14,6 +15,8 @@ class HomeViewBody extends StatelessWidget {
             child: Column(
               children: [
                 CustomHomeAppbar(),
+                SizedBox(height: 12),
+                SlidingFeaturedList(),
               ],
             ),
           ),
