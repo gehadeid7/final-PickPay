@@ -17,6 +17,8 @@ class HomeViewBody extends StatelessWidget {
                 CustomHomeAppbar(),
                 SizedBox(height: 12),
                 SlidingFeaturedList(),
+ SizedBox(height: 12),
+
               ],
             ),
           ),

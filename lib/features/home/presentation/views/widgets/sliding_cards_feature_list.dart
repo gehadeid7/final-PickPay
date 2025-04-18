@@ -23,22 +23,25 @@ class SlidingFeaturedList extends StatelessWidget {
           subtitle: 'Take Your Time'),
     ];
 
-    return CarouselSlider.builder(
-      itemCount: featuredItems.length,
-      itemBuilder: (context, index, realIndex) {
-        final item = featuredItems[index];
-        return SlidingFeatureItem(
-          imagePath: item.image,
-          title: item.title,
-          subtitle: item.subtitle,
-        );
-      },
-      options: CarouselOptions(
-        height: 200,
-        autoPlay: true,
-        viewportFraction: 1,
-        autoPlayCurve: Curves.fastOutSlowIn,
-        autoPlayAnimationDuration: const Duration(seconds: 1),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: CarouselSlider.builder(
+        itemCount: featuredItems.length,
+        itemBuilder: (context, index, realIndex) {
+          final item = featuredItems[index];
+          return SlidingFeatureItem(
+            imagePath: item.image,
+            title: item.title,
+            subtitle: item.subtitle,
+          );
+        },
+        options: CarouselOptions(
+          height: 200,
+          autoPlay: true,
+          viewportFraction: 1,
+          autoPlayCurve: Curves.fastOutSlowIn,
+          autoPlayAnimationDuration: const Duration(seconds: 1),
+        ),
       ),
     );
   }
