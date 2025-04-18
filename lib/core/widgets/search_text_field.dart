@@ -7,31 +7,7 @@ class SearchTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-<<<<<<< HEAD
-    return Container(
-      decoration: BoxDecoration(boxShadow: [
-        BoxShadow(
-          color: Color(0x0A000000),
-          blurRadius: 9,
-          offset: Offset(0, 2),
-          spreadRadius: 0,
-        )
-      ]),
-      child: TextField(
-        keyboardType: TextInputType.text,
-        textAlign: TextAlign.center,
-        decoration: InputDecoration(
-          hintStyle: TextStyles.regular16.copyWith(
-            color: AppColors.secondColor,
-          ),
-          hintText: 'What are you looking for?',
-          filled: true,
-          fillColor: Colors.white,
-          border: buildBorder(const Color(0xFFE6E9E9)),
-          enabledBorder: buildBorder(const Color(0xFFE6E9E9)),
-          contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
-        ),
-=======
+
     return TextField(
       keyboardType: TextInputType.text,
       decoration: InputDecoration(
@@ -51,7 +27,6 @@ class SearchTextField extends StatelessWidget {
         ),
         border: buildBorder(const Color(0xFFE6E9E9)),
         enabledBorder: buildBorder(const Color(0xFFE6E9E9)),
->>>>>>> 06bfb18 (Sliding Cards)
       ),
     );
   }

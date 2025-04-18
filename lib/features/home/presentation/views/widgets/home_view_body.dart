@@ -9,7 +9,6 @@ class HomeViewBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-<<<<<<< HEAD
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 2),
       child: CustomScrollView(
@@ -23,22 +22,16 @@ class HomeViewBody extends StatelessWidget {
                 SizedBox(height: 12),
                 RecommendedForuHeader(),
                 SizedBox(height: 12),
-                HomeItem(),
+                HomeItem(
+                  imageUrl: 'assets/elecCat/AirPodsPro.png', // Sample image
+                  productName: 'AirPods Pro 2nd Gen', // Sample product name
+                  price: 199.99, // Sample price
+                  originalPrice: 249.99, // Sample original price
+                  rating: 4.5, // Sample rating
+                  reviews: 120, // Sample reviews count
+                ),
               ],
             ),
-=======
-    return CustomScrollView(
-      slivers: [
-        SliverToBoxAdapter(
-          child: Column(
-            children: [
-              CustomAppbar(),
-              SizedBox(
-                height: 24,
-              ),
-              SlidingCards(),
-            ],
->>>>>>> 06bfb18 (Sliding Cards)
           ),
         ],
       ),
