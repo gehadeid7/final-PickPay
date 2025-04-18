@@ -1,7 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:pickpay/features/home/presentation/views/widgets/custom_card_items_feature.dart';
-import 'package:pickpay/features/home/presentation/views/widgets/featured_model.dart';
+import 'package:pickpay/features/home/presentation/views/widgets/sliding_cards_bannars/custom_card_items_feature.dart';
+import 'package:pickpay/features/home/presentation/views/widgets/sliding_cards_bannars/featured_model.dart';
 
 class SlidingFeaturedList extends StatelessWidget {
   const SlidingFeaturedList({super.key});

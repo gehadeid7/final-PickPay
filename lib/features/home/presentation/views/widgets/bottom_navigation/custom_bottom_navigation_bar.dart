@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pickpay/features/home/domain/entities/bottom_navigation_bar_entity.dart';
-import 'package:pickpay/features/home/presentation/views/widgets/navigation_bar_item.dart';
+import 'package:pickpay/features/home/presentation/views/widgets/bottom_navigation/navigation_bar_item.dart';
 
 class CustomBottomNavigationBar extends StatefulWidget {
   const CustomBottomNavigationBar({super.key});
