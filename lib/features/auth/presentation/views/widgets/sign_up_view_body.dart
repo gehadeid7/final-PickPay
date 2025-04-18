@@ -28,7 +28,7 @@ class _SignUpViewBodyState extends State<SignUpViewBody> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: KHorizontalPadding),
+        padding: const EdgeInsets.symmetric(horizontal: khorizontalPadding),
         child: Form(
           key: formKey,
           autovalidateMode: autovalidateMode,

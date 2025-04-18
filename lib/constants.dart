@@ -1,3 +1,3 @@
-const KHorizontalPadding = 20.0;
-const KIsOnBoardingViewSeen = 'isOnBoardingViewSeen';
-const KTopPadding = 16.0;
+const khorizontalPadding = 20.0;
+const kIsOnBoardingViewSeen = 'isOnBoardingViewSeen';
+const kTopPadding = 16.0;

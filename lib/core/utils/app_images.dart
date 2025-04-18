@@ -14,7 +14,7 @@ class Assets {
   static const String googleIcon = "assets/images/google.png";
   static const String checkIcon = "assets/images/check.png";
 
-  static const String Banner1 = "assets/banners/Banner1.jpg";
-  static const String Banner2 = "assets/banners/Banner2.jpg";
-  static const String Banner3 = "assets/banners/Banner3.jpg";
+  static const String banner1 = "assets/banners/Banner1.jpg";
+  static const String banner2 = "assets/banners/Banner2.jpg";
+  static const String banner3 = "assets/banners/Banner3.jpg";
 }

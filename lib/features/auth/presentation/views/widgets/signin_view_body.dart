@@ -27,7 +27,7 @@ class _SigninViewBodyState extends State<SigninViewBody> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: KHorizontalPadding),
+      padding: EdgeInsets.symmetric(horizontal: khorizontalPadding),
       child: SingleChildScrollView(
         child: Form(
           key: formKey,

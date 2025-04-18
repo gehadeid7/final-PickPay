@@ -44,10 +44,9 @@ class _OnBoardingViewBodyState extends State<OnBoardingViewBody> {
           dotsCount: 2,
           decorator: DotsDecorator(
             activeColor: AppColors.primaryColor,
-            color:
-                currentPage == 1
-                    ? AppColors.primaryColor
-                    : AppColors.secondColor,
+            color: currentPage == 1
+                ? AppColors.primaryColor
+                : AppColors.secondColor,
           ),
         ),
         SizedBox(height: 24),
@@ -57,17 +56,17 @@ class _OnBoardingViewBodyState extends State<OnBoardingViewBody> {
           maintainAnimation: true,
           maintainState: true,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: KHorizontalPadding),
+            padding: const EdgeInsets.symmetric(horizontal: khorizontalPadding),
             child: CustomButton(
               onPressed: () {
-                Prefs.setBool(KIsOnBoardingViewSeen, true);
-                Navigator.of(context).pushReplacementNamed(SigninView.routeName);
+                Prefs.setBool(kIsOnBoardingViewSeen, true);
+                Navigator.of(context)
+                    .pushReplacementNamed(SigninView.routeName);
               },
               buttonText: 'Start Now',
             ),
           ),
         ),
-
         SizedBox(height: 60),
       ],
     );

@@ -47,7 +47,7 @@ class _SplashViewBodyState extends State<SplashViewBody> {
   }
 
   void executeNavigation() {
-    bool isOnBoardingViewSeen = Prefs.getBool(KIsOnBoardingViewSeen);
+    bool isOnBoardingViewSeen = Prefs.getBool(kIsOnBoardingViewSeen);
     Future.delayed(const Duration(seconds: 3), () {
       if (isOnBoardingViewSeen) {
         Navigator.pushReplacement(
