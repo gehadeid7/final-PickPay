@@ -1,27 +1,11 @@
 import 'package:flutter/material.dart';
 
 class HomeItem extends StatelessWidget {
-  final String imageUrl;
-  final String productName;
-  final double price;
-  final double originalPrice;
-  final double rating;
-  final int reviews;
-
-  const HomeItem({
-    super.key,
-    required this.imageUrl,
-    required this.productName,
-    required this.price,
-    required this.originalPrice,
-    required this.rating,
-    required this.reviews,
-  });
+  const HomeItem({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 180,
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         color: const Color(0xFFF3F5F7),
@@ -36,7 +20,7 @@ class HomeItem extends StatelessWidget {
               // Product Image
               Center(
                 child: Image.asset(
-                  imageUrl,
+                  'assets/elecCat/AirPodsPro.png',
                   height: 130,
                   fit: BoxFit.contain,
                 ),
@@ -57,9 +41,9 @@ class HomeItem extends StatelessWidget {
           const SizedBox(height: 8),
 
           // Product Name
-          Text(
-            productName,
-            style: const TextStyle(
+          const Text(
+            'AirPods Pro 2nd Gen',
+            style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w600,
             ),
@@ -69,20 +53,20 @@ class HomeItem extends StatelessWidget {
           const SizedBox(height: 6),
 
           // Price and Original Price
-          Row(
+          const Row(
             children: [
               Text(
-                '\$$price',
-                style: const TextStyle(
+                '\$199',
+                style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
                   color: Colors.green,
                 ),
               ),
-              const SizedBox(width: 10),
+              SizedBox(width: 10),
               Text(
-                '\$$originalPrice',
-                style: const TextStyle(
+                '\$249',
+                style: TextStyle(
                   fontSize: 12,
                   color: Colors.grey,
                   decoration: TextDecoration.lineThrough,
@@ -98,16 +82,15 @@ class HomeItem extends StatelessWidget {
               // Stars + Reviews
               Row(
                 children: [
-                  for (int i = 0; i < 5; i++)
-                    Icon(
-                      i < rating ? Icons.star : Icons.star_border,
-                      color: Colors.amber,
-                      size: 16,
-                    ),
-                  const SizedBox(width: 4),
+                  Icon(Icons.star, color: Colors.amber, size: 16),
+                  Icon(Icons.star, color: Colors.amber, size: 16),
+                  Icon(Icons.star, color: Colors.amber, size: 16),
+                  Icon(Icons.star_half, color: Colors.amber, size: 16),
+                  Icon(Icons.star_border, color: Colors.amber, size: 16),
+                  SizedBox(width: 4),
                   Text(
-                    '($reviews)',
-                    style: const TextStyle(
+                    '(120)',
+                    style: TextStyle(
                       fontSize: 12,
                       color: Colors.black54,
                     ),
@@ -120,7 +103,7 @@ class HomeItem extends StatelessWidget {
                 radius: 19,
                 backgroundColor: Colors.black,
                 child: IconButton(
-                  icon: const Icon(Icons.add, color: Colors.white, size: 16),
+                  icon: Icon(Icons.add, color: Colors.white, size: 16),
                   padding: EdgeInsets.zero,
                   onPressed: () {
                     // Add to cart logic

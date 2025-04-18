@@ -88,6 +88,14 @@ flutter:
   - assets/banners/
   - assets/images/
   - assets/Box-seam.png
+  - assets/icons/home(1).png
+  - assets/icons/home.png
+  - assets/icons/categories(1).png
+  - assets/icons/categories.png
+  - assets/icons/shopping-cart(1).png
+  - assets/icons/shopping-cart.png
+  - assets/icons/user_filled.png
+  - assets/icons/user_unfilled.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 
@@ -100,6 +108,9 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
+  - family: Pseudonym
+    fonts:
+    - asset: assets/fonts/Pseudonym-Medium.otf
   - family: Montserrat
     fonts:
     - asset: assets/fonts/Montserrat-Regular.ttf
