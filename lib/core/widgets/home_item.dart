@@ -29,7 +29,7 @@ class HomeItem extends StatelessWidget {
                 // Favorite Icon (top right of image)
                 Positioned(
                   top: 0,
-                  right: -10,
+                  right: 0,
                   child: IconButton(
                     icon: const Icon(Icons.favorite_border),
                     onPressed: () {

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pickpay/core/widgets/home_item.dart';
 
-class RecommendedForuGridView extends StatelessWidget {
-  const RecommendedForuGridView({super.key});
+class TodaysSaleGridView extends StatelessWidget {
+  const TodaysSaleGridView({super.key});
 
   @override
   Widget build(BuildContext context) {
