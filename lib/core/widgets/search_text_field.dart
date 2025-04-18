@@ -7,6 +7,7 @@ class SearchTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
     return Container(
       decoration: BoxDecoration(boxShadow: [
         BoxShadow(
@@ -30,6 +31,27 @@ class SearchTextField extends StatelessWidget {
           enabledBorder: buildBorder(const Color(0xFFE6E9E9)),
           contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
         ),
+=======
+    return TextField(
+      keyboardType: TextInputType.text,
+      decoration: InputDecoration(
+        isCollapsed: true,
+        contentPadding: EdgeInsets.symmetric(vertical: 8),
+        hintStyle: TextStyles.regular16.copyWith(
+          color: Color(0xFF949D9E),
+        ),
+        hintText: 'Search...',
+        filled: true,
+        fillColor: const Color(0xFFF9FAFA),
+        prefixIcon: Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: Image.asset(
+            'assets/icons/search_icon.png',
+          ),
+        ),
+        border: buildBorder(const Color(0xFFE6E9E9)),
+        enabledBorder: buildBorder(const Color(0xFFE6E9E9)),
+>>>>>>> 06bfb18 (Sliding Cards)
       ),
     );
   }

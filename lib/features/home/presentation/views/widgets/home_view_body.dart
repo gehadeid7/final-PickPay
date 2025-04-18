@@ -9,6 +9,7 @@ class HomeViewBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 2),
       child: CustomScrollView(
@@ -25,6 +26,19 @@ class HomeViewBody extends StatelessWidget {
                 HomeItem(),
               ],
             ),
+=======
+    return CustomScrollView(
+      slivers: [
+        SliverToBoxAdapter(
+          child: Column(
+            children: [
+              CustomAppbar(),
+              SizedBox(
+                height: 24,
+              ),
+              SlidingCards(),
+            ],
+>>>>>>> 06bfb18 (Sliding Cards)
           ),
         ],
       ),
