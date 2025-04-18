@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pickpay/core/utils/app_colors.dart';
 import 'package:pickpay/core/utils/app_text_styles.dart';
 
 class RecommendedForuHeader extends StatelessWidget {
@@ -15,7 +16,9 @@ class RecommendedForuHeader extends StatelessWidget {
         Spacer(),
         Text(
           'more',
-          style: TextStyles.regular16,
+          style: TextStyles.regular16.copyWith(
+            color: AppColors.secondColor,
+          ),
         )
       ],
     );
