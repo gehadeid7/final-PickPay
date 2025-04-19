@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pickpay/constants.dart';
+import 'package:pickpay/core/services/firebase_auth_service.dart';
 import 'package:pickpay/core/services/shared_preferences_singletone.dart';
 import 'package:pickpay/core/utils/app_images.dart';
 import 'package:pickpay/features/auth/presentation/views/signin_view.dart';
@@ -50,15 +51,14 @@ class _SplashViewBodyState extends State<SplashViewBody> {
     bool isOnBoardingViewSeen = Prefs.getBool(kIsOnBoardingViewSeen);
     Future.delayed(const Duration(seconds: 3), () {
       if (isOnBoardingViewSeen) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const OnBoardingView()),
-        );
+        var isLoggedIn = FirebaseAuthService().isLoggedIn();
+        if (isLoggedIn) {
+          Navigator.pushReplacementNamed(context, SigninView.routeName);
+        } else {
+          Navigator.pushReplacementNamed(context, SigninView.routeName);
+        }
       } else {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const SigninView()),
-        );
+        Navigator.pushReplacementNamed(context, OnBoardingView.routeName);
       }
     });
   }
