@@ -1,15 +1,19 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:pickpay/constants.dart';
 import 'package:pickpay/core/errors/exceptions.dart';
 import 'package:pickpay/core/errors/failures.dart';
 import 'package:pickpay/core/services/database_services.dart';
 import 'package:pickpay/core/services/firebase_auth_service.dart';
+import 'package:pickpay/core/services/shared_preferences_singletone.dart';
 import 'package:pickpay/core/utils/backend_endpoints.dart';
 import 'package:pickpay/features/auth/data/models/user_model.dart';
 import 'package:pickpay/features/auth/domain/entities/user_entity.dart';
 import 'package:pickpay/features/auth/domain/repos/auth_repo.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthRepoImplementation extends AuthRepo {
   final FirebaseAuthService firebaseAuthService;
@@ -60,6 +64,7 @@ class AuthRepoImplementation extends AuthRepo {
           email: email, password: password);
 
       var userEntity = await getUserData(userId: user.uid);
+      await saveUserData(user: userEntity);
 
       return right(userEntity);
     } on CustomException catch (e) {
@@ -135,7 +140,7 @@ class AuthRepoImplementation extends AuthRepo {
     try {
       await databaseService.addData(
         path: BackendEndpoints.addUserData,
-        data: user.toMap(),
+        data: UserModel.fromEntity(user).toMap(),
         documentId: user.uId,
       );
     } catch (e) {
@@ -148,6 +153,12 @@ class AuthRepoImplementation extends AuthRepo {
     var userData = await databaseService.getData(
         path: BackendEndpoints.getUserData, documentId: userId);
     return UserModel.fromJson(userData);
+  }
+
+  @override
+  Future saveUserData({required UserEntity user}) async {
+    var jsonData = jsonEncode(UserModel.fromEntity(user).toMap());
+    await Prefs.setString(kUserData, jsonData);
   }
 }
 

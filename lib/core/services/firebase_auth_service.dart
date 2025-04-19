@@ -11,12 +11,9 @@ import 'package:pickpay/core/errors/exceptions.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class FirebaseAuthService {
-
-
   Future deleteUser() async {
     await FirebaseAuth.instance.currentUser!.delete();
   }
-
 
   Future<User> createUserWithEmailAndPassword({
     required String email,
@@ -139,6 +136,10 @@ class FirebaseAuthService {
         .user!;
   }
 
+  bool isLoggedIn() {
+    return FirebaseAuth.instance.currentUser != null;
+  }
+
   /// Generates a cryptographically secure random nonce, to be included in a
   /// credential request.
   String generateNonce([int length = 32]) {
@@ -150,12 +151,11 @@ class FirebaseAuthService {
   }
 
   /// Returns the sha256 hash of [input] in hex notation.
-String sha256ofString(String input) {
-  final bytes = utf8.encode(input);
-  final digest = sha256.convert(bytes);
-  return digest.toString();
-}
-
+  String sha256ofString(String input) {
+    final bytes = utf8.encode(input);
+    final digest = sha256.convert(bytes);
+    return digest.toString();
+  }
 
 // ..........................................................................................................................
 
@@ -186,7 +186,5 @@ String sha256ofString(String input) {
         .user!;
   }
 
-  bool isLoggedIn() {
-    return FirebaseAuth.instance.currentUser != null;
-  }
+ 
 }
