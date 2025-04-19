@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pickpay/core/utils/app_colors.dart';
 import 'package:pickpay/core/utils/app_text_styles.dart';
-import 'package:pickpay/features/electronics_page/presentation/views/electronics_view.dart';
+import 'package:pickpay/features/electronics/presentation/views/electronics_view.dart';
 
 class ElectronicsHeader extends StatelessWidget {
   const ElectronicsHeader({super.key});

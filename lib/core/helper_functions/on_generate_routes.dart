@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pickpay/features/checkout/presentation/views/checkout_view.dart';
-import 'package:pickpay/features/electronics_page/presentation/views/electronics_view.dart';
+import 'package:pickpay/features/electronics/presentation/views/electronics_view.dart';
 import 'package:pickpay/features/home/presentation/views/home_view.dart';
 
 import '../../features/auth/presentation/views/signin_view.dart';
