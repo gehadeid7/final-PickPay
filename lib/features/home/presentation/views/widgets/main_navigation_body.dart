@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pickpay/features/home/presentation/cubits/cubit/bottom_navigation_cubit.dart';
+import 'package:pickpay/features/home/presentation/views/account_view.dart';
 import 'package:pickpay/features/home/presentation/views/cart_view.dart';
 import 'package:pickpay/features/home/presentation/views/categories_view.dart';
 import 'package:pickpay/features/home/presentation/views/home_view.dart';
@@ -20,7 +21,7 @@ class MainNavigationScreenBody extends StatelessWidget {
             HomeView(),
             CategoriesView(),
             CartView(),
-            
+            AccountView(),
           ],
         );
       },
