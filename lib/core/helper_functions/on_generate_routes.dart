@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:pickpay/features/checkout/presentation/views/checkout_view.dart';
-import 'package:pickpay/features/electronics/presentation/views/electronics_view.dart';
+import 'package:pickpay/features/categories_pages/electronics/presentation/views/electronics_view.dart';
+import 'package:pickpay/features/home/presentation/views/cart_view.dart';
+import 'package:pickpay/features/home/presentation/views/categories_view.dart';
 import 'package:pickpay/features/home/presentation/views/home_view.dart';
+import 'package:pickpay/features/home/presentation/views/main_navigation_screen.dart';
 
 import '../../features/auth/presentation/views/signin_view.dart';
 import '../../features/auth/presentation/views/sign_up_view.dart';
@@ -22,6 +25,13 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (context) => const HomeView());
     case CheckoutView.routeName:
       return MaterialPageRoute(builder: (context) => const CheckoutView());
+    case MainNavigationScreen.routeName:
+      return MaterialPageRoute(
+          builder: (context) => const MainNavigationScreen());
+    case CartView.routeName:
+      return MaterialPageRoute(builder: (context) => const CartView());
+    case CategoriesView.routeName:
+      return MaterialPageRoute(builder: (context) => const CategoriesView());
     case ElectronicsView.routeName:
       return MaterialPageRoute(builder: (context) => const ElectronicsView());
     default:

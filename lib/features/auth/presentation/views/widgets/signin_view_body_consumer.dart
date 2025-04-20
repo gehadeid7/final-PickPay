@@ -4,7 +4,7 @@ import 'package:pickpay/core/helper_functions/build_error_bar.dart';
 import 'package:pickpay/core/widgets/custom_prograss_hud.dart';
 import 'package:pickpay/features/auth/presentation/cubits/signin_cubit/signin_cubit.dart';
 import 'package:pickpay/features/auth/presentation/views/widgets/signin_view_body.dart';
-import 'package:pickpay/features/home/presentation/views/home_view.dart';
+import 'package:pickpay/features/home/presentation/views/main_navigation_screen.dart';
 
 class SigninViewBodyBlocConsumer extends StatelessWidget {
   const SigninViewBodyBlocConsumer({
@@ -17,7 +17,7 @@ class SigninViewBodyBlocConsumer extends StatelessWidget {
       listener: (context, state) {
         if (state is SigninSuccess) {
           
-          Navigator.pushNamed(context, HomeView.routeName);
+          Navigator.pushNamed(context, MainNavigationScreen.routeName);
         } 
         if (state is SigninFailure) {
           buildErrorBar(context, state.message);

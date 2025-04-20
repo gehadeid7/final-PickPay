@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:pickpay/features/home/domain/entities/bottom_navigation_bar_entity.dart';
 import 'package:pickpay/features/home/presentation/views/widgets/bottom_navigation/navigation_bar_item.dart';
 
-class CustomBottomNavigationBar extends StatefulWidget {
-  const CustomBottomNavigationBar({super.key});
+class CustomBottomNavigationBar extends StatelessWidget {
+  final int selectedIndex;
+  final Function(int) onItemSelected;
 
-  @override
-  State<CustomBottomNavigationBar> createState() =>
-      _CustomBottomNavigationBarState();
-}
+  const CustomBottomNavigationBar({
+    super.key,
+    required this.selectedIndex,
+    required this.onItemSelected,
+  });
 
-class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
-  int selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -41,14 +41,11 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
           return Expanded(
             flex: index == selectedIndex ? 3 : 2,
             child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  selectedIndex = index;
-                });
-              },
+              onTap: () => onItemSelected(index),
               child: NavigationBarItem(
-                  isSelected: selectedIndex == index,
-                  bottomNavigationBarEntity: entity),
+                isSelected: selectedIndex == index,
+                bottomNavigationBarEntity: entity,
+              ),
             ),
           );
         }).toList(),

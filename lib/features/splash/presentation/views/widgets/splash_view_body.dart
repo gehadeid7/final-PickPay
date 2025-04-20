@@ -55,7 +55,7 @@ class _SplashViewBodyState extends State<SplashViewBody> {
         if (isLoggedIn) {
           Navigator.pushReplacementNamed(context, SigninView.routeName);
         } else {
-          Navigator.pushReplacementNamed(context, SigninView.routeName);
+          Navigator.pushReplacementNamed(context, OnBoardingView.routeName);
         }
       } else {
         Navigator.pushReplacementNamed(context, OnBoardingView.routeName);
