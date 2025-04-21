@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pickpay/constants.dart';
 import 'package:pickpay/core/widgets/custom_app.dart';
 import 'package:pickpay/core/widgets/custom_button.dart';
+import 'package:pickpay/features/checkout/presentation/views/checkout_view.dart';
 import 'package:pickpay/features/home/presentation/views/widgets/cart_header.dart';
 import 'package:pickpay/features/home/presentation/views/widgets/cart_items_list.dart';
 
@@ -33,7 +34,11 @@ class CartViewBody extends StatelessWidget {
           left: 16,
           right: 16,
           bottom: MediaQuery.sizeOf(context).height * .02,
-          child: CustomButton(onPressed: () {}, buttonText: 'Checkout'),
+          child: CustomButton(
+              onPressed: () {
+                Navigator.pushNamed(context, CheckoutView.routeName);
+              },
+              buttonText: 'Checkout'),
         ),
       ],
     );
