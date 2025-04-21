@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pickpay/core/utils/app_images.dart';
 import 'package:pickpay/core/utils/app_text_styles.dart';
 
 class SearchTextField extends StatelessWidget {
@@ -16,13 +17,19 @@ class SearchTextField extends StatelessWidget {
         ),
         hintText: 'Search...',
         filled: true,
-        fillColor: const Color(0xFFF9FAFA),
+        fillColor: Color(0xFFF9FAFA),
         prefixIcon: Padding(
-          padding: const EdgeInsets.all(4.0),
+          padding: EdgeInsets.all(8.0),
           child: Image.asset(
-            'assets/icons/search_icon.png',
-            
+            Assets.search,
+            width: 20,
+            height: 20,
+            fit: BoxFit.contain,
           ),
+        ),
+        prefixIconConstraints: BoxConstraints(
+          minWidth: 40,
+          minHeight: 40,
         ),
         border: buildBorder(const Color(0xFFE6E9E9)),
         enabledBorder: buildBorder(const Color(0xFFE6E9E9)),

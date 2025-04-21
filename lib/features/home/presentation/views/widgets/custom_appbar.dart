@@ -8,28 +8,25 @@ class CustomHomeAppbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(12),
-      child: Row(children: [
-        Image.asset(Assets.appLogo, width: 45, height: 45),
-        SizedBox(width: 5),
-        Text('PickPay',
-            style: TextStyles.bold19.copyWith(
-              color: Colors.black,
-            )),
-        SizedBox(width: 10),
-        Expanded(
-          child: Container(
-            width: 260,
-            height: 40,
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey, width: 1.0),
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-            child: SearchTextField(),
+    return Row(children: [
+      Image.asset(Assets.appLogo, width: 45, height: 45),
+      SizedBox(width: 5),
+      Text('PickPay',
+          style: TextStyles.bold19.copyWith(
+            color: Colors.black,
+          )),
+      SizedBox(width: 10),
+      Expanded(
+        child: Container(
+          width: 260,
+          height: 40,
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey, width: 1.0),
+            borderRadius: BorderRadius.circular(8.0),
           ),
-        )
-      ]),
-    );
+          child: SearchTextField(),
+        ),
+      )
+    ]);
   }
 }

@@ -18,7 +18,6 @@ class HomeViewBody extends StatelessWidget {
       children: const [
         SizedBox(height: 12),
         CustomHomeAppbar(),
-        SizedBox(height: 12),
         SlidingFeaturedList(),
         SizedBox(height: 12),
         RecommendedForuHeader(),

@@ -29,4 +29,5 @@ class Assets {
       "assets/icons/shopping-cart_unfilled.png";
 
   static const String trash = "assets/icons/delete.png";
+  static const String search = "assets/icons/search_icon.png";
 }

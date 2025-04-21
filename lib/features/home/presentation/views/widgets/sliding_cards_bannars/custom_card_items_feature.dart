@@ -1,4 +1,3 @@
-// sliding_featured_item.dart
 import 'package:flutter/material.dart';
 import 'package:pickpay/core/utils/app_text_styles.dart';
 
