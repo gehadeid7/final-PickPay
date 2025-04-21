@@ -27,4 +27,6 @@ class Assets {
   static const String navCartIcon = "assets/icons/shopping-cart.png";
   static const String navUnFillCartIcon =
       "assets/icons/shopping-cart_unfilled.png";
+
+  static const String trash = "assets/icons/delete.png";
 }

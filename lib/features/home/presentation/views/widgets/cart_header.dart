@@ -9,12 +9,13 @@ class CartHeader extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 20),
       width: double.infinity,
-      decoration:
-          const BoxDecoration(color: Color.fromARGB(255, 235, 235, 235)),
+      decoration: const BoxDecoration(
+        color: Color(0xFFF6F6FE),
+      ),
       child: Center(
         child: Text('You have 3 items',
             style: TextStyles.semiBold16.copyWith(
-              color: const Color.fromARGB(255, 33, 149, 243),
+              color: Colors.black,
             )),
       ),
     );
