@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pickpay/features/home/presentation/cubits/cubit/bottom_navigation_cubit.dart';
+import 'package:pickpay/features/home/presentation/cubits/bottom_navigation_cubits/bottom_navigation_cubit.dart';
 import 'package:pickpay/features/home/presentation/views/widgets/bottom_navigation/custom_bottom_navigation_bar.dart';
 import 'package:pickpay/features/home/presentation/views/widgets/main_navigation_body.dart';
 

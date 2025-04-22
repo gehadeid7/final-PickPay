@@ -58,7 +58,6 @@ dependencies:
   smooth_page_indicator: ^1.1.0
   equatable: ^2.0.7
 
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -89,6 +88,7 @@ flutter:
   - assets/banners/
   - assets/images/
   - assets/icons/
+  - assets/Categories/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 
@@ -101,7 +101,7 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
- 
+
   - family: Montserrat
     fonts:
     - asset: assets/fonts/Montserrat-Regular.ttf
@@ -111,7 +111,7 @@ flutter:
       weight: 600
     - asset: assets/fonts/Montserrat-Bold.ttf
       weight: 700
- # For details regarding fonts from package dependencies,
+  # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
 
 flutter_launcher_icons:

@@ -1,52 +1,61 @@
 import 'package:flutter/material.dart';
-import 'package:pickpay/constants.dart';
-import 'package:pickpay/core/utils/app_images.dart';
-import 'package:pickpay/core/widgets/custom_app.dart';
-import 'package:pickpay/features/home/presentation/views/widgets/categories_view_item.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pickpay/features/home/presentation/cubits/categories_cubits/categories_cubits_cubit.dart';
+import 'package:pickpay/features/home/presentation/cubits/categories_cubits/categories_cubits_state.dart';
+import 'package:pickpay/features/home/presentation/views/widgets/category_navigation_helper.dart';
+import 'package:pickpay/features/home/presentation/views/widgets/custom_appbar.dart';
 
 class CategoriesViewBody extends StatelessWidget {
   const CategoriesViewBody({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final List<Map<String, String>> categories = [
-      {'name': 'sale', 'image': Assets.appLogo},
-      {'name': 'Electronics', 'image': Assets.appLogo},
-      {'name': 'Appliances', 'image': Assets.appLogo},
-      {'name': 'Home', 'image': Assets.appLogo},
-      {'name': 'Fashion', 'image': Assets.appLogo},
-      {'name': 'Beauty', 'image': Assets.appLogo},
-      {'name': 'Video games', 'image': Assets.appLogo},
-      {'name': 'Toys & games', 'image': Assets.appLogo},
-    ];
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        children: [
-          SizedBox(height: kTopPadding),
-          buildAppBar(context: context, title: 'Categories'),
-          const SizedBox(height: 16),
-          Expanded(
-            child: GridView.builder(
-              itemCount: categories.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: 16,
-                crossAxisSpacing: 16,
-                childAspectRatio: 1.1,
-              ),
-              itemBuilder: (context, index) {
-                final category = categories[index];
-                return CategoriesViewItem(
-                  categoryName: category['name']!,
-                  imagePath: category['image']!,
+    return Column(
+      children: [
+        CustomHomeAppbar(),
+        Expanded(
+          child: BlocBuilder<CategoriesCubit, CategoriesState>(
+            builder: (context, state) {
+              if (state is CategoriesLoading) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (state is CategoriesLoaded) {
+                return GridView.builder(
+                  padding: const EdgeInsets.all(16),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 1,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
+                  ),
+                  itemCount: state.categories.length,
+                  itemBuilder: (context, index) {
+                    final category = state.categories[index];
+                    return GestureDetector(
+                      onTap: () => navigateToCategory(context, category),
+                      child: Container(
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: Colors.black)),
+                        child: Text(
+                          category,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
                 );
-              },
-            ),
+              } else if (state is CategoriesError) {
+                return Center(child: Text(state.message));
+              }
+              return const SizedBox.shrink();
+            },
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
