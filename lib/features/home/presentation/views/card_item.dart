@@ -21,7 +21,7 @@ class CardItem extends StatelessWidget {
                 // Product Image
                 Center(
                   child: Image.asset(
-                    'assets/elecCat/AirPodsPro.png',
+                    'assets/Categories/Electronics/iPhone.png',
                     height: 130,
                     fit: BoxFit.contain,
                   ),

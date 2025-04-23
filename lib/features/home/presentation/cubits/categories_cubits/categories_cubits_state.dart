@@ -1,3 +1,5 @@
+import 'package:pickpay/features/home/domain/models/categories_view_model.dart';
+
 abstract class CategoriesState {}
 
 class CategoriesInitial extends CategoriesState {}
@@ -5,7 +7,7 @@ class CategoriesInitial extends CategoriesState {}
 class CategoriesLoading extends CategoriesState {}
 
 class CategoriesLoaded extends CategoriesState {
-  final List<String> categories;
+  final List<CategoryModel> categories;
   CategoriesLoaded(this.categories);
 }
 

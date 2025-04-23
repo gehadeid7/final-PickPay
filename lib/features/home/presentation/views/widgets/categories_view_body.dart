@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pickpay/constants.dart';
+import 'package:pickpay/core/utils/app_colors.dart';
+import 'package:pickpay/core/utils/app_text_styles.dart';
 import 'package:pickpay/features/home/presentation/cubits/categories_cubits/categories_cubits_cubit.dart';
 import 'package:pickpay/features/home/presentation/cubits/categories_cubits/categories_cubits_state.dart';
 import 'package:pickpay/features/home/presentation/views/widgets/category_navigation_helper.dart';
@@ -37,18 +39,38 @@ class CategoriesViewBody extends StatelessWidget {
                     final category = state.categories[index];
 
                     return GestureDetector(
-                      onTap: () => navigateToCategory(context, category),
+                      onTap: () => navigateToCategory(context, category.name),
                       child: Container(
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(color: Colors.black)),
-                        child: Text(
-                          category,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          color: Color(0xFFF6F6FE),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: Colors.black),
+                        ),
+                        child: Stack(
+                          children: [
+                            Positioned.fill(
+                              child: Image.asset(
+                                category.image,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            Center(
+                              child: Text(
+                                category.name,
+                                style: TextStyles.bold19.copyWith(
+                                  color: Colors.white,
+                                  shadows: [
+                                    const Shadow(
+                                      blurRadius: 4,
+                                      color: Colors.black,
+                                      offset: Offset(0, 1),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     );
