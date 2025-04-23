@@ -88,6 +88,14 @@ flutter:
   - assets/banners/
   - assets/images/
   - assets/icons/
+  - assets/Categories/DailyDeals/
+  - assets/Categories/Electronics/
+  - assets/Categories/Appliances/
+  - assets/Categories/Home/
+  - assets/Categories/Fashion/
+  - assets/Categories/Beauty/
+  - assets/Categories/VideoGames/
+  - assets/Categories/ToysAndGames/
   - assets/Categories/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

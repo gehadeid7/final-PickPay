@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:pickpay/constants.dart';
 import 'package:pickpay/core/widgets/custom_app.dart';
 
-class AppliancesViewBody extends StatelessWidget {
-  const AppliancesViewBody({super.key});
+class FashionViewbody extends StatelessWidget {
+  const FashionViewbody({super.key});
 
   @override
   Widget build(BuildContext context) {
     return ListView(
       children: [
         SizedBox(height: kTopPadding),
-        buildAppBar(context: context, title: 'Appliances')
+        buildAppBar(context: context, title: 'FASHION')
       ],
     );
   }

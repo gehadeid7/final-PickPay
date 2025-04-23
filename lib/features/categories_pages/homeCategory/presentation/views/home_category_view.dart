@@ -4,10 +4,12 @@ import 'package:pickpay/features/categories_pages/homeCategory/presentation/view
 class HomeCategoryView extends StatelessWidget {
   const HomeCategoryView({super.key});
 
-  static const routeName = 'HomeCategory_View';
+  static const routeName = 'homecategory_view';
 
   @override
   Widget build(BuildContext context) {
-    return HomeCategoryViewBody();
+    return Scaffold(
+      body: SafeArea(child: HomeCategoryViewBody()),
+    );
   }
 }

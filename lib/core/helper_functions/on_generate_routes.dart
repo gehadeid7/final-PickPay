@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pickpay/features/categories_pages/appliances/presentation/views/appliances_view.dart';
+import 'package:pickpay/features/categories_pages/fashion/presentation/views/fashion_view.dart';
 import 'package:pickpay/features/categories_pages/homeCategory/presentation/views/home_category_view.dart';
 import 'package:pickpay/features/categories_pages/todayIsSale/presentation/views/sale_view.dart';
+import 'package:pickpay/features/categories_pages/toyes&games/presentation/views/toyes_view.dart';
 import 'package:pickpay/features/checkout/presentation/views/checkout_view.dart';
 import 'package:pickpay/features/categories_pages/electronics/presentation/views/electronics_view.dart';
 import 'package:pickpay/features/home/presentation/views/account_view.dart';
@@ -43,15 +45,20 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
     case ElectronicsView.routeName:
       return MaterialPageRoute(builder: (context) => const ElectronicsView());
 
-         case SaleView.routeName:
+    case SaleView.routeName:
       return MaterialPageRoute(builder: (context) => const SaleView());
 
-            case AppliancesView.routeName:
+    case AppliancesView.routeName:
       return MaterialPageRoute(builder: (context) => const AppliancesView());
 
-
-              case HomeCategoryView.routeName:
+    case HomeCategoryView.routeName:
       return MaterialPageRoute(builder: (context) => const HomeCategoryView());
+
+    case FashionView.routeName:
+      return MaterialPageRoute(builder: (context) => const FashionView());
+
+    case ToysView.routeName:
+      return MaterialPageRoute(builder: (context) => const ToysView());
 
     default:
       return MaterialPageRoute(builder: (context) => const Scaffold());

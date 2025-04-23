@@ -11,8 +11,8 @@ class SaleView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: SaleViewBody(),
+    return Scaffold(
+      body: SafeArea(child: SaleViewBody()),
     );
   }
 }

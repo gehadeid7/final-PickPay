@@ -6,14 +6,13 @@ class AppliancesView extends StatelessWidget {
 
 
 
-static const routeName = 'Appliances_view';
+static const routeName = 'appliances_view';
 
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      
-      body: AppliancesViewBody(),
+    return Scaffold(
+      body: SafeArea(child: AppliancesViewBody()),
     );
   }
 }
