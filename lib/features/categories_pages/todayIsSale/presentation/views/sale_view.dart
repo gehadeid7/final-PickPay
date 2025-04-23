@@ -5,6 +5,10 @@ import 'package:pickpay/features/categories_pages/todayIsSale/presentation/views
 class SaleView extends StatelessWidget {
   const SaleView({super.key});
 
+
+
+  static const routeName = 'sale_view';
+
   @override
   Widget build(BuildContext context) {
     return const Scaffold(

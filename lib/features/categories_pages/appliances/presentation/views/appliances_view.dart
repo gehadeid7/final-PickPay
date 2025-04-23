@@ -4,6 +4,11 @@ import 'package:pickpay/features/categories_pages/appliances/presentation/views/
 class AppliancesView extends StatelessWidget {
   const AppliancesView({super.key});
 
+
+
+static const routeName = 'Appliances_view';
+
+
   @override
   Widget build(BuildContext context) {
     return const Scaffold(

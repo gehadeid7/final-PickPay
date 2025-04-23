@@ -5,6 +5,7 @@ class ElectronicsView extends StatelessWidget {
   const ElectronicsView({super.key});
   static const routeName = 'electronics_view';
   @override
+
   Widget build(BuildContext context) {
     return ElectronicsViewBody();
   }

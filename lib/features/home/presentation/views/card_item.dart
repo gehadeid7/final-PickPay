@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class HomeItem extends StatelessWidget {
-  const HomeItem({super.key});
+class CardItem extends StatelessWidget {
+  const CardItem({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class HomeItem extends StatelessWidget {
                 // Favorite Icon (top right of image)
                 Positioned(
                   top: 0,
-                  right: 0,
+                  right: -4,
                   child: IconButton(
                     icon: const Icon(Icons.favorite_border),
                     onPressed: () {
@@ -120,14 +120,14 @@ class HomeItem extends StatelessWidget {
   }
 }
 
-//THARWAT CODE:
+// // THARWAT CODE:
 
 // import 'package:dartz/dartz.dart';
 // import 'package:flutter/material.dart';
 // import 'package:pickpay/core/utils/app_text_styles.dart';
 
-// class HomeItem extends StatelessWidget {
-//   const HomeItem({super.key});
+// class CardItem extends StatelessWidget {
+//   const CardItem({super.key});
 
 //   @override
 //   Widget build(BuildContext context) {

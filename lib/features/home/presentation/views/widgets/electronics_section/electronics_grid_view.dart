@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pickpay/core/widgets/home_item.dart';
+import 'package:pickpay/features/home/presentation/views/card_item.dart';
 
 class ElectronicsGridView extends StatelessWidget {
   const ElectronicsGridView({super.key});
@@ -16,7 +16,7 @@ class ElectronicsGridView extends StatelessWidget {
         mainAxisSpacing: 12,
         crossAxisSpacing: 16,
       ),
-      itemBuilder: (context, index) => const HomeItem(),
+      itemBuilder: (context, index) => const CardItem(),
       itemCount: 2,
     );
   }
