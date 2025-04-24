@@ -39,9 +39,21 @@ class ProductModel {
       imageUrl: json['imageUrl'],
       reviews: json['reviews'] != null
           ? List<ReviewModel>.from(
-              json[' reviews'].map((e) => ReviewModel.fromJson(e))) 
+              json[' reviews'].map((e) => ReviewModel.fromJson(e)))
           : [],
-      sellingCount: json['sellingCount'], 
+      sellingCount: json['sellingCount'],
+    );
+  }
+
+ ProductEntity toEntity() {
+    return ProductEntity(
+      name: name,
+      code: code,
+      description: description,
+      price: price,
+      image: image,
+      isFeatured: isFeatured,
+      reviews: reviews.map((e) => e.toEntity()).toList(),
     );
   }
 

@@ -1,5 +1,3 @@
-
-
 import 'package:pickpay/core/entities/review_entity.dart';
 
 class ReviewModel {
@@ -33,6 +31,17 @@ class ReviewModel {
         date: json['date'],
         reviewDescription: json['reviewDescription']);
   }
+
+ ReviewEntity toEntity() {
+    return ReviewEntity(
+      name: name,
+      image: image,
+      rating: rating,
+      date: date,
+      reviewDescription: reviewDescription,
+    );
+  }
+
   toJson() {
     return {
       'name': name,
