@@ -11,8 +11,14 @@ class ProductRepoImpl extends ProductsRepo {
 
   ProductRepoImpl(this.databaseService);
 
+
+
   @override
-  Future<Either<Failure, List<ProductEntity>>> getBestSellingProducts() {}
+  Future<Either<Failure, List<ProductEntity>>> getBestSellingProducts() {
+    // TODO: implement getBestSellingProducts
+    throw UnimplementedError();
+  }
+
 
   @override
   Future<Either<Failure, List<ProductEntity>>> getProducts() async {
@@ -28,4 +34,6 @@ class ProductRepoImpl extends ProductsRepo {
       return left(ServerFailure('failed to get product'));
     }
   }
+  
+
 }
