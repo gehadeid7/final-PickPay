@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:pickpay/core/entities/product_entity.dart';
 import 'package:pickpay/core/models/review_model.dart';
 
-
 class ProductModel {
   final String name;
   final String code;
@@ -15,6 +14,7 @@ class ProductModel {
   final num avgRating = 0;
   final num ratingCount = 0;
   final List<ReviewModel> reviews;
+  final num sellingCount;
 
   ProductModel({
     required this.name,
@@ -25,23 +25,23 @@ class ProductModel {
     required this.isFeatured,
     this.imageUrl,
     required this.reviews,
+    required this.sellingCount,
   });
 
-  factory ProductModel.fromEntity(
-    ProductEntity addProductInputEntity,
-  ) {
+  factory ProductModel.fromJson(Map<String, dynamic> json) {
     return ProductModel(
-      name: addProductInputEntity.name,
-      code: addProductInputEntity.code,
-      description: addProductInputEntity.description,
-      price: addProductInputEntity.price,
-      image: addProductInputEntity.image,
-      isFeatured: addProductInputEntity.isFeatured,
-      imageUrl: addProductInputEntity.imageUrl,
-      reviews:
-          addProductInputEntity.reviews
-              .map((e) => ReviewModel.fromEntity(e))
-              .toList(),
+      name: json['name'],
+      code: json['code'],
+      description: json['description'],
+      price: json['price'],
+      image: File(json['image']),
+      isFeatured: json['isFeatured'],
+      imageUrl: json['imageUrl'],
+      reviews: json['reviews'] != null
+          ? List<ReviewModel>.from(
+              json[' reviews'].map((e) => ReviewModel.fromJson(e))) 
+          : [],
+      sellingCount: json['sellingCount'], 
     );
   }
 
