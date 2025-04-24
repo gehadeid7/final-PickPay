@@ -10,8 +10,8 @@ class CategoriesCubit extends Cubit<CategoriesState> {
     try {
       final categories = [
         CategoryModel(
-            name: 'Sale',
-            image: 'assets/Categories/DailyDeals/SpecialOffer.png'),
+            name: 'Bestsellers',
+            image: 'assets/Categories/Electronics/iPhone.png'),
         CategoryModel(
             name: 'Electronics',
             image: 'assets/Categories/Electronics/iPhone.png'),

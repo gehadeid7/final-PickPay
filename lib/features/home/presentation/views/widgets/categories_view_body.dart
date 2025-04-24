@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pickpay/constants.dart';
-import 'package:pickpay/core/utils/app_colors.dart';
 import 'package:pickpay/core/utils/app_text_styles.dart';
 import 'package:pickpay/features/home/presentation/cubits/categories_cubits/categories_cubits_cubit.dart';
 import 'package:pickpay/features/home/presentation/cubits/categories_cubits/categories_cubits_state.dart';
