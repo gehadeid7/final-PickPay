@@ -57,6 +57,7 @@ dependencies:
   carousel_slider: ^5.0.0
   smooth_page_indicator: ^1.1.0
   equatable: ^2.0.7
+  skeletonizer: ^1.4.3
 
 dev_dependencies:
   flutter_test:
