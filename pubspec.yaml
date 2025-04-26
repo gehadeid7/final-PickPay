@@ -49,7 +49,7 @@ dependencies:
   modal_progress_hud_nsn: ^0.5.1
   google_sign_in: ^6.3.0
   flutter_facebook_auth: ^7.1.1
-  sign_in_with_apple: ^7.0.1
+  sign_in_with_apple: ^5.0.0
   crypto: ^3.0.6
   cloud_firestore: ^5.6.6
   standard_searchbar: ^2.1.1
@@ -58,6 +58,9 @@ dependencies:
   smooth_page_indicator: ^1.1.0
   equatable: ^2.0.7
   skeletonizer: ^1.4.3
+  http: ^1.2.2
+  supabase_flutter: 2.8.4
+
 
 dev_dependencies:
   flutter_test:

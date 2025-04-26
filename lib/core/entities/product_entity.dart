@@ -25,4 +25,28 @@ class ProductEntity {
     this.imageUrl,
     required this.reviews,
   });
+
+   // Add copyWith method to ProductEntity
+  ProductEntity copyWith({
+    String? name,
+    String? code,
+    String? description,
+    num? price,
+    File? image,
+    bool? isFeatured,
+    String? imageUrl,
+    List<ReviewEntity>? reviews,
+  }) {
+    return ProductEntity(
+      name: name ?? this.name,
+      code: code ?? this.code,
+      description: description ?? this.description,
+      price: price ?? this.price,
+      image: image ?? this.image,
+      isFeatured: isFeatured ?? this.isFeatured,
+      imageUrl: imageUrl ?? this.imageUrl,
+      reviews: reviews ?? this.reviews,
+    );
+  }
 }
+
