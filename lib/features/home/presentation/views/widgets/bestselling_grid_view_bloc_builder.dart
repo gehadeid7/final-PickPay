@@ -15,12 +15,18 @@ class BestSellingGridViewBlocBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ProductsCubit, ProductsState>(
       builder: (context, state) {
+        return Skeletonizer.sliver(
+            enabled: true,
+            child: ElectronicsGridView(
+              products: getDummyProducts(),
+            ));
         if (state is ProductsSuccess) {
           return ElectronicsGridView(
             products: state.products,
           );
         } else if (state is ProductsFailure) {
-          return SliverToBoxAdapter(child: CustomErrorWidget(text: state.errMessage));
+          return SliverToBoxAdapter(
+              child: CustomErrorWidget(text: state.errMessage));
         } else {
           return Skeletonizer.sliver(
               enabled: true,
@@ -32,8 +38,6 @@ class BestSellingGridViewBlocBuilder extends StatelessWidget {
     );
   }
 }
-
-
 
 //tharwat
 // import 'package:flutter/material.dart';
