@@ -3,7 +3,6 @@ import 'package:pickpay/constants.dart';
 import 'package:pickpay/core/services/firebase_auth_service.dart';
 import 'package:pickpay/core/services/shared_preferences_singletone.dart';
 import 'package:pickpay/core/utils/app_images.dart';
-import 'package:pickpay/features/auth/presentation/views/signin_view.dart';
 import 'package:pickpay/features/on_boarding/presentation/views/on_boarding_view.dart';
 
 class SplashViewBody extends StatefulWidget {
