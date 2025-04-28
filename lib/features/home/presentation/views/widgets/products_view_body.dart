@@ -7,7 +7,6 @@ import 'package:pickpay/features/home/presentation/views/widgets/appliances_sect
 import 'package:pickpay/features/home/presentation/views/widgets/appliances_section/appliances_header.dart';
 import 'package:pickpay/features/home/presentation/views/widgets/beauty_section/beauty_grid.dart';
 import 'package:pickpay/features/home/presentation/views/widgets/beauty_section/beauty_header.dart';
-import 'package:pickpay/features/home/presentation/views/widgets/bestselling_grid_view_bloc_builder.dart';
 import 'package:pickpay/features/home/presentation/views/widgets/custom_appbar.dart';
 import 'package:pickpay/features/home/presentation/views/widgets/electronics_section/electronics_grid_view.dart';
 import 'package:pickpay/features/home/presentation/views/widgets/electronics_section/electronics_header.dart';
@@ -21,20 +20,20 @@ import 'package:pickpay/features/home/presentation/views/widgets/todays_sale_sec
 import 'package:pickpay/features/home/presentation/views/widgets/video_games_bestsellers/vgames_grid.dart';
 import 'package:pickpay/features/home/presentation/views/widgets/video_games_bestsellers/vigames_section_header.dart';
 
-class HomeViewBody extends StatefulWidget {
-  const HomeViewBody({super.key});
+class ProductsViewBody extends StatefulWidget {
+  const ProductsViewBody({super.key});
 
   @override
-  State<HomeViewBody> createState() => _HomeViewBodyState();
+  State<ProductsViewBody> createState() => _ProductsViewBodyState();
 }
 
-class _HomeViewBodyState extends State<HomeViewBody> {
+class _ProductsViewBodyState extends State<ProductsViewBody> {
+
   @override
   void initState() {
-    context.read<ProductsCubit>().getBsetSellingProducts();
     super.initState();
+    context.read<ProductsCubit>().getProducts();
   }
-
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -77,7 +76,7 @@ class _HomeViewBodyState extends State<HomeViewBody> {
         BeautyGrid(),
         SizedBox(height: 12),
 
-        BestSellingGridViewBlocBuilder()
+        // BestSellingGridViewBlocBuilder()
       ],
     );
   }

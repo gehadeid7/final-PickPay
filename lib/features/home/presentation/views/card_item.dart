@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:pickpay/core/entities/product_entity.dart';
 
 class CardItem extends StatelessWidget {
-  const CardItem({super.key, 
-  // required this.productEntity
-  });
+  const CardItem({super.key, required this.productEntity});
 
-//  final ProductEntity productEntity;
+  final ProductEntity productEntity;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -22,13 +21,19 @@ class CardItem extends StatelessWidget {
             child: Stack(
               children: [
                 // Product Image
-                Center(
-                  child: Image.asset(
-                    'assets/Categories/Electronics/iPhone.png',
-                    height: 130,
-                    fit: BoxFit.contain,
-                  ),
-                ),
+                productEntity.imageUrl != null
+                    ? Center(
+                        child: Image.asset(
+                          'assets/Categories/Electronics/iPhone.png',
+                          height: 130,
+                          fit: BoxFit.contain,
+                        ),
+                      )
+                    : Container(
+                        color: Colors.grey,
+                        height: 100,
+                        width: 100,
+                      ),
                 // Favorite Icon (top right of image)
                 Positioned(
                   top: 0,
