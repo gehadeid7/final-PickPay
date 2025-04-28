@@ -7,11 +7,14 @@ class VideogamesViewBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        SizedBox(height: kTopPadding),
-        buildAppBar(context: context, title: 'Video Games')
-      ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: ListView(
+        children: [
+          SizedBox(height: kTopPadding),
+          buildAppBar(context: context, title: 'Video Games')
+        ],
+      ),
     );
   }
 }

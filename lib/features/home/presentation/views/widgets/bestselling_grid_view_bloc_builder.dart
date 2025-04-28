@@ -23,7 +23,7 @@ class BestSellingGridViewBlocBuilder extends StatelessWidget {
           return SliverToBoxAdapter(child: CustomErrorWidget(text: state.errMessage));
         } else {
           return Skeletonizer.sliver(
-              enabled: true,
+              enabled: true, 
               child: ElectronicsGridView(
                 products: getDummyProducts(),
               ));

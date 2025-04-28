@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:pickpay/core/entities/product_entity.dart';
 
 class CardItem extends StatelessWidget {
-  const CardItem({super.key, required this.productEntity});
+  const CardItem({super.key, 
+  // required this.productEntity
+  });
 
- final ProductEntity productEntity;
+//  final ProductEntity productEntity;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -16,7 +18,7 @@ class CardItem extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 👇 Stack: Image + Favorite Icon
+          // Stack: Image + Favorite Icon
           Expanded(
             child: Stack(
               children: [

@@ -39,37 +39,57 @@ class CategoriesViewBody extends StatelessWidget {
 
                     return GestureDetector(
                       onTap: () => navigateToCategory(context, category.name),
-                      child: Container(
-                        alignment: Alignment.center,
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        curve: Curves.easeInOut,
                         decoration: BoxDecoration(
-                          color: Color(0xFFF6F6FE),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: Colors.black),
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 8,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
                         ),
-                        child: Stack(
-                          children: [
-                            Positioned.fill(
-                              child: Image.asset(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(16),
+                          child: Stack(
+                            fit: StackFit.expand,
+                            children: [
+                              Image.asset(
                                 category.image,
                                 fit: BoxFit.cover,
                               ),
-                            ),
-                            Center(
-                              child: Text(
-                                category.name,
-                                style: TextStyles.bold19.copyWith(
-                                  color: Colors.white,
-                                  shadows: [
-                                    const Shadow(
-                                      blurRadius: 4,
-                                      color: Colors.black,
-                                      offset: Offset(0, 1),
-                                    ),
-                                  ],
+                              Container(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.bottomCenter,
+                                    end: Alignment.topCenter,
+                                    colors: [
+                                      Colors.black.withOpacity(0.5),
+                                      Colors.transparent,
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                              Center(
+                                child: Text(
+                                  category.name,
+                                  style: TextStyles.bold19.copyWith(
+                                    color: Colors.white,
+                                    shadows: [
+                                      const Shadow(
+                                        blurRadius: 4,
+                                        color: Colors.black,
+                                        offset: Offset(0, 1),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     );

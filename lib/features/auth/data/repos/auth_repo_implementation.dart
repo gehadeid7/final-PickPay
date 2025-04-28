@@ -13,7 +13,7 @@ import 'package:pickpay/core/utils/backend_endpoints.dart';
 import 'package:pickpay/features/auth/data/models/user_model.dart';
 import 'package:pickpay/features/auth/domain/entities/user_entity.dart';
 import 'package:pickpay/features/auth/domain/repos/auth_repo.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 
 class AuthRepoImplementation extends AuthRepo {
   final FirebaseAuthService firebaseAuthService;

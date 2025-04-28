@@ -19,7 +19,7 @@ Widget _getCategoryPage(String category) {
   switch (category) {
     case 'electronics':
       return const ElectronicsView();
-    case 'sale':
+    case "today's sale":
       return const SaleView();
     case 'appliances':
       return const AppliancesView();
@@ -36,7 +36,7 @@ Widget _getCategoryPage(String category) {
     default:
       return Scaffold(
         appBar: AppBar(title: Text(category)),
-        body: Center(child: Text('Page for "$category" coming soon')),
+        // body: Center(child: Text('Page for "$category" coming soon')),
       );
   }
 }

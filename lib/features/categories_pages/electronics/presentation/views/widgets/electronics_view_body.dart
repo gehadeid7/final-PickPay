@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pickpay/constants.dart';
 import 'package:pickpay/core/widgets/custom_app.dart';
+import 'package:pickpay/features/home/presentation/views/widgets/electronics_section/electronics_grid_view.dart';
 
 class ElectronicsViewBody extends StatelessWidget {
   const ElectronicsViewBody({super.key});
@@ -10,9 +11,27 @@ class ElectronicsViewBody extends StatelessWidget {
     return Scaffold(
       appBar: buildAppBar(context: context, title: 'Electronics'),
       body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 14),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         children: const [
           SizedBox(height: kTopPadding),
+          ElectronicsGridView(products: []),
+          SizedBox(height: 12),
+          ElectronicsGridView(products: []),
+          SizedBox(height: 12),
+          ElectronicsGridView(products: []),
+          SizedBox(height: 12),
+          ElectronicsGridView(products: []),
+          SizedBox(height: 12),
+          ElectronicsGridView(products: []),
+          SizedBox(height: 12),
+          ElectronicsGridView(products: []),
+          SizedBox(height: 12),
+          ElectronicsGridView(products: []),
+          SizedBox(height: 12),
+          ElectronicsGridView(products: []),
+          SizedBox(height: 12),
+          ElectronicsGridView(products: []),
+          SizedBox(height: 12),
         ],
       ),
     );

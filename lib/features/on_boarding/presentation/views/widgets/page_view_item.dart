@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pickpay/constants.dart';
 import 'package:pickpay/core/services/shared_preferences_singletone.dart';
 import 'package:pickpay/core/utils/app_text_styles.dart';
-import 'package:pickpay/features/checkout/presentation/views/checkout_view.dart';
+import 'package:pickpay/features/auth/presentation/views/signin_view.dart';
 
 class PageViewItem extends StatelessWidget {
   const PageViewItem({
@@ -50,8 +50,7 @@ class PageViewItem extends StatelessWidget {
                       Prefs.setBool(kIsOnBoardingViewSeen, true);
                       Navigator.of(
                         context,
-                      ).pushReplacementNamed(CheckoutView.routeName);
-                      // ).pushReplacementNamed(SigninView.routeName);
+                      ).pushReplacementNamed(SigninView.routeName);
                     },
                     child: Text(
                       'Skip',

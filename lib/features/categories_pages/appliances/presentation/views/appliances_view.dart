@@ -12,7 +12,8 @@ static const routeName = 'appliances_view';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(child: AppliancesViewBody()),
+      body: SafeArea(child: AppliancesViewBody(),
+      ),
     );
   }
 }

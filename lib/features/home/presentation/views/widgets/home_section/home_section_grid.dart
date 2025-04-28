@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:pickpay/features/home/presentation/views/card_item.dart';
 
-class TodaysSaleGridView extends StatelessWidget {
-  const TodaysSaleGridView({super.key});
+class HomeSectionGrid extends StatelessWidget {
+  const HomeSectionGrid({super.key});
 
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
-      
       shrinkWrap: true,
       physics:
           const NeverScrollableScrollPhysics(), // Important to avoid scroll conflict
