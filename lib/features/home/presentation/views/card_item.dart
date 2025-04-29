@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 class CardItem extends StatelessWidget {
-  const CardItem({super.key, 
-  // required this.productEntity
+  const CardItem({
+    super.key,
+    // required this.productEntity
   });
 
   // final ProductEntity productEntity;
@@ -23,20 +24,22 @@ class CardItem extends StatelessWidget {
               children: [
                 // Product Image
                 // productEntity.imageUrl != null
-                    // ?
-                     Center(
-                        child: Image.asset(
-                          'assets/Categories/Electronics/iPhone.png',
-                          height: 130,
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                    // : 
-                    // Container(
-                    //     color: Colors.grey,
-                    //     height: 100,
-                    //     width: 100,
-                    //   ),
+                // ?
+                Center(
+                  child: Flexible(
+                    child: Image.asset(
+                      'assets/Categories/Electronics/iPhone.png',
+                      height: 130,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+                // :
+                // Container(
+                //     color: Colors.grey,
+                //     height: 100,
+                //     width: 100,
+                //   ),
                 // Favorite Icon (top right of image)
                 Positioned(
                   top: 0,

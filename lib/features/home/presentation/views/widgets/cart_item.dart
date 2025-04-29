@@ -4,8 +4,12 @@ import 'package:pickpay/core/utils/app_text_styles.dart';
 import 'package:pickpay/features/home/presentation/views/widgets/cart_item_action_button.dart';
 
 class CartItem extends StatefulWidget {
-  const CartItem({super.key});
+  const CartItem({
+    super.key,
+    // required this.cartItemEntity
+  });
 
+  // final CartItemEntity cartItemEntity;
   @override
   State<CartItem> createState() => _CartItemState();
 }
