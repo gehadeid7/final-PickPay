@@ -1,24 +1,18 @@
 import 'package:flutter/material.dart';
 
 class ProductCard extends StatelessWidget {
-  // Constructor with parameters to receive product data
   const ProductCard({
     super.key,
-
-    // These are the variables passed when creating a ProductCard
-    required this.name, // Product name (e.g., "AirPods Pro")
-    required this.imagePaths, // List of local asset image paths
-    required this.price, // Discounted price (e.g., 199)
-    required this.originalPrice, // Original price (e.g., 249)
-    required this.rating, // Product rating out of 5 (e.g., 4.5)
-    required this.reviewCount, // Number of reviews (e.g., 120)
+    required this.name,
+    required this.imagePaths,
+    required this.price,
+    required this.originalPrice,
+    required this.rating,
+    required this.reviewCount,
   });
 
-  // final ProductEntity productEntity;  <-- This comment is now restored!
-
-  // Fields to hold the values received from the constructor
   final String name;
-  final List<String> imagePaths; // <-- Now receives a list of asset image paths
+  final List<String> imagePaths;
   final double price;
   final double originalPrice;
   final double rating;
@@ -26,10 +20,7 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Calculate number of full stars from rating
     int fullStars = rating.floor();
-
-    // Check if there's a half star (e.g., 4.5 has a half star)
     bool hasHalfStar = (rating - fullStars) >= 0.5;
 
     return Container(
@@ -41,36 +32,37 @@ class ProductCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Stack: Image + Favorite Icon
+          // Stack with product image and favorite icon
           SizedBox(
             height: 180,
             child: Stack(
               children: [
-                // Product Image Slider (using PageView)
-                Center(
-                  child: SizedBox(
-                    height: 170, // Fixed height for image area
-                    child: PageView.builder(
-                      itemCount: imagePaths.length, // Number of images
-                      itemBuilder: (context, index) {
-                        return Image.asset(
-                          imagePaths[index], // Show image at current index
-                          fit: BoxFit.contain,
-                        );
-                      },
-                    ),
+                // Image carousel
+                SizedBox(
+                  height: 170,
+                  width: double.infinity,
+                  child: PageView.builder(
+                    itemCount: imagePaths.length,
+                    itemBuilder: (context, index) {
+                      return Image.asset(
+                        imagePaths[index],
+                        fit: BoxFit.contain,
+                      );
+                    },
                   ),
                 ),
 
-                // Favorite Icon (top right of image)
-                Positioned(
-                  top: 0,
-                  right: -4,
-                  child: IconButton(
-                    icon: const Icon(Icons.favorite_border),
-                    onPressed: () {
-                      // Add to wishlist logic
-                    },
+                // Favorite icon top right
+                Align(
+                  alignment: Alignment.topRight,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 4.0),
+                    child: IconButton(
+                      icon: const Icon(Icons.favorite_border),
+                      onPressed: () {
+                        // Wishlist logic
+                      },
+                    ),
                   ),
                 ),
               ],
@@ -78,9 +70,9 @@ class ProductCard extends StatelessWidget {
           ),
           const SizedBox(height: 8),
 
-          // Product Name
+          // Product name
           Text(
-            name, // Use the name passed from constructor
+            name,
             style: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w600,
@@ -90,11 +82,11 @@ class ProductCard extends StatelessWidget {
           ),
           const SizedBox(height: 6),
 
-          // Price and Original Price
+          // Price row
           Row(
             children: [
               Text(
-                '\$${price.toStringAsFixed(2)}', // Show dynamic price
+                '\$${price.toStringAsFixed(2)}',
                 style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
@@ -103,7 +95,7 @@ class ProductCard extends StatelessWidget {
               ),
               const SizedBox(width: 10),
               Text(
-                '\$${originalPrice.toStringAsFixed(2)}', // Show original price with strikethrough
+                '\$${originalPrice.toStringAsFixed(2)}',
                 style: const TextStyle(
                   fontSize: 14,
                   color: Colors.grey,
@@ -113,22 +105,21 @@ class ProductCard extends StatelessWidget {
             ],
           ),
 
-          // Rating & Reviews and Plus Button aligned horizontally
+          // Rating and plus button
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Stars + Reviews
               Row(
                 children: [
-                  // Loop to display full stars
+                  // Full stars
                   for (int i = 0; i < fullStars; i++)
                     const Icon(Icons.star, color: Colors.amber, size: 16),
 
-                  // Show a half star if needed
+                  // Half star
                   if (hasHalfStar)
                     const Icon(Icons.star_half, color: Colors.amber, size: 16),
 
-                  // Show remaining empty stars to make total 5
+                  // Empty stars
                   for (int i = 0;
                       i < (5 - fullStars - (hasHalfStar ? 1 : 0));
                       i++)
@@ -137,7 +128,7 @@ class ProductCard extends StatelessWidget {
 
                   const SizedBox(width: 4),
 
-                  // Show number of reviews
+                  // Review count
                   Text(
                     '($reviewCount)',
                     style: const TextStyle(
@@ -148,7 +139,7 @@ class ProductCard extends StatelessWidget {
                 ],
               ),
 
-              // Plus Button
+              // Plus button
               CircleAvatar(
                 radius: 17,
                 backgroundColor: Colors.black,
