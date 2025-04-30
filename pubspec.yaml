@@ -99,6 +99,10 @@ flutter:
   - assets/Categories/VideoGames/
   - assets/Categories/Toys/
   - assets/Categories/
+  - assets/Categories/VideoGames/products/ps5/
+  - assets/Categories/VideoGames/products/ps5controller/
+  - assets/Categories/VideoGames/products/games/
+  - assets/Categories/VideoGames/products/headset/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 
