@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pickpay/constants.dart';
 import 'package:pickpay/core/widgets/custom_app.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product1.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product2.dart';
 import 'package:pickpay/features/categories_pages/widgets/product_card.dart';
 
 class ElectronicsViewBody extends StatelessWidget {
@@ -24,6 +26,12 @@ class ElectronicsViewBody extends StatelessWidget {
             originalPrice: 1199.99,
             rating: 4.9,
             reviewCount: 1893,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const Product1View()),
+              );
+            },
           ),
           SizedBox(height: 10),
           ProductCard(
@@ -35,6 +43,12 @@ class ElectronicsViewBody extends StatelessWidget {
             originalPrice: 1299.00,
             rating: 4.8,
             reviewCount: 2762,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const Product2View()),
+              );
+            },
           ),
           SizedBox(height: 10),
           ProductCard(

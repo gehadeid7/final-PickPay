@@ -3,7 +3,7 @@ import 'package:pickpay/core/utils/app_text_styles.dart';
 
 AppBar buildAppBar({required BuildContext context, required String title}) {
   return AppBar(
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.transparent,
     leading: GestureDetector(
       onTap: () {
         Navigator.pop(context);
