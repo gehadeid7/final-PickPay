@@ -26,6 +26,12 @@ class Product2View extends StatelessWidget {
       manufacturer: "Apple",
       description:
           "The iPhone 15 Pro Max features a 48MP main camera, A17 Pro chip, and a 6.7-inch Super Retina display.",
+      deliveryDate: 'Monday, 10 March',
+      deliveryTimeLeft: '18hrs 20 mins',
+      deliveryLocation: 'Egypt',
+      inStock: true,
+      shipsFrom: 'Pickpay ',
+      soldBy: 'Pickpay Official',
     );
 
     return ProductDetailView(product: product);

@@ -1,3 +1,5 @@
+// lib/features/categories_pages/models/product_model.dart
+
 class ProductsViewsModel {
   final String name;
   final List<String> imagePaths;
@@ -16,6 +18,12 @@ class ProductsViewsModel {
   final String powerSource;
   final String manufacturer;
   final String description;
+  final String deliveryDate;
+  final String deliveryTimeLeft;
+  final String deliveryLocation;
+  final bool inStock;
+  final String shipsFrom;
+  final String soldBy;
 
   ProductsViewsModel({
     required this.name,
@@ -35,5 +43,70 @@ class ProductsViewsModel {
     required this.powerSource,
     required this.manufacturer,
     required this.description,
+    required this.deliveryDate,
+    required this.deliveryTimeLeft,
+    required this.deliveryLocation,
+    required this.inStock,
+    required this.shipsFrom,
+    required this.soldBy,
   });
+
+// for backend
+  // From JSON data to ProductsViewsModel object
+  factory ProductsViewsModel.fromJson(Map<String, dynamic> json) {
+    return ProductsViewsModel(
+      name: json['name'],
+      imagePaths: List<String>.from(json['imagePaths']),
+      price: json['price'],
+      originalPrice: json['originalPrice'],
+      rating: json['rating'],
+      reviewCount: json['reviewCount'],
+      brand: json['brand'],
+      color: json['color'],
+      material: json['material'],
+      dimensions: json['dimensions'],
+      style: json['style'],
+      installationType: json['installationType'],
+      accessLocation: json['accessLocation'],
+      settingsCount: json['settingsCount'],
+      powerSource: json['powerSource'],
+      manufacturer: json['manufacturer'],
+      description: json['description'],
+      deliveryDate: json['deliveryDate'],
+      deliveryTimeLeft: json['deliveryTimeLeft'],
+      deliveryLocation: json['deliveryLocation'],
+      inStock: json['inStock'],
+      shipsFrom: json['shipsFrom'],
+      soldBy: json['soldBy'],
+    );
+  }
+
+  // To JSON to send data to the backend (if needed)
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'imagePaths': imagePaths,
+      'price': price,
+      'originalPrice': originalPrice,
+      'rating': rating,
+      'reviewCount': reviewCount,
+      'brand': brand,
+      'color': color,
+      'material': material,
+      'dimensions': dimensions,
+      'style': style,
+      'installationType': installationType,
+      'accessLocation': accessLocation,
+      'settingsCount': settingsCount,
+      'powerSource': powerSource,
+      'manufacturer': manufacturer,
+      'description': description,
+      'deliveryDate': deliveryDate,
+      'deliveryTimeLeft': deliveryTimeLeft,
+      'deliveryLocation': deliveryLocation,
+      'inStock': inStock,
+      'shipsFrom': shipsFrom,
+      'soldBy': soldBy,
+    };
+  }
 }

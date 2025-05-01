@@ -3,6 +3,11 @@ import 'package:pickpay/constants.dart';
 import 'package:pickpay/core/widgets/custom_app.dart';
 import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product1.dart';
 import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product2.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product3.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product4.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product5.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product6.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product7.dart';
 import 'package:pickpay/features/categories_pages/widgets/product_card.dart';
 
 class ElectronicsViewBody extends StatelessWidget {
@@ -16,6 +21,7 @@ class ElectronicsViewBody extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         children: [
           SizedBox(height: kTopPadding),
+          // product 1
           ProductCard(
             name: 'Samsung Galaxy S23 Ultra',
             imagePaths: [
@@ -34,6 +40,9 @@ class ElectronicsViewBody extends StatelessWidget {
             },
           ),
           SizedBox(height: 10),
+
+          // product 2
+
           ProductCard(
             name: 'Apple iPhone 15 Pro Max',
             imagePaths: [
@@ -51,6 +60,9 @@ class ElectronicsViewBody extends StatelessWidget {
             },
           ),
           SizedBox(height: 10),
+
+          // product 3
+
           ProductCard(
             name: 'Samsung 55-Inch QLED 4K Smart TV',
             imagePaths: [
@@ -60,8 +72,17 @@ class ElectronicsViewBody extends StatelessWidget {
             originalPrice: 899.99,
             rating: 4.7,
             reviewCount: 1542,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const Product3View()),
+              );
+            },
           ),
           SizedBox(height: 10),
+
+          // product 4
+
           ProductCard(
             name: 'Sony WH-1000XM5 Wireless Headphones',
             imagePaths: [
@@ -71,8 +92,16 @@ class ElectronicsViewBody extends StatelessWidget {
             originalPrice: 399.99,
             rating: 4.9,
             reviewCount: 3120,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const Product4View()),
+              );
+            },
           ),
           SizedBox(height: 10),
+
+          // product 5
           ProductCard(
             name: 'Apple MacBook Air M2',
             imagePaths: [
@@ -82,8 +111,15 @@ class ElectronicsViewBody extends StatelessWidget {
             originalPrice: 1299.00,
             rating: 4.8,
             reviewCount: 2123,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const Product5View()),
+              );
+            },
           ),
           SizedBox(height: 10),
+          // product 6
           ProductCard(
             name: 'Lenovo IdeaPad 3 Laptop',
             imagePaths: [
@@ -93,8 +129,16 @@ class ElectronicsViewBody extends StatelessWidget {
             originalPrice: 549.00,
             rating: 4.5,
             reviewCount: 954,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const Product6View()),
+              );
+            },
           ),
           SizedBox(height: 10),
+
+          // product 7
           ProductCard(
             name: 'ASUS ROG Strix Gaming Laptop',
             imagePaths: [
@@ -104,8 +148,16 @@ class ElectronicsViewBody extends StatelessWidget {
             originalPrice: 1599.00,
             rating: 4.7,
             reviewCount: 1288,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const Product7View()),
+              );
+            },
           ),
           SizedBox(height: 10),
+
+          // product 8
           ProductCard(
             name: 'Canon EOS R50 Mirrorless Camera',
             imagePaths: [
@@ -117,6 +169,8 @@ class ElectronicsViewBody extends StatelessWidget {
             reviewCount: 884,
           ),
           SizedBox(height: 10),
+
+          // product 9
           ProductCard(
             name: 'DJI Mini 3 Pro Drone with Camera',
             imagePaths: [
@@ -128,6 +182,8 @@ class ElectronicsViewBody extends StatelessWidget {
             reviewCount: 1193,
           ),
           SizedBox(height: 10),
+
+          // product 10
           ProductCard(
             name: 'Amazon Echo Dot (5th Gen)',
             imagePaths: [
@@ -139,6 +195,7 @@ class ElectronicsViewBody extends StatelessWidget {
             reviewCount: 4576,
           ),
           SizedBox(height: 10),
+          // product 11
           ProductCard(
             name: 'Xiaomi Smart Air Purifier 4',
             imagePaths: [
@@ -150,6 +207,7 @@ class ElectronicsViewBody extends StatelessWidget {
             reviewCount: 674,
           ),
           SizedBox(height: 10),
+          // product 12
           ProductCard(
             name: 'Anker PowerCore Portable Charger 20,000mAh',
             imagePaths: [
@@ -161,6 +219,7 @@ class ElectronicsViewBody extends StatelessWidget {
             reviewCount: 2285,
           ),
           SizedBox(height: 10),
+          // product 13
           ProductCard(
             name: 'Logitech MX Master 3 Wireless Mouse',
             imagePaths: [
@@ -172,6 +231,7 @@ class ElectronicsViewBody extends StatelessWidget {
             reviewCount: 1439,
           ),
           SizedBox(height: 10),
+          // product 14
           ProductCard(
             name: 'TP-Link AC1900 Smart WiFi Router',
             imagePaths: [
@@ -183,6 +243,7 @@ class ElectronicsViewBody extends StatelessWidget {
             reviewCount: 1162,
           ),
           SizedBox(height: 10),
+          // product 15
           ProductCard(
             name: 'Google Chromecast with Google TV',
             imagePaths: [

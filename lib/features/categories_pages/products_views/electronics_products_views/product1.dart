@@ -29,6 +29,12 @@ class Product1View extends StatelessWidget {
       manufacturer: 'Samsung',
       description:
           'The Galaxy S23 Ultra features a 200MP main camera, Snapdragon 8 Gen 2, and a 6.8-inch QHD+ AMOLED display with S Pen support.',
+      deliveryDate: 'Sunday, 9 March',
+      deliveryTimeLeft: '20hrs 36 mins',
+      deliveryLocation: 'Egypt',
+      inStock: true,
+      shipsFrom: 'Pickpay Warehouse',
+      soldBy: 'Pickpay Official',
     );
 
     return ProductDetailView(product: product);
