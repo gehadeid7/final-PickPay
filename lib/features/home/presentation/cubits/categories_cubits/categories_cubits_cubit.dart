@@ -27,9 +27,6 @@ class CategoriesCubit extends Cubit<CategoriesState> {
         CategoryModel(
             name: 'Video Games',
             image: 'assets/Categories/VideoGames/videogames.png'),
-        CategoryModel(
-            name: 'Toys & Games',
-            image: 'assets/Categories/VideoGames/videogames.png'),
       ];
 
       emit(CategoriesLoaded(categories));

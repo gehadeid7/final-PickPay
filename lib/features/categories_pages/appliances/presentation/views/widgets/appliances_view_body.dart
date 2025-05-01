@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pickpay/constants.dart';
+import 'package:pickpay/core/widgets/custom_app.dart';
 import 'package:pickpay/features/categories_pages/widgets/product_card.dart';
 
 class AppliancesViewBody extends StatelessWidget {
@@ -7,9 +8,10 @@ class AppliancesViewBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: ListView(
+    return Scaffold(
+      appBar: buildAppBar(context: context, title: 'Appliances'),
+      body: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         children: [
           SizedBox(height: kTopPadding),
           ProductCard(

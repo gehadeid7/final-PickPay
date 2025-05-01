@@ -8,12 +8,12 @@ class VideogamesViewBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: ListView(
+    return Scaffold(
+      appBar: buildAppBar(context: context, title: 'Video Games'),
+      body: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         children: [
           SizedBox(height: kTopPadding),
-          buildAppBar(context: context, title: 'Video Games'),
           ProductCard(
             name: 'Sony PlayStation 5 SLIM Disc',
             imagePaths: [
@@ -26,9 +26,7 @@ class VideogamesViewBody extends StatelessWidget {
             rating: 4.8,
             reviewCount: 2571,
           ),
-          SizedBox(
-            height: 10,
-          ),
+          SizedBox(height: 10),
           ProductCard(
             name: 'Sony DualSense Wireless Controller for PlayStation 5',
             imagePaths: [
@@ -40,9 +38,7 @@ class VideogamesViewBody extends StatelessWidget {
             rating: 4.7,
             reviewCount: 3538,
           ),
-          SizedBox(
-            height: 10,
-          ),
+          SizedBox(height: 10),
           ProductCard(
             name:
                 'Sony DualSense Wireless Controller for PlayStation 5 (Black)',
@@ -54,9 +50,7 @@ class VideogamesViewBody extends StatelessWidget {
             rating: 4.7,
             reviewCount: 3538,
           ),
-          SizedBox(
-            height: 10,
-          ),
+          SizedBox(height: 10),
           ProductCard(
             name: 'The Last of Us Part I - PlayStation 5',
             imagePaths: [
@@ -68,9 +62,7 @@ class VideogamesViewBody extends StatelessWidget {
             rating: 4.9,
             reviewCount: 814,
           ),
-          SizedBox(
-            height: 10,
-          ),
+          SizedBox(height: 10),
           ProductCard(
             name: 'Call of Duty: Modern Warfare II - Xbox Series X',
             imagePaths: [
@@ -82,9 +74,7 @@ class VideogamesViewBody extends StatelessWidget {
             rating: 4.4,
             reviewCount: 557,
           ),
-          SizedBox(
-            height: 10,
-          ),
+          SizedBox(height: 10),
           ProductCard(
             name: 'Gaming Headset for PS4, PS5, Xbox One, Switch & PC',
             imagePaths: [
@@ -96,6 +86,124 @@ class VideogamesViewBody extends StatelessWidget {
             rating: 4.2,
             reviewCount: 698,
           ),
+          SizedBox(height: 10),
+          ProductCard(
+            name: 'Sony PlayStation 5 SLIM Disc',
+            imagePaths: [
+              'assets/Categories/VideoGames/products/ps5/ps5.png',
+              'assets/Categories/VideoGames/products/ps5/ps52.png',
+              'assets/Categories/VideoGames/products/ps5/ps53.png',
+            ],
+            price: 449.99,
+            originalPrice: 499.99,
+            rating: 4.8,
+            reviewCount: 2571,
+          ),
+          SizedBox(height: 10),
+          ProductCard(
+            name: 'Sony PlayStation 5 SLIM Disc',
+            imagePaths: [
+              'assets/Categories/VideoGames/products/ps5/ps5.png',
+              'assets/Categories/VideoGames/products/ps5/ps52.png',
+              'assets/Categories/VideoGames/products/ps5/ps53.png',
+            ],
+            price: 449.99,
+            originalPrice: 499.99,
+            rating: 4.8,
+            reviewCount: 2571,
+          ),
+          SizedBox(height: 10),
+          ProductCard(
+            name: 'Sony PlayStation 5 SLIM Disc',
+            imagePaths: [
+              'assets/Categories/VideoGames/products/ps5/ps5.png',
+              'assets/Categories/VideoGames/products/ps5/ps52.png',
+              'assets/Categories/VideoGames/products/ps5/ps53.png',
+            ],
+            price: 449.99,
+            originalPrice: 499.99,
+            rating: 4.8,
+            reviewCount: 2571,
+          ),
+          SizedBox(height: 10),
+          ProductCard(
+            name: 'Sony PlayStation 5 SLIM Disc',
+            imagePaths: [
+              'assets/Categories/VideoGames/products/ps5/ps5.png',
+              'assets/Categories/VideoGames/products/ps5/ps52.png',
+              'assets/Categories/VideoGames/products/ps5/ps53.png',
+            ],
+            price: 449.99,
+            originalPrice: 499.99,
+            rating: 4.8,
+            reviewCount: 2571,
+          ),
+          SizedBox(height: 10),
+          ProductCard(
+            name: 'Sony PlayStation 5 SLIM Disc',
+            imagePaths: [
+              'assets/Categories/VideoGames/products/ps5/ps5.png',
+              'assets/Categories/VideoGames/products/ps5/ps52.png',
+              'assets/Categories/VideoGames/products/ps5/ps53.png',
+            ],
+            price: 449.99,
+            originalPrice: 499.99,
+            rating: 4.8,
+            reviewCount: 2571,
+          ),
+          SizedBox(height: 10),
+          ProductCard(
+            name: 'Sony PlayStation 5 SLIM Disc',
+            imagePaths: [
+              'assets/Categories/VideoGames/products/ps5/ps5.png',
+              'assets/Categories/VideoGames/products/ps5/ps52.png',
+              'assets/Categories/VideoGames/products/ps5/ps53.png',
+            ],
+            price: 449.99,
+            originalPrice: 499.99,
+            rating: 4.8,
+            reviewCount: 2571,
+          ),
+          SizedBox(height: 10),
+          ProductCard(
+            name: 'Sony PlayStation 5 SLIM Disc',
+            imagePaths: [
+              'assets/Categories/VideoGames/products/ps5/ps5.png',
+              'assets/Categories/VideoGames/products/ps5/ps52.png',
+              'assets/Categories/VideoGames/products/ps5/ps53.png',
+            ],
+            price: 449.99,
+            originalPrice: 499.99,
+            rating: 4.8,
+            reviewCount: 2571,
+          ),
+          SizedBox(height: 10),
+          ProductCard(
+            name: 'Sony PlayStation 5 SLIM Disc',
+            imagePaths: [
+              'assets/Categories/VideoGames/products/ps5/ps5.png',
+              'assets/Categories/VideoGames/products/ps5/ps52.png',
+              'assets/Categories/VideoGames/products/ps5/ps53.png',
+            ],
+            price: 449.99,
+            originalPrice: 499.99,
+            rating: 4.8,
+            reviewCount: 2571,
+          ),
+          SizedBox(height: 10),
+          ProductCard(
+            name: 'Sony PlayStation 5 SLIM Disc',
+            imagePaths: [
+              'assets/Categories/VideoGames/products/ps5/ps5.png',
+              'assets/Categories/VideoGames/products/ps5/ps52.png',
+              'assets/Categories/VideoGames/products/ps5/ps53.png',
+            ],
+            price: 449.99,
+            originalPrice: 499.99,
+            rating: 4.8,
+            reviewCount: 2571,
+          ),
+          SizedBox(height: 10),
         ],
       ),
     );

@@ -5,7 +5,6 @@ import 'package:pickpay/features/categories_pages/electronics/presentation/views
 import 'package:pickpay/features/categories_pages/fashion/presentation/views/fashion_view.dart';
 import 'package:pickpay/features/categories_pages/homeCategory/presentation/views/home_category_view.dart';
 import 'package:pickpay/features/categories_pages/todayIsSale/presentation/views/sale_view.dart';
-import 'package:pickpay/features/categories_pages/toyes&games/presentation/views/toyes_view.dart';
 import 'package:pickpay/features/categories_pages/videogames/presentation/views/videogames_view.dart';
 
 void navigateToCategory(BuildContext context, String category) {
@@ -29,8 +28,7 @@ Widget _getCategoryPage(String category) {
       return const FashionView();
     case 'beauty':
       return const BeautyView();
-    case 'toys & games':
-      return const ToysView();
+
     case 'video games':
       return const VideogamesView();
     default:

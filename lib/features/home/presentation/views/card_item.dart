@@ -22,73 +22,23 @@ class CardItem extends StatelessWidget {
           Expanded(
             child: Stack(
               children: [
-                // Product Image
-                // productEntity.imageUrl != null
-                // ?
                 Center(
-                  child: Flexible(
-                    child: Image.asset(
-                      'assets/Categories/Electronics/iPhone.png',
-                      height: 130,
-                      fit: BoxFit.contain,
-                    ),
+                  child: Image.asset(
+                    'assets/Categories/Electronics/iPhone.png',
+                    height: 130,
+                    fit: BoxFit.contain,
                   ),
                 ),
-                // :
-                // Container(
-                //     color: Colors.grey,
-                //     height: 100,
-                //     width: 100,
-                //   ),
-                // Favorite Icon (top right of image)
                 Positioned(
                   top: 0,
                   right: -4,
                   child: IconButton(
                     icon: const Icon(Icons.favorite_border),
-                    onPressed: () {
-                      // Add to wishlist logic
-                    },
+                    onPressed: () {},
                   ),
                 ),
               ],
             ),
-          ),
-          const SizedBox(height: 8),
-
-          // Product Name
-          const Text(
-            'AirPods Pro 2nd Gen',
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-            ),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-          const SizedBox(height: 6),
-
-          // Price and Original Price
-          const Row(
-            children: [
-              Text(
-                '\$199',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.green,
-                ),
-              ),
-              SizedBox(width: 10),
-              Text(
-                '\$249',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey,
-                  decoration: TextDecoration.lineThrough,
-                ),
-              ),
-            ],
           ),
 
           // Rating & Reviews and Plus Button aligned horizontally
