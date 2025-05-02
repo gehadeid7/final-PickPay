@@ -49,7 +49,7 @@ class _ProductDetailViewState extends State<ProductDetailView> {
                       itemBuilder: (context, index) {
                         return Image.asset(
                           product.imagePaths[index],
-                          fit: BoxFit.cover,
+                          fit: BoxFit.contain,
                         );
                       },
                     ),

@@ -1,6 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:pickpay/constants.dart';
 import 'package:pickpay/core/widgets/custom_app.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product1.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product10.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product11.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product12.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product13.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product14.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product15.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product2.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product3.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product4.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product5.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product6.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product7.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product8.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product9.dart';
 import 'package:pickpay/features/categories_pages/widgets/product_card.dart';
 
 class AppliancesViewBody extends StatelessWidget {
@@ -27,6 +42,13 @@ class AppliancesViewBody extends StatelessWidget {
             originalPrice: 11999,
             rating: 4.9,
             reviewCount: 1893,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const AppliancesProduct1()),
+              );
+            },
           ),
           SizedBox(height: 10),
           // product 2
@@ -39,6 +61,13 @@ class AppliancesViewBody extends StatelessWidget {
             originalPrice: 1299.00,
             rating: 4.8,
             reviewCount: 2762,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const AppliancesProduct2()),
+              );
+            },
           ),
           SizedBox(height: 10),
 
@@ -55,6 +84,13 @@ class AppliancesViewBody extends StatelessWidget {
             originalPrice: 28000,
             rating: 4.7,
             reviewCount: 1542,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const AppliancesProduct3()),
+              );
+            },
           ),
           SizedBox(height: 10),
 
@@ -69,6 +105,13 @@ class AppliancesViewBody extends StatelessWidget {
             originalPrice: 19000,
             rating: 4.9,
             reviewCount: 3120,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const AppliancesProduct4()),
+              );
+            },
           ),
           SizedBox(height: 10),
 
@@ -86,6 +129,13 @@ class AppliancesViewBody extends StatelessWidget {
             originalPrice: 16000,
             rating: 4.8,
             reviewCount: 2123,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const AppliancesProduct5()),
+              );
+            },
           ),
           SizedBox(height: 10),
 
@@ -102,6 +152,13 @@ class AppliancesViewBody extends StatelessWidget {
             originalPrice: 4000,
             rating: 4.5,
             reviewCount: 954,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const AppliancesProduct6()),
+              );
+            },
           ),
           SizedBox(height: 10),
 
@@ -117,6 +174,13 @@ class AppliancesViewBody extends StatelessWidget {
             originalPrice: 1200,
             rating: 4.7,
             reviewCount: 1288,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const AppliancesProduct7()),
+              );
+            },
           ),
           SizedBox(height: 10),
 
@@ -133,6 +197,13 @@ class AppliancesViewBody extends StatelessWidget {
             originalPrice: 2760,
             rating: 4.6,
             reviewCount: 884,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const AppliancesProduct8()),
+              );
+            },
           ),
           SizedBox(height: 10),
 
@@ -147,6 +218,13 @@ class AppliancesViewBody extends StatelessWidget {
             originalPrice: 11000,
             rating: 4.8,
             reviewCount: 1193,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const AppliancesProduct9()),
+              );
+            },
           ),
           SizedBox(height: 10),
 
@@ -160,6 +238,13 @@ class AppliancesViewBody extends StatelessWidget {
             originalPrice: 3100,
             rating: 4.6,
             reviewCount: 4576,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const AppliancesProduct10()),
+              );
+            },
           ),
           SizedBox(height: 10),
 
@@ -174,6 +259,13 @@ class AppliancesViewBody extends StatelessWidget {
             originalPrice: 4200,
             rating: 4.4,
             reviewCount: 674,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const AppliancesProduct11()),
+              );
+            },
           ),
           SizedBox(height: 10),
 
@@ -189,6 +281,13 @@ class AppliancesViewBody extends StatelessWidget {
             originalPrice: 3900,
             rating: 4.8,
             reviewCount: 2285,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const AppliancesProduct12()),
+              );
+            },
           ),
           SizedBox(height: 10),
 
@@ -207,6 +306,13 @@ class AppliancesViewBody extends StatelessWidget {
             originalPrice: 1450,
             rating: 4.9,
             reviewCount: 1439,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const AppliancesProduct13()),
+              );
+            },
           ),
           SizedBox(height: 10),
 
@@ -226,6 +332,13 @@ class AppliancesViewBody extends StatelessWidget {
             originalPrice: 1730,
             rating: 4.5,
             reviewCount: 1162,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const AppliancesProduct14()),
+              );
+            },
           ),
           SizedBox(height: 10),
 
@@ -242,6 +355,13 @@ class AppliancesViewBody extends StatelessWidget {
             originalPrice: 6978,
             rating: 4.6,
             reviewCount: 1735,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const AppliancesProduct15()),
+              );
+            },
           ),
           SizedBox(height: 20),
         ],
