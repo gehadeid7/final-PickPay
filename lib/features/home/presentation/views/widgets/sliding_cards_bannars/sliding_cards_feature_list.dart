@@ -24,7 +24,7 @@ class SlidingFeaturedList extends StatelessWidget {
     ];
 
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.symmetric(vertical: 10),
       child: CarouselSlider.builder(
         itemCount: featuredItems.length,
         itemBuilder: (context, index, realIndex) {

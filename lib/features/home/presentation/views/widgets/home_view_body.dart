@@ -53,7 +53,7 @@ class _HomeViewBodyState extends State<HomeViewBody> {
         SizedBox(height: 12),
         ElectronicsHeader(),
         SizedBox(height: 12),
-        ElectronicsGridView(products: []),
+        ElectronicsGridView(),
         SizedBox(height: 12),
         AppliancesHeader(),
         SizedBox(height: 12),
