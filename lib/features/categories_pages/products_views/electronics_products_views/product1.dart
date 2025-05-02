@@ -8,11 +8,12 @@ class Product1View extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      name: 'Samsung Galaxy S23 Ultra',
+      title: 'Samsung Galaxy S23 Ultra',
       imagePaths: [
         'assets/Categories/Electronics/samsung_galaxys23ultra.png',
         'assets/Categories/Electronics/samsung_galaxys23ultra.png',
       ],
+      category: 'Electronics',
       price: 999.99,
       originalPrice: 1199.99,
       rating: 4.9,

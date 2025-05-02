@@ -26,7 +26,7 @@ class _ProductDetailViewState extends State<ProductDetailView> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0.5,
-        title: Text(product.name, style: TextStyles.bold16),
+        title: Text(product.title, style: TextStyles.bold16),
         centerTitle: true,
         iconTheme: const IconThemeData(color: Colors.black),
       ),
@@ -117,6 +117,8 @@ class _ProductDetailViewState extends State<ProductDetailView> {
                   child: Column(
                     children: [
                       _ProductFeatureRow(label: "Brand", value: product.brand),
+                      _ProductFeatureRow(
+                          label: "Category", value: product.category),
                       _ProductFeatureRow(label: "Color", value: product.color),
                       _ProductFeatureRow(
                           label: "Material", value: product.material),

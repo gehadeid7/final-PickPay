@@ -1,14 +1,16 @@
 // lib/features/categories_pages/models/product_model.dart
 
 class ProductsViewsModel {
-  final String name;
-  final List<String> imagePaths;
+  final String title;
   final double price;
+  final String brand;
+  final String category;
+  final List<String> imagePaths;
   final double originalPrice;
   final double rating;
   final int reviewCount;
-  final String brand;
   final String color;
+
   final String material;
   final String dimensions;
   final String style;
@@ -26,7 +28,8 @@ class ProductsViewsModel {
   final String soldBy;
 
   ProductsViewsModel({
-    required this.name,
+    required this.category,
+    required this.title,
     required this.imagePaths,
     required this.price,
     required this.originalPrice,
@@ -51,11 +54,10 @@ class ProductsViewsModel {
     required this.soldBy,
   });
 
-// for backend
-  // From JSON data to ProductsViewsModel object
   factory ProductsViewsModel.fromJson(Map<String, dynamic> json) {
     return ProductsViewsModel(
-      name: json['name'],
+      category: json['Electronics'],
+      title: json['name'],
       imagePaths: List<String>.from(json['imagePaths']),
       price: json['price'],
       originalPrice: json['originalPrice'],
@@ -81,10 +83,10 @@ class ProductsViewsModel {
     );
   }
 
-  // To JSON to send data to the backend (if needed)
   Map<String, dynamic> toJson() {
     return {
-      'name': name,
+      'category': category,
+      'name': title,
       'imagePaths': imagePaths,
       'price': price,
       'originalPrice': originalPrice,

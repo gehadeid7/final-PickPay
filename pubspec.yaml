@@ -102,6 +102,21 @@ flutter:
   - assets/Categories/VideoGames/products/ps5controller/
   - assets/Categories/VideoGames/products/games/
   - assets/Categories/VideoGames/products/headset/
+  - assets/appliances/product1/
+  - assets/appliances/product2/
+  - assets/appliances/product3/
+  - assets/appliances/product4/
+  - assets/appliances/product5/
+  - assets/appliances/product6/
+  - assets/appliances/product7/
+  - assets/appliances/product8/
+  - assets/appliances/product9/
+  - assets/appliances/product10/
+  - assets/appliances/product11/
+  - assets/appliances/product12/
+  - assets/appliances/product13/
+  - assets/appliances/product14/
+  - assets/appliances/product15/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 
