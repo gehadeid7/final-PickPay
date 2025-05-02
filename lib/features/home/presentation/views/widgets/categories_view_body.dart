@@ -29,7 +29,7 @@ class CategoriesViewBody extends StatelessWidget {
                   padding: const EdgeInsets.all(16),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
-                    childAspectRatio: 1,
+                    childAspectRatio: .8,
                     crossAxisSpacing: 16,
                     mainAxisSpacing: 16,
                   ),

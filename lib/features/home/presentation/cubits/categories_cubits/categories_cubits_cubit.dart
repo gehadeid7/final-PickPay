@@ -10,9 +10,6 @@ class CategoriesCubit extends Cubit<CategoriesState> {
     try {
       final categories = [
         CategoryModel(
-            name: "Today's Sale",
-            image: 'assets/Categories/Electronics/iPhone.png'),
-        CategoryModel(
             name: 'Electronics',
             image: 'assets/Categories/Electronics/iPhone.png'),
         CategoryModel(
@@ -26,7 +23,7 @@ class CategoriesCubit extends Cubit<CategoriesState> {
             name: 'Beauty', image: 'assets/Categories/Beauty/makeup.png'),
         CategoryModel(
             name: 'Video Games',
-            image: 'assets/Categories/VideoGames/videogames.png'),
+            image: 'assets/Categories/VideoGames/products/ps5/ps52.png'),
       ];
 
       emit(CategoriesLoaded(categories));
