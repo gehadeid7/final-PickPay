@@ -117,6 +117,26 @@ flutter:
   - assets/appliances/product13/
   - assets/appliances/product14/
   - assets/appliances/product15/
+  - assets/beauty_products/fragrance_1/
+  - assets/beauty_products/fragrance_2/
+  - assets/beauty_products/fragrance_3/
+  - assets/beauty_products/fragrance_4/
+  - assets/beauty_products/fragrance_5/
+  - assets/beauty_products/haircare_1/
+  - assets/beauty_products/haircare_2/
+  - assets/beauty_products/haircare_3/
+  - assets/beauty_products/haircare_4/
+  - assets/beauty_products/haircare_5/
+  - assets/beauty_products/makeup_1/
+  - assets/beauty_products/makeup_2/
+  - assets/beauty_products/makeup_3/
+  - assets/beauty_products/makeup_4/
+  - assets/beauty_products/makeup_5/
+  - assets/beauty_products/skincare_1/
+  - assets/beauty_products/skincare_2/
+  - assets/beauty_products/skincare_3/
+  - assets/beauty_products/skincare_4/
+  - assets/beauty_products/skincare_5/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 
