@@ -340,15 +340,3 @@ class _InfoCard extends StatelessWidget {
     );
   }
 }
-
-CartItemModel _convertToCartItemModel(ProductsViewsModel product) {
-  return CartItemModel(
-    id: product.id,
-    title: product.title ?? '',
-    price: product.price ?? 0,
-    imagePath: product.imagePaths != null && product.imagePaths!.isNotEmpty
-        ? product.imagePaths!.first
-        : '',
-    quantity: 1,
-  );
-}
