@@ -61,18 +61,6 @@ class ProductCard extends StatelessWidget {
                       },
                     ),
                   ),
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 4.0),
-                      child: IconButton(
-                        icon: const Icon(Icons.favorite_border),
-                        onPressed: () {
-                          // Wishlist logic
-                        },
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),
@@ -133,17 +121,17 @@ class ProductCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                CircleAvatar(
-                  radius: 17,
-                  backgroundColor: Colors.black,
-                  child: IconButton(
-                    icon: const Icon(Icons.add, color: Colors.white, size: 23),
-                    padding: EdgeInsets.zero,
-                    onPressed: () {
-                      // Add to cart logic
-                    },
-                  ),
-                ),
+                // CircleAvatar(
+                //   radius: 17,
+                //   backgroundColor: Colors.black,
+                //   child: IconButton(
+                //     icon: const Icon(Icons.add, color: Colors.white, size: 23),
+                //     padding: EdgeInsets.zero,
+                //     onPressed: () {
+                //       // Add to cart logic
+                //     },
+                //   ),
+                // ),
               ],
             ),
           ],
