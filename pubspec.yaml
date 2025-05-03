@@ -162,11 +162,11 @@ flutter:
   - assets/electronics_products/mobile_and_tablet/mobile_and_tablet3/
   - assets/electronics_products/mobile_and_tablet/mobile_and_tablet4/
   - assets/electronics_products/mobile_and_tablet/mobile_and_tablet5/
-  - assets/electronics_products\tvs/tv1/
-  - assets/electronics_products\tvs/tv2/
-  - assets/electronics_products\tvs/tv3/
-  - assets/electronics_products\tvs/tv4/
-  - assets/electronics_products\tvs/tv5/
+  # - assets/electronics_products\tvs/tv1/
+  # - assets/electronics_products\tvs/tv2/
+  # - assets/electronics_products\tvs/tv3/
+  # - assets/electronics_products\tvs/tv4/
+  # - assets/electronics_products\tvs/tv5/
   - assets/Home_products/bath_and_bedding/bath1/
   - assets/Home_products/bath_and_bedding/bath2/
   - assets/Home_products/bath_and_bedding/bath3/

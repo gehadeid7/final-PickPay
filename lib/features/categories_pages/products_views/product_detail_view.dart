@@ -27,29 +27,27 @@ class _ProductDetailViewState extends State<ProductDetailView> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0.5,
-        title: Text(product.title, style: TextStyles.bold16),
+        title: Text(product.title ?? 'Product', style: TextStyles.bold16),
         centerTitle: true,
         iconTheme: const IconThemeData(color: Colors.black),
       ),
       body: Stack(
         children: [
-          // Main content wrapped in SingleChildScrollView
           SingleChildScrollView(
             padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // 📷 Image Carousel
                 ClipRRect(
                   borderRadius: BorderRadius.circular(16),
                   child: SizedBox(
                     height: 260,
                     child: PageView.builder(
                       controller: _pageController,
-                      itemCount: product.imagePaths.length,
+                      itemCount: product.imagePaths?.length ?? 0,
                       itemBuilder: (context, index) {
                         return Image.asset(
-                          product.imagePaths[index],
+                          product.imagePaths![index],
                           fit: BoxFit.contain,
                         );
                       },
@@ -60,7 +58,7 @@ class _ProductDetailViewState extends State<ProductDetailView> {
                 Center(
                   child: SmoothPageIndicator(
                     controller: _pageController,
-                    count: product.imagePaths.length,
+                    count: product.imagePaths?.length ?? 0,
                     effect: const WormEffect(
                       dotHeight: 8,
                       dotWidth: 8,
@@ -68,15 +66,12 @@ class _ProductDetailViewState extends State<ProductDetailView> {
                     ),
                   ),
                 ),
-
                 const SizedBox(height: 24),
-
-                // Price & Rating Card with gray background
                 Card(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12)),
                   elevation: 2,
-                  color: Colors.grey.shade200, // Gray background for price
+                  color: Colors.grey.shade200,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 16, vertical: 12),
@@ -86,31 +81,30 @@ class _ProductDetailViewState extends State<ProductDetailView> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text("EGP ${product.price.toStringAsFixed(2)}",
-                                style: TextStyles.bold19.copyWith(
-                                    color: Colors.green.shade700,
-                                    fontSize: 22)),
+                            Text(
+                              "EGP ${product.price?.toStringAsFixed(2) ?? '0.00'}",
+                              style: TextStyles.bold19.copyWith(
+                                  color: Colors.green.shade700, fontSize: 22),
+                            ),
                             ProductRating(
-                              rating: product.rating,
-                              reviewCount: product.reviewCount,
+                              rating: product.rating ?? 0.0,
+                              reviewCount: product.reviewCount ?? 0,
                             ),
                           ],
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          "List price: EGP ${product.originalPrice.toStringAsFixed(2)}",
+                          "List price: EGP ${product.originalPrice?.toStringAsFixed(2) ?? '0.00'}",
                           style: TextStyles.regular13.copyWith(
-                              color: Colors.red,
-                              decoration: TextDecoration.lineThrough),
+                            color: Colors.red,
+                            decoration: TextDecoration.lineThrough,
+                          ),
                         ),
                       ],
                     ),
                   ),
                 ),
-
                 const SizedBox(height: 20),
-
-                // 🧾 Product Features
                 _buildSectionTitle("Product Details"),
                 Container(
                   decoration: _lightCardBox(),
@@ -134,7 +128,7 @@ class _ProductDetailViewState extends State<ProductDetailView> {
                           value: product.accessLocation),
                       _ProductFeatureRow(
                           label: "Settings Count",
-                          value: product.settingsCount.toString()),
+                          value: product.settingsCount?.toString()),
                       _ProductFeatureRow(
                           label: "Power Source", value: product.powerSource),
                       _ProductFeatureRow(
@@ -142,84 +136,75 @@ class _ProductDetailViewState extends State<ProductDetailView> {
                     ],
                   ),
                 ),
-
                 const SizedBox(height: 20),
-
-                // 📋 About This Item
                 _buildSectionTitle("About this item"),
-                Text(product.description, style: TextStyles.regular13),
-
+                Text(product.description ?? 'No description available',
+                    style: TextStyles.regular13),
                 const SizedBox(height: 20),
-
-                // 🚚 Delivery Info
                 _buildSectionTitle("Delivery"),
                 _infoRow(
-                    Icons.local_shipping_outlined,
-                    RichText(
-                      text: TextSpan(
-                        style:
-                            TextStyles.regular13.copyWith(color: Colors.black),
-                        children: [
-                          const TextSpan(
-                              text: 'FREE Delivery ',
-                              style: TextStyle(
-                                  color: Colors.red,
-                                  fontWeight: FontWeight.bold)),
-                          TextSpan(
-                              text: '${product.deliveryDate} order\nwithin '),
-                          TextSpan(
-                            text: product.deliveryTimeLeft,
-                            style: const TextStyle(color: Colors.green),
-                          ),
-                        ],
-                      ),
-                    )),
-
+                  Icons.local_shipping_outlined,
+                  RichText(
+                    text: TextSpan(
+                      style: TextStyles.regular13.copyWith(color: Colors.black),
+                      children: [
+                        const TextSpan(
+                          text: 'FREE Delivery ',
+                          style: TextStyle(
+                              color: Colors.red, fontWeight: FontWeight.bold),
+                        ),
+                        TextSpan(
+                          text:
+                              '${product.deliveryDate ?? 'soon'} order\nwithin ',
+                        ),
+                        TextSpan(
+                          text: product.deliveryTimeLeft ?? '',
+                          style: const TextStyle(color: Colors.green),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
                 const SizedBox(height: 8),
-
-                // 📍 Deliver To
                 _infoRow(
-                    Icons.location_on_outlined,
-                    RichText(
-                      text: TextSpan(
-                        style:
-                            TextStyles.regular13.copyWith(color: Colors.black),
-                        children: [
-                          const TextSpan(text: 'Deliver to '),
-                          TextSpan(
-                            text: product.deliveryLocation,
-                            style: const TextStyle(
-                                color: Colors.blue,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                    )),
-
+                  Icons.location_on_outlined,
+                  RichText(
+                    text: TextSpan(
+                      style: TextStyles.regular13.copyWith(color: Colors.black),
+                      children: [
+                        const TextSpan(text: 'Deliver to '),
+                        TextSpan(
+                          text: product.deliveryLocation ?? 'your location',
+                          style: const TextStyle(
+                              color: Colors.blue, fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
                 const SizedBox(height: 8),
-
-                // 🟢 Stock Status
                 _infoRow(
-                  product.inStock ? Icons.check_circle : Icons.cancel,
+                  (product.inStock ?? false)
+                      ? Icons.check_circle
+                      : Icons.cancel,
                   Text(
-                    product.inStock ? 'In stock' : 'Out of stock',
+                    (product.inStock ?? false) ? 'In stock' : 'Out of stock',
                     style: TextStyle(
-                      color: product.inStock ? Colors.green : Colors.red,
+                      color: (product.inStock ?? false)
+                          ? Colors.green
+                          : Colors.red,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  iconColor: product.inStock ? Colors.green : Colors.red,
+                  iconColor:
+                      (product.inStock ?? false) ? Colors.green : Colors.red,
                 ),
-
                 const SizedBox(height: 16),
-
                 Row(
                   children: [
                     Expanded(
                       child: ConstrainedBox(
-                        constraints: BoxConstraints(
-                          maxHeight: 95, // Set max height for consistency
-                        ),
+                        constraints: BoxConstraints(maxHeight: 95),
                         child: _InfoCard(
                           icon: Icons.storefront,
                           label: "Ships From",
@@ -231,10 +216,7 @@ class _ProductDetailViewState extends State<ProductDetailView> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: ConstrainedBox(
-                        constraints: BoxConstraints(
-                          maxHeight:
-                              95, // Ensure same max height for both cards
-                        ),
+                        constraints: BoxConstraints(maxHeight: 95),
                         child: _InfoCard(
                           icon: Icons.shopping_cart,
                           label: "Sold By",
@@ -245,21 +227,20 @@ class _ProductDetailViewState extends State<ProductDetailView> {
                     ),
                   ],
                 ),
-
                 const SizedBox(height: 80),
               ],
             ),
           ),
-
           Positioned(
             bottom: 30,
             left: 16,
             right: 16,
             child: Center(
-                child: CustomButton(
-              onPressed: () {},
-              buttonText: "Add to Cart",
-            )),
+              child: CustomButton(
+                onPressed: () {},
+                buttonText: "Add to Cart",
+              ),
+            ),
           ),
         ],
       ),
@@ -295,19 +276,21 @@ class _ProductDetailViewState extends State<ProductDetailView> {
 
 class _ProductFeatureRow extends StatelessWidget {
   final String label;
-  final String value;
+  final String? value;
 
   const _ProductFeatureRow({required this.label, required this.value});
 
   @override
   Widget build(BuildContext context) {
+    if (value == null || value!.isEmpty) return SizedBox.shrink();
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text("$label: ", style: TextStyles.bold13),
-          Expanded(child: Text(value, style: TextStyles.regular13)),
+          Expanded(child: Text(value!, style: TextStyles.regular13)),
         ],
       ),
     );
@@ -317,22 +300,24 @@ class _ProductFeatureRow extends StatelessWidget {
 class _InfoCard extends StatelessWidget {
   final IconData icon;
   final String label;
-  final String value;
-  final Color backgroundColor; // New parameter for background color
+  final String? value;
+  final Color backgroundColor;
 
   const _InfoCard({
     required this.icon,
     required this.label,
     required this.value,
-    this.backgroundColor = Colors.white, // Default background color
+    this.backgroundColor = Colors.white,
   });
 
   @override
   Widget build(BuildContext context) {
+    if (value == null || value!.isEmpty) return SizedBox.shrink();
+
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       elevation: 2,
-      color: backgroundColor, // Use the passed background color
+      color: backgroundColor,
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Row(
@@ -345,7 +330,7 @@ class _InfoCard extends StatelessWidget {
                 children: [
                   Text(label, style: TextStyles.bold13),
                   const SizedBox(height: 4),
-                  Text(value, style: TextStyles.regular13),
+                  Text(value!, style: TextStyles.regular13),
                 ],
               ),
             ),
@@ -359,11 +344,11 @@ class _InfoCard extends StatelessWidget {
 CartItemModel _convertToCartItemModel(ProductsViewsModel product) {
   return CartItemModel(
     id: product.id,
-    title: product.title,
-    price: product.price,
-    imagePath: product.imagePaths.isNotEmpty
-        ? product.imagePaths.first
-        : '', // Take the first image path
-    quantity: 1, // Default quantity to 1
+    title: product.title ?? '',
+    price: product.price ?? 0,
+    imagePath: product.imagePaths != null && product.imagePaths!.isNotEmpty
+        ? product.imagePaths!.first
+        : '',
+    quantity: 1,
   );
 }
