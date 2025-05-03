@@ -14,196 +14,197 @@ class VideogamesViewBody extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         children: [
           SizedBox(height: kTopPadding),
-          ProductCard(
-            name: 'Sony PlayStation 5 SLIM Disc',
-            imagePaths: [
-              'assets/Categories/VideoGames/products/ps5/ps5.png',
-              'assets/Categories/VideoGames/products/ps5/ps52.png',
-              'assets/Categories/VideoGames/products/ps5/ps53.png',
-            ],
-            price: 449.99,
-            originalPrice: 499.99,
-            rating: 4.8,
-            reviewCount: 2571,
-          ),
-          SizedBox(height: 10),
-          ProductCard(
-            name: 'Sony DualSense Wireless Controller for PlayStation 5',
-            imagePaths: [
-              'assets/Categories/VideoGames/products/ps5controller/whitecontroller2.png',
-              'assets/Categories/VideoGames/products/ps5controller/whitecontroller.png',
-            ],
-            price: 66.99,
-            originalPrice: 124.89,
-            rating: 4.7,
-            reviewCount: 3538,
-          ),
-          SizedBox(height: 10),
+
+          // product 1
           ProductCard(
             name:
-                'Sony DualSense Wireless Controller for PlayStation 5 (Black)',
+                'Sony PlayStation 5 SLIM Disc [ NEW 2023 Model ] - International Version',
             imagePaths: [
-              'assets/Categories/VideoGames/products/ps5controller/blackcontroller.png',
+              'assets/videogames_products/Consoles/console1/2.png',
             ],
-            price: 66.99,
-            originalPrice: 124.89,
+            price: 27.750,
+            originalPrice: 28.999,
+            rating: 4.8,
+            reviewCount: 88,
+          ),
+          SizedBox(height: 10),
+
+          // product 2
+          ProductCard(
+            name: 'PlayStation 5 Digital Console (Slim)',
+            imagePaths: [
+              'assets/videogames_products/Consoles/console2/1.png',
+            ],
+            price: 19.600,
+            originalPrice: 20.800,
             rating: 4.7,
             reviewCount: 3538,
           ),
           SizedBox(height: 10),
+
+          // product 3
           ProductCard(
-            name: 'The Last of Us Part I - PlayStation 5',
+            name: ' PlayStation 5 Digital Edition Slim (Nordic)',
             imagePaths: [
-              'assets/Categories/VideoGames/products/games/lastofuspt11.png',
-              'assets/Categories/VideoGames/products/games/lastofuspt1.png',
+              'assets/videogames_products/Consoles/console3/1.png',
             ],
-            price: 48.99,
-            originalPrice: 69.99,
+            price: 28.799,
+            originalPrice: 20.900,
+            rating: 4.7,
+            reviewCount: 3538,
+          ),
+          SizedBox(height: 10),
+
+          // product 4
+          ProductCard(
+            name: 'Nintendo Switch OLED Mario Red Edition Gaming Console',
+            imagePaths: [
+              'assets/videogames_products/Consoles/console4/1.png',
+            ],
+            price: 16.990,
+            originalPrice: 18.989,
             rating: 4.9,
             reviewCount: 814,
           ),
           SizedBox(height: 10),
+
+          // product 5
           ProductCard(
-            name: 'Call of Duty: Modern Warfare II - Xbox Series X',
+            name: 'Sony PlayStation 5 DualSense Wireless Controller',
             imagePaths: [
-              'assets/Categories/VideoGames/products/games/cod.png',
-              'assets/Categories/VideoGames/products/games/cod1.png'
+              'assets/videogames_products/Controllers/controller1/1.png',
             ],
-            price: 44.89,
-            originalPrice: 69.99,
+            price: 4.499,
+            originalPrice: 5.000,
             rating: 4.4,
             reviewCount: 557,
           ),
           SizedBox(height: 10),
+
+          // product 6
           ProductCard(
-            name: 'Gaming Headset for PS4, PS5, Xbox One, Switch & PC',
+            name:
+                'PlayStation Sony DualSense wireless controller for PS5 White',
             imagePaths: [
-              'assets/Categories/VideoGames/products/headset/headset.png',
-              'assets/Categories/VideoGames/products/headset/headset1.png',
+              'assets/videogames_products/Controllers/controller2/1.png',
             ],
-            price: 19.99,
-            originalPrice: 29.99,
+            price: 4.536,
+            originalPrice: 5.000,
             rating: 4.2,
             reviewCount: 698,
           ),
           SizedBox(height: 10),
+
+          // product 7
           ProductCard(
-            name: 'Sony PlayStation 5 SLIM Disc',
+            name: 'PlayStation 5 Dual Sense Wireless Controller Cosmic Red',
             imagePaths: [
-              'assets/Categories/VideoGames/products/ps5/ps5.png',
-              'assets/Categories/VideoGames/products/ps5/ps52.png',
-              'assets/Categories/VideoGames/products/ps5/ps53.png',
+              'assets/videogames_products/Controllers/controller3/1.png',
             ],
-            price: 449.99,
-            originalPrice: 499.99,
+            price: 4.498,
+            originalPrice: 4.900,
             rating: 4.8,
             reviewCount: 2571,
           ),
           SizedBox(height: 10),
+
+          // product 8
           ProductCard(
-            name: 'Sony PlayStation 5 SLIM Disc',
+            name:
+                'PlayStation 5 DualSense Edge Wireless Controller (UAE Version)',
             imagePaths: [
-              'assets/Categories/VideoGames/products/ps5/ps5.png',
-              'assets/Categories/VideoGames/products/ps5/ps52.png',
-              'assets/Categories/VideoGames/products/ps5/ps53.png',
+              'assets/videogames_products/Controllers/controller4/1.png',
             ],
-            price: 449.99,
-            originalPrice: 499.99,
+            price: 16.500,
+            originalPrice: 17.000,
             rating: 4.8,
             reviewCount: 2571,
           ),
           SizedBox(height: 10),
+
+          // product 9
           ProductCard(
-            name: 'Sony PlayStation 5 SLIM Disc',
+            name:
+                'Nintendo 160 2 Nintendo Switch Joy-Con Controllers (Pastel Purple/Pastel Green)',
             imagePaths: [
-              'assets/Categories/VideoGames/products/ps5/ps5.png',
-              'assets/Categories/VideoGames/products/ps5/ps52.png',
-              'assets/Categories/VideoGames/products/ps5/ps53.png',
+              'assets/videogames_products/Controllers/controller5/1.png',
             ],
-            price: 449.99,
-            originalPrice: 499.99,
+            price: 4.499,
+            originalPrice: 4.988,
             rating: 4.8,
             reviewCount: 2571,
           ),
           SizedBox(height: 10),
+
+          // product 10
           ProductCard(
-            name: 'Sony PlayStation 5 SLIM Disc',
+            name:
+                ' Likorlove PS5 Controller Quick Charger, Dual USB Fast Charging Dock Station Stand for Playstation 5 DualSense Controllers Console with LED Indicator USB Type C Ports, White [2.5-3 Hours]',
             imagePaths: [
-              'assets/Categories/VideoGames/products/ps5/ps5.png',
-              'assets/Categories/VideoGames/products/ps5/ps52.png',
-              'assets/Categories/VideoGames/products/ps5/ps53.png',
+              'assets/videogames_products/Accessories/accessories1/1.png',
             ],
-            price: 449.99,
-            originalPrice: 499.99,
+            price: 750.00,
+            originalPrice: 800.99,
             rating: 4.8,
             reviewCount: 2571,
           ),
           SizedBox(height: 10),
+
+          // product 11
           ProductCard(
-            name: 'Sony PlayStation 5 SLIM Disc',
+            name:
+                'OIVO PS5 Charging Station, 2H Fast PS5 Controller Charger for Playstation 5 Dualsense Controller, Upgrade PS5 Charging Dock with 2 Types of Cable, PS5 Charger for Dual PS5 Controller',
             imagePaths: [
-              'assets/Categories/VideoGames/products/ps5/ps5.png',
-              'assets/Categories/VideoGames/products/ps5/ps52.png',
-              'assets/Categories/VideoGames/products/ps5/ps53.png',
+              'assets/videogames_products/Accessories/accessories2/1.png',
             ],
-            price: 449.99,
-            originalPrice: 499.99,
+            price: 1.375,
+            originalPrice: 1.599,
             rating: 4.8,
             reviewCount: 2571,
           ),
           SizedBox(height: 10),
+
+          // product 12
           ProductCard(
-            name: 'Sony PlayStation 5 SLIM Disc',
+            name:
+                'fanxiang S770 4TB NVMe M.2 SSD for PS5 - with Heatsink and DRAM, Up to 7300MB/s, PCIe 4.0, Suitable for Playstation 5 Memory Expansion, Game Enthusiasts, IT Professionals',
             imagePaths: [
-              'assets/Categories/VideoGames/products/ps5/ps5.png',
-              'assets/Categories/VideoGames/products/ps5/ps52.png',
-              'assets/Categories/VideoGames/products/ps5/ps53.png',
+              'assets/videogames_products/Accessories/accessories3/1.png',
             ],
-            price: 449.99,
-            originalPrice: 499.99,
+            price: 26.200,
+            originalPrice: 26.999,
             rating: 4.8,
             reviewCount: 2571,
           ),
           SizedBox(height: 10),
+
+          // product 13
           ProductCard(
-            name: 'Sony PlayStation 5 SLIM Disc',
+            name:
+                'Mcbazel PS5 Cooling Station and Charging Station, 3 Speed Fan, Controller Dock with LED Indicator and 11 Storage Discs - White(Not for PS5 Pro)',
             imagePaths: [
-              'assets/Categories/VideoGames/products/ps5/ps5.png',
-              'assets/Categories/VideoGames/products/ps5/ps52.png',
-              'assets/Categories/VideoGames/products/ps5/ps53.png',
+              'assets/videogames_products/Accessories/accessories4/1.png',
             ],
-            price: 449.99,
-            originalPrice: 499.99,
+            price: 2.122,
+            originalPrice: 2.555,
             rating: 4.8,
             reviewCount: 2571,
           ),
           SizedBox(height: 10),
+
+          // product 14
           ProductCard(
-            name: 'Sony PlayStation 5 SLIM Disc',
+            name: ' EA SPORTS FC 25 Standard Edition PS5 | VideoGame | English',
             imagePaths: [
-              'assets/Categories/VideoGames/products/ps5/ps5.png',
-              'assets/Categories/VideoGames/products/ps5/ps52.png',
-              'assets/Categories/VideoGames/products/ps5/ps53.png',
+              'assets/videogames_products/Accessories/accessories5/1.png',
             ],
-            price: 449.99,
-            originalPrice: 499.99,
+            price: 3.216,
+            originalPrice: 3.490,
             rating: 4.8,
             reviewCount: 2571,
           ),
-          SizedBox(height: 10),
-          ProductCard(
-            name: 'Sony PlayStation 5 SLIM Disc',
-            imagePaths: [
-              'assets/Categories/VideoGames/products/ps5/ps5.png',
-              'assets/Categories/VideoGames/products/ps5/ps52.png',
-              'assets/Categories/VideoGames/products/ps5/ps53.png',
-            ],
-            price: 449.99,
-            originalPrice: 499.99,
-            rating: 4.8,
-            reviewCount: 2571,
-          ),
-          SizedBox(height: 10),
+
+          SizedBox(height: 20),
         ],
       ),
     );
