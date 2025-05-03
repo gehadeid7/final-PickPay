@@ -162,11 +162,11 @@ flutter:
   # - assets/electronics_products/Mobile&Tablet/Mobile&tablet3/
   # - assets/electronics_products/Mobile&Tablet/Mobile&tablet4/
   # - assets/electronics_products/Mobile&Tablet/Mobile&tablet5/
-  - assets/electronics_products\Tvs/tv1/
-  - assets/electronics_products\Tvs/tv2/
-  - assets/electronics_products\Tvs/tv3/
-  - assets/electronics_products\Tvs/tv4/
-  - assets/electronics_products\Tvs/tv5/
+  # - assets/electronics_products\Tvs/tv1/
+  # - assets/electronics_products\Tvs/tv2/
+  # - assets/electronics_products\Tvs/tv3/
+  # - assets/electronics_products\Tvs/tv4/
+  # - assets/electronics_products\Tvs/tv5/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 
