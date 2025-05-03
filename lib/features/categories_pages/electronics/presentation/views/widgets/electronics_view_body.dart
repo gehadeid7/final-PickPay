@@ -18,245 +18,267 @@ class ElectronicsViewBody extends StatelessWidget {
     return Scaffold(
       appBar: buildAppBar(context: context, title: 'Electronics'),
       body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        children: [
-          SizedBox(height: kTopPadding),
-          // product 1
-          ProductCard(
-            name: 'Samsung Galaxy S23 Ultra',
-            imagePaths: [
-              'assets/Categories/Electronics/samsung_galaxys23ultra.png',
-              'assets/Categories/Electronics/samsung_galaxys23ultra.png',
-            ],
-            price: 999.99,
-            originalPrice: 1199.99,
-            rating: 4.9,
-            reviewCount: 1893,
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const Product1View()),
-              );
-            },
-          ),
-          SizedBox(height: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          children: [
+            SizedBox(height: kTopPadding),
+            // product 1
+            ProductCard(
+              name:
+                  'Samsung Galaxy Tab A9 4G LTE, 8.7" Tablet, 8GB RAM, 128GB, Navy',
+              imagePaths: [
+                'assets/electronics_products/mobile_and_tablet/mobile_and_tablet1/1.png',
+              ],
+              price: 9399.00,
+              originalPrice: 0,
+              rating: 5.0,
+              reviewCount: 88,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Product1View()),
+                );
+              },
+            ),
+            SizedBox(height: 10),
 
-          // product 2
+            // product 2
+            ProductCard(
+              name:
+                  'Xiaomi Redmi Pad SE WiFi 11" FHD+, 8GB+256GB, Snapdragon 680',
+              imagePaths: [
+                'assets/electronics_products/mobile_and_tablet/mobile_and_tablet2/1.png',
+              ],
+              price: 12999.99,
+              originalPrice: 0,
+              rating: 5.0,
+              reviewCount: 88,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Product2View()),
+                );
+              },
+            ),
+            SizedBox(height: 10),
 
-          ProductCard(
-            name: 'Apple iPhone 15 Pro Max',
-            imagePaths: [
-              'assets/Categories/Electronics/samsung_galaxys23ultra.png',
-            ],
-            price: 1099.00,
-            originalPrice: 1299.00,
-            rating: 4.8,
-            reviewCount: 2762,
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const Product2View()),
-              );
-            },
-          ),
-          SizedBox(height: 10),
+            // product 3
+            ProductCard(
+              name: 'Apple iPhone 16 (128GB) - Ultramarine',
+              imagePaths: [
+                'assets/electronics_products/mobile_and_tablet/mobile_and_tablet3/1.png',
+              ],
+              price: 57555.00,
+              originalPrice: 0,
+              rating: 5.0,
+              reviewCount: 88,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Product3View()),
+                );
+              },
+            ),
+            SizedBox(height: 10),
+            // product 4
+            ProductCard(
+              name:
+                  'CANSHN Magnetic iPhone 16 Pro Max Case, Clear, Magsafe Compatible',
+              imagePaths: [
+                'assets/electronics_products/mobile_and_tablet/mobile_and_tablet4/1.png',
+              ],
+              price: 141.25,
+              originalPrice: 119.00,
+              rating: 5.0,
+              reviewCount: 92,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Product4View()),
+                );
+              },
+            ),
+            SizedBox(height: 10),
+            // product 5
+            ProductCard(
+              name: 'Oraimo 18W USB-C Fast Charger, Dual Output, QC3.0 & PD3.0',
+              imagePaths: [
+                'assets/electronics_products/mobile_and_tablet/mobile_and_tablet5/1.png',
+              ],
+              price: 199.00,
+              originalPrice: 0,
+              rating: 5.0,
+              reviewCount: 88,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Product5View()),
+                );
+              },
+            ),
+            SizedBox(height: 10),
 
-          // product 3
+// product 6
+            ProductCard(
+              name:
+                  'Samsung 55 Inch QLED Smart TV Neural HDR Quantum Processor Lite 4K - QA55QE1DAUXEG [2024 Model]',
+              imagePaths: [
+                'assets/electronics_products/tvscreens/tv1/1.png',
+              ],
+              price: 18499.00,
+              originalPrice: 0,
+              rating: 4.0,
+              reviewCount: 19,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Product6View()),
+                );
+              },
+            ),
+            SizedBox(height: 10),
 
-          ProductCard(
-            name: 'Samsung 55-Inch QLED 4K Smart TV',
-            imagePaths: [
-              'assets/Categories/Electronics/samsung_galaxys23ultra.png',
-            ],
-            price: 699.99,
-            originalPrice: 899.99,
-            rating: 4.7,
-            reviewCount: 1542,
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const Product3View()),
-              );
-            },
-          ),
-          SizedBox(height: 10),
+// product 7
+            ProductCard(
+              name:
+                  'Xiaomi TV A 43 2025, 43", FHD, HDR, Smart Google TV with Dolby Atmos',
+              imagePaths: [
+                'assets/electronics_products/tvscreens/tv2/1.png',
+              ],
+              price: 9999.00,
+              originalPrice: 0,
+              rating: 4.0,
+              reviewCount: 19,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Product7View()),
+                );
+              },
+            ),
+            SizedBox(height: 10),
 
-          // product 4
+// product 8
+            ProductCard(
+              name:
+                  'Samsung 50 Inch TV Crystal Processor 4K LED - Titan Gray - UA50DU8000UXEG [2024 Model]',
+              imagePaths: [
+                'assets/electronics_products/tvscreens/tv3/1.png',
+              ],
+              price: 16299.00,
+              originalPrice: 20999.00,
+              rating: 4.0,
+              reviewCount: 19,
+              // onTap: () {
+              //   Navigator.push(
+              //     context,
+              //     MaterialPageRoute(builder: (context) => const Product8View()),
+              //   );
+              // },
+            ),
+            SizedBox(height: 10),
 
-          ProductCard(
-            name: 'Sony WH-1000XM5 Wireless Headphones',
-            imagePaths: [
-              'assets/Categories/Electronics/samsung_galaxys23ultra.png',
-            ],
-            price: 348.00,
-            originalPrice: 399.99,
-            rating: 4.9,
-            reviewCount: 3120,
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const Product4View()),
-              );
-            },
-          ),
-          SizedBox(height: 10),
+// product 9
+            ProductCard(
+              name:
+                  'SHARP 4K Smart Frameless TV 55 Inch Built-In Receiver 4T-C55FL6EX',
+              imagePaths: [
+                'assets/electronics_products/tvscreens/tv4/1.png',
+              ],
+              price: 16999.00,
+              originalPrice: 23499.00,
+              rating: 4.0,
+              reviewCount: 19,
+              // onTap: () {
+              //   Navigator.push(
+              //     context,
+              //     MaterialPageRoute(builder: (context) => const Product9View()),
+              //   );
+              // },
+            ),
+            SizedBox(height: 10),
 
-          // product 5
-          ProductCard(
-            name: 'Apple MacBook Air M2',
-            imagePaths: [
-              'assets/Categories/Electronics/samsung_galaxys23ultra.png',
-            ],
-            price: 1149.00,
-            originalPrice: 1299.00,
-            rating: 4.8,
-            reviewCount: 2123,
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const Product5View()),
-              );
-            },
-          ),
-          SizedBox(height: 10),
-          // product 6
-          ProductCard(
-            name: 'Lenovo IdeaPad 3 Laptop',
-            imagePaths: [
-              'assets/Categories/Electronics/samsung_galaxys23ultra.png',
-            ],
-            price: 429.00,
-            originalPrice: 549.00,
-            rating: 4.5,
-            reviewCount: 954,
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const Product6View()),
-              );
-            },
-          ),
-          SizedBox(height: 10),
+// product 10
+            ProductCard(
+              name:
+                  'LG UHD 4K TV 60 Inch UQ7900 Series, Cinema Screen Design WebOS Smart AI ThinQ',
+              imagePaths: [
+                'assets/electronics_products/tvscreens/tv5/1.png',
+              ],
+              price: 18849.00,
+              originalPrice: 23999.00,
+              rating: 4.5,
+              reviewCount: 19,
+              // onTap: () {
+              //   Navigator.push(
+              //     context,
+              //     MaterialPageRoute(builder: (context) => const Product10View()),
+              //   );
+              // },
+            ),
+            SizedBox(height: 10),
 
-          // product 7
-          ProductCard(
-            name: 'ASUS ROG Strix Gaming Laptop',
-            imagePaths: [
-              'assets/Categories/Electronics/samsung_galaxys23ultra.png',
-            ],
-            price: 1399.00,
-            originalPrice: 1599.00,
-            rating: 4.7,
-            reviewCount: 1288,
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const Product7View()),
-              );
-            },
-          ),
-          SizedBox(height: 10),
+            // product 11
 
-          // product 8
-          ProductCard(
-            name: 'Canon EOS R50 Mirrorless Camera',
-            imagePaths: [
-              'assets/Categories/Electronics/samsung_galaxys23ultra.png',
-            ],
-            price: 699.00,
-            originalPrice: 799.00,
-            rating: 4.6,
-            reviewCount: 884,
-          ),
-          SizedBox(height: 10),
-
-          // product 9
-          ProductCard(
-            name: 'DJI Mini 3 Pro Drone with Camera',
-            imagePaths: [
-              'assets/Categories/Electronics/samsung_galaxys23ultra.png',
-            ],
-            price: 759.00,
-            originalPrice: 859.00,
-            rating: 4.8,
-            reviewCount: 1193,
-          ),
-          SizedBox(height: 10),
-
-          // product 10
-          ProductCard(
-            name: 'Amazon Echo Dot (5th Gen)',
-            imagePaths: [
-              'assets/Categories/Electronics/samsung_galaxys23ultra.png',
-            ],
-            price: 39.99,
-            originalPrice: 59.99,
-            rating: 4.6,
-            reviewCount: 4576,
-          ),
-          SizedBox(height: 10),
-          // product 11
-          ProductCard(
-            name: 'Xiaomi Smart Air Purifier 4',
-            imagePaths: [
-              'assets/Categories/Electronics/samsung_galaxys23ultra.png',
-            ],
-            price: 149.99,
-            originalPrice: 199.99,
-            rating: 4.4,
-            reviewCount: 674,
-          ),
-          SizedBox(height: 10),
-          // product 12
-          ProductCard(
-            name: 'Anker PowerCore Portable Charger 20,000mAh',
-            imagePaths: [
-              'assets/Categories/Electronics/samsung_galaxys23ultra.png',
-            ],
-            price: 49.99,
-            originalPrice: 79.99,
-            rating: 4.8,
-            reviewCount: 2285,
-          ),
-          SizedBox(height: 10),
-          // product 13
-          ProductCard(
-            name: 'Logitech MX Master 3 Wireless Mouse',
-            imagePaths: [
-              'assets/Categories/Electronics/samsung_galaxys23ultra.png',
-            ],
-            price: 89.99,
-            originalPrice: 109.99,
-            rating: 4.9,
-            reviewCount: 1439,
-          ),
-          SizedBox(height: 10),
-          // product 14
-          ProductCard(
-            name: 'TP-Link AC1900 Smart WiFi Router',
-            imagePaths: [
-              'assets/Categories/Electronics/samsung_galaxys23ultra.png',
-            ],
-            price: 74.99,
-            originalPrice: 99.99,
-            rating: 4.5,
-            reviewCount: 1162,
-          ),
-          SizedBox(height: 10),
-          // product 15
-          ProductCard(
-            name: 'Google Chromecast with Google TV',
-            imagePaths: [
-              'assets/Categories/Electronics/samsung_galaxys23ultra.png',
-            ],
-            price: 49.99,
-            originalPrice: 69.99,
-            rating: 4.6,
-            reviewCount: 1735,
-          ),
-          SizedBox(height: 10),
-        ],
-      ),
+            ProductCard(
+              name:
+                  'LENOVO ideapad slim3 15IRH8 -I5-13420H 8G-512SSD 83EM007LPS GREY',
+              imagePaths: [
+                'assets/electronics_products/Laptop/Laptop1/1.png',
+              ],
+              price: 24313.00,
+              originalPrice: 0,
+              rating: 4,
+              reviewCount: 19,
+            ),
+            SizedBox(height: 10),
+            ProductCard(
+              name:
+                  'Lenovo Legion 5 15ACH6 Gaming Laptop - Ryzen 5-5600H, 16 GB RAM, 512 GB SSD, NVIDIA GeForce RTX 3050 Ti 4GB GDDR6 Graphics, 15.6" FHD (1920x1080) IPS 120Hz, Backlit Keyboard, WIN 11',
+              imagePaths: [
+                'assets/electronics_products/Laptop/Laptop2/1.png',
+              ],
+              price: 36999.00,
+              originalPrice: 0,
+              rating: 4,
+              reviewCount: 19,
+            ),
+            SizedBox(height: 10),
+            ProductCard(
+              name:
+                  'HP Victus Gaming Laptop (15-fb1004ne), CPU: Ryzen 5-7535HS, 16GB DDR5 2DM 4800, NVIDIA RTX 2050, 15.6" FHD 144Hz, 512GB, Windows 11',
+              imagePaths: [
+                'assets/electronics_products/Laptop/Laptop3/1.png',
+              ],
+              price: 30999.00,
+              originalPrice: 0,
+              rating: 4,
+              reviewCount: 19,
+            ),
+            SizedBox(height: 10),
+            ProductCard(
+              name:
+                  'HP OfficeJet Pro 9720 Wide Format All-in-One Printer - Print, Scan, Copy, Wireless, ADF, Duplex, Touchscreen - [53N94C]',
+              imagePaths: [
+                'assets/electronics_products/Laptop/Laptop4/1.png',
+              ],
+              price: 7199.00,
+              originalPrice: 0,
+              rating: 4,
+              reviewCount: 19,
+            ),
+            SizedBox(height: 10),
+            ProductCard(
+              name: 'USB Cooling Pad Stand Fan Cooler for Laptop Notebook',
+              imagePaths: [
+                'assets/electronics_products/Laptop/Laptop5/1.png',
+              ],
+              price: 355.00,
+              originalPrice: 0,
+              rating: 4,
+              reviewCount: 19,
+            ),
+            SizedBox(height: 20),
+          ]),
     );
   }
 }

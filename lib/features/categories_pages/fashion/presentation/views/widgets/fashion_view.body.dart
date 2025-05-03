@@ -14,172 +14,205 @@ class FashionViewbody extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         children: [
           SizedBox(height: kTopPadding),
+
+          // Product 1
           ProductCard(
-            name: 'Samsung Galaxy S23 Ultra',
+            name: "Women's Chiffon Lining Batwing Sleeve Dress",
             imagePaths: [
-              'assets/Categories/Electronics/samsung_galaxys23ultra.png',
-              'assets/Categories/Electronics/samsung_galaxys23ultra.png',
+              "assets/Fashion_products/Women_Fashion/women_fashion1/1.png",
             ],
-            price: 999.99,
-            originalPrice: 1199.99,
-            rating: 4.9,
-            reviewCount: 1893,
+            price: 850.00,
+            originalPrice: 970.00,
+            rating: 5.0,
+            reviewCount: 88,
           ),
           SizedBox(height: 10),
+
+// Product 2
           ProductCard(
-            name: 'Apple iPhone 15 Pro Max',
+            name: "adidas womens ULTIMASHOW Shoes",
             imagePaths: [
-              'assets/Categories/Electronics/samsung_galaxys23ultra.png',
+              "assets/Fashion_products/Women_Fashion/women_fashion2/1.png",
             ],
-            price: 1099.00,
-            originalPrice: 1299.00,
-            rating: 4.8,
-            reviewCount: 2762,
+            price: 1456.53,
+            originalPrice: 2188.06,
+            rating: 5.0,
+            reviewCount: 88,
           ),
           SizedBox(height: 10),
+
+// Product 3
           ProductCard(
-            name: 'Samsung 55-Inch QLED 4K Smart TV',
+            name: "American Eagle Womens Low-Rise Baggy Wide-Leg Jean",
             imagePaths: [
-              'assets/Categories/Electronics/samsung_galaxys23ultra.png',
+              "assets/Fashion_products/Women_Fashion/women_fashion3/1.png",
             ],
-            price: 699.99,
-            originalPrice: 899.99,
-            rating: 4.7,
-            reviewCount: 1542,
+            price: 2700.00,
+            originalPrice: 0,
+            rating: 5.0,
+            reviewCount: 88,
           ),
           SizedBox(height: 10),
+
+// Product 4
           ProductCard(
-            name: 'Sony WH-1000XM5 Wireless Headphones',
+            name: "Dejavu womens JAL-DJTF-058 Sandal",
             imagePaths: [
-              'assets/Categories/Electronics/samsung_galaxys23ultra.png',
-            ],
-            price: 348.00,
-            originalPrice: 399.99,
-            rating: 4.9,
-            reviewCount: 3120,
-          ),
-          SizedBox(height: 10),
-          ProductCard(
-            name: 'Apple MacBook Air M2',
-            imagePaths: [
-              'assets/Categories/Electronics/samsung_galaxys23ultra.png',
-            ],
-            price: 1149.00,
-            originalPrice: 1299.00,
-            rating: 4.8,
-            reviewCount: 2123,
-          ),
-          SizedBox(height: 10),
-          ProductCard(
-            name: 'Lenovo IdeaPad 3 Laptop',
-            imagePaths: [
-              'assets/Categories/Electronics/samsung_galaxys23ultra.png',
-            ],
-            price: 429.00,
-            originalPrice: 549.00,
-            rating: 4.5,
-            reviewCount: 954,
-          ),
-          SizedBox(height: 10),
-          ProductCard(
-            name: 'ASUS ROG Strix Gaming Laptop',
-            imagePaths: [
-              'assets/Categories/Electronics/samsung_galaxys23ultra.png',
+              "assets/Fashion_products/Women_Fashion/women_fashion4/1.png",
             ],
             price: 1399.00,
-            originalPrice: 1599.00,
-            rating: 4.7,
-            reviewCount: 1288,
+            originalPrice: 0,
+            rating: 5.0,
+            reviewCount: 92,
           ),
           SizedBox(height: 10),
+
+// Product 5
           ProductCard(
-            name: 'Canon EOS R50 Mirrorless Camera',
+            name: "Aldo Caraever Ladies Satchel Handbags, Khaki, Khaki",
             imagePaths: [
-              'assets/Categories/Electronics/samsung_galaxys23ultra.png',
+              "assets/Fashion_products/Women_Fashion/women_fashion5/1.png",
             ],
-            price: 699.00,
+            price: 5190.00,
+            originalPrice: 0,
+            rating: 5.0,
+            reviewCount: 88,
+          ),
+          SizedBox(height: 10),
+
+          // Product 6
+          ProductCard(
+            name:
+                "DeFacto Man Modern Fit Polo Neck Short Sleeve B6374AX Polo T-Shirt",
+            imagePaths: [
+              "assets/Fashion_products/Men_Fashion/men_fashion1/1.png",
+            ],
+            price: 352.00, // Assuming lower bound
+            originalPrice: 899.00, // Assuming upper bound
+            rating: 4.0,
+            reviewCount: 19,
+          ),
+          SizedBox(height: 10),
+
+// Product 7
+          ProductCard(
+            name: "DOTT JEANS WEAR Men's Relaxed Fit Jeans",
+            imagePaths: [
+              "assets/Fashion_products/Men_Fashion/men_fashion2/1.png",
+            ],
+            price: 718.30,
             originalPrice: 799.00,
-            rating: 4.6,
-            reviewCount: 884,
+            rating: 4.0,
+            reviewCount: 19,
           ),
           SizedBox(height: 10),
+
+// Product 8
           ProductCard(
-            name: 'DJI Mini 3 Pro Drone with Camera',
+            name:
+                "Sport-Q®Fury-X Football Shoes – Comfort, Precision, Performance",
             imagePaths: [
-              'assets/Categories/Electronics/samsung_galaxys23ultra.png',
+              "assets/Fashion_products/Men_Fashion/men_fashion3/1.png",
             ],
-            price: 759.00,
-            originalPrice: 859.00,
-            rating: 4.8,
-            reviewCount: 1193,
+            price: 269.00,
+            originalPrice: 299.00,
+            rating: 4.0,
+            reviewCount: 19,
           ),
           SizedBox(height: 10),
+
+// Product 9
           ProductCard(
-            name: 'Amazon Echo Dot (5th Gen)',
+            name: "Timberland Ek Larchmont Ftm_Chelsea, Men's Boots",
             imagePaths: [
-              'assets/Categories/Electronics/samsung_galaxys23ultra.png',
+              "assets/Fashion_products/Men_Fashion/men_fashion4/1.png",
             ],
-            price: 39.99,
-            originalPrice: 59.99,
-            rating: 4.6,
-            reviewCount: 4576,
+            price: 8035.12,
+            originalPrice: 0,
+            rating: 4.0,
+            reviewCount: 19,
           ),
           SizedBox(height: 10),
+
+// Product 10
           ProductCard(
-            name: 'Xiaomi Smart Air Purifier 4',
+            name:
+                "Timberland Men's Leather Trifold Wallet Hybrid, Brown/Black, One Size",
             imagePaths: [
-              'assets/Categories/Electronics/samsung_galaxys23ultra.png',
+              "assets/Fashion_products/Men_Fashion/men_fashion5/1.png",
             ],
-            price: 149.99,
-            originalPrice: 199.99,
-            rating: 4.4,
-            reviewCount: 674,
+            price: 1416.99,
+            originalPrice: 1511.11,
+            rating: 4.0,
+            reviewCount: 19,
           ),
           SizedBox(height: 10),
+
+          // product 11
           ProductCard(
-            name: 'Anker PowerCore Portable Charger 20,000mAh',
+            name: "LC WAIKIKI Crew Neck Girl's Shorts Pajama Set",
             imagePaths: [
-              'assets/Categories/Electronics/samsung_galaxys23ultra.png',
+              "assets/Fashion_products/Kids_Fashion/kids_fashion1/1.png",
             ],
-            price: 49.99,
-            originalPrice: 79.99,
-            rating: 4.8,
-            reviewCount: 2285,
+            price: 261.00,
+            originalPrice: 349.00,
+            rating: 4.0,
+            reviewCount: 19,
           ),
           SizedBox(height: 10),
+
+// product 12
           ProductCard(
-            name: 'Logitech MX Master 3 Wireless Mouse',
+            name: "Kidzo Boys Pajamas",
             imagePaths: [
-              'assets/Categories/Electronics/samsung_galaxys23ultra.png',
+              "assets/Fashion_products/Kids_Fashion/kids_fashion2/1.png",
             ],
-            price: 89.99,
-            originalPrice: 109.99,
-            rating: 4.9,
-            reviewCount: 1439,
+            price: 580.00,
+            originalPrice: 580.00,
+            rating: 4.0,
+            reviewCount: 19,
           ),
           SizedBox(height: 10),
+
+// product 13
           ProductCard(
-            name: 'TP-Link AC1900 Smart WiFi Router',
+            name: "DeFacto Girls Cropped Fit Long Sleeve B9857A8 Denim Jacket",
             imagePaths: [
-              'assets/Categories/Electronics/samsung_galaxys23ultra.png',
+              "assets/Fashion_products/Kids_Fashion/kids_fashion3/1.png",
             ],
-            price: 74.99,
-            originalPrice: 99.99,
-            rating: 4.5,
-            reviewCount: 1162,
+            price: 899.00,
+            originalPrice: 899.00,
+            rating: 4.0,
+            reviewCount: 19,
           ),
           SizedBox(height: 10),
+
+// product 14
           ProductCard(
-            name: 'Google Chromecast with Google TV',
+            name:
+                "Baby Boys Jacket Fashion Comfortable High Quality Plush Full Warmth Jacket",
             imagePaths: [
-              'assets/Categories/Electronics/samsung_galaxys23ultra.png',
+              "assets/Fashion_products/Kids_Fashion/kids_fashion4/1.png",
             ],
-            price: 49.99,
-            originalPrice: 69.99,
-            rating: 4.6,
-            reviewCount: 1735,
+            price: 425.00,
+            originalPrice: 475.00,
+            rating: 4.0,
+            reviewCount: 19,
           ),
           SizedBox(height: 10),
+
+// product 15
+          ProductCard(
+            name: "MIX & MAX, Ballerina Shoes, girls, Ballet Flat",
+            imagePaths: [
+              "assets/Fashion_products/Kids_Fashion/kids_fashion5/1.png",
+            ],
+            price: 354.65,
+            originalPrice: 429.00,
+            rating: 4.0,
+            reviewCount: 19,
+          ),
+          SizedBox(height: 20),
         ],
       ),
     );

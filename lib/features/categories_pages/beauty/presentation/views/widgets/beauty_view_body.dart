@@ -29,7 +29,7 @@ class BeautyViewBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildAppBar(context: context, title: 'Beauty'),
+      appBar: buildAppBar(context: context, title: 'Beauty & Fragrance'),
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         children: [

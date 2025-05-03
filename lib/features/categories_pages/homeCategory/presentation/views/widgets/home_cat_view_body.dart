@@ -14,172 +14,273 @@ class HomeCategoryViewBody extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         children: [
           SizedBox(height: kTopPadding),
+
+// product 1
           ProductCard(
-            name: 'Samsung Galaxy S23 Ultra',
+            name: 'Golden Life Sofa Bed - Size 190 cm - Beige',
             imagePaths: [
-              'assets/Categories/Electronics/samsung_galaxys23ultra.png',
-              'assets/Categories/Electronics/samsung_galaxys23ultra.png',
+              'assets/Home_products/furniture/furniture1/1.png',
             ],
-            price: 999.99,
-            originalPrice: 1199.99,
-            rating: 4.9,
-            reviewCount: 1893,
+            price: 7850.00,
+            originalPrice: 0,
+            rating: 5.0,
+            reviewCount: 88,
           ),
           SizedBox(height: 10),
+
+// product 2
           ProductCard(
-            name: 'Apple iPhone 15 Pro Max',
+            name:
+                'Star Bags Bean Bag Chair - Purple, 95*95*97 cm, Unisex Adults',
             imagePaths: [
-              'assets/Categories/Electronics/samsung_galaxys23ultra.png',
+              'assets/Home_products/furniture/furniture2/1.png',
             ],
-            price: 1099.00,
-            originalPrice: 1299.00,
+            price: 1699.00,
+            originalPrice: 2499.00,
+            rating: 5.0,
+            reviewCount: 88,
+          ),
+          SizedBox(height: 10),
+
+// product 3
+          ProductCard(
+            name: 'Generic Coffee Table, Round, 71 cm x 45 cm, Black',
+            imagePaths: [
+              'assets/Home_products/furniture/furniture3/1.png',
+            ],
+            price: 3600.00,
+            originalPrice: 0,
+            rating: 5.0,
+            reviewCount: 88,
+          ),
+          SizedBox(height: 10),
+
+// product 4
+          ProductCard(
+            name:
+                'Gaming Chair, Furgle Gocker Ergonomic Adjustable 3D Swivel Chair',
+            imagePaths: [
+              'assets/Home_products/furniture/furniture4/1.png',
+            ],
+            price: 9696.55,
+            originalPrice: 12071.00,
+            rating: 5.0,
+            reviewCount: 92,
+          ),
+          SizedBox(height: 10),
+
+// product 5
+          ProductCard(
+            name:
+                'Janssen Almany Innerspring Mattress Height 25 cm - 120 x 195 cm',
+            imagePaths: [
+              'assets/Home_products/furniture/furniture5/1.png',
+            ],
+            price: 5060.03,
+            originalPrice: 0,
+            rating: 5.0,
+            reviewCount: 88,
+          ),
+          SizedBox(height: 10),
+// Product 6
+          ProductCard(
+            name:
+                'Golden Lighting LED Gold Lampshade + 1 Crystal Cylinder Bulb.',
+            imagePaths: [
+              'assets/Home_products/home-decor/home_decor1/1.png',
+            ],
+            price: 1128.00,
+            originalPrice: 0.0,
+            rating: 4.0,
+            reviewCount: 19,
+          ),
+          SizedBox(height: 10),
+
+// Product 7
+          ProductCard(
+            name:
+                'Luxury Bathroom Rug Shaggy Bath Mat 60x40 Cm, Washable Non Slip, Soft Chenille, Gray',
+            imagePaths: [
+              'assets/Home_products/home-decor/home_decor2/1.png',
+            ],
+            price: 355.00,
+            originalPrice: 0.0,
+            rating: 4.0,
+            reviewCount: 19,
+          ),
+          SizedBox(height: 10),
+
+// Product 8
+          ProductCard(
+            name: 'Glass Vase 15cm',
+            imagePaths: [
+              'assets/Home_products/home-decor/home_decor3/1.png',
+            ],
+            price: 250.00,
+            originalPrice: 0.0,
+            rating: 4.0,
+            reviewCount: 19,
+          ),
+          SizedBox(height: 10),
+
+// Product 9
+          ProductCard(
+            name:
+                'Amotpo Indoor/Outdoor Wall Clock, 12-Inch Waterproof with Thermometer & Hygrometer',
+            imagePaths: [
+              'assets/Home_products/home-decor/home_decor4/1.png',
+            ],
+            price: 549.00,
+            originalPrice: 0.0,
+            rating: 4.0,
+            reviewCount: 19,
+          ),
+          SizedBox(height: 10),
+
+// Product 10
+          ProductCard(
+            name:
+                'Oliruim Black Home Decor Accent Art Woman Face Statue - 2 Pieces Set',
+            imagePaths: [
+              'assets/Home_products/home-decor/home_decor5/1.png',
+            ],
+            price: 650.00,
+            originalPrice: 0.0,
+            rating: 5.0,
+            reviewCount: 19,
+          ),
+          SizedBox(height: 10),
+
+          // product 11
+          ProductCard(
+            name: 'Neoflam Pote Cookware Set 11-Pieces, Pink Marble',
+            imagePaths: [
+              'assets/Home_products/kitchen/kitchen1/1.png',
+            ],
+            price: 15.795,
+            originalPrice: 18.989,
             rating: 4.8,
-            reviewCount: 2762,
+            reviewCount: 19,
           ),
           SizedBox(height: 10),
+
+          // product 12
           ProductCard(
-            name: 'Samsung 55-Inch QLED 4K Smart TV',
+            name: 'Pasabahce Set of 6 Large Mug with Handle -340ml Turkey Made',
             imagePaths: [
-              'assets/Categories/Electronics/samsung_galaxys23ultra.png',
+              'assets/Home_products/kitchen/kitchen2/1.png',
             ],
-            price: 699.99,
-            originalPrice: 899.99,
-            rating: 4.7,
-            reviewCount: 1542,
-          ),
-          SizedBox(height: 10),
-          ProductCard(
-            name: 'Sony WH-1000XM5 Wireless Headphones',
-            imagePaths: [
-              'assets/Categories/Electronics/samsung_galaxys23ultra.png',
-            ],
-            price: 348.00,
-            originalPrice: 399.99,
-            rating: 4.9,
-            reviewCount: 3120,
-          ),
-          SizedBox(height: 10),
-          ProductCard(
-            name: 'Apple MacBook Air M2',
-            imagePaths: [
-              'assets/Categories/Electronics/samsung_galaxys23ultra.png',
-            ],
-            price: 1149.00,
-            originalPrice: 1299.00,
-            rating: 4.8,
-            reviewCount: 2123,
-          ),
-          SizedBox(height: 10),
-          ProductCard(
-            name: 'Lenovo IdeaPad 3 Laptop',
-            imagePaths: [
-              'assets/Categories/Electronics/samsung_galaxys23ultra.png',
-            ],
-            price: 429.00,
-            originalPrice: 549.00,
-            rating: 4.5,
-            reviewCount: 954,
-          ),
-          SizedBox(height: 10),
-          ProductCard(
-            name: 'ASUS ROG Strix Gaming Laptop',
-            imagePaths: [
-              'assets/Categories/Electronics/samsung_galaxys23ultra.png',
-            ],
-            price: 1399.00,
-            originalPrice: 1599.00,
-            rating: 4.7,
-            reviewCount: 1288,
-          ),
-          SizedBox(height: 10),
-          ProductCard(
-            name: 'Canon EOS R50 Mirrorless Camera',
-            imagePaths: [
-              'assets/Categories/Electronics/samsung_galaxys23ultra.png',
-            ],
-            price: 699.00,
-            originalPrice: 799.00,
-            rating: 4.6,
-            reviewCount: 884,
-          ),
-          SizedBox(height: 10),
-          ProductCard(
-            name: 'DJI Mini 3 Pro Drone with Camera',
-            imagePaths: [
-              'assets/Categories/Electronics/samsung_galaxys23ultra.png',
-            ],
-            price: 759.00,
-            originalPrice: 859.00,
-            rating: 4.8,
-            reviewCount: 1193,
-          ),
-          SizedBox(height: 10),
-          ProductCard(
-            name: 'Amazon Echo Dot (5th Gen)',
-            imagePaths: [
-              'assets/Categories/Electronics/samsung_galaxys23ultra.png',
-            ],
-            price: 39.99,
-            originalPrice: 59.99,
-            rating: 4.6,
-            reviewCount: 4576,
-          ),
-          SizedBox(height: 10),
-          ProductCard(
-            name: 'Xiaomi Smart Air Purifier 4',
-            imagePaths: [
-              'assets/Categories/Electronics/samsung_galaxys23ultra.png',
-            ],
-            price: 149.99,
-            originalPrice: 199.99,
-            rating: 4.4,
-            reviewCount: 674,
-          ),
-          SizedBox(height: 10),
-          ProductCard(
-            name: 'Anker PowerCore Portable Charger 20,000mAh',
-            imagePaths: [
-              'assets/Categories/Electronics/samsung_galaxys23ultra.png',
-            ],
-            price: 49.99,
-            originalPrice: 79.99,
-            rating: 4.8,
-            reviewCount: 2285,
-          ),
-          SizedBox(height: 10),
-          ProductCard(
-            name: 'Logitech MX Master 3 Wireless Mouse',
-            imagePaths: [
-              'assets/Categories/Electronics/samsung_galaxys23ultra.png',
-            ],
-            price: 89.99,
-            originalPrice: 109.99,
+            price: 495.00,
+            originalPrice: 590.99,
             rating: 4.9,
             reviewCount: 1439,
           ),
           SizedBox(height: 10),
+
+          // product 13
           ProductCard(
-            name: 'TP-Link AC1900 Smart WiFi Router',
+            name:
+                'P&P CHEF 13½ Inch Pizza Pan Set, 3 Pack Nonstick Pizza Pans, Round Pizza Tray Bakeware for Oven Baking, Stainless Steel Core & Easy to Clean, Non Toxic & Durable, Black',
             imagePaths: [
-              'assets/Categories/Electronics/samsung_galaxys23ultra.png',
+              'assets/Home_products/kitchen/kitchen3/1.png',
             ],
-            price: 74.99,
-            originalPrice: 99.99,
+            price: 276.00,
+            originalPrice: 300.00,
             rating: 4.5,
             reviewCount: 1162,
           ),
           SizedBox(height: 10),
+
+          // product 14
           ProductCard(
-            name: 'Google Chromecast with Google TV',
+            name:
+                ' LIANYU 20 Piece Silverware Flatware Cutlery Set, Stainless Steel Utensils Service for 4, Include Knife Fork Spoon, Mirror Polished, Dishwasher Safe ',
             imagePaths: [
-              'assets/Categories/Electronics/samsung_galaxys23ultra.png',
+              'assets/Home_products/kitchen/kitchen4/1.png',
             ],
-            price: 49.99,
+            price: 50.099,
             originalPrice: 69.99,
             rating: 4.6,
             reviewCount: 1735,
           ),
           SizedBox(height: 10),
+
+          // product 15
+          ProductCard(
+            name:
+                ' Dish Rack Dish Drying Stand Dish Drainer Plate Rack Dish rake Kitchen Organizer Dish Drying Rack Countertop Large Antibacterial Kitchen Utensils Dish racks Dish Stand (STYLE A)',
+            imagePaths: [
+              'assets/Home_products/kitchen/kitchen5/1.png',
+            ],
+            price: 400.00,
+            originalPrice: 550.99,
+            rating: 4.6,
+            reviewCount: 4576,
+          ),
+          SizedBox(height: 10),
+
+          // product 16
+          ProductCard(
+            name: 'Banotex Cotton Towel 50x100 (Sugar)',
+            imagePaths: [
+              'assets/Home_products/bath_and_bedding/bath1/1.png',
+            ],
+            price: 170.00,
+            originalPrice: 200.99,
+            rating: 4.6,
+            reviewCount: 4576,
+          ),
+          SizedBox(height: 10),
+          // product 17
+          ProductCard(
+            name: 'Fiber pillow 2 pieces size 40x60',
+            imagePaths: [
+              'assets/Home_products/bath_and_bedding/bath2/1.png',
+            ],
+            price: 180.00,
+            originalPrice: 200.99,
+            rating: 4.6,
+            reviewCount: 4576,
+          ),
+          SizedBox(height: 10),
+          // product 18
+          ProductCard(
+            name:
+                'Bedsure 100% Cotton Blankets Queen Size for Bed - Waffle Weave Blankets for Summer, Lightweight and Breathable Soft Woven Blankets for Spring, Mint, 90x90 Inches ',
+            imagePaths: [
+              'assets/Home_products/bath_and_bedding/bath3/1.png',
+            ],
+            price: 604.00,
+            originalPrice: 700.99,
+            rating: 4.6,
+            reviewCount: 4576,
+          ),
+          SizedBox(height: 10),
+          // product 19
+          ProductCard(
+            name: 'Home of linen-fitted sheet set, size 120 * 200cm, offwhite',
+            imagePaths: [
+              'assets/Home_products/bath_and_bedding/bath4/1.png',
+            ],
+            price: 369.00,
+            originalPrice: 400.99,
+            rating: 4.6,
+            reviewCount: 4576,
+          ),
+          SizedBox(height: 10),
+          // product 20
+          ProductCard(
+            name:
+                'Home of Linen - Duvet Cover Set - 3 Pieces for Double Bed - 1 Duvet Cover (185cm*235cm) + 2 Pillow Cases (50cm*70cm) - 100% Egyptian Cotton - Zebra - 802',
+            imagePaths: [
+              'assets/Home_products/bath_and_bedding/bath5/1.png',
+            ],
+            price: 948.00,
+            originalPrice: 1000.99,
+            rating: 4.6,
+            reviewCount: 4576,
+          ),
+          SizedBox(height: 20),
         ],
       ),
     );

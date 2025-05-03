@@ -3,7 +3,6 @@ import 'package:pickpay/core/utils/app_text_styles.dart';
 import 'package:pickpay/core/widgets/custom_button.dart';
 import 'package:pickpay/features/categories_pages/models/product_model.dart';
 import 'package:pickpay/features/categories_pages/widgets/product_rating.dart';
-import 'package:pickpay/features/home/domain/models/cart_item_model.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class ProductDetailView extends StatefulWidget {
