@@ -167,6 +167,27 @@ flutter:
   - assets/electronics_products\tvs/tv3/
   - assets/electronics_products\tvs/tv4/
   - assets/electronics_products\tvs/tv5/
+  - assets/Home_products/bath_and_bedding/bath1/
+  - assets/Home_products/bath_and_bedding/bath2/
+  - assets/Home_products/bath_and_bedding/bath3/
+  - assets/Home_products/bath_and_bedding/bath4/
+  - assets/Home_products/bath_and_bedding/bath5/
+  - assets/Home_products/by_color/
+  - assets/Home_products/furniture/furniture1/
+  - assets/Home_products/furniture/furniture2/
+  - assets/Home_products/furniture/furniture3/
+  - assets/Home_products/furniture/furniture4/
+  - assets/Home_products/furniture/furniture5/
+  - assets/Home_products/home-decor/home_decor1/
+  - assets/Home_products/home-decor/home_decor2/
+  - assets/Home_products/home-decor/home_decor3/
+  - assets/Home_products/home-decor/home_decor4/
+  - assets/Home_products/home-decor/home_decor5/
+  - assets/Home_products/kitchen/kitchen1/
+  - assets/Home_products/kitchen/kitchen2/
+  - assets/Home_products/kitchen/kitchen3/
+  - assets/Home_products/kitchen/kitchen4/
+  - assets/Home_products/kitchen/kitchen5/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 
