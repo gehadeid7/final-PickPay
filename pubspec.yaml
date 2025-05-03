@@ -157,11 +157,11 @@ flutter:
   - assets/electronics_products/Laptop/Laptop3/
   - assets/electronics_products/Laptop/Laptop4/
   - assets/electronics_products/Laptop/Laptop5/
-  - assets/electronics_products/Mobile&Tablet/Mobile&tablet1/
-  - assets/electronics_products/Mobile&Tablet/Mobile&tablet2/
-  - assets/electronics_products/Mobile&Tablet/Mobile&tablet3/
-  - assets/electronics_products/Mobile&Tablet/Mobile&tablet4/
-  - assets/electronics_products/Mobile&Tablet/Mobile&tablet5/
+  # - assets/electronics_products/Mobile&Tablet/Mobile&tablet1/
+  # - assets/electronics_products/Mobile&Tablet/Mobile&tablet2/
+  # - assets/electronics_products/Mobile&Tablet/Mobile&tablet3/
+  # - assets/electronics_products/Mobile&Tablet/Mobile&tablet4/
+  # - assets/electronics_products/Mobile&Tablet/Mobile&tablet5/
   - assets/electronics_products\Tvs/tv1/
   - assets/electronics_products\Tvs/tv2/
   - assets/electronics_products\Tvs/tv3/
