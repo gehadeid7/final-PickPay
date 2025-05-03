@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:pickpay/core/repos/product_repo/product_repo_impl.dart';
 import 'package:pickpay/core/repos/product_repo/products_repo.dart';
+import 'package:pickpay/core/services/cart_service.dart';
 import 'package:pickpay/core/services/database_services.dart';
 import 'package:pickpay/core/services/firebase_auth_service.dart';
 import 'package:pickpay/core/services/firestore_servies.dart';
@@ -11,8 +12,9 @@ final getIt = GetIt.instance;
 
 void setupGetit() {
   getIt.registerSingleton<FirebaseAuthService>(FirebaseAuthService());
-
   getIt.registerSingleton<DatabaseService>(FireStoreService());
+
+  getIt.registerSingleton<CartService>(CartService());
 
   getIt.registerSingleton<AuthRepo>(AuthRepoImplementation(
     firebaseAuthService: getIt<FirebaseAuthService>(),

@@ -8,6 +8,7 @@ class AppliancesProduct12 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
+      id: "68132a95ff7813b3d47f9db0",
       title:
           'TORNADO Gas Water Heater 6 Liter, Digital, Natural Gas, Silver GHM-C06CNE-S',
       imagePaths: [

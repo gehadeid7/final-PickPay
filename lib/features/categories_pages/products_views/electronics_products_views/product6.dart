@@ -9,6 +9,7 @@ class Product6View extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
+      id: '',
       title: "Lenovo IdeaPad 3 Laptop",
       imagePaths: ['assets/Categories/Electronics/samsung_galaxys23ultra.png'],
       price: 429.00,

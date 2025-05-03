@@ -8,6 +8,7 @@ class AppliancesProduct10 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
+      id: "68132a95ff7813b3d47f9dae",
       title: 'Fresh 1600W Faster Vacuum Cleaner with Bag, Black',
       imagePaths: [
         'assets/appliances/product10/1.png',

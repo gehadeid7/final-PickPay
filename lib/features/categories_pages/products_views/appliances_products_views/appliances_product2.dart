@@ -8,6 +8,7 @@ class AppliancesProduct2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
+      id: "68132a95ff7813b3d47f9da6",
       title: 'Fresh Jumbo Stainless Steel Potato CB90"',
       imagePaths: [
         'assets/appliances/product2/1.png',

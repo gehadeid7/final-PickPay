@@ -9,6 +9,7 @@ class Product5View extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
+      id: '',
       title: "Apple MacBook Air M2",
       imagePaths: ['assets/Categories/Electronics/samsung_galaxys23ultra.png'],
       price: 1149.00,

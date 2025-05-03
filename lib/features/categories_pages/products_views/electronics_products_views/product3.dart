@@ -8,6 +8,7 @@ class Product3View extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
+      id: '',
       title: "Samsung 55-Inch QLED 4K Smart TV",
       imagePaths: ['assets/Categories/Electronics/samsung_galaxys23ultra.png'],
       price: 699.99,

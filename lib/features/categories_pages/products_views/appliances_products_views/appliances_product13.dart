@@ -8,6 +8,7 @@ class AppliancesProduct13 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
+      id: "68132a95ff7813b3d47f9db1",
       title:
           'Black & Decker 500W 1.5L Blender with Grinder Mill, White - BX520-B5',
       imagePaths: [

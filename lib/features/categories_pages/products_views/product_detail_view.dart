@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pickpay/core/utils/app_text_styles.dart';
 import 'package:pickpay/core/widgets/custom_button.dart';
 import 'package:pickpay/features/categories_pages/models/product_model.dart';
 import 'package:pickpay/features/categories_pages/widgets/product_rating.dart';
+import 'package:pickpay/features/home/domain/models/cart_item_model.dart';
+import 'package:pickpay/features/home/presentation/cubits/cart_cubit/cart_cubit.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class ProductDetailView extends StatefulWidget {
@@ -250,17 +253,24 @@ class _ProductDetailViewState extends State<ProductDetailView> {
             ),
           ),
 
-          // 🛒 Floating Add to Cart Button
           Positioned(
-            bottom: 30, // Adjust the bottom margin as needed
-            left: 16, // Adjust the left margin as needed
-            right: 16, // Adjust the right margin as needed
+            bottom: 30,
+            left: 16,
+            right: 16,
             child: Center(
-              child: CustomButton(
-                onPressed: () => print("Add to Cart Pressed"),
-                buttonText: "Add to Cart",
-              ),
-            ),
+                child: CustomButton(
+              onPressed: () {
+                final cartItem = _convertToCartItemModel(
+                    product); // Convert product to CartItemModel
+                context
+                    .read<CartCubit>()
+                    .addToCart(cartItem); // Add CartItemModel to cart
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Item added to cart')),
+                );
+              },
+              buttonText: "Add to Cart",
+            )),
           ),
         ],
       ),
@@ -355,4 +365,16 @@ class _InfoCard extends StatelessWidget {
       ),
     );
   }
+}
+
+CartItemModel _convertToCartItemModel(ProductsViewsModel product) {
+  return CartItemModel(
+    id: product.id,
+    title: product.title,
+    price: product.price,
+    imagePath: product.imagePaths.isNotEmpty
+        ? product.imagePaths.first
+        : '', // Take the first image path
+    quantity: 1, // Default quantity to 1
+  );
 }

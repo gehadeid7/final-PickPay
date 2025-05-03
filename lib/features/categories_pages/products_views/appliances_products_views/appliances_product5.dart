@@ -8,6 +8,7 @@ class AppliancesProduct5 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
+      id: "68132a95ff7813b3d47f9da9",
       title:
           'Midea Dishwasher - WQP13-5201C-S - 6 programs - Free standing - 13 Place set - Silver',
       imagePaths: [

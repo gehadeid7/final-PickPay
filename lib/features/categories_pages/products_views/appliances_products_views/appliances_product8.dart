@@ -8,6 +8,7 @@ class AppliancesProduct8 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
+      id: "68132a95ff7813b3d47f9dac",
       title:
           'Black & Decker 1050W 2-Slice Stainless Steel Toaster, Silver/Black',
       imagePaths: [

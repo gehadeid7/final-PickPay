@@ -8,6 +8,7 @@ class Product2View extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
+      id: '',
       title: "Apple iPhone 15 Pro Max",
       imagePaths: ['assets/Categories/Electronics/samsung_galaxys23ultra.png'],
       price: 1099.00,

@@ -8,6 +8,7 @@ class AppliancesProduct14 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
+      id: "68132a95ff7813b3d47f9db2",
       title:
           'Black & Decker 1.7L Concealed Coil Stainless Steel Kettle, Jc450-B5, Silver',
       imagePaths: [

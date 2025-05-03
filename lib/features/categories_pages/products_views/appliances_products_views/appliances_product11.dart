@@ -8,6 +8,7 @@ class AppliancesProduct11 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
+      id: "68132a95ff7813b3d47f9daf",
       title:
           'Fresh fan 50 watts 18 inches with charger with 3 blades, black and white',
       imagePaths: [

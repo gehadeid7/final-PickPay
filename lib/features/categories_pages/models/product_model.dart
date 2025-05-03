@@ -1,6 +1,5 @@
-// lib/features/categories_pages/models/product_model.dart
-
 class ProductsViewsModel {
+  final String id;
   final String title;
   final double price;
   final String brand;
@@ -28,6 +27,7 @@ class ProductsViewsModel {
   final String soldBy;
 
   ProductsViewsModel({
+    required this.id,
     required this.category,
     required this.title,
     required this.imagePaths,
@@ -56,35 +56,39 @@ class ProductsViewsModel {
 
   factory ProductsViewsModel.fromJson(Map<String, dynamic> json) {
     return ProductsViewsModel(
-      category: json['Electronics'],
-      title: json['name'],
-      imagePaths: List<String>.from(json['imagePaths']),
-      price: json['price'],
-      originalPrice: json['originalPrice'],
-      rating: json['rating'],
-      reviewCount: json['reviewCount'],
-      brand: json['brand'],
-      color: json['color'],
-      material: json['material'],
-      dimensions: json['dimensions'],
-      style: json['style'],
-      installationType: json['installationType'],
-      accessLocation: json['accessLocation'],
-      settingsCount: json['settingsCount'],
-      powerSource: json['powerSource'],
-      manufacturer: json['manufacturer'],
-      description: json['description'],
-      deliveryDate: json['deliveryDate'],
-      deliveryTimeLeft: json['deliveryTimeLeft'],
-      deliveryLocation: json['deliveryLocation'],
-      inStock: json['inStock'],
-      shipsFrom: json['shipsFrom'],
-      soldBy: json['soldBy'],
+      id: json['_id']?['\$oid'] ??
+          json['id'] ??
+          '', // Handles MongoDB or Supabase ID
+      category: json['category'] ?? '',
+      title: json['name'] ?? '',
+      imagePaths: List<String>.from(json['imagePaths'] ?? []),
+      price: (json['price'] ?? 0).toDouble(),
+      originalPrice: (json['originalPrice'] ?? 0).toDouble(),
+      rating: (json['rating'] ?? 0).toDouble(),
+      reviewCount: json['reviewCount'] ?? 0,
+      brand: json['brand'] ?? '',
+      color: json['color'] ?? '',
+      material: json['material'] ?? '',
+      dimensions: json['dimensions'] ?? '',
+      style: json['style'] ?? '',
+      installationType: json['installationType'] ?? '',
+      accessLocation: json['accessLocation'] ?? '',
+      settingsCount: json['settingsCount'] ?? 0,
+      powerSource: json['powerSource'] ?? '',
+      manufacturer: json['manufacturer'] ?? '',
+      description: json['description'] ?? '',
+      deliveryDate: json['deliveryDate'] ?? '',
+      deliveryTimeLeft: json['deliveryTimeLeft'] ?? '',
+      deliveryLocation: json['deliveryLocation'] ?? '',
+      inStock: json['inStock'] ?? false,
+      shipsFrom: json['shipsFrom'] ?? '',
+      soldBy: json['soldBy'] ?? '',
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id, // You might skip this if backend auto-generates
       'category': category,
       'name': title,
       'imagePaths': imagePaths,

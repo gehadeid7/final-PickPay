@@ -8,6 +8,7 @@ class AppliancesProduct1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
+      id: "68132a95ff7813b3d47f9da5", // Add a backend-generated ID here
       title:
           'Koldair Water Dispenser Cold And Hot 2 Tabs - Bottom Load KWDB Silver Cooler',
       imagePaths: [

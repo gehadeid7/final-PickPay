@@ -8,6 +8,7 @@ class Product4View extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
+      id: '',
       title: "Sony WH-1000XM5 Wireless Headphones",
       imagePaths: ['assets/Categories/Electronics/samsung_galaxys23ultra.png'],
       price: 348.00,

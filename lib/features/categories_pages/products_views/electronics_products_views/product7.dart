@@ -8,6 +8,7 @@ class Product7View extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
+      id: '',
       title: "ASUS ROG Strix Gaming Laptop",
       imagePaths: ['assets/Categories/Electronics/samsung_galaxys23ultra.png'],
       price: 1399.00,
