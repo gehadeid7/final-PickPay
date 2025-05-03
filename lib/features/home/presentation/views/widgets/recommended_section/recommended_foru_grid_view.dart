@@ -28,9 +28,9 @@ class RecommendedForuGridView extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        childAspectRatio: 180 / 230,
         mainAxisSpacing: 12,
         crossAxisSpacing: 16,
+        childAspectRatio: 180 / 230,
       ),
       itemCount: recommendedProducts.length,
       itemBuilder: (context, index) {

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pickpay/core/utils/app_text_styles.dart';
-import 'package:pickpay/features/categories_pages/widgets/product_rating.dart';
 
 class CardItem extends StatelessWidget {
   final String imagePath;
@@ -21,68 +19,49 @@ class CardItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 200,
-      height: 260,
-      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
-      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: const Color(0xFFF3F5F7),
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 6,
-            offset: Offset(0, 3),
-          ),
-        ],
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4)],
       ),
+      padding: const EdgeInsets.all(8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Product Image
-          Center(
-            child: Image.asset(
-              imagePath,
-              height: 120, // Adjusted image height for better spacing
-              fit: BoxFit.contain,
-            ),
+          Expanded(
+            child: Center(child: Image.asset(imagePath, fit: BoxFit.contain)),
           ),
-
-          const SizedBox(height: 10),
-
-          // Product Name
+          const SizedBox(height: 4),
           Text(
             productName,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: TextStyles.semiBold13.copyWith(
-              color: Colors.black87,
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            "\$$price",
+            style: const TextStyle(
               fontSize: 14,
+              color: Colors.green,
+              fontWeight: FontWeight.w600,
             ),
           ),
-
-          const SizedBox(height: 6),
-
-          // Product Rating
-          ProductRating(
-            rating: rating,
-            reviewCount: reviewCount,
-          ),
-
-          const SizedBox(height: 10), // Added space between rating and price
-
-          // Price
-          Expanded(
-            child: Align(
-              alignment: Alignment.bottomLeft,
-              child: Text(
-                '\$$price',
-                style: TextStyles.bold13.copyWith(
-                  fontSize: 16,
-                  color: Colors.green[700],
-                ),
+          const SizedBox(height: 4),
+          Row(
+            children: [
+              const Icon(Icons.star, color: Colors.orange, size: 14),
+              const SizedBox(width: 4),
+              Text(
+                '$rating',
+                style: const TextStyle(fontSize: 12),
               ),
-            ),
+              const SizedBox(width: 4),
+              Text(
+                '($reviewCount reviews)',
+                style: const TextStyle(fontSize: 10, color: Colors.grey),
+              ),
+            ],
           ),
         ],
       ),
