@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pickpay/core/utils/app_text_styles.dart';
 import 'package:pickpay/core/widgets/custom_button.dart';
 import 'package:pickpay/features/categories_pages/models/product_model.dart';
 import 'package:pickpay/features/categories_pages/widgets/product_rating.dart';
 import 'package:pickpay/features/home/domain/models/cart_item_model.dart';
-import 'package:pickpay/features/home/presentation/cubits/cart_cubit/cart_cubit.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class ProductDetailView extends StatefulWidget {
@@ -259,16 +257,7 @@ class _ProductDetailViewState extends State<ProductDetailView> {
             right: 16,
             child: Center(
                 child: CustomButton(
-              onPressed: () {
-                final cartItem = _convertToCartItemModel(
-                    product); // Convert product to CartItemModel
-                context
-                    .read<CartCubit>()
-                    .addToCart(cartItem); // Add CartItemModel to cart
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Item added to cart')),
-                );
-              },
+              onPressed: () {},
               buttonText: "Add to Cart",
             )),
           ),
