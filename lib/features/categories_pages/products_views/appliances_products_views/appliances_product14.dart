@@ -26,16 +26,18 @@ class AppliancesProduct14 extends StatelessWidget {
       reviewCount: 1162,
       brand: 'Black & Decker',
       color: 'Silver',
-      material: 'Stainless Steel',
-      dimensions: '1.7L',
-      style: 'Electric Kettle',
-      installationType: 'Corded Base',
-      accessLocation: 'Top',
-      settingsCount: 1,
-      powerSource: 'Electric',
-      manufacturer: 'Black & Decker',
+      specialfeatures: 'Programmable',
+      containerType: 'Kettle',
+      voltage: '240',
+      finishType: 'Powder Coated',
+      dimensions: '20.3L x 20.3W x 21.6H',
+      wattage: '2000 watts',
       aboutThisItem:
-          'Stainless steel 1.7L kettle with concealed coil and auto shut-off for safe, fast boiling.',
+          '''Model Number : JC450-B5Type : Electric KettleCapacity : 1.7
+
+LiterMaterial : Stainless SteelColor : SilverBrand : Black & Decker
+
+Voltage : 220-240VFrequency : 50-60 HzÂ 2 Years warranty 19311 Anasia Egypt''',
       deliveryDate: 'Sunday, 9 March',
       deliveryTimeLeft: '20hrs 36 mins',
       deliveryLocation: 'Egypt',

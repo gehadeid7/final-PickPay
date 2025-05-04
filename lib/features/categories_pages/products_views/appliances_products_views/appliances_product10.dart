@@ -19,17 +19,22 @@ class AppliancesProduct10 extends StatelessWidget {
       rating: 4.6,
       reviewCount: 4576,
       brand: 'Fresh',
-      color: 'Black',
-      material: 'Plastic',
-      dimensions: 'N/A',
-      style: 'Vacuum Cleaner',
-      installationType: 'N/A',
-      accessLocation: 'Front',
-      settingsCount: 3,
-      powerSource: 'Electric',
-      manufacturer: 'Fresh',
-      aboutThisItem:
-          'A high-performance 1600W vacuum cleaner with bag. Compact and powerful, ideal for daily use.',
+      filtertype: 'HEPA',
+      surface: 'All floors',
+      components: 'Vacuum Bag',
+      isProductCordless: 'No',
+      installationType: 'Floor Mounted',
+      capacity: '3.5 Liters',
+      wattage: '1600 watts',
+      aboutThisItem: '''Quickly removes solid particles at ease.
+
+Keep your house clean and healthy without any physical effort.
+
+Thermo cut keeps motor from getting extra heated.
+
+Dust bag full indicator automatically detects when the dust bag is full.
+
+Make daily cleaning hassle-free.''',
       deliveryDate: 'Sunday, 9 March',
       deliveryTimeLeft: '20hrs 36 mins',
       deliveryLocation: 'Egypt',

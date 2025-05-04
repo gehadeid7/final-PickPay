@@ -24,15 +24,22 @@ class AppliancesProduct15 extends StatelessWidget {
       brand: 'Black & Decker',
       color: 'White/Silver',
       material: 'Stainless Steel',
-      dimensions: '4L Bowl, 5.76kg',
-      style: 'Stand Mixer',
-      installationType: 'Countertop',
-      accessLocation: 'Top',
-      settingsCount: 6,
-      powerSource: 'Electric',
-      manufacturer: 'Black & Decker',
-      aboutThisItem:
-          'Powerful 1000W dough mixer with 3-blade system and 4L capacity, perfect for baking and kneading tasks.',
+      bladeMaterial: 'Stainless Steel',
+      stainlessSteelNumberofSpeeds: '6',
+      dimensions: '40D x 12W x 43H',
+      specialfeatures: 'Removable Bowl',
+      settingsCount: 2,
+      capacity: '4 Liters',
+      wattage: '1000 watts',
+      aboutThisItem: '''Kitchen appliance used to mix and knead dough
+
+Consists of a large bowl and a rotating mixing attachment
+
+Used for making bread, pizza, pasta, and other baked goods
+
+Some models come with additional attachments for whipping, beating, and blending
+
+Commonly used in bakeries, pizzerias, restaurants, and by home bakers''',
       deliveryDate: 'Sunday, 9 March',
       deliveryTimeLeft: '20hrs 36 mins',
       deliveryLocation: 'Egypt',

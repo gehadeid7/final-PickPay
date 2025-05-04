@@ -20,17 +20,18 @@ class AppliancesProduct9 extends StatelessWidget {
       rating: 4.8,
       reviewCount: 1193,
       brand: 'Panasonic',
-      color: 'White/Blue',
+      color: 'Violet',
       material: 'Plastic and Metal',
-      dimensions: '27.4 x 11.3 x 13.6 cm',
-      style: 'Handheld Iron',
-      installationType: 'N/A',
-      accessLocation: 'Top',
-      settingsCount: 3,
-      powerSource: 'Electric',
-      manufacturer: 'Panasonic',
-      aboutThisItem:
-          'Panasonic NI-M300TVTD is a powerful 1800W steam/dry iron with a titanium-coated soleplate, anti-calc system, and precision tip for efficient ironing.',
+      style: 'Modern Handheld Iron',
+      itemWeight: '1.9 Kilograms',
+      modelName: 'NI-M300TVTD',
+      voltage: '240 Volts',
+      frequency: '50 Hz',
+      aboutThisItem: '''Brand : Panasonic.
+Iron.
+Model Number : NI-M300TVTD.
+1800 W
+Steam/Dry .''',
       deliveryDate: 'Sunday, 9 March',
       deliveryTimeLeft: '20hrs 36 mins',
       deliveryLocation: 'Egypt',

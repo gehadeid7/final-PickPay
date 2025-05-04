@@ -25,16 +25,24 @@ class AppliancesProduct13 extends StatelessWidget {
       reviewCount: 1439,
       brand: 'Black & Decker',
       color: 'White',
-      material: 'Plastic and Glass',
-      dimensions: '1.5L',
-      style: 'Countertop Blender',
-      installationType: 'N/A',
-      accessLocation: 'Top',
-      settingsCount: 2,
-      powerSource: 'Electric',
-      manufacturer: 'Black & Decker',
+      specialfeatures: 'Portable',
+      capacity: '1.5 Liters',
+      dimensions: '30D x 20W x 30H centimeters',
+      material: 'Stainless Steel',
+      components: 'Juice Container',
+      style: 'Modern',
+      powerSource: 'Corded Electric',
+      recommendedUsesForProduct: 'Crushing',
       aboutThisItem:
-          'High-quality 500W blender with a 1.5L jar and grinder mill. Ideal for blending and grinding tasks.',
+          '''500W Powerful motor for on demand blending and grinding applicationsr.
+
+2 Speed control + Pulse to suit different ingredients.
+
+Durable stainless-steel blades for blending tough ingredients.
+
+Ice Crushing flexibility for making perfect slushy drinks.
+
+60g Grinding mill for coffee, herbs & spices.''',
       deliveryDate: 'Sunday, 9 March',
       deliveryTimeLeft: '20hrs 36 mins',
       deliveryLocation: 'Egypt',
