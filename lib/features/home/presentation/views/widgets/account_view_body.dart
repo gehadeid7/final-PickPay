@@ -55,7 +55,6 @@ class AccountViewBody extends StatelessWidget {
             _accountTile(Icons.favorite, "Wishlist", () {}),
             _accountTile(Icons.location_on, "Addresses", () {}),
             _accountTile(Icons.payment, "Payment Methods", () {}),
-            _accountTile(Icons.history, "Recently Viewed", () {}),
             const Divider(height: 32),
 
             // Settings Section
