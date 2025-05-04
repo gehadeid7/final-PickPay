@@ -8,10 +8,13 @@ class Product4View extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: '',
-      title: "Sony WH-1000XM5 Wireless Headphones",
-      imagePaths: ['assets/Categories/Electronics/samsung_galaxys23ultra.png'],
-      price: 348.00,
+      id: 'electronics_product4',
+      title:
+          "CANSHN Magnetic iPhone 16 Pro Max Case, Clear, Magsafe Compatible",
+      imagePaths: [
+        'assets/electronics_products/mobile_and_tablet/mobile_and_tablet4/1.png',
+      ],
+      price: 141.25,
       category: 'Electronics',
       originalPrice: 399.99,
       rating: 4.9,
@@ -26,7 +29,8 @@ class Product4View extends StatelessWidget {
       settingsCount: 1,
       powerSource: "Rechargeable Battery",
       manufacturer: "Sony",
-      description: "Sony's flagship noise-cancelling wireless headphones.",
+      aboutThisItem:
+          "Experience industry-leading noise cancellation and high-resolution audio with the Sony WH-1000XM5 wireless headphones, perfect for music lovers and frequent travelers.",
       deliveryDate: "Friday, May 8th",
       deliveryTimeLeft: "1 hour 15 minutes",
       deliveryLocation: "Cairo, Egypt",

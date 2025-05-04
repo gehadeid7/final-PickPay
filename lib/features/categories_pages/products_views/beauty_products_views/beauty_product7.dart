@@ -32,7 +32,7 @@ class BeautyProduct7 extends StatelessWidget {
       settingsCount: 0,
       powerSource: 'Manual',
       manufacturer: 'La Roche-Posay',
-      description:
+      aboutThisItem:
           'Oil control SPF50+ sunscreen with dry touch formula, perfect for sensitive skin.',
       deliveryDate: 'Sunday, 9 March',
       deliveryTimeLeft: '20hrs 36 mins',

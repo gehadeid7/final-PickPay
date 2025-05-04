@@ -32,7 +32,7 @@ class BeautyProduct5 extends StatelessWidget {
       settingsCount: 0,
       powerSource: 'Manual',
       manufacturer: 'Maybelline',
-      description:
+      aboutThisItem:
           'Hydrating lip gloss with hyaluronic acid for a fuller, lifted look.',
       deliveryDate: 'Sunday, 9 March',
       deliveryTimeLeft: '20hrs 36 mins',

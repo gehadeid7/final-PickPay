@@ -32,7 +32,7 @@ class BeautyProduct15 extends StatelessWidget {
       settingsCount: 0,
       powerSource: 'None',
       manufacturer: 'CORATED',
-      description:
+      aboutThisItem:
           'Gentle heatless curling kit for creating soft, bouncy curls without damage.',
       deliveryDate: 'Saturday, 15 March',
       deliveryTimeLeft: '16hrs 10 mins',

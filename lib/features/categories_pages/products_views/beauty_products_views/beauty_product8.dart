@@ -30,7 +30,7 @@ class BeautyProduct8 extends StatelessWidget {
       powerSource: '',
       manufacturer: 'Eva Cosmetics',
       color: 'Green',
-      description:
+      aboutThisItem:
           'Anti-ageing collagen toner that firms and refines skin. Suitable for daily skincare routine.',
       deliveryDate: 'Sunday, 9 March',
       deliveryTimeLeft: '20hrs 36 mins',

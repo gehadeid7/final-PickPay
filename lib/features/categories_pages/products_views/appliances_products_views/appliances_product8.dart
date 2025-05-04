@@ -24,15 +24,22 @@ class AppliancesProduct8 extends StatelessWidget {
       brand: 'Black & Decker',
       color: 'Silver/Black',
       material: 'Stainless Steel',
-      dimensions: 'Compact',
-      style: 'Toaster',
-      installationType: 'Countertop',
-      accessLocation: 'Top',
-      settingsCount: 2,
-      powerSource: 'Electric',
-      manufacturer: 'Black & Decker',
-      description:
-          'Compact 2-slice toaster with stainless steel housing and even toasting performance.',
+      dimensions: '22D x 20W x 22H centimeters',
+      style: '1050W-2 Slice toaster',
+      specialfeatures: 'Electronic Browning Control',
+      installationType: 'LED',
+      specialty: 'Bagel, Thicker Bread Slices',
+      wattage: '1050 watts',
+      slotcount: '2',
+      aboutThisItem: '''Six adjustable toasting levels for perfect results.
+
+Reheat and defrost functions for versatile use.
+
+Electronic toasting control ensures even browning.
+
+Heat-resistant design enhances safety during use.
+
+LED indicator for easy monitoring''',
       deliveryDate: 'Sunday, 9 March',
       deliveryTimeLeft: '20hrs 36 mins',
       deliveryLocation: 'Egypt',

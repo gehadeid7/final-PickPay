@@ -30,7 +30,7 @@ class AppliancesProduct12 extends StatelessWidget {
       settingsCount: 5,
       powerSource: 'Natural Gas',
       manufacturer: 'TORNADO',
-      description:
+      aboutThisItem:
           'Digital gas water heater with 6L capacity, natural gas-powered. Energy-efficient with safety features.',
       deliveryDate: 'Sunday, 9 March',
       deliveryTimeLeft: '20hrs 36 mins',

@@ -29,7 +29,7 @@ class BeautyProduct16 extends StatelessWidget {
       settingsCount: 0,
       powerSource: 'N/A',
       manufacturer: 'Avon',
-      description: 'Floral Eau de Parfum with long-lasting scent for women.',
+      aboutThisItem: 'Floral Eau de Parfum with long-lasting scent for women.',
       deliveryDate: 'Monday, 17 March',
       deliveryTimeLeft: '14hrs 30 mins',
       deliveryLocation: 'Egypt',

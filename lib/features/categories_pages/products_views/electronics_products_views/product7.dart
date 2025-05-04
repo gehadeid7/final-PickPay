@@ -1,3 +1,4 @@
+// lib/features/categories_pages/products_views/product7_view.dart
 import 'package:flutter/material.dart';
 import 'package:pickpay/features/categories_pages/models/product_model.dart';
 import 'package:pickpay/features/categories_pages/products_views/product_detail_view.dart';
@@ -9,8 +10,11 @@ class Product7View extends StatelessWidget {
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
       id: '',
-      title: "ASUS ROG Strix Gaming Laptop",
-      imagePaths: ['assets/Categories/Electronics/samsung_galaxys23ultra.png'],
+      title:
+          'Xiaomi TV A 43 2025, 43", FHD, HDR, Smart Google TV with Dolby Atmos',
+      imagePaths: [
+        'assets/electronics_products/tvscreens/tv2/1.png',
+      ],
       price: 1399.00,
       originalPrice: 1599.00,
       rating: 4.7,
@@ -26,8 +30,8 @@ class Product7View extends StatelessWidget {
       settingsCount: 1,
       powerSource: "Battery",
       manufacturer: "ASUS",
-      description:
-          "ASUS ROG Strix, high-performance gaming laptop with AMD Ryzen 9, NVIDIA RTX 4070, 16GB RAM, and 1TB SSD.",
+      aboutThisItem:
+          "ASUS ROG Strix, high-performance gaming laptop with AMD Ryzen 9, NVIDIA RTX 4070, 16GB RAM, and 1TB SSD. Built for serious gamers.",
       deliveryDate: "Thursday, May 11th",
       deliveryTimeLeft: "3 hours 5 minutes",
       deliveryLocation: "Cairo, Egypt",

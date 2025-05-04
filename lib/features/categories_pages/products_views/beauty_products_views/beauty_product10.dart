@@ -23,7 +23,7 @@ class BeautyProduct10 extends StatelessWidget {
       rating: 4.8,
       reviewCount: 19,
       brand: 'L’Oréal Paris',
-      description:
+      aboutThisItem:
           'Hydrating eye serum with hyaluronic acid for plumper, youthful under eyes.',
       color: 'Clear',
       material: 'Liquid Serum',

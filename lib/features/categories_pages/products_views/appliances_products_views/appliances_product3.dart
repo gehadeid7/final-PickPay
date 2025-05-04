@@ -18,20 +18,28 @@ class AppliancesProduct3 extends StatelessWidget {
       category: 'Appliances',
       price: 26999,
       originalPrice: 28000,
-      rating: 4.7,
-      reviewCount: 1542,
+      rating: 4.5,
+      reviewCount: 12,
       brand: 'Midea',
       color: 'Silver',
-      material: 'Stainless Steel',
-      dimensions: 'Height: 1770 mm, Width: 700 mm, Depth: 685 mm',
-      style: 'Top Mount Freezer Refrigerator',
-      installationType: 'Freestanding',
-      accessLocation: 'Front',
-      settingsCount: 3,
-      powerSource: 'Electric',
-      manufacturer: 'Midea',
-      description:
-          'Midea 449L Top Mount Freezer refrigerator features Inverter Quattro technology, No Frost system, Multi-Air Flow, Active-C Fresh filter, and humidity control to keep food fresher longer.',
+      capacity: '449L',
+      modelNumber: 'MDRT645MTE06E',
+      defrostSystem: 'No Frost',
+      technology: 'Inverter Quattro',
+      configration: 'Couble-Door',
+      formFactor: 'Freestanding',
+      energyEfficency: ' A +',
+      itemWeight: '92 Kg',
+      aboutThisItem:
+          ''' Spacious 449L capacity refrigerator with double-door design.
+
+Advanced Inverter Quattro technology for energy efficiency and quieter operation.
+
+No Frost technology prevents ice buildup and eliminates the need for manual defrosting.
+
+Multi-Air Flow system ensures even cooling throughout the refrigerator.
+
+Active-C Fresh and Humidity Control features help keep food fresher for longer''',
       deliveryDate: 'Sunday, 9 March',
       deliveryTimeLeft: '20hrs 36 mins',
       deliveryLocation: 'Egypt',

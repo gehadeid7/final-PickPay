@@ -31,7 +31,7 @@ class BeautyProduct11 extends StatelessWidget {
       settingsCount: 0,
       powerSource: 'N/A',
       manufacturer: 'L’Oréal Paris',
-      description: 'Gentle purifying shampoo for oily scalp and dry ends.',
+      aboutThisItem: 'Gentle purifying shampoo for oily scalp and dry ends.',
       deliveryDate: 'Tuesday, 11 March',
       deliveryTimeLeft: '20hrs 30 mins',
       deliveryLocation: 'Egypt',

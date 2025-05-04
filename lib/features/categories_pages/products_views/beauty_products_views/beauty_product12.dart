@@ -30,7 +30,7 @@ class BeautyProduct12 extends StatelessWidget {
       settingsCount: 0,
       powerSource: 'N/A',
       manufacturer: 'Raw African',
-      description: 'Complete natural shea butter care for hair and scalp.',
+      aboutThisItem: 'Complete natural shea butter care for hair and scalp.',
       deliveryDate: 'Wednesday, 12 March',
       deliveryTimeLeft: '19hrs 50 mins',
       deliveryLocation: 'Egypt',

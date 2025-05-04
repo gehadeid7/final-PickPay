@@ -14,22 +14,30 @@ class AppliancesProduct4 extends StatelessWidget {
         'assets/appliances/product4/1.png',
       ],
       category: 'Appliances',
-      price: 17023,
-      originalPrice: 19000,
-      rating: 4.9,
-      reviewCount: 3120,
+      price: 17.023,
+      originalPrice: 17.950,
+      rating: 4.2,
+      reviewCount: 14,
       brand: 'Zanussi',
       color: 'Silver',
-      material: 'Stainless Steel, Plastic',
-      dimensions: '850 x 600 x 600 mm',
-      style: 'Front Load Washing Machine',
+      material: 'Stainless Steel',
+      capacity: '8 KG',
       installationType: 'Freestanding',
-      accessLocation: 'Front',
-      settingsCount: 15,
-      powerSource: 'Electric',
-      manufacturer: 'Zanussi',
-      description:
-          'The Zanussi ZWF8240SX5r is an 8 KG front-load automatic washing machine offering advanced washing programs, a sleek silver finish, and energy-efficient performance ideal for daily laundry needs.',
+      controlsType: 'Electronic',
+      energyEfficency: 'A+++',
+      spinSpeed: '1200 RPM',
+      modelNumber: 'ZWF8240SX5',
+      itemWeight: '71 Kg',
+      aboutThisItem:
+          ''' Automatic washing machine with 8 kg capacity, perfect for medium to large households.
+
+Multiple washing programs designed for different fabric types and soil levels.
+
+Energy-efficient design helps reduce water and electricity consumption.
+
+Features include delay start, child lock, and easy-to-use electronic controls.
+
+Sleek silver finish that complements any modern laundry space. ''',
       deliveryDate: 'Sunday, 9 March',
       deliveryTimeLeft: '20hrs 36 mins',
       deliveryLocation: 'Egypt',

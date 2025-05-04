@@ -31,7 +31,7 @@ class BeautyProduct20 extends StatelessWidget {
       settingsCount: 0,
       powerSource: 'N/A',
       manufacturer: 'Jacques Bogart',
-      description:
+      aboutThisItem:
           'Elegant Eau de Toilette fragrance for men with a strong, masculine scent.',
       deliveryDate: 'Friday, 21 March',
       deliveryTimeLeft: '12hrs 10 mins',

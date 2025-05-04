@@ -13,23 +13,28 @@ class AppliancesProduct2 extends StatelessWidget {
       imagePaths: [
         'assets/appliances/product2/1.png',
       ],
-      category: 'Appliances',
-      price: 1099.00,
-      originalPrice: 1299.00,
-      rating: 4.8,
-      reviewCount: 2762,
-      brand: 'Fresh',
-      color: 'Silver',
+      price: 10.525,
+      originalPrice: 10.968,
+      rating: 3.1,
+      reviewCount: 9,
+      drawertype: 'Storage',
       material: 'Stainless Steel',
-      dimensions: '90 cm',
-      style: 'Potato Peeler',
-      installationType: 'Countertop',
-      accessLocation: 'Top',
-      settingsCount: 1,
-      powerSource: 'Electric',
-      manufacturer: 'Fresh',
-      description:
-          'The Fresh Jumbo Potato CB90" features a durable stainless steel body designed for fast and efficient potato peeling in commercial kitchens or busy homes.',
+      finishType: 'Polished',
+      brand: 'Fresh',
+      modelName: 'CB90',
+      formFactor: 'Freestanding',
+      controlsType: 'Knob',
+      itemWeight: '110.23 Pounds',
+      efficiency: 'Efficient',
+      mountingType: 'Freestanding',
+      aboutThisItem:
+          '''Fresh gas cookers are known as the best selling cookers in Egypt. Enjoy buying Fresh Gas Cooker Jumbo Stainless CB 90*60 at a competitive price with high quality.
+
+Fresh Gas Cooker Jumbo Stainless CB 90*60 has very unique features such as thermostat. It is also characterised with its distinguished full glass easy clean oven door and closed door grilling system.
+
+full ignition at oven and grill burners.
+
+Fresh Gas Cooker provide with one Knob for oven and grill burners with safety and Self Igition feature''',
       deliveryDate: 'Sunday, 9 March',
       deliveryTimeLeft: '20hrs 36 mins',
       deliveryLocation: 'Egypt',

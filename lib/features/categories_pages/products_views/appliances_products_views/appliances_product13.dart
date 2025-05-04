@@ -33,7 +33,7 @@ class AppliancesProduct13 extends StatelessWidget {
       settingsCount: 2,
       powerSource: 'Electric',
       manufacturer: 'Black & Decker',
-      description:
+      aboutThisItem:
           'High-quality 500W blender with a 1.5L jar and grinder mill. Ideal for blending and grinding tasks.',
       deliveryDate: 'Sunday, 9 March',
       deliveryTimeLeft: '20hrs 36 mins',

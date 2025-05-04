@@ -31,7 +31,7 @@ class BeautyProduct14 extends StatelessWidget {
       settingsCount: 0,
       powerSource: 'N/A',
       manufacturer: "L'Oreal",
-      description:
+      aboutThisItem:
           'Multi-benefit hair serum for intense repair, strength, and softness.',
       deliveryDate: 'Friday, 14 March',
       deliveryTimeLeft: '17hrs 40 mins',

@@ -10,10 +10,13 @@ class Product6View extends StatelessWidget {
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
       id: '',
-      title: "Lenovo IdeaPad 3 Laptop",
-      imagePaths: ['assets/Categories/Electronics/samsung_galaxys23ultra.png'],
-      price: 429.00,
-      originalPrice: 549.00,
+      title:
+          "Samsung 55 Inch QLED Smart TV Neural HDR Quantum Processor Lite 4K - QA55QE1DAUXEG [2024 Model]",
+      imagePaths: [
+        'assets/electronics_products/tvscreens/tv1/1.png',
+      ],
+      price: 18499.00,
+      originalPrice: 19477.00,
       category: 'Electronics',
       rating: 4.5,
       reviewCount: 954,
@@ -27,8 +30,8 @@ class Product6View extends StatelessWidget {
       settingsCount: 1,
       powerSource: "Battery",
       manufacturer: "Lenovo",
-      description:
-          "Lenovo IdeaPad 3, 15.6-inch laptop with AMD Ryzen 5 processor, 8GB RAM, and 512GB SSD.",
+      aboutThisItem:
+          "Lenovo IdeaPad 3, 15.6-inch laptop with AMD Ryzen 5 processor, 8GB RAM, and 512GB SSD. Ideal for work, study, and entertainment.",
       deliveryDate: "Thursday, May 11th",
       deliveryTimeLeft: "3 hours 5 minutes",
       deliveryLocation: "Cairo, Egypt",

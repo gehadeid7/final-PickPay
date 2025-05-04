@@ -28,7 +28,7 @@ class AppliancesProduct10 extends StatelessWidget {
       settingsCount: 3,
       powerSource: 'Electric',
       manufacturer: 'Fresh',
-      description:
+      aboutThisItem:
           'A high-performance 1600W vacuum cleaner with bag. Compact and powerful, ideal for daily use.',
       deliveryDate: 'Sunday, 9 March',
       deliveryTimeLeft: '20hrs 36 mins',

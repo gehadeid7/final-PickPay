@@ -31,7 +31,7 @@ class BeautyProduct13 extends StatelessWidget {
       settingsCount: 0,
       powerSource: 'N/A',
       manufacturer: 'Garnier',
-      description:
+      aboutThisItem:
           'Permanent hair color with nourishing formula for radiant, long-lasting results.',
       deliveryDate: 'Thursday, 13 March',
       deliveryTimeLeft: '18hrs 20 mins',

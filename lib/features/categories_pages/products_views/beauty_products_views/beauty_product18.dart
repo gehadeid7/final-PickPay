@@ -31,7 +31,7 @@ class BeautyProduct18 extends StatelessWidget {
       settingsCount: 0,
       powerSource: 'N/A',
       manufacturer: 'Bath & Body Works',
-      description:
+      aboutThisItem:
           'Gingham Gorgeous body mist with a delightful floral scent in a large 236ml size.',
       deliveryDate: 'Wednesday, 19 March',
       deliveryTimeLeft: '13hrs 10 mins',

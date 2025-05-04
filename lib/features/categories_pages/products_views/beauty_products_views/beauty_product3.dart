@@ -28,7 +28,7 @@ class BeautyProduct3 extends StatelessWidget {
       settingsCount: 0,
       powerSource: 'Manual',
       manufacturer: 'Cybele',
-      description:
+      aboutThisItem:
           'Smooth and long-lasting powder blush for a natural flush of color.',
       deliveryDate: 'Sunday, 9 March',
       deliveryTimeLeft: '20hrs 36 mins',

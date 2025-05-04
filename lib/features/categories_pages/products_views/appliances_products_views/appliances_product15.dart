@@ -31,7 +31,7 @@ class AppliancesProduct15 extends StatelessWidget {
       settingsCount: 6,
       powerSource: 'Electric',
       manufacturer: 'Black & Decker',
-      description:
+      aboutThisItem:
           'Powerful 1000W dough mixer with 3-blade system and 4L capacity, perfect for baking and kneading tasks.',
       deliveryDate: 'Sunday, 9 March',
       deliveryTimeLeft: '20hrs 36 mins',

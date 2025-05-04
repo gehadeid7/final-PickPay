@@ -32,7 +32,7 @@ class BeautyProduct1 extends StatelessWidget {
       settingsCount: 0,
       powerSource: 'Manual',
       manufacturer: 'L’Oréal',
-      description:
+      aboutThisItem:
           'Achieve fanned-out lashes with L’Oréal Paris Volume Million Lashes Panorama Mascara. Its unique formula and brush offer intense volume and definition for a captivating eye look.',
       deliveryDate: 'Sunday, 9 March',
       deliveryTimeLeft: '20hrs 36 mins',

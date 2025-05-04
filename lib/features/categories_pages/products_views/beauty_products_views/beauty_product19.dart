@@ -33,7 +33,7 @@ class BeautyProduct19 extends StatelessWidget {
       settingsCount: 0,
       powerSource: 'N/A',
       manufacturer: 'NIVEA',
-      description:
+      aboutThisItem:
           'NIVEA Pearl & Beauty Antiperspirant Spray with a soothing scent and pearl extracts.',
       deliveryDate: 'Thursday, 20 March',
       deliveryTimeLeft: '12hrs 40 mins',

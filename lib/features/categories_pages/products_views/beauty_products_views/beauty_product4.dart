@@ -29,7 +29,7 @@ class BeautyProduct4 extends StatelessWidget {
       settingsCount: 0,
       powerSource: 'Manual',
       manufacturer: 'Eva Cosmetics',
-      description:
+      aboutThisItem:
           'Gently cleanses and removes makeup, suitable for normal to dry skin.',
       deliveryDate: 'Sunday, 9 March',
       deliveryTimeLeft: '20hrs 36 mins',

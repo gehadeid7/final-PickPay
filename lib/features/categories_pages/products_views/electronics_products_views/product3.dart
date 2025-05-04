@@ -8,32 +8,34 @@ class Product3View extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: '',
-      title: "Samsung 55-Inch QLED 4K Smart TV",
-      imagePaths: ['assets/Categories/Electronics/samsung_galaxys23ultra.png'],
-      price: 699.99,
+      id: 'electronics_product3',
+      title: "Apple iPhone 16 (128GB) - Ultramarine",
+      imagePaths: [
+        'assets/electronics_products/mobile_and_tablet/mobile_and_tablet3/1.png',
+      ],
+      price: 57555.00,
       category: 'Electronics',
-      originalPrice: 899.99,
-      rating: 4.7,
-      reviewCount: 1542,
-      brand: "Samsung",
-      color: "Black",
-      material: "Metal, Glass",
-      dimensions: "1230.4 x 710.4 x 59.5 mm",
-      style: "TV",
-      installationType: "Wall Mount, Stand Mount",
+      originalPrice: 0,
+      rating: 5.0,
+      reviewCount: 88,
+      brand: "Apple",
+      color: "Ultramarine",
+      material: "Aluminum and Glass",
+      dimensions: "146.7 x 71.5 x 7.8 mm",
+      style: "Smartphone",
+      installationType: "Handheld",
       accessLocation: "Front",
       settingsCount: 1,
-      powerSource: "Corded Electric",
-      manufacturer: "Samsung",
-      description:
-          "55-inch QLED Smart TV with 4K resolution, HDR support, and Tizen OS.",
+      powerSource: "Built-in Rechargeable Battery",
+      manufacturer: "Apple Inc.",
+      aboutThisItem:
+          "Apple iPhone 16 with 128GB storage, A17 chip, and advanced camera system. Featuring an ultramarine finish with all-day battery life.",
       deliveryDate: "Monday, May 5th",
       deliveryTimeLeft: "2 hours 30 minutes",
       deliveryLocation: "Cairo, Egypt",
       inStock: true,
       shipsFrom: "Egypt",
-      soldBy: "Samsung Official Store",
+      soldBy: "Apple Authorized Reseller",
     );
 
     return ProductDetailView(product: product);

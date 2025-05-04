@@ -34,7 +34,7 @@ class AppliancesProduct14 extends StatelessWidget {
       settingsCount: 1,
       powerSource: 'Electric',
       manufacturer: 'Black & Decker',
-      description:
+      aboutThisItem:
           'Stainless steel 1.7L kettle with concealed coil and auto shut-off for safe, fast boiling.',
       deliveryDate: 'Sunday, 9 March',
       deliveryTimeLeft: '20hrs 36 mins',

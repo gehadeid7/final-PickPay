@@ -29,7 +29,7 @@ class AppliancesProduct9 extends StatelessWidget {
       settingsCount: 3,
       powerSource: 'Electric',
       manufacturer: 'Panasonic',
-      description:
+      aboutThisItem:
           'Panasonic NI-M300TVTD is a powerful 1800W steam/dry iron with a titanium-coated soleplate, anti-calc system, and precision tip for efficient ironing.',
       deliveryDate: 'Sunday, 9 March',
       deliveryTimeLeft: '20hrs 36 mins',

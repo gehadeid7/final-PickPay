@@ -8,38 +8,42 @@ class AppliancesProduct1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: "68132a95ff7813b3d47f9da5", // Add a backend-generated ID here
-      title:
-          'Koldair Water Dispenser Cold And Hot 2 Tabs - Bottom Load KWDB Silver Cooler',
-      imagePaths: [
-        'assets/appliances/product1/1.png',
-        'assets/appliances/product1/2.png',
-        'assets/appliances/product1/3.png',
-      ],
-      category: 'Appliances',
-      price: 10499,
-      originalPrice: 11999,
-      rating: 4.9,
-      reviewCount: 1893,
-      brand: 'Koldair',
-      color: 'Silver',
-      material: 'Plastic and Metal',
-      dimensions: '310 x 360 x 1040 mm',
-      style: 'Bottom Load Water Dispenser',
-      installationType: 'Freestanding',
-      accessLocation: 'Front',
-      settingsCount: 2,
-      powerSource: 'Electric',
-      manufacturer: 'Koldair',
-      description:
-          'The Koldair KWDB water dispenser provides both cold and hot water with two separate taps. Features a bottom loading design for ease of use and a sleek silver finish suitable for home or office.',
-      deliveryDate: 'Sunday, 9 March',
-      deliveryTimeLeft: '20hrs 36 mins',
-      deliveryLocation: 'Egypt',
-      inStock: true,
-      shipsFrom: 'Pickpay Warehouse',
-      soldBy: 'Pickpay Official',
-    );
+        id: "68132a95ff7813b3d47f9da5", // Add a backend-generated ID here
+        title:
+            'Koldair Water Dispenser Cold And Hot 2 Tabs - Bottom Load KWDB Silver Cooler',
+        imagePaths: [
+          'assets/appliances/product1/1.png',
+          'assets/appliances/product1/2.png',
+          'assets/appliances/product1/3.png',
+        ],
+        price: 10.499,
+        originalPrice: 16.800,
+        rating: 3.1,
+        reviewCount: 9,
+        category: 'appliances',
+        color: 'Silver',
+        material: 'Plastic, Acrylonitrile Butadiene Styrene (ABS)',
+        brand: 'Koldair',
+        dimensions: '30D x 30W x 110H centimeters',
+        style: 'Bottom Load',
+        installationType: 'Floor Mounted',
+        accessLocation: 'Top',
+        settingsCount: 2,
+        powerSource: 'Corderd Electric',
+        manufacturer: 'Koldair',
+        aboutThisItem: '''
+Brand Name : Koldair
+Type : Water Dispenser
+Water Type : Hot And Cold
+Top Load - Floor Standing -2 Tabs
+Material : ABS (Plastic)
+''',
+        deliveryDate:
+            'FREE Delivery Sunday, 9 March order within 20hrs 36 mins',
+        deliveryLocation: 'to Egypt',
+        inStock: true,
+        shipsFrom: 'PickPay',
+        soldBy: 'Pickpay');
 
     return ProductDetailView(product: product);
   }

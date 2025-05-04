@@ -1,15 +1,29 @@
 class ProductsViewsModel {
+  // general
   final String id;
   final String title;
   final double price;
-  final double originalPrice;
 
-  final String? brand;
+  final double? originalPrice;
   final String? category;
   final List<String>? imagePaths;
   final double? rating;
   final int? reviewCount;
+  final String? brand;
   final String? color;
+  final String? aboutThisItem;
+  final String? deliveryDate;
+  final String? deliveryTimeLeft;
+  final String? deliveryLocation;
+  final bool? inStock;
+  final String? shipsFrom;
+  final String? soldBy;
+  final String? specialfeatures;
+  final String? finishType;
+  final String? containerType;
+  final String? manufacturer;
+
+// appliances detailes
   final String? material;
   final String? dimensions;
   final String? style;
@@ -17,20 +31,69 @@ class ProductsViewsModel {
   final String? accessLocation;
   final int? settingsCount;
   final String? powerSource;
-  final String? manufacturer;
-  final String? description;
-  final String? deliveryDate;
-  final String? deliveryTimeLeft;
-  final String? deliveryLocation;
-  final bool? inStock;
-  final String? shipsFrom;
-  final String? soldBy;
+  final String? modelName;
+  final String? formFactor;
+  final String? controlsType;
+  final String? itemWeight;
+  final String? efficiency;
+  final String? mountingType;
+  final String? capacity;
+  final String? technology;
+  final String? configration;
+  final String? energyEfficency;
+  final String? spinSpeed;
+  final String? modelNumber;
+  final String? numberofprograms;
+  final String? noiselevel;
+  final String? recommendedUsesForProduct;
+  final String? outputWattage;
+  final String? wattage;
+  final String? coffeeMakerType;
+  final String? filtertype;
+  final String? stainlessSteelNumberofSpeeds;
+  final String? bladeMaterial;
+  final String? voltage;
+  final String? finishtype;
+  final String? components;
+  final String? powersource;
+  final String? pressure;
+  final String? maximumpressure;
+  final String? controllertype;
+  final String? electricFanDesign;
+  final String? roomtype;
+  final String? surface;
+  final String? isProductCordless;
+  final String? frequency;
+  final String? slotcount;
+  final String? drawertype;
+  final String? defrostSystem;
+
+  // beauty
+  final String? productbenefit;
+  final String? itemform;
+  final String? specialty;
+  final String? unitcount;
+  final String? numberofitems;
+  final String? skintype;
+  final String? coverage;
+  final String? ageRangeDescription;
+  final String? specialIngredients;
+  final String? activeIngredients;
+  final String? sunProtectionFactor;
+  final String? itemvolume;
+  final String? scent;
+  final String? targetUseBodyPart;
+  final String? hairtype;
+  final String? liquidVolume;
+  final String? resultingHairType;
+  final String? materialfeature;
+  final String? fragranceConcentration;
 
   ProductsViewsModel({
     required this.id,
     required this.title,
     required this.price,
-    required this.originalPrice,
+    this.originalPrice,
     this.brand,
     this.category,
     this.imagePaths,
@@ -42,18 +105,77 @@ class ProductsViewsModel {
     this.style,
     this.installationType,
     this.accessLocation,
+    this.defrostSystem,
     this.settingsCount,
     this.powerSource,
     this.manufacturer,
-    this.description,
+    this.aboutThisItem,
     this.deliveryDate,
     this.deliveryTimeLeft,
     this.deliveryLocation,
     this.inStock,
     this.shipsFrom,
     this.soldBy,
+    this.specialfeatures,
+    this.finishType,
+    this.modelName,
+    this.formFactor,
+    this.controlsType,
+    this.itemWeight,
+    this.efficiency,
+    this.mountingType,
+    this.capacity,
+    this.technology,
+    this.configration,
+    this.energyEfficency,
+    this.spinSpeed,
+    this.modelNumber,
+    this.numberofprograms,
+    this.noiselevel,
+    this.recommendedUsesForProduct,
+    this.outputWattage,
+    this.wattage,
+    this.coffeeMakerType,
+    this.filtertype,
+    this.stainlessSteelNumberofSpeeds,
+    this.bladeMaterial,
+    this.containerType,
+    this.voltage,
+    this.finishtype,
+    this.components,
+    this.powersource,
+    this.pressure,
+    this.maximumpressure,
+    this.controllertype,
+    this.electricFanDesign,
+    this.roomtype,
+    this.surface,
+    this.isProductCordless,
+    this.frequency,
+    this.slotcount,
+    this.productbenefit,
+    this.itemform,
+    this.specialty,
+    this.unitcount,
+    this.numberofitems,
+    this.skintype,
+    this.coverage,
+    this.ageRangeDescription,
+    this.specialIngredients,
+    this.activeIngredients,
+    this.sunProtectionFactor,
+    this.itemvolume,
+    this.scent,
+    this.targetUseBodyPart,
+    this.hairtype,
+    this.liquidVolume,
+    this.resultingHairType,
+    this.materialfeature,
+    this.fragranceConcentration,
+    this.drawertype,
   });
 
+// for back
   factory ProductsViewsModel.fromJson(Map<String, dynamic> json) {
     return ProductsViewsModel(
       id: json['_id']?['\$oid'] ?? json['id'] ?? '',
@@ -76,7 +198,7 @@ class ProductsViewsModel {
       settingsCount: json['settingsCount'],
       powerSource: json['powerSource'],
       manufacturer: json['manufacturer'],
-      description: json['description'],
+      aboutThisItem: json['description'],
       deliveryDate: json['deliveryDate'],
       deliveryTimeLeft: json['deliveryTimeLeft'],
       deliveryLocation: json['deliveryLocation'],
@@ -106,7 +228,7 @@ class ProductsViewsModel {
       if (settingsCount != null) 'settingsCount': settingsCount,
       if (powerSource != null) 'powerSource': powerSource,
       if (manufacturer != null) 'manufacturer': manufacturer,
-      if (description != null) 'description': description,
+      if (aboutThisItem != null) 'description': aboutThisItem,
       if (deliveryDate != null) 'deliveryDate': deliveryDate,
       if (deliveryTimeLeft != null) 'deliveryTimeLeft': deliveryTimeLeft,
       if (deliveryLocation != null) 'deliveryLocation': deliveryLocation,

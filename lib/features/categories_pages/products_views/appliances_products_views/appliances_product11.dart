@@ -29,7 +29,7 @@ class AppliancesProduct11 extends StatelessWidget {
       settingsCount: 3,
       powerSource: 'Electric with charger',
       manufacturer: 'Fresh',
-      description:
+      aboutThisItem:
           'Rechargeable standing fan with 50W power, 3 blades, and long-lasting battery backup.',
       deliveryDate: 'Sunday, 9 March',
       deliveryTimeLeft: '20hrs 36 mins',

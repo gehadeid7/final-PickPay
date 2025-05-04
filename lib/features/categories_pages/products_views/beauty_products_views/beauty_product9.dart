@@ -30,7 +30,7 @@ class BeautyProduct9 extends StatelessWidget {
       settingsCount: 0,
       powerSource: '',
       manufacturer: 'Eucerin',
-      description:
+      aboutThisItem:
           'Eucerin Skin Renewal Serum treats blemish-prone skin and controls oil, improving skin texture and appearance.',
       deliveryDate: 'Sunday, 9 March',
       deliveryTimeLeft: '20hrs 36 mins',

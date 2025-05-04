@@ -1,4 +1,3 @@
-// lib/features/categories_pages/products_views/product5_view.dart
 import 'package:flutter/material.dart';
 import 'package:pickpay/features/categories_pages/models/product_model.dart';
 import 'package:pickpay/features/categories_pages/products_views/product_detail_view.dart';
@@ -10,10 +9,12 @@ class Product5View extends StatelessWidget {
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
       id: '',
-      title: "Apple MacBook Air M2",
-      imagePaths: ['assets/Categories/Electronics/samsung_galaxys23ultra.png'],
-      price: 1149.00,
-      originalPrice: 1299.00,
+      title: "Oraimo 18W USB-C Fast Charger, Dual Output, QC3.0 & PD3.0",
+      imagePaths: [
+        'assets/electronics_products/mobile_and_tablet/mobile_and_tablet5/1.png',
+      ],
+      price: 199.00,
+      originalPrice: 299.00,
       category: 'Electronics',
       rating: 4.8,
       reviewCount: 2123,
@@ -27,8 +28,8 @@ class Product5View extends StatelessWidget {
       settingsCount: 1,
       powerSource: "Battery",
       manufacturer: "Apple",
-      description:
-          "Apple MacBook Air with M2 chip. 13.6-inch Retina display, up to 18 hours of battery life.",
+      aboutThisItem:
+          "Apple MacBook Air with M2 chip. 13.6-inch Retina display, up to 18 hours of battery life, ultra-light and powerful for all your needs.",
       deliveryDate: "Wednesday, May 10th",
       deliveryTimeLeft: "2 hours 30 minutes",
       deliveryLocation: "Cairo, Egypt",

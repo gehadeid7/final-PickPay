@@ -20,20 +20,28 @@ class AppliancesProduct5 extends StatelessWidget {
       category: 'Appliances',
       price: 15699,
       originalPrice: 16000,
-      rating: 4.8,
-      reviewCount: 2123,
+      rating: 4.0,
+      reviewCount: 11,
       brand: 'Midea',
       color: 'Silver',
+      modelNumber: 'WQP13-5201C-S',
+      capacity: '13 Place Set',
+      installationType: 'Free standing',
+      numberofprograms: '6',
+      controlsType: 'Electronic',
       material: 'Stainless Steel',
-      dimensions: '598 x 600 x 845 mm',
-      style: 'Dishwasher',
-      installationType: 'Freestanding',
-      accessLocation: 'Front',
-      settingsCount: 6,
-      powerSource: 'Electric',
-      manufacturer: 'Midea',
-      description:
-          'A powerful and efficient dishwasher with 13-place setting capacity and 6 washing programs.',
+      energyEfficency: 'A + +',
+      noiselevel: '49 dB',
+      aboutThisItem:
+          '''Free-standing dishwasher with 13 place settings capacity, ideal for family use.
+
+6 versatile washing programs to handle everything from lightly soiled to heavily dirty dishes.
+
+Sleek silver finish that complements modern kitchen designs.
+
+Energy-efficient operation helps save on electricity and water bills.
+
+Easy-to-use electronic controls with clear program indicators. ''',
       deliveryDate: 'Sunday, 9 March',
       deliveryTimeLeft: '20hrs 36 mins',
       deliveryLocation: 'Egypt',

@@ -29,7 +29,7 @@ class BeautyProduct6 extends StatelessWidget {
       settingsCount: 0,
       powerSource: 'Manual',
       manufacturer: 'Care & More',
-      description:
+      aboutThisItem:
           'Hydrating soft cream enriched with glycerin and berry extract for dry skin.',
       deliveryDate: 'Sunday, 9 March',
       deliveryTimeLeft: '20hrs 36 mins',

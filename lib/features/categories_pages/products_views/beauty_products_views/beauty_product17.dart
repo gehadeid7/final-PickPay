@@ -30,7 +30,7 @@ class BeautyProduct17 extends StatelessWidget {
       settingsCount: 0,
       powerSource: 'N/A',
       manufacturer: 'Memwa',
-      description:
+      aboutThisItem:
           'Long-lasting luxury fragrance for women with elegant scent profile.',
       deliveryDate: 'Tuesday, 18 March',
       deliveryTimeLeft: '13hrs 50 mins',

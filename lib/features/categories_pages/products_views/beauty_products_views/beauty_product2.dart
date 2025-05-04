@@ -32,7 +32,7 @@ class BeautyProduct2 extends StatelessWidget {
       settingsCount: 0,
       powerSource: 'Manual',
       manufacturer: 'L’Oréal',
-      description:
+      aboutThisItem:
           'Oil control, high coverage foundation designed to last 24 hours with a matte finish.',
       deliveryDate: 'Sunday, 9 March',
       deliveryTimeLeft: '20hrs 36 mins',
