@@ -193,8 +193,8 @@ class AppliancesViewBody extends StatelessWidget {
               'assets/appliances/product8/2.png',
               'assets/appliances/product8/3.png',
             ],
-            price: 2540,
-            originalPrice: 2760,
+            price: 2540.00,
+            originalPrice: 2760.00,
             rating: 4.6,
             reviewCount: 884,
             onTap: () {

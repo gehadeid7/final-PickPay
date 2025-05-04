@@ -16,7 +16,6 @@ import 'package:pickpay/features/home/presentation/views/widgets/recommended_sec
 import 'package:pickpay/features/home/presentation/views/widgets/recommended_section/recommended_foru_header.dart';
 import 'package:pickpay/features/home/presentation/views/widgets/sliding_cards_bannars/sliding_cards_feature_list.dart';
 import 'package:pickpay/features/home/presentation/views/widgets/todays_sale_section/todays_sale_grid_view.dart';
-import 'package:pickpay/features/home/presentation/views/widgets/todays_sale_section/todays_sale_header.dart';
 import 'package:pickpay/features/home/presentation/views/widgets/video_games_bestsellers/vgames_grid.dart';
 import 'package:pickpay/features/home/presentation/views/widgets/video_games_bestsellers/vigames_section_header.dart';
 
@@ -50,13 +49,11 @@ class _HomeViewBodyState extends State<HomeViewBody> {
             SizedBox(height: 12),
             RecommendedForuGridView(),
             SizedBox(height: 12),
-            TodaysSaleHeader(),
-            SizedBox(height: 12),
             TodaysSaleGridView(),
             SizedBox(height: 12),
             ElectronicsHeader(),
             SizedBox(height: 12),
-            ElectronicsGridView(),
+            ElectronicsCarouselView(),
             SizedBox(height: 12),
             AppliancesHeader(),
             SizedBox(height: 12),

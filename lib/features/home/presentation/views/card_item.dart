@@ -22,6 +22,8 @@ class CardItem extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+            color: const Color.fromARGB(67, 158, 158, 158), width: 1),
         boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4)],
       ),
       padding: const EdgeInsets.all(8),

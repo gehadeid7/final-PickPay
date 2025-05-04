@@ -231,6 +231,7 @@ class ElectronicsViewBody extends StatelessWidget {
               reviewCount: 19,
             ),
             SizedBox(height: 10),
+            // product 12
             ProductCard(
               name:
                   'Lenovo Legion 5 15ACH6 Gaming Laptop - Ryzen 5-5600H, 16 GB RAM, 512 GB SSD, NVIDIA GeForce RTX 3050 Ti 4GB GDDR6 Graphics, 15.6" FHD (1920x1080) IPS 120Hz, Backlit Keyboard, WIN 11',
@@ -243,6 +244,7 @@ class ElectronicsViewBody extends StatelessWidget {
               reviewCount: 19,
             ),
             SizedBox(height: 10),
+            // product 13
             ProductCard(
               name:
                   'HP Victus Gaming Laptop (15-fb1004ne), CPU: Ryzen 5-7535HS, 16GB DDR5 2DM 4800, NVIDIA RTX 2050, 15.6" FHD 144Hz, 512GB, Windows 11',
@@ -255,6 +257,7 @@ class ElectronicsViewBody extends StatelessWidget {
               reviewCount: 19,
             ),
             SizedBox(height: 10),
+            // product 14
             ProductCard(
               name:
                   'HP OfficeJet Pro 9720 Wide Format All-in-One Printer - Print, Scan, Copy, Wireless, ADF, Duplex, Touchscreen - [53N94C]',
@@ -267,6 +270,7 @@ class ElectronicsViewBody extends StatelessWidget {
               reviewCount: 19,
             ),
             SizedBox(height: 10),
+            // product 15
             ProductCard(
               name: 'USB Cooling Pad Stand Fan Cooler for Laptop Notebook',
               imagePaths: [

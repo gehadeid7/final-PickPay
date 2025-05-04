@@ -10,23 +10,23 @@ class BeautyHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: GestureDetector(
-        onTap: () => Navigator.pushNamed(context, BeautyView.routeName),
-        child: Row(
-          children: [
-            Text(
-              'Beauty',
-              style: TextStyles.bold16,
-            ),
-            Spacer(),
-            Text(
+      child: Row(
+        children: [
+          Text(
+            'Beauty & Fragrance Bestsellers',
+            style: TextStyles.bold16,
+          ),
+          Spacer(),
+          GestureDetector(
+            onTap: () => Navigator.pushNamed(context, BeautyView.routeName),
+            child: Text(
               'more',
               style: TextStyles.regular16.copyWith(
                 color: AppColors.secondColor,
               ),
-            )
-          ],
-        ),
+            ),
+          )
+        ],
       ),
     );
   }

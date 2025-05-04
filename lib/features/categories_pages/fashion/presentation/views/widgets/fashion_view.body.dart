@@ -87,8 +87,8 @@ class FashionViewbody extends StatelessWidget {
             imagePaths: [
               "assets/Fashion_products/Men_Fashion/men_fashion1/1.png",
             ],
-            price: 352.00, // Assuming lower bound
-            originalPrice: 899.00, // Assuming upper bound
+            price: 352.00,
+            originalPrice: 899.00,
             rating: 4.0,
             reviewCount: 19,
           ),

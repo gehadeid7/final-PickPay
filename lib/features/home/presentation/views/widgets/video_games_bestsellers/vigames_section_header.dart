@@ -10,23 +10,23 @@ class VigamesSectionHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: GestureDetector(
-        onTap: () => Navigator.pushNamed(context, VideogamesView.routeName),
-        child: Row(
-          children: [
-            Text(
-              'Video Games Bestsellers',
-              style: TextStyles.bold16,
-            ),
-            Spacer(),
-            Text(
+      child: Row(
+        children: [
+          Text(
+            'Video Games Bestsellers',
+            style: TextStyles.bold16,
+          ),
+          const Spacer(),
+          GestureDetector(
+            onTap: () => Navigator.pushNamed(context, VideogamesView.routeName),
+            child: Text(
               'more',
               style: TextStyles.regular16.copyWith(
                 color: AppColors.secondColor,
               ),
-            )
-          ],
-        ),
+            ),
+          ),
+        ],
       ),
     );
   }

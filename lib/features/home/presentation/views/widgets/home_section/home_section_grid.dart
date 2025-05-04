@@ -1,48 +1,195 @@
 import 'package:flutter/material.dart';
+import 'package:pickpay/features/categories_pages/homeCategory/presentation/views/home_category_view.dart';
 import 'package:pickpay/features/home/presentation/views/card_item.dart';
 
-class HomeSectionGrid extends StatelessWidget {
+class HomeSectionGrid extends StatefulWidget {
   const HomeSectionGrid({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final List<Map<String, dynamic>> homeItems = [
-      {
-        'imagePath': 'assets/Categories/Electronics/samsung_galaxys23ultra.png',
-        'productName': 'Samsung Galaxy S23 Ultra',
-        'price': '999.99',
-        'rating': 4.8,
-        'reviewCount': 200,
-      },
-      {
-        'imagePath': 'assets/Categories/Electronics/samsung_galaxys23ultra.png',
-        'productName': 'Apple iPhone 15 Pro Max',
-        'price': '79.99',
-        'rating': 4.6,
-        'reviewCount': 150,
-      },
-    ];
+  State<HomeSectionGrid> createState() => _HomeSectionGrid();
+}
 
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 180 / 230,
-        mainAxisSpacing: 12,
-        crossAxisSpacing: 16,
+class _HomeSectionGrid extends State<HomeSectionGrid> {
+  late PageController _pageController;
+  int currentPage = 1; // Start at the first real item
+
+  final List<Map<String, dynamic>> originalItems = [
+    {
+      'imagePath': 'assets/Home_products/furniture/furniture2/1.png',
+      'productName':
+          'Star Bags Bean Bag Chair - Purple, 95*95*97 cm, Unisex Adults',
+      'price': '1699.00',
+      'rating': 5.0,
+      'reviewCount': 954,
+      'detailPage': const HomeCategoryView(),
+    },
+    {
+      'imagePath': 'assets/Home_products/home-decor/home_decor1/1.png',
+      'productName':
+          'Golden Lighting LED Gold Lampshade + 1 Crystal Cylinder Bulb.',
+      'price': '1128.00',
+      'rating': 4.0,
+      'reviewCount': 1288,
+      'detailPage': const HomeCategoryView(),
+    },
+    {
+      'imagePath': 'assets/Home_products/home-decor/home_decor3/1.png',
+      'productName': 'Glass Vase 15cm',
+      'price': '250.00',
+      'rating': 4.6,
+      'reviewCount': 1735,
+      'detailPage': const HomeCategoryView(),
+    },
+    {
+      'imagePath': 'assets/Home_products/bath_and_bedding/bath3/1.png',
+      'productName':
+          'Bedsure 100% Cotton Blankets Queen Size for Bed - Waffle Weave Blankets for Summer, Lightweight and Breathable Soft Woven Blankets for Spring, Mint, 90x90 Inches ',
+      'price': '604.00',
+      'rating': 4.9,
+      'reviewCount': 1893,
+      'detailPage': const HomeCategoryView(),
+    },
+    {
+      'imagePath': 'assets/Home_products/kitchen/kitchen1/1.png',
+      'productName': 'Neoflam Pote Cookware Set 11-Pieces, Pink Marble',
+      'price': '15.795',
+      'rating': 4.9,
+      'reviewCount': 1893,
+      'detailPage': const HomeCategoryView(),
+    },
+  ];
+
+  List<Map<String, dynamic>> get carouselItems {
+    final list = [...originalItems];
+    list.insert(0, originalItems.last); // Fake first item (last real)
+    list.add(originalItems.first); // Fake last item (first real)
+    return list;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(initialPage: currentPage);
+  }
+
+  void _onPageChanged(int index) {
+    setState(() => currentPage = index);
+
+    // Handle wrapping around
+    if (index == 0) {
+      Future.delayed(const Duration(milliseconds: 300), () {
+        _pageController.jumpToPage(originalItems.length);
+      });
+    } else if (index == originalItems.length + 1) {
+      Future.delayed(const Duration(milliseconds: 300), () {
+        _pageController.jumpToPage(1);
+      });
+    }
+  }
+
+  void _goLeft() {
+    if (_pageController.hasClients) {
+      _pageController.previousPage(
+          duration: const Duration(milliseconds: 400), curve: Curves.easeInOut);
+    }
+  }
+
+  void _goRight() {
+    if (_pageController.hasClients) {
+      _pageController.nextPage(
+          duration: const Duration(milliseconds: 400), curve: Curves.easeInOut);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 230, // Adjusted height for better appearance
+      width: 600, // Increased width of the carousel
+      child: Stack(
+        children: [
+          PageView.builder(
+            controller: _pageController,
+            onPageChanged: _onPageChanged,
+            itemCount: carouselItems.length,
+            itemBuilder: (context, index) {
+              final int firstIndex = index;
+              final int secondIndex = index + 1;
+
+              final item1 = carouselItems[firstIndex];
+              final item2 = secondIndex < carouselItems.length
+                  ? carouselItems[secondIndex]
+                  : null;
+
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => item1['detailPage']));
+                        },
+                        child: CardItem(
+                          imagePath: item1['imagePath'],
+                          productName: item1['productName'],
+                          price: item1['price'],
+                          rating: item1['rating'],
+                          reviewCount: item1['reviewCount'],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    if (item2 != null)
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => item2['detailPage']));
+                          },
+                          child: CardItem(
+                            imagePath: item2['imagePath'],
+                            productName: item2['productName'],
+                            price: item2['price'],
+                            rating: item2['rating'],
+                            reviewCount: item2['reviewCount'],
+                          ),
+                        ),
+                      )
+                    else
+                      const Expanded(
+                          child: SizedBox()), // Empty slot if odd number
+                  ],
+                ),
+              );
+            },
+          ),
+          Positioned(
+            left: 0,
+            top: 100,
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back_ios),
+              onPressed: _goLeft,
+              splashRadius: 24,
+            ),
+          ),
+          Positioned(
+            right: -4.5,
+            top: 100,
+            child: IconButton(
+              icon: const Icon(Icons.arrow_forward_ios),
+              onPressed: _goRight,
+              splashRadius: 24,
+            ),
+          ),
+        ],
       ),
-      itemCount: homeItems.length,
-      itemBuilder: (context, index) {
-        final item = homeItems[index];
-        return CardItem(
-          imagePath: item['imagePath'],
-          productName: item['productName'],
-          price: item['price'],
-          rating: item['rating'],
-          reviewCount: item['reviewCount'],
-        );
-      },
     );
   }
 }

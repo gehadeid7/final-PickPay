@@ -10,23 +10,24 @@ class HomeSectionHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: GestureDetector(
-        onTap: () => Navigator.pushNamed(context, HomeCategoryView.routeName),
-        child: Row(
-          children: [
-            Text(
-              'Home Bestsellers',
-              style: TextStyles.bold16,
-            ),
-            Spacer(),
-            Text(
+      child: Row(
+        children: [
+          Text(
+            'Home Bestsellers',
+            style: TextStyles.bold16,
+          ),
+          Spacer(),
+          GestureDetector(
+            onTap: () =>
+                Navigator.pushNamed(context, HomeCategoryView.routeName),
+            child: Text(
               'more',
               style: TextStyles.regular16.copyWith(
                 color: AppColors.secondColor,
               ),
-            )
-          ],
-        ),
+            ),
+          )
+        ],
       ),
     );
   }

@@ -9,24 +9,25 @@ class ElectronicsHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 14),
-      child: GestureDetector(
-        onTap: () => Navigator.pushNamed(context, ElectronicsView.routeName),
-        child: Row(
-          children: [
-            Text(
-              'Electronics Bestsellers',
-              style: TextStyles.bold16,
-            ),
-            Spacer(),
-            Text(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: Row(
+        children: [
+          Text(
+            'Electronics Bestsellers',
+            style: TextStyles.bold16,
+          ),
+          Spacer(),
+          GestureDetector(
+            onTap: () =>
+                Navigator.pushNamed(context, ElectronicsView.routeName),
+            child: Text(
               'more',
               style: TextStyles.regular16.copyWith(
                 color: AppColors.secondColor,
               ),
-            )
-          ],
-        ),
+            ),
+          )
+        ],
       ),
     );
   }
