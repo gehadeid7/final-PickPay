@@ -3,12 +3,10 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:math' as math;
 import 'package:crypto/crypto.dart';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pickpay/core/errors/exceptions.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class FirebaseAuthService {
   Future deleteUser() async {
@@ -57,19 +55,19 @@ class FirebaseAuthService {
     }
   }
 
-  Future<User> signInWithEmailAndPassword(
-      {required String email, required String password}) async {
+  Future<User> signInWithEmailAndPassword({
+    required String email,
+    required String password,
+  }) async {
     try {
       final credential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
       return credential.user!;
     } on FirebaseAuthException catch (e) {
       log("Exception in FirebaseAuthService.signInWithEmailAndPassword: ${e.toString()} and code is ${e.code}");
-      if (e.code == 'user-not-found') {
-        throw CustomException(message: 'incorrect email or password');
-      } else if (e.code == 'wrong-password') {
-        throw CustomException(message: 'incorrect email or password');
-      } else if (e.code == 'invalid-credential') {
+      if (e.code == 'user-not-found' ||
+          e.code == 'wrong-password' ||
+          e.code == 'invalid-credential') {
         throw CustomException(message: 'incorrect email or password');
       } else if (e.code == 'network-request-failed') {
         throw CustomException(
@@ -84,7 +82,7 @@ class FirebaseAuthService {
     }
   }
 
-// login with google >> firebase
+  // login with google >> firebase
   Future<User> signInWithGoogle() async {
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
@@ -99,7 +97,7 @@ class FirebaseAuthService {
     return (await FirebaseAuth.instance.signInWithCredential(credential)).user!;
   }
 
-// login with facebook >> firebase
+  // login with facebook >> firebase
   Future<User> signInWithFacebook() async {
     final rawNonce = generateNonce();
     final nonce = sha256ofString(rawNonce);
@@ -140,8 +138,7 @@ class FirebaseAuthService {
     return FirebaseAuth.instance.currentUser != null;
   }
 
-  /// Generates a cryptographically secure random nonce, to be included in a
-  /// credential request.
+  // Generates a cryptographically secure random nonce
   String generateNonce([int length = 32]) {
     const charset =
         '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
@@ -150,41 +147,10 @@ class FirebaseAuthService {
         .join();
   }
 
-  /// Returns the sha256 hash of [input] in hex notation.
+  // Returns the sha256 hash of input in hex
   String sha256ofString(String input) {
     final bytes = utf8.encode(input);
     final digest = sha256.convert(bytes);
     return digest.toString();
   }
-
-// ..........................................................................................................................
-
-  Future<User> signInWithApple() async {
-    // To prevent replay attacks with the credential returned from Apple, we
-    // include a nonce in the credential request. When signing in with
-    // Firebase, the nonce in the id token returned by Apple, is expected to
-    // match the sha256 hash of `rawNonce`.
-    final rawNonce = generateNonce();
-    final nonce = sha256ofString(rawNonce);
-
-    // Request credential for the currently signed in Apple account.
-    final appleCredential = await SignInWithApple.getAppleIDCredential(
-      scopes: [
-        AppleIDAuthorizationScopes.email,
-        AppleIDAuthorizationScopes.fullName,
-      ],
-      nonce: nonce,
-    );
-
-    // Create an `OAuthCredential` from the credential returned by Apple.
-    final oauthCredential = OAuthProvider("apple.com").credential(
-      idToken: appleCredential.identityToken,
-      rawNonce: rawNonce,
-    );
-
-    return (await FirebaseAuth.instance.signInWithCredential(oauthCredential))
-        .user!;
-  }
-
- 
 }

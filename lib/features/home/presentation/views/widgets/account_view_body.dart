@@ -1,5 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pickpay/core/widgets/custom_app.dart';
+import 'package:pickpay/features/auth/presentation/views/signin_view.dart';
+import 'package:pickpay/features/home/presentation/views/cart_view.dart';
 
 class AccountViewBody extends StatelessWidget {
   final String fullName;
@@ -51,7 +54,12 @@ class AccountViewBody extends StatelessWidget {
             const SizedBox(height: 24),
 
             // Quick Access
-            _accountTile(Icons.shopping_bag, "My Orders", () {}),
+            _accountTile(Icons.shopping_bag, "My Orders", () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const CartView()),
+              );
+            }),
             _accountTile(Icons.favorite, "Wishlist", () {}),
             _accountTile(Icons.location_on, "Addresses", () {}),
             _accountTile(Icons.payment, "Payment Methods", () {}),
@@ -67,18 +75,24 @@ class AccountViewBody extends StatelessWidget {
 
             // Logout
             Center(
-              child: ElevatedButton.icon(
-                icon: const Icon(Icons.logout),
-                label: const Text("Logout"),
-                onPressed: () {
-                  // Handle logout logic here
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.redAccent,
-                  foregroundColor: Colors.white,
-                ),
+                child: ElevatedButton.icon(
+              icon: const Icon(Icons.logout),
+              label: const Text("Logout"),
+              onPressed: () async {
+                await FirebaseAuth.instance.signOut();
+
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => const SigninView()), // your login screen
+                  (route) => false, // remove all previous routes
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.redAccent,
+                foregroundColor: Colors.white,
               ),
-            )
+            ))
           ],
         ),
       ),
