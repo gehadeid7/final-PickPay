@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pickpay/core/widgets/custom_app.dart';
 
 class AccountViewBody extends StatelessWidget {
   final String fullName;
@@ -15,10 +16,7 @@ class AccountViewBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("My Account"),
-        centerTitle: true,
-      ),
+      appBar: buildAppBar(context: context, title: 'Account'),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
