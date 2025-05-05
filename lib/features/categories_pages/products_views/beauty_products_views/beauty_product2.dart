@@ -22,24 +22,42 @@ class BeautyProduct2 extends StatelessWidget {
       originalPrice: 575.00,
       rating: 5.0,
       reviewCount: 88,
+      colorOptions: [
+        '200 Sable',
+        '130 Beige',
+        '135 Vanil',
+        '155 Natural Rose',
+        '175 Sand',
+        '230 Miel',
+        '260 Solei',
+        '320 Cool Undertone',
+        'ivory Pink/Rose Ivory'
+      ],
+      itemform: 'Cream',
+      skintype: 'All',
       brand: 'L’Oréal Paris',
-      color: 'Sable Dore',
-      material: 'Liquid Foundation',
-      dimensions: '30 ml',
-      style: 'Matte Cover',
-      installationType: 'N/A',
-      accessLocation: 'N/A',
-      settingsCount: 0,
-      powerSource: 'Manual',
-      manufacturer: 'L’Oréal',
+      finishType: 'Matte',
+      recommendedUsesForProduct: 'Brightening',
+      material: 'Non-comedogenic',
+      containerType: 'Tube',
+      coverage: 'Full',
+      productbenefit: 'Brightening',
       aboutThisItem:
-          'Oil control, high coverage foundation designed to last 24 hours with a matte finish.',
+          '''Waterproof foundation with maximum matte coverage that lasts all day.
+           ​​
+Lightweight and supernatural finish.​​
+
+24H shine/oil Control​​
+
+Smoothly blends with fingers​​
+
+Color stays true the whole day ​''',
       deliveryDate: 'Sunday, 9 March',
       deliveryTimeLeft: '20hrs 36 mins',
       deliveryLocation: 'Egypt',
       inStock: true,
-      shipsFrom: 'Pickpay Warehouse',
-      soldBy: 'Pickpay Official',
+      shipsFrom: 'Pickpay ',
+      soldBy: 'Pickpay ',
     );
 
     return ProductDetailView(product: product);

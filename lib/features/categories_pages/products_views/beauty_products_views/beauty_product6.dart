@@ -17,26 +17,35 @@ class BeautyProduct6 extends StatelessWidget {
       category: 'Beauty',
       price: 31.00,
       originalPrice: 44.00,
-      rating: 4.0,
-      reviewCount: 19,
+      rating: 4.3,
+      reviewCount: 769,
+      scentOption: [
+        'Glycerin Mixed Berries',
+        'Strawberry',
+        'Vanilla & Cookies'
+      ],
+      itemvolume: '75 Milliliters',
+      dimensions: '25.4 x 5.1 x 6.9 centimeters',
       brand: 'Care & More',
-      color: 'White',
-      material: 'Cream',
-      dimensions: '75 ml',
-      style: 'Moisturizing Cream',
-      installationType: 'N/A',
-      accessLocation: 'N/A',
-      settingsCount: 0,
-      powerSource: 'Manual',
-      manufacturer: 'Care & More',
-      aboutThisItem:
-          'Hydrating soft cream enriched with glycerin and berry extract for dry skin.',
+      ageRangeDescription: 'Adult',
+      specialfeatures: 'Water Resistant',
+      activeIngredients: 'Glycerin',
+      skintype: 'All',
+      numberofitems: '1',
+      itemform: 'Cream',
+      aboutThisItem: '''Brand: Care And More
+
+Item Form: Cream
+
+Skin type: All
+
+Target gender: Unisex''',
       deliveryDate: 'Sunday, 9 March',
       deliveryTimeLeft: '20hrs 36 mins',
       deliveryLocation: 'Egypt',
       inStock: true,
-      shipsFrom: 'Pickpay Warehouse',
-      soldBy: 'Pickpay Official',
+      shipsFrom: 'Pickpay',
+      soldBy: 'Pickpay',
     );
 
     return ProductDetailView(product: product);

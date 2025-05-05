@@ -18,28 +18,37 @@ class BeautyProduct1 extends StatelessWidget {
         // 'assets/beauty_products/makeup_1/4.png',
       ],
       category: 'Beauty',
-      price: 401.00,
+      price: 443,
       originalPrice: 730.00,
-      rating: 5.0,
-      reviewCount: 88,
+      rating: 4.2,
+      reviewCount: 4470,
+      productbenefit:
+          'Provides intense volume and long-lasting, clump-free definition while being suitable for sensitive eyes',
       brand: 'L’Oréal Paris',
       color: 'Black',
-      material: 'Liquid',
-      dimensions: '9.9 ml',
-      style: 'Panorama Mascara',
-      installationType: 'N/A',
-      accessLocation: 'N/A',
-      settingsCount: 0,
-      powerSource: 'Manual',
-      manufacturer: 'L’Oréal',
+      specialfeatures: 'Clump-free',
+      material: 'Paraben Free, Silicone Free, Aluminum Free, Sulfate Free',
+      itemform: 'Gel',
+      specialty: 'Long Lasting',
+      numberofitems: '1',
+      unitcount: '1 count',
+      itemvolume: '9.9 Milliliters',
       aboutThisItem:
-          'Achieve fanned-out lashes with L’Oréal Paris Volume Million Lashes Panorama Mascara. Its unique formula and brush offer intense volume and definition for a captivating eye look.',
+          '''Provides lashes that look fuller and eyes that look 1.4x bigger
+
+5% stretchflex complex, allowing seamless stretches while extending each lash up and out with maximum panoramic volume.
+
+Suitable for sensitive eyes
+
+No-clump Mascara
+
+A brush with short & long bristles to volumize & fan the eyelashes''',
       deliveryDate: 'Sunday, 9 March',
       deliveryTimeLeft: '20hrs 36 mins',
       deliveryLocation: 'Egypt',
       inStock: true,
-      shipsFrom: 'Pickpay Warehouse',
-      soldBy: 'Pickpay Official',
+      shipsFrom: 'Pickpay ',
+      soldBy: 'Pickpay ',
     );
 
     return ProductDetailView(product: product);

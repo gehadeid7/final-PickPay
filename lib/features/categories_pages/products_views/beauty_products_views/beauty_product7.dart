@@ -23,23 +23,28 @@ class BeautyProduct7 extends StatelessWidget {
       rating: 4.0,
       reviewCount: 19,
       brand: 'La Roche-Posay',
-      color: 'White',
-      material: 'Gel Cream',
-      dimensions: '50 ml',
-      style: 'Dry Touch Sunscreen',
-      installationType: 'N/A',
-      accessLocation: 'N/A',
-      settingsCount: 0,
-      powerSource: 'Manual',
-      manufacturer: 'La Roche-Posay',
+      itemvolume: '50 Milliliters',
+      unitcount: '50.0 millilitre',
+      itemWeight: '50 Grams',
+      sunProtectionFactor: '50 Sun Protection Factor (SPF)',
+      activeIngredients: 'Avobenzone',
+      skintype: 'Oily, Combination',
+      numberofitems: '1',
+      productbenefit: 'Soothing, Antioxidant',
       aboutThisItem:
-          'Oil control SPF50+ sunscreen with dry touch formula, perfect for sensitive skin.',
+          '''Dry touch texture : double anti-shine action, immediate absorption, ultra-dry finish, no white marks.
+
+Ideal for combination to oily skin.
+
+Prevents sun intolerance, commonly known as sun allergies.
+
+Also prevents sun-induced pigment spots (pregnancy, photosensitization...).''',
       deliveryDate: 'Sunday, 9 March',
       deliveryTimeLeft: '20hrs 36 mins',
       deliveryLocation: 'Egypt',
       inStock: true,
-      shipsFrom: 'Pickpay Warehouse',
-      soldBy: 'Pickpay Official',
+      shipsFrom: 'Pickpay',
+      soldBy: 'Pickpay',
     );
 
     return ProductDetailView(product: product);

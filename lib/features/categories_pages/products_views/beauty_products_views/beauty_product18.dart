@@ -21,24 +21,28 @@ class BeautyProduct18 extends StatelessWidget {
       originalPrice: 1350.00,
       rating: 4.0,
       reviewCount: 19,
-      brand: 'Bath & Body Works',
-      color: 'N/A',
-      material: 'Mist',
-      dimensions: '236ml',
-      style: 'Fragrance Mist',
-      installationType: 'N/A',
-      accessLocation: 'N/A',
-      settingsCount: 0,
-      powerSource: 'N/A',
-      manufacturer: 'Bath & Body Works',
+      modelName:
+          'Bath Body Gingham Gorgeous Fine Fragrance Mist, Size/Volume: 8 fl oz / 236 mL',
+      itemform: 'Liquid',
+      brand: '9Street Corner',
+      scent: 'juicy pear, sparkling clementine and fresh daisies',
+      itemWeight: '150 Milligrams',
+      numberofitems: '1',
+      unitcount: '236 Milliliters',
       aboutThisItem:
-          'Gingham Gorgeous body mist with a delightful floral scent in a large 236ml size.',
+          '''scents your skin with a light-as-air-mist that's super layerable
+
+The truest way to fragrance, Designed for great coverage
+
+What it smells like: our freshest, brightest, most cheerful Gingham yet.
+
+Fragrance notes: juicy pear, sparkling clementine and fresh daisies.''',
       deliveryDate: 'Wednesday, 19 March',
       deliveryTimeLeft: '13hrs 10 mins',
       deliveryLocation: 'Egypt',
       inStock: true,
-      shipsFrom: 'Pickpay Warehouse',
-      soldBy: 'Pickpay Official',
+      shipsFrom: 'Pickpay',
+      soldBy: 'Pickpay',
     );
 
     return ProductDetailView(product: product);

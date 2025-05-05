@@ -16,22 +16,26 @@ class BeautyProduct17 extends StatelessWidget {
         'assets/beauty_products/fragrance_2/2.png',
       ],
       category: 'Beauty',
-      price: 624.04,
-      originalPrice: 624.04,
-      rating: 4.0,
+      price: 500,
+      originalPrice: 608,
+      rating: 3.4,
       reviewCount: 19,
-      brand: 'Memwa',
-      color: 'N/A',
-      material: 'Liquid',
-      dimensions: 'Standard Bottle',
-      style: 'Luxury Perfume',
-      installationType: 'N/A',
-      accessLocation: 'N/A',
-      settingsCount: 0,
-      powerSource: 'N/A',
-      manufacturer: 'Memwa',
-      aboutThisItem:
-          'Long-lasting luxury fragrance for women with elegant scent profile.',
+      modelName: 'Memwa Coco Memwa',
+      itemform: 'Liquid',
+      scent: 'Amber',
+      brand: 'Gulf Orchid',
+      itemvolume: '110 Milliliters',
+      materialfeature: 'Cruelty Free',
+      material: 'Preservative Free, Paraben Free',
+      fragranceConcentration: 'Eau de Parfum',
+      specialfeatures: 'Long Lasting',
+      aboutThisItem: '''Family: Oriental Floral
+
+Top Notes: Citrus, Fresh, Fruity
+
+Heart Notes: Freesia, Jasmine, Lily of The Valley
+
+Base Notes: Moss, Musk, Patchouli''',
       deliveryDate: 'Tuesday, 18 March',
       deliveryTimeLeft: '13hrs 50 mins',
       deliveryLocation: 'Egypt',

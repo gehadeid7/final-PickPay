@@ -17,27 +17,35 @@ class BeautyProduct9 extends StatelessWidget {
         'assets/beauty_products/skincare_4/3.png',
       ],
       category: 'Beauty',
-      price: 658.93,
+      price: 533.93,
       originalPrice: 775.00,
-      rating: 4.0,
-      reviewCount: 19,
+      rating: 4.3,
+      reviewCount: 121,
       brand: 'Eucerin',
-      material: 'Serum',
-      dimensions: '40ml',
-      style: 'Oil Control Serum',
-      installationType: '',
-      accessLocation: '',
-      settingsCount: 0,
-      powerSource: '',
-      manufacturer: 'Eucerin',
+      itemvolume: '40 Milliliters',
+      itemform: 'serum',
+      numberofitems: '1',
+      scent: 'Unscented',
+      activeIngredients: 'glycolic acid, vitamin e',
+      skintype: 'Blemish-prone skin',
+      specialfeatures: 'Without Smell',
+      ageRangeDescription: 'Adult',
       aboutThisItem:
-          'Eucerin Skin Renewal Serum treats blemish-prone skin and controls oil, improving skin texture and appearance.',
+          '''Eucerin DermoPurifyer Oil Control Skin Renewal Treatment Face Serum for Blemish and Acne-Prone Skin with Hydroxy Complex, Unclogs Pores, Reduces Blemishes, Supports Skin Renewal, 40ml
+
+Exfoliating blemish serum for clearer, more even skin .
+
+Formulated with 10% Hydroxy Acids
+
+Supports skin renewal
+
+Starts to visibly improve skin after just 1 week''',
       deliveryDate: 'Sunday, 9 March',
       deliveryTimeLeft: '20hrs 36 mins',
       deliveryLocation: 'Egypt',
       inStock: true,
-      shipsFrom: 'Pickpay Warehouse',
-      soldBy: 'Pickpay Official',
+      shipsFrom: 'Pickpay',
+      soldBy: 'Pickpay ',
       color: 'White',
     );
 

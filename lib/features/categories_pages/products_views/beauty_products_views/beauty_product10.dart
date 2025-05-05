@@ -18,28 +18,34 @@ class BeautyProduct10 extends StatelessWidget {
         'assets/beauty_products/skincare_5/5.png',
       ],
       category: 'Beauty',
-      price: 429.00,
-      originalPrice: 0.00,
-      rating: 4.8,
-      reviewCount: 19,
+      price: 341,
+      originalPrice: 400,
+      rating: 4.2,
+      reviewCount: 899,
       brand: 'L’Oréal Paris',
-      aboutThisItem:
-          'Hydrating eye serum with hyaluronic acid for plumper, youthful under eyes.',
-      color: 'Clear',
-      material: 'Liquid Serum',
-      dimensions: '20ml',
-      style: 'Eye Serum',
-      installationType: 'Topical Use',
-      accessLocation: 'Eye Area',
-      settingsCount: 1,
-      powerSource: 'None',
-      manufacturer: 'L’Oréal',
+      itemWeight: '100 Grams',
+      itemform: 'Drop',
+      materialfeature: 'Cruelty Free',
+      scent: 'Unscented',
+      activeIngredients: 'Hyaluronic Acid, Niacinamide, Caffeine',
+      skintype: 'All',
+      productbenefit: 'Hydration',
+      targetUseBodyPart: 'Eye',
+      aboutThisItem: '''Deeply moisturizes around the eyes
+      
+Fills all the lines around the eyes .
+
+Re-energizes skin
+
+Reduces dark circles
+
+Reduces puffiness''',
       deliveryDate: 'Monday, 10 March',
       deliveryTimeLeft: '18hrs 20 mins',
       deliveryLocation: 'Egypt',
       inStock: true,
-      shipsFrom: 'Pickpay Warehouse',
-      soldBy: 'Pickpay Official',
+      shipsFrom: 'Pickpay',
+      soldBy: 'Pickpay',
     );
 
     return ProductDetailView(product: product);

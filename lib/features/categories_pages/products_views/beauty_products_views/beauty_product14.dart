@@ -19,26 +19,30 @@ class BeautyProduct14 extends StatelessWidget {
       category: 'Beauty',
       price: 965.00,
       originalPrice: 1214.00,
-      rating: 4.0,
-      reviewCount: 19,
+      rating: 4.6,
+      reviewCount: 11987,
       brand: "L'Oreal Professionnel",
-      color: 'Golden',
-      material: 'Serum',
-      dimensions: '90ml',
-      style: 'Hair Serum',
-      installationType: 'N/A',
-      accessLocation: 'N/A',
-      settingsCount: 0,
-      powerSource: 'N/A',
-      manufacturer: "L'Oreal",
+      itemvolume: '90 Milliliters',
+      itemform: 'Cream',
+      liquidVolume: '90 Milliliters',
+      productbenefit: 'Frizz Control',
+      materialfeature: 'Paraben Free',
+      recommendedUsesForProduct: 'Hair Treatment',
+      numberofitems: '1',
       aboutThisItem:
-          'Multi-benefit hair serum for intense repair, strength, and softness.',
+          '''The professional formula of the 10 in 1 Perfecting Multipurpose Spray instantly provides damaged hair with 10 benefits
+
+Treatment: Nourishment, resurfacing, split ends reduction, lightweight touch & softness. 
+
+Manageability: Detangling, easy-blowdry, frizz control. 
+
+Protection: anti pollution and heat protection up to 230°C/450°F The spray allows an easy and homogeneous distribution of the lightweight milky formula.''',
       deliveryDate: 'Friday, 14 March',
       deliveryTimeLeft: '17hrs 40 mins',
       deliveryLocation: 'Egypt',
       inStock: true,
-      shipsFrom: 'Pickpay Warehouse',
-      soldBy: 'Pickpay Official',
+      shipsFrom: 'Pickpay',
+      soldBy: 'Pickpay',
     );
 
     return ProductDetailView(product: product);

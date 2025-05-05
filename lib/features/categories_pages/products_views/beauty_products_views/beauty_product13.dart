@@ -23,22 +23,28 @@ class BeautyProduct13 extends StatelessWidget {
       reviewCount: 19,
       brand: 'Garnier',
       color: 'Light Ash Blonde',
-      material: 'Cream',
-      dimensions: 'Box',
-      style: 'Hair Color',
-      installationType: 'N/A',
-      accessLocation: 'N/A',
-      settingsCount: 0,
-      powerSource: 'N/A',
-      manufacturer: 'Garnier',
-      aboutThisItem:
-          'Permanent hair color with nourishing formula for radiant, long-lasting results.',
+      itemform: 'Cream',
+      containerType: 'Bottle',
+      productbenefit: 'Nourishing',
+      materialfeature: 'Alcohol Free',
+      hairtype: 'All',
+      unitcount: '100 grams',
+      numberofitems: '1',
+      aboutThisItem: '''Add a dramatic splash of colour to your day
+
+Nourishes hair and provides shiny, long lasting colour
+
+Covers grey hair but also makes hair soft, silky and stylish
+
+Triple protection system that seals, replenishes & conditions
+
+Permanent nourishing hair colourant with up to 100% grey hair coverage in just 30 minutes''',
       deliveryDate: 'Thursday, 13 March',
       deliveryTimeLeft: '18hrs 20 mins',
       deliveryLocation: 'Egypt',
       inStock: true,
-      shipsFrom: 'Pickpay Warehouse',
-      soldBy: 'Pickpay Official',
+      shipsFrom: 'Pickpay',
+      soldBy: 'Pickpay',
     );
 
     return ProductDetailView(product: product);

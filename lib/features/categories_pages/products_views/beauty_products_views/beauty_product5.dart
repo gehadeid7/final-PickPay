@@ -18,28 +18,44 @@ class BeautyProduct5 extends StatelessWidget {
         // 'assets/beauty_products/makeup_5/5.png',
       ],
       category: 'Beauty',
-      price: 300.00,
-      originalPrice: 310.00,
-      rating: 5.0,
-      reviewCount: 88,
-      brand: 'Maybelline New York',
-      color: '005 Petal',
-      material: 'Gloss',
-      dimensions: 'Standard Size',
-      style: 'Lifter Gloss',
-      installationType: 'N/A',
-      accessLocation: 'N/A',
-      settingsCount: 0,
-      powerSource: 'Manual',
-      manufacturer: 'Maybelline',
+      price: 430,
+      originalPrice: 510,
+      rating: 4.5,
+      reviewCount: 17782,
+      colorOptions: [
+        'Pink',
+        '004 Silk',
+        '006 Reef',
+        '007- Amber',
+        '017 Copper',
+        '019 Cold',
+        'Amber',
+      ],
+      itemform: 'Liquid',
+      skintype: 'Dry',
+      brand: 'MAYBELLINE',
+      finishType: 'Glossy',
+      specialIngredients: 'Hyaluronic Acid',
+      productbenefit: 'Glossy finish for luscious lips',
+      coverage: 'Sheer to Medium',
+      specialty: 'Hyaluronic Acid Infused',
+      material: 'Paraben Free',
       aboutThisItem:
-          'Hydrating lip gloss with hyaluronic acid for a fuller, lifted look.',
+          '''Is this a Dangerous Good or a Hazardous Material, Substance or Waste that is regulated for transportation, storage, and/or disposal? : No
+
+Are batteries needed to power the product or is this product a battery : No
+
+Type : Lip Gloss
+
+Manufacturer Number : 855456564
+
+Brand : Maybelline New York''',
       deliveryDate: 'Sunday, 9 March',
       deliveryTimeLeft: '20hrs 36 mins',
       deliveryLocation: 'Egypt',
       inStock: true,
-      shipsFrom: 'Pickpay Warehouse',
-      soldBy: 'Pickpay Official',
+      shipsFrom: 'Pickpay',
+      soldBy: 'Pickpay',
     );
 
     return ProductDetailView(product: product);

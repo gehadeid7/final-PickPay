@@ -17,28 +17,31 @@ class BeautyProduct20 extends StatelessWidget {
         'assets/beauty_products/fragrance_5/4.png',
       ],
       category: 'Beauty',
-      price: 840.00,
-      originalPrice: 900.00,
+      price: 600,
+      originalPrice: 699,
       rating: 4.0,
       reviewCount: 19,
       brand: 'Jacques Bogart',
-      color: 'N/A',
-      material: 'Liquid',
-      dimensions: '100ml',
-      style: 'Eau de Toilette',
-      installationType: 'N/A',
-      accessLocation: 'N/A',
-      settingsCount: 0,
-      powerSource: 'N/A',
-      manufacturer: 'Jacques Bogart',
+      modelName: 'One Man Show',
+      itemform: 'Liquid',
+      scent: 'Wood',
+      itemvolume: '100 Milliliters',
+      material: 'fragrance',
+      materialfeature: 'Natural',
+      fragranceConcentration: 'Eau de Toilette',
+      specialfeatures: 'Travel Size',
       aboutThisItem:
-          'Elegant Eau de Toilette fragrance for men with a strong, masculine scent.',
+          '''Middle Notes Are : Labdanum, Nutmeg, Spices, Carnation, Patchouli, Jasmine, Vetiver,Rose, Pine tree needles and Geranium.
+
+Base Notes Are : Leather, Sandalwood, Tonka Bean, Amber, Coconut, Vanilla, Oakmoss, Cedar, Styrax and Castoreum.
+
+Brand Name : Jacques Bogart''',
       deliveryDate: 'Friday, 21 March',
       deliveryTimeLeft: '12hrs 10 mins',
       deliveryLocation: 'Egypt',
       inStock: true,
-      shipsFrom: 'Pickpay Warehouse',
-      soldBy: 'Pickpay Official',
+      shipsFrom: 'Pickpay',
+      soldBy: 'Pickpay',
     );
 
     return ProductDetailView(product: product);

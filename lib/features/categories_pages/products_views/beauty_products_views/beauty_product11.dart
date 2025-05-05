@@ -19,25 +19,32 @@ class BeautyProduct11 extends StatelessWidget {
       category: 'Beauty',
       price: 142.20,
       originalPrice: 0.00,
-      rating: 4.0,
-      reviewCount: 19,
+      rating: 4.4,
+      reviewCount: 93,
       brand: 'L’Oréal Paris',
-      color: 'Clear',
-      material: 'Liquid',
-      dimensions: '400ml',
-      style: 'Shampoo',
-      installationType: 'N/A',
-      accessLocation: 'N/A',
-      settingsCount: 0,
-      powerSource: 'N/A',
-      manufacturer: 'L’Oréal Paris',
-      aboutThisItem: 'Gentle purifying shampoo for oily scalp and dry ends.',
+      hairtype: 'Oily',
+      itemform: 'Liquid',
+      ageRangeDescription: 'Adult',
+      scent: 'Unscented',
+      liquidVolume: '400 Milliliters',
+      recommendedUsesForProduct: 'Scalp',
+      productbenefit: 'Moisturizing',
+      numberofitems: '1',
+      aboutThisItem: '''Suitable for all hair types, but designed for oily hair.
+
+Suitable for all hair types, but designed for oily hair.
+
+Enjoy clean roots and moisturized ends that last up to 72 hours, and a fresh and breathable scalp after two weeks
+
+L’Oréal Paris Shampoo
+
+Helps to give an even fuller hair''',
       deliveryDate: 'Tuesday, 11 March',
       deliveryTimeLeft: '20hrs 30 mins',
       deliveryLocation: 'Egypt',
       inStock: true,
-      shipsFrom: 'Pickpay Warehouse',
-      soldBy: 'Pickpay Official',
+      shipsFrom: 'Pickpay',
+      soldBy: 'Pickpay',
     );
 
     return ProductDetailView(product: product);

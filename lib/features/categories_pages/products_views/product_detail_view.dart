@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:pickpay/core/utils/app_text_styles.dart';
 import 'package:pickpay/core/widgets/custom_button.dart';
 import 'package:pickpay/features/categories_pages/models/product_model.dart';
+import 'package:pickpay/features/categories_pages/widgets/color_option_selector.dart';
 import 'package:pickpay/features/categories_pages/widgets/dropdown_count.dart';
+import 'package:pickpay/features/categories_pages/widgets/info_icons_row.dart';
 import 'package:pickpay/features/categories_pages/widgets/product_rating.dart';
+import 'package:pickpay/features/categories_pages/widgets/scent_option.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class ProductDetailView extends StatefulWidget {
@@ -41,6 +44,23 @@ class _ProductDetailViewState extends State<ProductDetailView> {
                 _buildImageSlider(product),
                 const SizedBox(height: 24),
                 _buildPriceAndRating(product),
+                const SizedBox(height: 12),
+                InfoSectionWithIcons(),
+                const SizedBox(height: 10),
+                ColorOptionSelector(
+                  colorOptions: product.colorOptions ?? [],
+                  showLabel: true,
+                  onColorSelected: (selectedColorName) {
+                    debugPrint("Color: $selectedColorName");
+                  },
+                ),
+                ScentOption(
+                  scentOption: product.scentOption ?? [],
+                  showLabel: true,
+                  onScentSelected: (selectedScentName) {
+                    debugPrint("Scent: $selectedScentName");
+                  },
+                ),
                 const SizedBox(height: 20),
                 _buildSectionTitle("Product Details"),
                 _buildFeatureBox([
@@ -189,6 +209,7 @@ class _ProductDetailViewState extends State<ProductDetailView> {
                       value: product.fragranceConcentration),
                   _ProductFeatureRow(
                       label: "Defrost System", value: product.defrostSystem),
+                  _ProductFeatureRow(label: "Size", value: product.size),
                 ]),
                 const SizedBox(height: 12),
                 QuantityDropdown(),

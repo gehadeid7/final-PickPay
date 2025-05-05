@@ -15,28 +15,35 @@ class BeautyProduct4 extends StatelessWidget {
         'assets/beauty_products/makeup_4/1.png',
       ],
       category: 'Beauty',
-      price: 63.00,
+      price: 62.00,
       originalPrice: 63.00,
       rating: 5.0,
       reviewCount: 92,
+      itemform: 'Wipes',
+      skintype: 'Normal',
       brand: 'Eva',
-      color: 'White',
-      material: 'Wet Wipes',
-      dimensions: 'Pack of 20%',
-      style: 'Cleansing wipes',
-      installationType: 'N/A',
-      accessLocation: 'N/A',
-      settingsCount: 0,
-      powerSource: 'Manual',
-      manufacturer: 'Eva Cosmetics',
-      aboutThisItem:
-          'Gently cleanses and removes makeup, suitable for normal to dry skin.',
+      material: 'Allergen Free, Alcohol Free',
+      specialfeatures:
+          'dehydration_&_dryness, daily_care, fairness_&_brightening, Makeup Remover',
+      productbenefit: 'Makeup Removal',
+      unitcount: '1 Pack',
+      numberofitems: '1',
+      ageRangeDescription: 'Adult',
+      aboutThisItem: '''wipes
+
+Eva Skin Care Cleansing & Makeup Remover Facial Wipes For Normal/Dry Skin 20%
+
+product_type: SKIN_CLEANING_WIPE
+
+gl_product_group_type: gl_beauty
+
+ASIN: B0BN469HL9''',
       deliveryDate: 'Sunday, 9 March',
       deliveryTimeLeft: '20hrs 36 mins',
       deliveryLocation: 'Egypt',
       inStock: true,
-      shipsFrom: 'Pickpay Warehouse',
-      soldBy: 'Pickpay Official',
+      shipsFrom: 'Pickpay ',
+      soldBy: 'Pickpay ',
     );
 
     return ProductDetailView(product: product);

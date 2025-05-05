@@ -18,28 +18,35 @@ class BeautyProduct15 extends StatelessWidget {
         'assets/beauty_products/haircare_5/4.png',
       ],
       category: 'Beauty',
-      price: 94.96,
-      originalPrice: 111.98,
+      price: 93,
+      originalPrice: 111,
       rating: 4.0,
       reviewCount: 19,
       brand: 'CORATED',
       color: 'Pink',
       material: 'Silk',
-      dimensions: 'Kit',
-      style: 'Curling Tool',
-      installationType: 'Manual',
-      accessLocation: 'N/A',
-      settingsCount: 0,
-      powerSource: 'None',
-      manufacturer: 'CORATED',
+      itemform: 'Flexi Rod+clip',
+      manufacturer: 'Flumine-US',
+      resultingHairType: 'Curly',
+      hairtype: 'All',
+      unitcount: '1 Count',
+      numberofitems: '4',
       aboutThisItem:
-          'Gentle heatless curling kit for creating soft, bouncy curls without damage.',
+          '''【Upgrade Heatless Curls】Upgraded curling rod headband is made of satin material outside and soft material inside, which is much softer, and more comfortable to sleep in than the old version, help you to stay in place, hold your hair tightly and no chemical smell.
+
+【No Heat Curlers】Wet dry hair with a spray bottle or wet comb before using a heatless curling iron. Hair curlers for long hair or medium hair length.
+
+【No Damage Silk Curlers】Hair rollers that are long enough can be tightly fixed and are perfect for thick, thin, curly, or straight hair. The rounded edges and smooth surface will not pull or damage your hair.
+
+【Easy to Use】While your hair is slightly damp, put the curling rod over your head like a headband, you can clip it at the top or secure one side with a scrunchie like a ponytail, and then wind dry hair around the other side of the curling ribbon and secure with a scrunchie on the bottom. Make sure to wind tightly and start near the top of your head. Can leave in for more than two hours in the daytime or overnight with dry hair.
+
+【Attention】Sleep curlers are not suitable for girls with short hair and thinning hair. The length of the heatless curls is 39.3 inches, suitable for medium hair and long hair. Make sure it's suitable for your hair before you place an order. Any problem with the curlers, please contact us directly.''',
       deliveryDate: 'Saturday, 15 March',
       deliveryTimeLeft: '16hrs 10 mins',
       deliveryLocation: 'Egypt',
       inStock: true,
-      shipsFrom: 'Pickpay Warehouse',
-      soldBy: 'Pickpay Official',
+      shipsFrom: 'Pickpay',
+      soldBy: 'Pickpay',
     );
 
     return ProductDetailView(product: product);

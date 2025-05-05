@@ -16,28 +16,31 @@ class BeautyProduct8 extends StatelessWidget {
         'assets/beauty_products/skincare_3/2.png',
       ],
       category: 'Beauty',
-      price: 138.60,
+      price: 158.60,
       originalPrice: 210.00,
-      rating: 4.0,
-      reviewCount: 19,
+      rating: 4.4,
+      reviewCount: 317,
       brand: 'Eva',
-      material: 'Liquid',
-      dimensions: '200ml',
-      style: 'Toner',
-      installationType: '',
-      accessLocation: '',
-      settingsCount: 0,
-      powerSource: '',
-      manufacturer: 'Eva Cosmetics',
-      color: 'Green',
-      aboutThisItem:
-          'Anti-ageing collagen toner that firms and refines skin. Suitable for daily skincare routine.',
+      itemvolume: '200 Milliliters',
+      itemform: 'Aerosol',
+      itemWeight: '2 Grams',
+      scent: 'Unscented',
+      recommendedUsesForProduct:
+          'anti-ageing skin care, facial toning, general skin care',
+      skintype: 'All',
+      materialfeature: 'Alcohol Free',
+      productbenefit: 'Anti Aging',
+      aboutThisItem: '''Brand: Eva
+Type: Face.
+Skin: All Skin Type
+Size: 200 ml
+Cleansers''',
       deliveryDate: 'Sunday, 9 March',
       deliveryTimeLeft: '20hrs 36 mins',
       deliveryLocation: 'Egypt',
       inStock: true,
-      shipsFrom: 'Pickpay Warehouse',
-      soldBy: 'Pickpay Official',
+      shipsFrom: 'Pickpay',
+      soldBy: 'Pickpay',
     );
 
     return ProductDetailView(product: product);

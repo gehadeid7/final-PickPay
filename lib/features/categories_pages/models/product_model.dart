@@ -22,6 +22,7 @@ class ProductsViewsModel {
   final String? finishType;
   final String? containerType;
   final String? manufacturer;
+  final String? size;
 
 // appliances detailes
   final String? material;
@@ -88,6 +89,8 @@ class ProductsViewsModel {
   final String? resultingHairType;
   final String? materialfeature;
   final String? fragranceConcentration;
+  final List<String>? colorOptions;
+  final List<String>? scentOption;
 
   ProductsViewsModel({
     required this.id,
@@ -132,6 +135,7 @@ class ProductsViewsModel {
     this.modelNumber,
     this.numberofprograms,
     this.noiselevel,
+    this.size,
     this.recommendedUsesForProduct,
     this.outputWattage,
     this.wattage,
@@ -173,6 +177,8 @@ class ProductsViewsModel {
     this.materialfeature,
     this.fragranceConcentration,
     this.drawertype,
+    this.colorOptions,
+    this.scentOption,
   });
 
 // for back
