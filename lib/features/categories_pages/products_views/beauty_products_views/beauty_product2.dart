@@ -55,7 +55,7 @@ Color stays true the whole day ​''',
       deliveryDate: 'Sunday, 9 March',
       deliveryTimeLeft: '20hrs 36 mins',
       deliveryLocation: 'Egypt',
-      inStock: true,
+      inStock: false,
       shipsFrom: 'Pickpay ',
       soldBy: 'Pickpay ',
     );

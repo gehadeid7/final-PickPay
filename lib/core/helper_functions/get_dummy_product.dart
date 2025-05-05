@@ -1,25 +1,25 @@
 
-import 'package:pickpay/core/entities/product_entity.dart';
+// import 'package:pickpay/core/entities/product_entity.dart';
 
-ProductEntity getDummyProduct() {
+// ProductEntity getDummyProduct() {
   
-  return ProductEntity(
-    name: 'Apple',
-    code: '123',
-    description: 'Fresh apple',
-    price: 2.5,
-    reviews: [],
-    isFeatured: true,
-    imageUrl: null,
-  );
-}
+//   return ProductEntity(
+//     name: 'Apple',
+//     code: '123',
+//     description: 'Fresh apple',
+//     price: 2.5,
+//     reviews: [],
+//     isFeatured: true,
+//     imageUrl: null,
+//   );
+// }
 
-List<ProductEntity> getDummyProducts() {
-  return [
-    getDummyProduct(),
-    getDummyProduct(),
-    getDummyProduct(),
-    getDummyProduct(),
-    getDummyProduct(),
-  ];
-}
+// List<ProductEntity> getDummyProducts() {
+//   return [
+//     getDummyProduct(),
+//     getDummyProduct(),
+//     getDummyProduct(),
+//     getDummyProduct(),
+//     getDummyProduct(),
+//   ];
+// }

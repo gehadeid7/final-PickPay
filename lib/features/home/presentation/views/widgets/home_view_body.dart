@@ -28,10 +28,10 @@ class HomeViewBody extends StatefulWidget {
 
 class _HomeViewBodyState extends State<HomeViewBody> {
   @override
-  void initState() {
-    context.read<ProductsCubit>().getBsetSellingProducts();
-    super.initState();
-  }
+  // void initState() {
+  //   context.read<ProductsCubit>().getBsetSellingProducts();
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {

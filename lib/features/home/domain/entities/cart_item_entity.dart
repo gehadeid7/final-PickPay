@@ -1,11 +1,11 @@
-import 'package:pickpay/core/entities/product_entity.dart';
+// import 'package:pickpay/core/entities/product_entity.dart';
 
-class CartItemEntity {
-  final ProductEntity productEntity;
-  int count;
+// class CartItemEntity {
+//   final ProductEntity productEntity;
+//   int count;
 
-  CartItemEntity({
-    required this.productEntity,
-    this.count = 0,
-  });
-}
+//   CartItemEntity({
+//     required this.productEntity,
+//     this.count = 0,
+//   });
+// }

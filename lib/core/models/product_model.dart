@@ -43,16 +43,16 @@ class ProductModel {
     );
   }
 
-  ProductEntity toEntity() {
-    return ProductEntity(
-      name: name,
-      code: code,
-      description: description,
-      price: price,
-      isFeatured: isFeatured,
-      reviews: reviews.map((e) => e.toEntity()).toList(),
-    );
-  }
+  // ProductEntity toEntity() {
+  //   return ProductEntity(
+  //     name: name,
+  //     code: code,
+  //     description: description,
+  //     price: price,
+  //     isFeatured: isFeatured,
+  //     reviews: reviews.map((e) => e.toEntity()).toList(),
+  //   );
+  // }
 
   toJson() {
     return {

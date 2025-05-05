@@ -21,7 +21,7 @@ void setupGetit() {
     databaseService: getIt<DatabaseService>(),
   ));
 
-  getIt.registerSingleton<ProductsRepo>(ProductRepoImpl(
-    getIt<DatabaseService>(),
-  ));
+  // getIt.registerSingleton<ProductsRepo>(ProductRepoImpl(
+  //   getIt<DatabaseService>(),
+  // ));
 }
