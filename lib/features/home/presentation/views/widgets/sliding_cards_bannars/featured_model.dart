@@ -1,11 +1,15 @@
+import 'package:flutter/material.dart';
+
 class FeaturedItem {
   final String image;
   final String title;
   final String subtitle;
+  final Widget destinationView;
 
-  const FeaturedItem({
+  FeaturedItem({
     required this.image,
     required this.title,
     required this.subtitle,
+    required this.destinationView,
   });
 }

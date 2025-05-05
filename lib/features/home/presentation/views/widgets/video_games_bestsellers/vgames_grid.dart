@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pickpay/features/categories_pages/electronics/presentation/views/electronics_view.dart';
+import 'package:pickpay/features/categories_pages/videogames/presentation/views/videogames_view.dart';
 import 'package:pickpay/features/home/presentation/views/card_item.dart';
 
 class VgamesGrid extends StatefulWidget {
@@ -21,7 +21,7 @@ class _VgamesGrid extends State<VgamesGrid> {
       'price': '16.500',
       'rating': 5.0,
       'reviewCount': 954,
-      'detailPage': const ElectronicsView(),
+      'detailPage': const VideogamesView(),
     },
     {
       'imagePath': 'assets/videogames_products/Accessories/accessories5/1.png',
@@ -30,7 +30,7 @@ class _VgamesGrid extends State<VgamesGrid> {
       'price': '1128.00',
       'rating': 4.0,
       'reviewCount': 1288,
-      'detailPage': const ElectronicsView(),
+      'detailPage': const VideogamesView(),
     },
     {
       'imagePath': 'assets/videogames_products/Consoles/console1/2.png',
@@ -39,7 +39,7 @@ class _VgamesGrid extends State<VgamesGrid> {
       'price': '27.750',
       'rating': 4.6,
       'reviewCount': 1735,
-      'detailPage': const ElectronicsView(),
+      'detailPage': const VideogamesView(),
     },
     {
       'imagePath': 'assets/videogames_products/Controllers/controller3/1.png',
@@ -47,7 +47,7 @@ class _VgamesGrid extends State<VgamesGrid> {
       'price': ' 4.498',
       'rating': 4.9,
       'reviewCount': 1893,
-      'detailPage': const ElectronicsView(),
+      'detailPage': const VideogamesView(),
     },
   ];
 
