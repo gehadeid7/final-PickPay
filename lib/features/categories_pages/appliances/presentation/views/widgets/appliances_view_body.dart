@@ -21,6 +21,85 @@ import 'package:pickpay/services/api_service.dart'; // Import ApiService
 class AppliancesViewBody extends StatelessWidget {
   const AppliancesViewBody({super.key});
 
+  // Mapping of product IDs to corresponding product details (Widget, Rating, Review Count)
+  final Map<String, Map<String, dynamic>> productData = const {
+    '68132a95ff7813b3d47f9da5': {
+      'widget': AppliancesProduct1(),
+      'rating': 4.2,
+      'reviewCount': 150,
+    },
+    '68132a95ff7813b3d47f9da6': {
+      'widget': AppliancesProduct2(),
+      'rating': 4.5,
+      'reviewCount': 230,
+    },
+    '68132a95ff7813b3d47f9da7': {
+      'widget': AppliancesProduct3(),
+      'rating': 3.8,
+      'reviewCount': 110,
+    },
+    '68132a95ff7813b3d47f9da8': {
+      'widget': AppliancesProduct4(),
+      'rating': 4.7,
+      'reviewCount': 310,
+    },
+    '68132a95ff7813b3d47f9da9': {
+      'widget': AppliancesProduct5(),
+      'rating': 4.1,
+      'reviewCount': 190,
+    },
+    '68132a95ff7813b3d47f9daa': {
+      'widget': AppliancesProduct6(),
+      'rating': 4.0,
+      'reviewCount': 50,
+    },
+    '68132a95ff7813b3d47f9dab': {
+      'widget': AppliancesProduct7(),
+      'rating': 4.3,
+      'reviewCount': 200,
+    },
+    '68132a95ff7813b3d47f9dac': {
+      'widget': AppliancesProduct8(),
+      'rating': 3.9,
+      'reviewCount': 180,
+    },
+    '68132a95ff7813b3d47f9dad': {
+      'widget': AppliancesProduct9(),
+      'rating': 4.6,
+      'reviewCount': 270,
+    },
+    '68132a95ff7813b3d47f9dae': {
+      'widget': AppliancesProduct10(),
+      'rating': 4.4,
+      'reviewCount': 160,
+    },
+    '68132a95ff7813b3d47f9daf': {
+      'widget': AppliancesProduct11(),
+      'rating': 3.7,
+      'reviewCount': 130,
+    },
+    '68132a95ff7813b3d47f9db0': {
+      'widget': AppliancesProduct12(),
+      'rating': 4.8,
+      'reviewCount': 300,
+    },
+    '68132a95ff7813b3d47f9db1': {
+      'widget': AppliancesProduct13(),
+      'rating': 4.5,
+      'reviewCount': 220,
+    },
+    '68132a95ff7813b3d47f9db2': {
+      'widget': AppliancesProduct14(),
+      'rating': 4.3,
+      'reviewCount': 150,
+    },
+    '68132a95ff7813b3d47f9db3': {
+      'widget': AppliancesProduct15(),
+      'rating': 4.6,
+      'reviewCount': 270,
+    },
+  };
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,109 +123,32 @@ class AppliancesViewBody extends StatelessWidget {
               itemBuilder: (context, index) {
                 var product = products[index];
 
-                return ProductCard(
-                  id: product.id,
-                  name: product.name,
-                  imagePaths: product.imagePaths,
-                  price: product.price,
-                  originalPrice: product.originalPrice,
-                  rating: product.rating,
-                  reviewCount: product.reviewCount,
-                  onTap: () {
-                    if (product.id == '68132a95ff7813b3d47f9da5') {
+                // Get the product details dynamically
+                var productDetails = productData[product.id];
+
+                if (productDetails != null) {
+                  return ProductCard(
+                    id: product.id,
+                    name: product.name,
+                    imagePaths: product.imagePaths,
+                    price: product.price,
+                    originalPrice: product.originalPrice,
+                    rating: productDetails['rating'], // Dynamic rating
+                    reviewCount:
+                        productDetails['reviewCount'], // Dynamic review count
+                    onTap: () {
+                      // Single line for navigation and dynamic product details
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => AppliancesProduct1()),
+                            builder: (context) => productDetails['widget']),
                       );
-                    } else if (product.id == '68132a95ff7813b3d47f9da6') {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => AppliancesProduct2()),
-                      );
-                    } else if (product.id == '68132a95ff7813b3d47f9da7') {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => AppliancesProduct3()),
-                      );
-                    } else if (product.id == '68132a95ff7813b3d47f9da8') {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => AppliancesProduct4()),
-                      );
-                    } else if (product.id == '68132a95ff7813b3d47f9da9') {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => AppliancesProduct5()),
-                      );
-                    } else if (product.id == '68132a95ff7813b3d47f9daa') {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => AppliancesProduct6()),
-                      );
-                    } else if (product.id == '68132a95ff7813b3d47f9dab') {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => AppliancesProduct7()),
-                      );
-                    } else if (product.id == '68132a95ff7813b3d47f9dac') {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => AppliancesProduct8()),
-                      );
-                    } else if (product.id == '68132a95ff7813b3d47f9dad') {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => AppliancesProduct9()),
-                      );
-                    } else if (product.id == '68132a95ff7813b3d47f9dae') {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => AppliancesProduct10()),
-                      );
-                    } else if (product.id == '68132a95ff7813b3d47f9daf') {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => AppliancesProduct11()),
-                      );
-                    } else if (product.id == '68132a95ff7813b3d47f9db0') {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => AppliancesProduct12()),
-                      );
-                    } else if (product.id == '68132a95ff7813b3d47f9db1') {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => AppliancesProduct13()),
-                      );
-                    } else if (product.id == '68132a95ff7813b3d47f9db2') {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => AppliancesProduct14()),
-                      );
-                    } else if (product.id == '68132a95ff7813b3d47f9db3') {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => AppliancesProduct15()),
-                      );
-                    }
-                    // Add more else if for every product id
-                  },
-                );
+                    },
+                  );
+                } else {
+                  return SizedBox
+                      .shrink(); // If no product data found, return an empty widget
+                }
               },
             );
           } else {
