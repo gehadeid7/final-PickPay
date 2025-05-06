@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class ProductCard extends StatelessWidget {
   const ProductCard({
     super.key,
+    required this.id,
     required this.name,
     required this.imagePaths,
     required this.price,
@@ -12,6 +13,7 @@ class ProductCard extends StatelessWidget {
     this.onTap,
   });
 
+  final String id;
   final String name;
   final List<String> imagePaths;
   final double price;
@@ -46,18 +48,22 @@ class ProductCard extends StatelessWidget {
           children: [
             SizedBox(
               height: 180,
-              width: double.infinity,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: PageView.builder(
-                  itemCount: imagePaths.length,
-                  itemBuilder: (context, index) {
-                    return Image.asset(
-                      imagePaths[index],
-                      fit: BoxFit.contain,
-                    );
-                  },
-                ),
+              child: Stack(
+                children: [
+                  SizedBox(
+                    height: 170,
+                    width: double.infinity,
+                    child: PageView.builder(
+                      itemCount: imagePaths.length,
+                      itemBuilder: (context, index) {
+                        return Image.asset(
+                          imagePaths[index],
+                          fit: BoxFit.contain,
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: 8),
@@ -92,7 +98,6 @@ class ProductCard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 6),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -118,6 +123,17 @@ class ProductCard extends StatelessWidget {
                     ),
                   ],
                 ),
+                // CircleAvatar(
+                //   radius: 17,
+                //   backgroundColor: Colors.black,
+                //   child: IconButton(
+                //     icon: const Icon(Icons.add, color: Colors.white, size: 23),
+                //     padding: EdgeInsets.zero,
+                //     onPressed: () {
+                //       // Add to cart logic
+                //     },
+                //   ),
+                // ),
               ],
             ),
           ],

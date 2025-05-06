@@ -37,6 +37,7 @@ class BeautyViewBody extends StatelessWidget {
 
           // Product 1
           ProductCard(
+            id: '68132a95ff7813b3d47f9da5',
             name:
                 'L’Oréal Paris Volume Million Lashes Panorama Mascara in Black, 9.9 ml',
             imagePaths: [
@@ -57,6 +58,7 @@ class BeautyViewBody extends StatelessWidget {
 
           // Product 2
           ProductCard(
+            id: '68132a95ff7813b3d47f9da5',
             name:
                 'L\'Oréal Paris Infaillible 24H Matte Cover Foundation 200 Sable Dore - Oil Control, High Coverage',
             imagePaths: [
@@ -77,6 +79,7 @@ class BeautyViewBody extends StatelessWidget {
 
           // Product 3
           ProductCard(
+            id: '68132a95ff7813b3d47f9da5',
             name: 'Cybele Smooth N`Wear Powder Blush Corail 17 - 3.7gm',
             imagePaths: [
               'assets/beauty_products/makeup_3/1.png',
@@ -96,6 +99,7 @@ class BeautyViewBody extends StatelessWidget {
 
           // Product 4
           ProductCard(
+            id: '68132a95ff7813b3d47f9da5',
             name:
                 'Eva skin care cleansing & makeup remover facial wipes for normal/dry skin 20%',
             imagePaths: [
@@ -116,6 +120,7 @@ class BeautyViewBody extends StatelessWidget {
 
           // Product 5
           ProductCard(
+            id: '68132a95ff7813b3d47f9da5',
             name: 'Maybelline New York Lifter Lip Gloss, 005 Petal',
             imagePaths: [
               'assets/beauty_products/makeup_5/1.png',
@@ -135,6 +140,7 @@ class BeautyViewBody extends StatelessWidget {
 
 // Product 6
           ProductCard(
+            id: '68132a95ff7813b3d47f9da5',
             name: 'Care & More Soft Cream With Glycerin Mixed berries 75 ML',
             imagePaths: [
               'assets/beauty_products/skincare_1/1.png',
@@ -154,6 +160,7 @@ class BeautyViewBody extends StatelessWidget {
 
 // Product 7
           ProductCard(
+            id: '68132a95ff7813b3d47f9da5',
             name:
                 'La Roche-Posay Anthelios XL Non-perfumed Dry Touch oil control gel cream SPF50+ 50ml',
             imagePaths: [
@@ -174,6 +181,7 @@ class BeautyViewBody extends StatelessWidget {
 
 // Product 8
           ProductCard(
+            id: '68132a95ff7813b3d47f9da5',
             name:
                 'Eva Aloe skin clinic anti-ageing collagen toner for firmed and refined skin - 200ml',
             imagePaths: [
@@ -194,6 +202,7 @@ class BeautyViewBody extends StatelessWidget {
 
           // product 9
           ProductCard(
+            id: '68132a95ff7813b3d47f9da5',
             name:
                 'Eucerin DermoPurifyer Oil Control Skin Renewal Treatment Face Serum, 40ml',
             imagePaths: [
@@ -214,6 +223,7 @@ class BeautyViewBody extends StatelessWidget {
 
           // product 10
           ProductCard(
+            id: '68132a95ff7813b3d47f9da5',
             name: 'L’Oréal Paris Hyaluron Expert Eye Serum - 20ml',
             imagePaths: [
               'assets/beauty_products/skincare_5/1.png',
@@ -234,6 +244,7 @@ class BeautyViewBody extends StatelessWidget {
 
           // product 11
           ProductCard(
+            id: '68132a95ff7813b3d47f9da5',
             name: 'L’Oréal Paris Elvive Hyaluron Pure Shampoo 400ML',
             imagePaths: [
               'assets/beauty_products/haircare_1/1.png',
@@ -254,6 +265,7 @@ class BeautyViewBody extends StatelessWidget {
 
           // product 12
           ProductCard(
+            id: '68132a95ff7813b3d47f9da5',
             name: 'Raw African Booster Shea Set',
             imagePaths: [
               'assets/beauty_products/haircare_2/1.png',
@@ -274,6 +286,7 @@ class BeautyViewBody extends StatelessWidget {
 
           // product 13
           ProductCard(
+            id: '68132a95ff7813b3d47f9da5',
             name:
                 'Garnier Color Naturals Permanent Crème Hair Color - 8.1 Light Ash Blonde',
             imagePaths: [
@@ -295,6 +308,7 @@ class BeautyViewBody extends StatelessWidget {
 
           // product 14
           ProductCard(
+            id: '68132a95ff7813b3d47f9da5',
             name:
                 "L'Oreal Professionnel Absolut Repair 10-In-1 Hair Serum Oil - 90ml",
             imagePaths: [
@@ -316,6 +330,7 @@ class BeautyViewBody extends StatelessWidget {
 
           // product 15
           ProductCard(
+            id: '68132a95ff7813b3d47f9da5',
             name:
                 'CORATED Heatless Curling Rod Headband Kit with Clips and Scrunchie',
             imagePaths: [
@@ -337,6 +352,7 @@ class BeautyViewBody extends StatelessWidget {
 
           // product 16
           ProductCard(
+            id: '68132a95ff7813b3d47f9da5',
             name: 'Avon Far Away for Women, Floral Eau de Parfum 50ml',
             imagePaths: [
               'assets/beauty_products/fragrance_1/1.png',
@@ -357,6 +373,7 @@ class BeautyViewBody extends StatelessWidget {
 
           // product 17
           ProductCard(
+            id: '68132a95ff7813b3d47f9da5',
             name:
                 'Memwa Coco Memwa Long Lasting Perfume Fragrance Luxury Eau De Parfum EDP Perfume for Women',
             imagePaths: [
@@ -378,6 +395,7 @@ class BeautyViewBody extends StatelessWidget {
 
           // product 18
           ProductCard(
+            id: '68132a95ff7813b3d47f9da5',
             name:
                 'Bath Body Gingham Gorgeous Fine Fragrance Mist, Size/Volume: 8 fl oz / 236 mL',
             imagePaths: [
@@ -399,6 +417,7 @@ class BeautyViewBody extends StatelessWidget {
 
           // product 19
           ProductCard(
+            id: '68132a95ff7813b3d47f9da5',
             name:
                 'NIVEA Antiperspirant Spray for Women, Pearl & Beauty Pearl Extracts, 150ml',
             imagePaths: [
@@ -420,6 +439,7 @@ class BeautyViewBody extends StatelessWidget {
 
           // product 20
           ProductCard(
+            id: '68132a95ff7813b3d47f9da5',
             name:
                 'Jacques Bogart One Man Show for Men, Eau de Toilette - 100ml',
             imagePaths: [
