@@ -16,7 +16,7 @@ class FashionViewbody extends StatelessWidget {
           SizedBox(height: kTopPadding),
 
           // Product 1
-          ProductCard(
+          ProductCard(id: '68132a95ff7813b3d47f9da5',
             name: "Women's Chiffon Lining Batwing Sleeve Dress",
             imagePaths: [
               "assets/Fashion_products/Women_Fashion/women_fashion1/1.png",
@@ -29,7 +29,7 @@ class FashionViewbody extends StatelessWidget {
           SizedBox(height: 10),
 
 // Product 2
-          ProductCard(
+          ProductCard(id: '68132a95ff7813b3d47f9da5',
             name: "adidas womens ULTIMASHOW Shoes",
             imagePaths: [
               "assets/Fashion_products/Women_Fashion/women_fashion2/1.png",
@@ -42,7 +42,7 @@ class FashionViewbody extends StatelessWidget {
           SizedBox(height: 10),
 
 // Product 3
-          ProductCard(
+          ProductCard(id: '68132a95ff7813b3d47f9da5',
             name: "American Eagle Womens Low-Rise Baggy Wide-Leg Jean",
             imagePaths: [
               "assets/Fashion_products/Women_Fashion/women_fashion3/1.png",
@@ -55,7 +55,7 @@ class FashionViewbody extends StatelessWidget {
           SizedBox(height: 10),
 
 // Product 4
-          ProductCard(
+          ProductCard(id: '68132a95ff7813b3d47f9da5',
             name: "Dejavu womens JAL-DJTF-058 Sandal",
             imagePaths: [
               "assets/Fashion_products/Women_Fashion/women_fashion4/1.png",
@@ -68,7 +68,7 @@ class FashionViewbody extends StatelessWidget {
           SizedBox(height: 10),
 
 // Product 5
-          ProductCard(
+          ProductCard(id: '68132a95ff7813b3d47f9da5',
             name: "Aldo Caraever Ladies Satchel Handbags, Khaki, Khaki",
             imagePaths: [
               "assets/Fashion_products/Women_Fashion/women_fashion5/1.png",
@@ -81,7 +81,7 @@ class FashionViewbody extends StatelessWidget {
           SizedBox(height: 10),
 
           // Product 6
-          ProductCard(
+          ProductCard(id: '68132a95ff7813b3d47f9da5',
             name:
                 "DeFacto Man Modern Fit Polo Neck Short Sleeve B6374AX Polo T-Shirt",
             imagePaths: [
@@ -95,7 +95,7 @@ class FashionViewbody extends StatelessWidget {
           SizedBox(height: 10),
 
 // Product 7
-          ProductCard(
+          ProductCard(id: '68132a95ff7813b3d47f9da5',
             name: "DOTT JEANS WEAR Men's Relaxed Fit Jeans",
             imagePaths: [
               "assets/Fashion_products/Men_Fashion/men_fashion2/1.png",
@@ -108,7 +108,7 @@ class FashionViewbody extends StatelessWidget {
           SizedBox(height: 10),
 
 // Product 8
-          ProductCard(
+          ProductCard(id: '68132a95ff7813b3d47f9da5',
             name:
                 "Sport-Q®Fury-X Football Shoes – Comfort, Precision, Performance",
             imagePaths: [
@@ -122,7 +122,7 @@ class FashionViewbody extends StatelessWidget {
           SizedBox(height: 10),
 
 // Product 9
-          ProductCard(
+          ProductCard(id: '68132a95ff7813b3d47f9da5',
             name: "Timberland Ek Larchmont Ftm_Chelsea, Men's Boots",
             imagePaths: [
               "assets/Fashion_products/Men_Fashion/men_fashion4/1.png",
@@ -135,7 +135,7 @@ class FashionViewbody extends StatelessWidget {
           SizedBox(height: 10),
 
 // Product 10
-          ProductCard(
+          ProductCard(id: '68132a95ff7813b3d47f9da5',
             name:
                 "Timberland Men's Leather Trifold Wallet Hybrid, Brown/Black, One Size",
             imagePaths: [
@@ -149,7 +149,7 @@ class FashionViewbody extends StatelessWidget {
           SizedBox(height: 10),
 
           // product 11
-          ProductCard(
+          ProductCard(id: '68132a95ff7813b3d47f9da5',
             name: "LC WAIKIKI Crew Neck Girl's Shorts Pajama Set",
             imagePaths: [
               "assets/Fashion_products/Kids_Fashion/kids_fashion1/1.png",
@@ -162,7 +162,7 @@ class FashionViewbody extends StatelessWidget {
           SizedBox(height: 10),
 
 // product 12
-          ProductCard(
+          ProductCard(id: '68132a95ff7813b3d47f9da5',
             name: "Kidzo Boys Pajamas",
             imagePaths: [
               "assets/Fashion_products/Kids_Fashion/kids_fashion2/1.png",
@@ -175,7 +175,7 @@ class FashionViewbody extends StatelessWidget {
           SizedBox(height: 10),
 
 // product 13
-          ProductCard(
+          ProductCard(id: '68132a95ff7813b3d47f9da5',
             name: "DeFacto Girls Cropped Fit Long Sleeve B9857A8 Denim Jacket",
             imagePaths: [
               "assets/Fashion_products/Kids_Fashion/kids_fashion3/1.png",
@@ -188,7 +188,7 @@ class FashionViewbody extends StatelessWidget {
           SizedBox(height: 10),
 
 // product 14
-          ProductCard(
+          ProductCard(id: '68132a95ff7813b3d47f9da5',
             name:
                 "Baby Boys Jacket Fashion Comfortable High Quality Plush Full Warmth Jacket",
             imagePaths: [
@@ -202,7 +202,7 @@ class FashionViewbody extends StatelessWidget {
           SizedBox(height: 10),
 
 // product 15
-          ProductCard(
+          ProductCard(id: '68132a95ff7813b3d47f9da5',
             name: "MIX & MAX, Ballerina Shoes, girls, Ballet Flat",
             imagePaths: [
               "assets/Fashion_products/Kids_Fashion/kids_fashion5/1.png",

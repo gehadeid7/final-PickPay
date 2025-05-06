@@ -14,7 +14,7 @@ class SaleViewBody extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         children: [
           SizedBox(height: kTopPadding),
-          ProductCard(
+          ProductCard(id: '68132a95ff7813b3d47f9da5',
             name: 'Samsung Galaxy S23 Ultra',
             imagePaths: [
               'assets/Categories/Electronics/samsung_galaxys23ultra.png',
@@ -26,7 +26,7 @@ class SaleViewBody extends StatelessWidget {
             reviewCount: 1893,
           ),
           SizedBox(height: 10),
-          ProductCard(
+          ProductCard(id: '68132a95ff7813b3d47f9da5',
             name: 'Apple iPhone 15 Pro Max',
             imagePaths: [
               'assets/Categories/Electronics/samsung_galaxys23ultra.png',
@@ -37,7 +37,7 @@ class SaleViewBody extends StatelessWidget {
             reviewCount: 2762,
           ),
           SizedBox(height: 10),
-          ProductCard(
+          ProductCard(id: '68132a95ff7813b3d47f9da5',
             name: 'Samsung 55-Inch QLED 4K Smart TV',
             imagePaths: [
               'assets/Categories/Electronics/samsung_galaxys23ultra.png',
@@ -48,7 +48,7 @@ class SaleViewBody extends StatelessWidget {
             reviewCount: 1542,
           ),
           SizedBox(height: 10),
-          ProductCard(
+          ProductCard(id: '68132a95ff7813b3d47f9da5',
             name: 'Sony WH-1000XM5 Wireless Headphones',
             imagePaths: [
               'assets/Categories/Electronics/samsung_galaxys23ultra.png',
@@ -59,7 +59,7 @@ class SaleViewBody extends StatelessWidget {
             reviewCount: 3120,
           ),
           SizedBox(height: 10),
-          ProductCard(
+          ProductCard(id: '68132a95ff7813b3d47f9da5',
             name: 'Apple MacBook Air M2',
             imagePaths: [
               'assets/Categories/Electronics/samsung_galaxys23ultra.png',
@@ -70,7 +70,7 @@ class SaleViewBody extends StatelessWidget {
             reviewCount: 2123,
           ),
           SizedBox(height: 10),
-          ProductCard(
+          ProductCard(id: '68132a95ff7813b3d47f9da5',
             name: 'Lenovo IdeaPad 3 Laptop',
             imagePaths: [
               'assets/Categories/Electronics/samsung_galaxys23ultra.png',
@@ -81,7 +81,7 @@ class SaleViewBody extends StatelessWidget {
             reviewCount: 954,
           ),
           SizedBox(height: 10),
-          ProductCard(
+          ProductCard(id: '68132a95ff7813b3d47f9da5',
             name: 'ASUS ROG Strix Gaming Laptop',
             imagePaths: [
               'assets/Categories/Electronics/samsung_galaxys23ultra.png',
@@ -92,7 +92,7 @@ class SaleViewBody extends StatelessWidget {
             reviewCount: 1288,
           ),
           SizedBox(height: 10),
-          ProductCard(
+          ProductCard(id: '68132a95ff7813b3d47f9da5',
             name: 'Canon EOS R50 Mirrorless Camera',
             imagePaths: [
               'assets/Categories/Electronics/samsung_galaxys23ultra.png',
@@ -103,7 +103,7 @@ class SaleViewBody extends StatelessWidget {
             reviewCount: 884,
           ),
           SizedBox(height: 10),
-          ProductCard(
+          ProductCard(id: '68132a95ff7813b3d47f9da5',
             name: 'DJI Mini 3 Pro Drone with Camera',
             imagePaths: [
               'assets/Categories/Electronics/samsung_galaxys23ultra.png',
@@ -114,7 +114,7 @@ class SaleViewBody extends StatelessWidget {
             reviewCount: 1193,
           ),
           SizedBox(height: 10),
-          ProductCard(
+          ProductCard(id: '68132a95ff7813b3d47f9da5',
             name: 'Amazon Echo Dot (5th Gen)',
             imagePaths: [
               'assets/Categories/Electronics/samsung_galaxys23ultra.png',
@@ -125,7 +125,7 @@ class SaleViewBody extends StatelessWidget {
             reviewCount: 4576,
           ),
           SizedBox(height: 10),
-          ProductCard(
+          ProductCard(id: '68132a95ff7813b3d47f9da5',
             name: 'Xiaomi Smart Air Purifier 4',
             imagePaths: [
               'assets/Categories/Electronics/samsung_galaxys23ultra.png',
@@ -136,7 +136,7 @@ class SaleViewBody extends StatelessWidget {
             reviewCount: 674,
           ),
           SizedBox(height: 10),
-          ProductCard(
+          ProductCard(id: '68132a95ff7813b3d47f9da5',
             name: 'Anker PowerCore Portable Charger 20,000mAh',
             imagePaths: [
               'assets/Categories/Electronics/samsung_galaxys23ultra.png',
@@ -147,7 +147,7 @@ class SaleViewBody extends StatelessWidget {
             reviewCount: 2285,
           ),
           SizedBox(height: 10),
-          ProductCard(
+          ProductCard(id: '68132a95ff7813b3d47f9da5',
             name: 'Logitech MX Master 3 Wireless Mouse',
             imagePaths: [
               'assets/Categories/Electronics/samsung_galaxys23ultra.png',
@@ -158,7 +158,7 @@ class SaleViewBody extends StatelessWidget {
             reviewCount: 1439,
           ),
           SizedBox(height: 10),
-          ProductCard(
+          ProductCard(id: '68132a95ff7813b3d47f9da5',
             name: 'TP-Link AC1900 Smart WiFi Router',
             imagePaths: [
               'assets/Categories/Electronics/samsung_galaxys23ultra.png',
@@ -169,7 +169,7 @@ class SaleViewBody extends StatelessWidget {
             reviewCount: 1162,
           ),
           SizedBox(height: 10),
-          ProductCard(
+          ProductCard(id: '68132a95ff7813b3d47f9da5',
             name: 'Google Chromecast with Google TV',
             imagePaths: [
               'assets/Categories/Electronics/samsung_galaxys23ultra.png',
