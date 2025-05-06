@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pickpay/core/helper_functions/on_generate_routes.dart';
 import 'package:pickpay/core/services/get_it_service.dart';
 import 'package:pickpay/core/services/shared_preferences_singletone.dart';
-import 'package:pickpay/features/home/presentation/cubits/cubit/cart_cubit.dart';
+import 'package:pickpay/features/home/presentation/cubits/cart_cubits/cart_cubit.dart';
 import 'package:pickpay/features/splash/presentation/views/splash_view.dart';
 import 'package:pickpay/firebase_options.dart';
 

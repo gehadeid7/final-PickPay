@@ -9,7 +9,7 @@ import 'package:pickpay/features/categories_pages/widgets/info_icons_row.dart';
 import 'package:pickpay/features/categories_pages/widgets/product_rating.dart';
 import 'package:pickpay/features/categories_pages/widgets/scent_option.dart';
 import 'package:pickpay/features/home/domain/models/cart_item_model.dart';
-import 'package:pickpay/features/home/presentation/cubits/cubit/cart_cubit.dart';
+import 'package:pickpay/features/home/presentation/cubits/cart_cubits/cart_cubit.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class ProductDetailView extends StatefulWidget {

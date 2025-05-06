@@ -12,6 +12,7 @@ import 'package:pickpay/features/home/presentation/views/cart_view.dart';
 import 'package:pickpay/features/home/presentation/views/categories_view.dart';
 import 'package:pickpay/features/home/presentation/views/home_view.dart';
 import 'package:pickpay/features/home/presentation/views/main_navigation_screen.dart';
+import 'package:pickpay/features/home/presentation/views/wishlist_view.dart';
 
 import '../../features/auth/presentation/views/signin_view.dart';
 import '../../features/auth/presentation/views/sign_up_view.dart';
@@ -61,6 +62,11 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (context) => const VideogamesView());
     case BeautyView.routeName:
       return MaterialPageRoute(builder: (context) => const BeautyView());
+
+  case WishlistView.routeName:
+      return MaterialPageRoute(builder: (context) => const WishlistView());
+
+
 
     default:
       return MaterialPageRoute(builder: (context) => const Scaffold());

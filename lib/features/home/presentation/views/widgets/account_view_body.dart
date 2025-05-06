@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pickpay/core/widgets/custom_app.dart';
 import 'package:pickpay/features/auth/presentation/views/signin_view.dart';
 import 'package:pickpay/features/home/presentation/views/cart_view.dart';
+import 'package:pickpay/features/home/presentation/views/wishlist_view.dart';
 
 class AccountViewBody extends StatelessWidget {
   final String fullName;
@@ -60,7 +61,11 @@ class AccountViewBody extends StatelessWidget {
                 MaterialPageRoute(builder: (_) => const CartView()),
               );
             }),
-            _accountTile(Icons.favorite, "Wishlist", () {}),
+            _accountTile(
+              Icons.favorite,
+              "Wishlist",
+              () => Navigator.pushNamed(context, WishlistView.routeName),
+            ),
             _accountTile(Icons.location_on, "Addresses", () {}),
             _accountTile(Icons.payment, "Payment Methods", () {}),
             const Divider(height: 32),

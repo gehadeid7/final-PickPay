@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pickpay/core/cubits/products_cubit/products_cubit_cubit.dart';
 import 'package:pickpay/features/home/presentation/views/widgets/Fashion_section/fashion_grid.dart';
 import 'package:pickpay/features/home/presentation/views/widgets/Fashion_section/fashion_header.dart';
 import 'package:pickpay/features/home/presentation/views/widgets/appliances_section/appliances_grid.dart';
@@ -28,11 +26,6 @@ class HomeViewBody extends StatefulWidget {
 
 class _HomeViewBodyState extends State<HomeViewBody> {
   @override
-  // void initState() {
-  //   context.read<ProductsCubit>().getBsetSellingProducts();
-  //   super.initState();
-  // }
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
