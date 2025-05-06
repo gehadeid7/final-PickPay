@@ -12,14 +12,6 @@ import 'package:pickpay/firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Hive
-  // await Hive.initFlutter(); // For Flutter apps
-  // Hive.registerAdapter(ProductAdapter());
-  // Hive.registerAdapter(CartItemAdapter());
-
-  //  await Hive.openBox<Product>('products');
-  // await Hive.openBox<CartItem>('cart');
-
   // Initialize Firebase
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await Prefs.init();
