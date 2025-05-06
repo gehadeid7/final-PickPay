@@ -12,23 +12,34 @@ class WishlistCubit extends Cubit<WishlistState> {
   List<ProductsViewsModel> _wishlistItems = [];
 
   void loadInitialWishlist() {
-    // You can load from local storage here if needed
-    emit(WishlistLoaded(items: _wishlistItems));
+    emit(WishlistLoaded(items: List.from(_wishlistItems)));
   }
 
   void addToWishlist(ProductsViewsModel product) {
-    if (!_wishlistItems.any((item) => item.id == product.id)) {
-      _wishlistItems.add(product);
-      emit(WishlistLoaded(items: _wishlistItems, action: WishlistAction.added));
+    final newList = List<ProductsViewsModel>.from(_wishlistItems);
+    if (!newList.any((item) => item.id == product.id)) {
+      newList.add(product);
+      _wishlistItems = newList;
+      emit(WishlistLoaded(
+        items: List.from(_wishlistItems),
+        action: WishlistAction.added,
+      ));
     }
   }
 
   void removeFromWishlist(String productId) {
-    _wishlistItems.removeWhere((item) => item.id == productId);
-    emit(WishlistLoaded(items: _wishlistItems, action: WishlistAction.removed));
+    final newList = List<ProductsViewsModel>.from(_wishlistItems);
+    newList.removeWhere((item) => item.id == productId);
+    _wishlistItems = newList;
+    emit(WishlistLoaded(
+      items: List.from(_wishlistItems),
+      action: WishlistAction.removed,
+    ));
   }
 
   bool isInWishlist(String productId) {
     return _wishlistItems.any((item) => item.id == productId);
   }
+
+  List<ProductsViewsModel> get wishlistItems => List.from(_wishlistItems);
 }

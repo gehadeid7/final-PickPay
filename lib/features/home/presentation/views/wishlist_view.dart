@@ -1,4 +1,3 @@
-// In wishlist_view.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pickpay/features/home/presentation/cubits/wishlist_cubits/wishlist_cubit.dart';
@@ -11,9 +10,11 @@ class WishlistView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => WishlistCubit(),
-      child: WishlistViewBody(),
+    return BlocProvider.value(
+      value: context.read<WishlistCubit>(),
+      child: const Scaffold(
+        body: WishlistViewBody(),
+      ),
     );
   }
 }

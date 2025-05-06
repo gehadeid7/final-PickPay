@@ -10,6 +10,7 @@ import 'package:pickpay/features/categories_pages/widgets/product_rating.dart';
 import 'package:pickpay/features/categories_pages/widgets/scent_option.dart';
 import 'package:pickpay/features/home/domain/models/cart_item_model.dart';
 import 'package:pickpay/features/home/presentation/cubits/cart_cubits/cart_cubit.dart';
+import 'package:pickpay/features/home/presentation/views/widgets/wishlist_button.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class ProductDetailView extends StatefulWidget {
@@ -336,31 +337,48 @@ class _ProductDetailViewState extends State<ProductDetailView> {
   }
 
   Widget _buildImageSlider(ProductsViewsModel product) {
-    return Column(
+    return Stack(
       children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(16),
-          child: SizedBox(
-            height: 260,
-            child: PageView.builder(
-              controller: _pageController,
-              itemCount: product.imagePaths?.length ?? 0,
-              itemBuilder: (context, index) {
-                return Image.asset(
-                  product.imagePaths![index],
-                  fit: BoxFit.contain,
-                );
-              },
+        Column(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: SizedBox(
+                height: 260,
+                child: PageView.builder(
+                  controller: _pageController,
+                  itemCount: product.imagePaths?.length ?? 0,
+                  itemBuilder: (context, index) {
+                    return Image.asset(
+                      product.imagePaths![index],
+                      fit: BoxFit.contain,
+                    );
+                  },
+                ),
+              ),
             ),
-          ),
+            const SizedBox(height: 10),
+            Center(
+              child: SmoothPageIndicator(
+                controller: _pageController,
+                count: product.imagePaths?.length ?? 0,
+                effect: const WormEffect(
+                  dotHeight: 8,
+                  dotWidth: 8,
+                  activeDotColor: Colors.blueAccent,
+                ),
+              ),
+            ),
+          ],
         ),
-        const SizedBox(height: 10),
-        Center(
-          child: SmoothPageIndicator(
-            controller: _pageController,
-            count: product.imagePaths?.length ?? 0,
-            effect: const WormEffect(
-                dotHeight: 8, dotWidth: 8, activeDotColor: Colors.blueAccent),
+        // Add the WishlistButton positioned in the top-right corner
+        Positioned(
+          top: 8,
+          right: 8,
+          child: WishlistButton(
+            product: product,
+            backgroundColor: Colors.grey.shade200.withOpacity(0.8),
+            iconSize: 24,
           ),
         ),
       ],
