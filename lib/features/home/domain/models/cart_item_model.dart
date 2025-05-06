@@ -1,37 +1,35 @@
+import 'package:pickpay/features/categories_pages/models/product_model.dart';
+
 class CartItemModel {
-  final String id;
-  final String title;
-  final double price;
-  final String imagePath;
+  final ProductsViewsModel product;
   final int quantity;
 
   CartItemModel({
-    required this.id,
-    required this.title,
-    required this.price,
-    required this.imagePath,
+    required this.product,
     required this.quantity,
   });
 
-  // Convert CartItemModel to CartItem JSON format
-  factory CartItemModel.fromJson(Map<String, dynamic> json) {
+  CartItemModel copyWith({int? quantity}) {
     return CartItemModel(
-      id: json['id'],
-      title: json['title'],
-      price: json['price'].toDouble(),
-      imagePath: json['imagePath'],
-      quantity: json['quantity'],
+      product: product,
+      quantity: quantity ?? this.quantity,
     );
   }
 
-  // Convert CartItem JSON format to CartItemModel
+  // Convert CartItemModel to JSON
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
-      'title': title,
-      'price': price,
-      'imagePath': imagePath,
+      'product': product.toJson(), // Make sure ProductsViewsModel has toJson()
       'quantity': quantity,
     };
+  }
+
+  // Create CartItemModel from JSON
+  factory CartItemModel.fromJson(Map<String, dynamic> json) {
+    return CartItemModel(
+      product: ProductsViewsModel.fromJson(
+          json['product']), // Make sure ProductsViewsModel has fromJson()
+      quantity: json['quantity'],
+    );
   }
 }

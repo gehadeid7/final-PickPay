@@ -8,7 +8,7 @@ class AppliancesProduct1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-        id: "68132a95ff7813b3d47f9da5", // Add a backend-generated ID here
+        id: "68132a95ff7813b3d47f9da5",
         title:
             'Koldair Water Dispenser Cold And Hot 2 Tabs - Bottom Load KWDB Silver Cooler',
         imagePaths: [
@@ -16,8 +16,8 @@ class AppliancesProduct1 extends StatelessWidget {
           'assets/appliances/product1/2.png',
           'assets/appliances/product1/3.png',
         ],
-        price: 10.499,
-        originalPrice: 16.800,
+        price: 10499,
+        originalPrice: 16800,
         rating: 3.1,
         reviewCount: 9,
         category: 'appliances',

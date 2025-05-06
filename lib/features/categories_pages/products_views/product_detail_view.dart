@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pickpay/core/utils/app_text_styles.dart';
 import 'package:pickpay/core/widgets/custom_button.dart';
 import 'package:pickpay/features/categories_pages/models/product_model.dart';
@@ -7,6 +8,8 @@ import 'package:pickpay/features/categories_pages/widgets/dropdown_count.dart';
 import 'package:pickpay/features/categories_pages/widgets/info_icons_row.dart';
 import 'package:pickpay/features/categories_pages/widgets/product_rating.dart';
 import 'package:pickpay/features/categories_pages/widgets/scent_option.dart';
+import 'package:pickpay/features/home/domain/models/cart_item_model.dart';
+import 'package:pickpay/features/home/presentation/cubits/cubit/cart_cubit.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class ProductDetailView extends StatefulWidget {
@@ -91,8 +94,7 @@ class _ProductDetailViewState extends State<ProductDetailView> {
                       label: "Special Features",
                       value: product.specialfeatures),
                   _ProductFeatureRow(
-                      label: "Finish Type",
-                      value: product.finishType ?? product.finishtype),
+                      label: "Finish Type", value: product.finishType),
                   _ProductFeatureRow(
                       label: "Model Name", value: product.modelName),
                   _ProductFeatureRow(
@@ -315,7 +317,15 @@ class _ProductDetailViewState extends State<ProductDetailView> {
             right: 16,
             child: Center(
               child: CustomButton(
-                onPressed: () {},
+                onPressed: () {
+                  context.read<CartCubit>().addToCart(
+                        CartItemModel(
+                          product:
+                              product, // ✅ This should be an instance, not the class
+                          quantity: 1,
+                        ),
+                      );
+                },
                 buttonText: "Add to Cart",
               ),
             ),

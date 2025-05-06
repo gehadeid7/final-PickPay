@@ -1,9 +1,8 @@
 class ProductsViewsModel {
-  // general
+  // General product information
   final String id;
   final String title;
   final double price;
-
   final double? originalPrice;
   final String? category;
   final List<String>? imagePaths;
@@ -18,13 +17,8 @@ class ProductsViewsModel {
   final bool? inStock;
   final String? shipsFrom;
   final String? soldBy;
-  final String? specialfeatures;
-  final String? finishType;
-  final String? containerType;
-  final String? manufacturer;
-  final String? size;
 
-// appliances detailes
+  // Product specifications
   final String? material;
   final String? dimensions;
   final String? style;
@@ -54,7 +48,6 @@ class ProductsViewsModel {
   final String? stainlessSteelNumberofSpeeds;
   final String? bladeMaterial;
   final String? voltage;
-  final String? finishtype;
   final String? components;
   final String? powersource;
   final String? pressure;
@@ -68,8 +61,13 @@ class ProductsViewsModel {
   final String? slotcount;
   final String? drawertype;
   final String? defrostSystem;
+  final String? size;
+  final String? specialfeatures;
+  final String? finishType;
+  final String? containerType;
+  final String? manufacturer;
 
-  // beauty
+  // Beauty-specific properties
   final String? productbenefit;
   final String? itemform;
   final String? specialty;
@@ -97,21 +95,12 @@ class ProductsViewsModel {
     required this.title,
     required this.price,
     this.originalPrice,
-    this.brand,
     this.category,
     this.imagePaths,
     this.rating,
     this.reviewCount,
+    this.brand,
     this.color,
-    this.material,
-    this.dimensions,
-    this.style,
-    this.installationType,
-    this.accessLocation,
-    this.defrostSystem,
-    this.settingsCount,
-    this.powerSource,
-    this.manufacturer,
     this.aboutThisItem,
     this.deliveryDate,
     this.deliveryTimeLeft,
@@ -119,8 +108,13 @@ class ProductsViewsModel {
     this.inStock,
     this.shipsFrom,
     this.soldBy,
-    this.specialfeatures,
-    this.finishType,
+    this.material,
+    this.dimensions,
+    this.style,
+    this.installationType,
+    this.accessLocation,
+    this.settingsCount,
+    this.powerSource,
     this.modelName,
     this.formFactor,
     this.controlsType,
@@ -135,7 +129,6 @@ class ProductsViewsModel {
     this.modelNumber,
     this.numberofprograms,
     this.noiselevel,
-    this.size,
     this.recommendedUsesForProduct,
     this.outputWattage,
     this.wattage,
@@ -143,9 +136,7 @@ class ProductsViewsModel {
     this.filtertype,
     this.stainlessSteelNumberofSpeeds,
     this.bladeMaterial,
-    this.containerType,
     this.voltage,
-    this.finishtype,
     this.components,
     this.powersource,
     this.pressure,
@@ -157,6 +148,13 @@ class ProductsViewsModel {
     this.isProductCordless,
     this.frequency,
     this.slotcount,
+    this.drawertype,
+    this.defrostSystem,
+    this.size,
+    this.specialfeatures,
+    this.finishType,
+    this.containerType,
+    this.manufacturer,
     this.productbenefit,
     this.itemform,
     this.specialty,
@@ -176,23 +174,24 @@ class ProductsViewsModel {
     this.resultingHairType,
     this.materialfeature,
     this.fragranceConcentration,
-    this.drawertype,
     this.colorOptions,
     this.scentOption,
   });
 
-// for back
   factory ProductsViewsModel.fromJson(Map<String, dynamic> json) {
     return ProductsViewsModel(
       id: json['_id']?['\$oid'] ?? json['id'] ?? '',
-      title: json['name'] ?? '',
+      title: json['name'] ?? json['title'] ?? '',
       price: (json['price'] ?? 0).toDouble(),
-      originalPrice: (json['originalPrice'] ?? 0).toDouble(),
+      originalPrice:
+          (json['originalPrice'] ?? json['listPrice'] ?? 0).toDouble(),
       brand: json['brand'],
       category: json['category'],
       imagePaths: json['imagePaths'] != null
           ? List<String>.from(json['imagePaths'])
-          : null,
+          : json['images'] != null
+              ? List<String>.from(json['images'])
+              : null,
       rating: (json['rating'] as num?)?.toDouble(),
       reviewCount: json['reviewCount'],
       color: json['color'],
@@ -204,13 +203,77 @@ class ProductsViewsModel {
       settingsCount: json['settingsCount'],
       powerSource: json['powerSource'],
       manufacturer: json['manufacturer'],
-      aboutThisItem: json['description'],
+      aboutThisItem: json['description'] ?? json['aboutThisItem'],
       deliveryDate: json['deliveryDate'],
       deliveryTimeLeft: json['deliveryTimeLeft'],
       deliveryLocation: json['deliveryLocation'],
       inStock: json['inStock'],
       shipsFrom: json['shipsFrom'],
       soldBy: json['soldBy'],
+      modelName: json['modelName'],
+      formFactor: json['formFactor'],
+      controlsType: json['controlsType'],
+      itemWeight: json['itemWeight'],
+      efficiency: json['efficiency'],
+      mountingType: json['mountingType'],
+      capacity: json['capacity'],
+      technology: json['technology'],
+      configration: json['configration'],
+      energyEfficency: json['energyEfficency'],
+      spinSpeed: json['spinSpeed'],
+      modelNumber: json['modelNumber'],
+      numberofprograms: json['numberofprograms'],
+      noiselevel: json['noiselevel'],
+      recommendedUsesForProduct: json['recommendedUsesForProduct'],
+      outputWattage: json['outputWattage'],
+      wattage: json['wattage'],
+      coffeeMakerType: json['coffeeMakerType'],
+      filtertype: json['filtertype'],
+      stainlessSteelNumberofSpeeds: json['stainlessSteelNumberofSpeeds'],
+      bladeMaterial: json['bladeMaterial'],
+      voltage: json['voltage'],
+      components: json['components'],
+      powersource: json['powersource'],
+      pressure: json['pressure'],
+      maximumpressure: json['maximumpressure'],
+      controllertype: json['controllertype'],
+      electricFanDesign: json['electricFanDesign'],
+      roomtype: json['roomtype'],
+      surface: json['surface'],
+      isProductCordless: json['isProductCordless'],
+      frequency: json['frequency'],
+      slotcount: json['slotcount'],
+      drawertype: json['drawertype'],
+      defrostSystem: json['defrostSystem'],
+      size: json['size'],
+      specialfeatures: json['specialfeatures'],
+      finishType: json['finishType'] ?? json['finishtype'],
+      containerType: json['containerType'],
+      productbenefit: json['productbenefit'],
+      itemform: json['itemform'],
+      specialty: json['specialty'],
+      unitcount: json['unitcount'],
+      numberofitems: json['numberofitems'],
+      skintype: json['skintype'],
+      coverage: json['coverage'],
+      ageRangeDescription: json['ageRangeDescription'],
+      specialIngredients: json['specialIngredients'],
+      activeIngredients: json['activeIngredients'],
+      sunProtectionFactor: json['sunProtectionFactor'],
+      itemvolume: json['itemvolume'],
+      scent: json['scent'],
+      targetUseBodyPart: json['targetUseBodyPart'],
+      hairtype: json['hairtype'],
+      liquidVolume: json['liquidVolume'],
+      resultingHairType: json['resultingHairType'],
+      materialfeature: json['materialfeature'],
+      fragranceConcentration: json['fragranceConcentration'],
+      colorOptions: json['colorOptions'] != null
+          ? List<String>.from(json['colorOptions'])
+          : null,
+      scentOption: json['scentOption'] != null
+          ? List<String>.from(json['scentOption'])
+          : null,
     );
   }
 
@@ -219,21 +282,13 @@ class ProductsViewsModel {
       'id': id,
       'name': title,
       'price': price,
-      'originalPrice': originalPrice,
-      if (brand != null) 'brand': brand,
+      if (originalPrice != null) 'originalPrice': originalPrice,
       if (category != null) 'category': category,
       if (imagePaths != null) 'imagePaths': imagePaths,
       if (rating != null) 'rating': rating,
       if (reviewCount != null) 'reviewCount': reviewCount,
+      if (brand != null) 'brand': brand,
       if (color != null) 'color': color,
-      if (material != null) 'material': material,
-      if (dimensions != null) 'dimensions': dimensions,
-      if (style != null) 'style': style,
-      if (installationType != null) 'installationType': installationType,
-      if (accessLocation != null) 'accessLocation': accessLocation,
-      if (settingsCount != null) 'settingsCount': settingsCount,
-      if (powerSource != null) 'powerSource': powerSource,
-      if (manufacturer != null) 'manufacturer': manufacturer,
       if (aboutThisItem != null) 'description': aboutThisItem,
       if (deliveryDate != null) 'deliveryDate': deliveryDate,
       if (deliveryTimeLeft != null) 'deliveryTimeLeft': deliveryTimeLeft,
@@ -241,6 +296,79 @@ class ProductsViewsModel {
       if (inStock != null) 'inStock': inStock,
       if (shipsFrom != null) 'shipsFrom': shipsFrom,
       if (soldBy != null) 'soldBy': soldBy,
+      if (material != null) 'material': material,
+      if (dimensions != null) 'dimensions': dimensions,
+      if (style != null) 'style': style,
+      if (installationType != null) 'installationType': installationType,
+      if (accessLocation != null) 'accessLocation': accessLocation,
+      if (settingsCount != null) 'settingsCount': settingsCount,
+      if (powerSource != null) 'powerSource': powerSource,
+      if (modelName != null) 'modelName': modelName,
+      if (formFactor != null) 'formFactor': formFactor,
+      if (controlsType != null) 'controlsType': controlsType,
+      if (itemWeight != null) 'itemWeight': itemWeight,
+      if (efficiency != null) 'efficiency': efficiency,
+      if (mountingType != null) 'mountingType': mountingType,
+      if (capacity != null) 'capacity': capacity,
+      if (technology != null) 'technology': technology,
+      if (configration != null) 'configration': configration,
+      if (energyEfficency != null) 'energyEfficency': energyEfficency,
+      if (spinSpeed != null) 'spinSpeed': spinSpeed,
+      if (modelNumber != null) 'modelNumber': modelNumber,
+      if (numberofprograms != null) 'numberofprograms': numberofprograms,
+      if (noiselevel != null) 'noiselevel': noiselevel,
+      if (recommendedUsesForProduct != null)
+        'recommendedUsesForProduct': recommendedUsesForProduct,
+      if (outputWattage != null) 'outputWattage': outputWattage,
+      if (wattage != null) 'wattage': wattage,
+      if (coffeeMakerType != null) 'coffeeMakerType': coffeeMakerType,
+      if (filtertype != null) 'filtertype': filtertype,
+      if (stainlessSteelNumberofSpeeds != null)
+        'stainlessSteelNumberofSpeeds': stainlessSteelNumberofSpeeds,
+      if (bladeMaterial != null) 'bladeMaterial': bladeMaterial,
+      if (voltage != null) 'voltage': voltage,
+      if (components != null) 'components': components,
+      if (powersource != null) 'powersource': powersource,
+      if (pressure != null) 'pressure': pressure,
+      if (maximumpressure != null) 'maximumpressure': maximumpressure,
+      if (controllertype != null) 'controllertype': controllertype,
+      if (electricFanDesign != null) 'electricFanDesign': electricFanDesign,
+      if (roomtype != null) 'roomtype': roomtype,
+      if (surface != null) 'surface': surface,
+      if (isProductCordless != null) 'isProductCordless': isProductCordless,
+      if (frequency != null) 'frequency': frequency,
+      if (slotcount != null) 'slotcount': slotcount,
+      if (drawertype != null) 'drawertype': drawertype,
+      if (defrostSystem != null) 'defrostSystem': defrostSystem,
+      if (size != null) 'size': size,
+      if (specialfeatures != null) 'specialfeatures': specialfeatures,
+      if (finishType != null) 'finishType': finishType,
+      if (containerType != null) 'containerType': containerType,
+      if (manufacturer != null) 'manufacturer': manufacturer,
+      if (productbenefit != null) 'productbenefit': productbenefit,
+      if (itemform != null) 'itemform': itemform,
+      if (specialty != null) 'specialty': specialty,
+      if (unitcount != null) 'unitcount': unitcount,
+      if (numberofitems != null) 'numberofitems': numberofitems,
+      if (skintype != null) 'skintype': skintype,
+      if (coverage != null) 'coverage': coverage,
+      if (ageRangeDescription != null)
+        'ageRangeDescription': ageRangeDescription,
+      if (specialIngredients != null) 'specialIngredients': specialIngredients,
+      if (activeIngredients != null) 'activeIngredients': activeIngredients,
+      if (sunProtectionFactor != null)
+        'sunProtectionFactor': sunProtectionFactor,
+      if (itemvolume != null) 'itemvolume': itemvolume,
+      if (scent != null) 'scent': scent,
+      if (targetUseBodyPart != null) 'targetUseBodyPart': targetUseBodyPart,
+      if (hairtype != null) 'hairtype': hairtype,
+      if (liquidVolume != null) 'liquidVolume': liquidVolume,
+      if (resultingHairType != null) 'resultingHairType': resultingHairType,
+      if (materialfeature != null) 'materialfeature': materialfeature,
+      if (fragranceConcentration != null)
+        'fragranceConcentration': fragranceConcentration,
+      if (colorOptions != null) 'colorOptions': colorOptions,
+      if (scentOption != null) 'scentOption': scentOption,
     };
   }
 }

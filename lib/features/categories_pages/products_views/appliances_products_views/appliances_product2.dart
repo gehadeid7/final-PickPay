@@ -13,8 +13,8 @@ class AppliancesProduct2 extends StatelessWidget {
       imagePaths: [
         'assets/appliances/product2/1.png',
       ],
-      price: 10.525,
-      originalPrice: 10.968,
+      price: 10525,
+      originalPrice: 10968,
       rating: 3.1,
       reviewCount: 9,
       drawertype: 'Storage',
