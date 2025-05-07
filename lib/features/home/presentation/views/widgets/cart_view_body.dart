@@ -5,6 +5,7 @@ import 'package:pickpay/core/utils/app_text_styles.dart';
 import 'package:pickpay/core/widgets/custom_app.dart';
 import 'package:pickpay/core/widgets/custom_button.dart';
 import 'package:pickpay/features/categories_pages/products_views/product_detail_view.dart';
+import 'package:pickpay/features/checkout/presentation/views/checkout_view.dart';
 import 'package:pickpay/features/home/presentation/cubits/cart_cubits/cart_cubit.dart';
 
 class CartViewBody extends StatelessWidget {
@@ -243,7 +244,7 @@ class CartViewBody extends StatelessWidget {
                       ),
                       children: [
                         const TextSpan(text: "Subtotal"),
-                        const WidgetSpan(child: SizedBox(width: 120)),
+                        const WidgetSpan(child: SizedBox(width: 100)),
                         TextSpan(
                           text: "EGP ${totalPrice.toStringAsFixed(2)}",
                           style: const TextStyle(color: Colors.black),
@@ -256,7 +257,12 @@ class CartViewBody extends StatelessWidget {
               const SizedBox(height: 10),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: CustomButton(onPressed: () {}, buttonText: 'Checkout'),
+                child: CustomButton(
+                    onPressed: () {
+                      Navigator.of(context)
+                          .pushReplacementNamed(CheckoutView.routeName);
+                    },
+                    buttonText: 'Checkout'),
               ),
               const SizedBox(height: 10),
             ],
