@@ -30,6 +30,7 @@ class WishlistButton extends StatelessWidget {
 
         return FloatingActionButton(
           heroTag: 'wishlist_${product.id}', // Unique hero tag
+          // ignore: deprecated_member_use
           backgroundColor: backgroundColor ?? Colors.white.withOpacity(0.9),
           mini: isMini,
           elevation: 2,

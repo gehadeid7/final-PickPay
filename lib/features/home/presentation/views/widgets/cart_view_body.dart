@@ -92,6 +92,7 @@ class CartViewBody extends StatelessWidget {
                           borderRadius: BorderRadius.circular(12),
                           boxShadow: [
                             BoxShadow(
+                              // ignore: deprecated_member_use
                               color: Colors.grey.withOpacity(0.4),
                               spreadRadius: 2,
                               blurRadius: 6,
@@ -134,7 +135,7 @@ class CartViewBody extends StatelessWidget {
                                       style: TextStyles.bold16),
                                   const SizedBox(height: 4),
                                   Text(
-                                      "Price: \EGP ${item.product.price?.toStringAsFixed(2) ?? '0.00'}",
+                                      "Price: EGP ${item.product.price?.toStringAsFixed(2) ?? '0.00'}",
                                       style: TextStyles.semiBold13.copyWith(
                                           color: AppColors.primaryColor)),
                                   const SizedBox(height: 10),
@@ -165,6 +166,7 @@ class CartViewBody extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(30),
                                     boxShadow: [
                                       BoxShadow(
+                                        // ignore: deprecated_member_use
                                         color: Colors.black.withOpacity(0.2),
                                         offset: const Offset(0, 2),
                                         blurRadius: 4,
@@ -196,6 +198,7 @@ class CartViewBody extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(30),
                                     boxShadow: [
                                       BoxShadow(
+                                        // ignore: deprecated_member_use
                                         color: Colors.black.withOpacity(0.2),
                                         offset: const Offset(0, 2),
                                         blurRadius: 4,
@@ -244,7 +247,7 @@ class CartViewBody extends StatelessWidget {
                       ),
                       children: [
                         const TextSpan(text: "Subtotal"),
-                        const WidgetSpan(child: SizedBox(width: 100)),
+                        const WidgetSpan(child: SizedBox(width: 20)),
                         TextSpan(
                           text: "EGP ${totalPrice.toStringAsFixed(2)}",
                           style: const TextStyle(color: Colors.black),

@@ -55,6 +55,7 @@ class _ScentOptionState extends State<ScentOption> {
                   border:
                       Border.all(color: isSelected ? Colors.blue : Colors.grey),
                   borderRadius: BorderRadius.circular(6),
+                  // ignore: deprecated_member_use
                   color: isSelected ? Colors.blue.withOpacity(0.1) : null,
                 ),
                 child: Text(

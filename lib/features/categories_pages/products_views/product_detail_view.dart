@@ -377,6 +377,7 @@ class _ProductDetailViewState extends State<ProductDetailView> {
           right: 8,
           child: WishlistButton(
             product: product,
+            // ignore: deprecated_member_use
             backgroundColor: Colors.grey.shade200.withOpacity(0.8),
             iconSize: 24,
           ),
@@ -451,12 +452,12 @@ class _ProductDetailViewState extends State<ProductDetailView> {
     );
   }
 
-  BoxDecoration _lightCardBox() {
-    return BoxDecoration(
-      color: Colors.grey.shade100,
-      borderRadius: BorderRadius.circular(12),
-    );
-  }
+  // BoxDecoration _lightCardBox() {
+  //   return BoxDecoration(
+  //     color: Colors.grey.shade100,
+  //     borderRadius: BorderRadius.circular(12),
+  //   );
+  // }
 }
 
 class _ProductFeatureRow extends StatelessWidget {

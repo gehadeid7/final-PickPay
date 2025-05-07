@@ -59,6 +59,7 @@ class _SigninViewBodyState extends State<SigninViewBody> {
                   Text(
                     'Forget Password?',
                     style: TextStyles.semiBold13.copyWith(
+                      // ignore: deprecated_member_use
                       color: AppColors.primaryColor.withOpacity(0.7),
                     ),
                   ),

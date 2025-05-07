@@ -13,8 +13,9 @@ class TermsAndConditions extends StatefulWidget {
 }
 
 class _TermsAndConditionsState extends State<TermsAndConditions> {
-  @override
   bool isTermsAccepted = false;
+
+  @override
   Widget build(BuildContext context) {
     return Row(
       children: [

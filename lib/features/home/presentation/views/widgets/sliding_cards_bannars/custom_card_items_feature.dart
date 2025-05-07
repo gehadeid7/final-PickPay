@@ -44,6 +44,7 @@ class SlidingFeatureItem extends StatelessWidget {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
+                    // ignore: deprecated_member_use
                     Colors.black.withOpacity(0.6),
                     Colors.transparent,
                   ],

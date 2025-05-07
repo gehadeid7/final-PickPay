@@ -173,7 +173,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                         ),
                       ),
                       Text(
-                        'EGP ${(item.product.price! * item.quantity).toStringAsFixed(2)}',
+                        'EGP ${(item.product.price * item.quantity).toStringAsFixed(2)}',
                         style: TextStyles.semiBold11,
                       ),
                     ],
