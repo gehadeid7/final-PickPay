@@ -8,7 +8,7 @@ class BeautyProduct18 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: "",
+      id: "68132a95ff7813b3d47f9da18",
       title:
           'Bath Body Gingham Gorgeous Fine Fragrance Mist, Size/Volume: 8 fl oz / 236 mL',
       imagePaths: [

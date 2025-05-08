@@ -8,7 +8,7 @@ class BeautyProduct8 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: "",
+      id: "68132a95ff7813b3d47f9da8",
       title:
           'Eva Aloe skin clinic anti-ageing collagen toner for firmed and refined skin - 200ml',
       imagePaths: [

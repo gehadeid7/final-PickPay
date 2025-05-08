@@ -8,7 +8,7 @@ class BeautyProduct7 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: "",
+      id: "68132a95ff7813b3d47f9da7",
       title:
           'La Roche-Posay Anthelios XL Non-perfumed Dry Touch oil control gel cream SPF50+ 50ml',
       imagePaths: [

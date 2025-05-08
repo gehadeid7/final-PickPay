@@ -8,7 +8,7 @@ class BeautyProduct6 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: "",
+      id: "68132a95ff7813b3d47f9da6",
       title: 'Care & More Soft Cream With Glycerin Mixed berries 75 ML',
       imagePaths: [
         'assets/beauty_products/skincare_1/1.png',

@@ -8,7 +8,7 @@ class BeautyProduct12 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: "",
+      id: "68132a95ff7813b3d47f9da12",
       title: 'Raw African Booster Shea Set',
       imagePaths: [
         'assets/beauty_products/haircare_2/1.png',

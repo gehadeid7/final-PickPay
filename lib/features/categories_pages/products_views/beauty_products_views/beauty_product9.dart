@@ -8,7 +8,7 @@ class BeautyProduct9 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: "",
+      id: "68132a95ff7813b3d47f9da9",
       title:
           'Eucerin DermoPurifyer Oil Control Skin Renewal Treatment Face Serum, 40ml',
       imagePaths: [
