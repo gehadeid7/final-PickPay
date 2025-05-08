@@ -34,8 +34,8 @@ class Product4View extends StatelessWidget {
       deliveryTimeLeft: "1 hour 15 minutes",
       deliveryLocation: "Cairo, Egypt",
       inStock: true,
-      shipsFrom: "Egypt",
-      soldBy: "Sony Official Store",
+      shipsFrom: "PickPay",
+      soldBy: "PickPay",
     );
 
     return ProductDetailView(product: product);

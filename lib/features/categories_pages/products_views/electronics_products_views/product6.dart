@@ -35,8 +35,8 @@ class Product6View extends StatelessWidget {
       deliveryTimeLeft: "3 hours 5 minutes",
       deliveryLocation: "Cairo, Egypt",
       inStock: true,
-      shipsFrom: "Egypt",
-      soldBy: "Lenovo Official Store",
+      shipsFrom: "PickPay",
+      soldBy: "PickPay",
     );
 
     return ProductDetailView(product: product);

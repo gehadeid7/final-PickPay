@@ -17,24 +17,12 @@ class Product1View extends StatelessWidget {
       originalPrice: 0.0,
       rating: 5.0,
       reviewCount: 88,
-      brand: 'Samsung',
-      color: 'Navy',
-      material: 'Aluminum',
-      dimensions: '211 x 124.7 x 8 mm',
-      style: 'Tablet',
-      installationType: 'N/A',
-      accessLocation: 'Front',
-      settingsCount: 1,
-      powerSource: 'Battery Powered',
-      manufacturer: 'Samsung',
-      aboutThisItem:
-          'Samsung Galaxy Tab A9 offers an immersive 8.7-inch display, 8GB RAM, and 128GB storage with LTE connectivity. Ideal for entertainment, work, and everyday use.',
       deliveryDate: 'Sunday, 9 March',
       deliveryTimeLeft: '20hrs 36 mins',
       deliveryLocation: 'Egypt',
       inStock: true,
-      shipsFrom: 'Pickpay Warehouse',
-      soldBy: 'Pickpay Official',
+      shipsFrom: 'Pickpay',
+      soldBy: 'Pickpay',
     );
 
     return ProductDetailView(product: product);

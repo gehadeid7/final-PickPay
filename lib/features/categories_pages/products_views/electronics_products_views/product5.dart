@@ -33,8 +33,8 @@ class Product5View extends StatelessWidget {
       deliveryTimeLeft: "2 hours 30 minutes",
       deliveryLocation: "Cairo, Egypt",
       inStock: true,
-      shipsFrom: "Egypt",
-      soldBy: "Apple Official Store",
+      shipsFrom: "PickPay",
+      soldBy: "PickPay",
     );
 
     return ProductDetailView(product: product);
