@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:pickpay/features/categories_pages/fashion/presentation/views/fashion_view.dart';
+import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product12.dart';
+import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product2.dart';
+import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product5.dart';
+import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product6.dart';
 import 'package:pickpay/features/home/presentation/views/card_item.dart';
 
 class FashionGrid extends StatefulWidget {
@@ -21,7 +24,7 @@ class _FashionGrid extends State<FashionGrid> {
       'price': '352.00',
       'rating': 5.0,
       'reviewCount': 954,
-      'detailPage': const FashionView(),
+      'detailPage': const FashionProduct6(),
     },
     {
       'imagePath': 'assets/Fashion_products/Women_Fashion/women_fashion2/1.png',
@@ -29,7 +32,7 @@ class _FashionGrid extends State<FashionGrid> {
       'price': '1456.53',
       'rating': 4.0,
       'reviewCount': 1288,
-      'detailPage': const FashionView(),
+      'detailPage': const FashionProduct2(),
     },
     {
       'imagePath': 'assets/Fashion_products/Kids_Fashion/kids_fashion2/1.png',
@@ -37,7 +40,7 @@ class _FashionGrid extends State<FashionGrid> {
       'price': '580.00',
       'rating': 4.6,
       'reviewCount': 1735,
-      'detailPage': const FashionView(),
+      'detailPage': const FashionProduct12(),
     },
     {
       'imagePath': 'assets/Fashion_products/Women_Fashion/women_fashion5/1.png',
@@ -45,7 +48,7 @@ class _FashionGrid extends State<FashionGrid> {
       'price': '5190.00',
       'rating': 4.9,
       'reviewCount': 1893,
-      'detailPage': const FashionView(),
+      'detailPage': const FashionProduct5(),
     },
   ];
 
