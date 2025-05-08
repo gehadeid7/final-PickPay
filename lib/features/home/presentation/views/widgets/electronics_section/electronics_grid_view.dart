@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pickpay/features/categories_pages/electronics/presentation/views/electronics_view.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product11.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product14.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product3.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product4.dart';
 import 'package:pickpay/features/home/presentation/views/card_item.dart';
 
 class ElectronicsCarouselView extends StatefulWidget {
@@ -21,7 +25,7 @@ class _ElectronicsGridState extends State<ElectronicsCarouselView> {
       'price': '57555.00',
       'rating': 4.8,
       'reviewCount': 88,
-      'detailPage': const ElectronicsView(),
+      'detailPage': const Product3View(),
     },
     {
       'imagePath':
@@ -30,7 +34,7 @@ class _ElectronicsGridState extends State<ElectronicsCarouselView> {
       'price': '141.25',
       'rating': 4.6,
       'reviewCount': 92,
-      'detailPage': const ElectronicsView(),
+      'detailPage': const Product4View(),
     },
     {
       'imagePath': 'assets/electronics_products/Laptop/Laptop1/1.png',
@@ -38,7 +42,7 @@ class _ElectronicsGridState extends State<ElectronicsCarouselView> {
       'price': '24313.00',
       'rating': 4.9,
       'reviewCount': 19,
-      'detailPage': const ElectronicsView(),
+      'detailPage': const Product11View(),
     },
     {
       'imagePath': 'assets/electronics_products/Laptop/Laptop4/1.png',
@@ -46,7 +50,7 @@ class _ElectronicsGridState extends State<ElectronicsCarouselView> {
       'price': '7199.00',
       'rating': 4.4,
       'reviewCount': 19,
-      'detailPage': const ElectronicsView(),
+      'detailPage': const Product14View(),
     },
   ];
 

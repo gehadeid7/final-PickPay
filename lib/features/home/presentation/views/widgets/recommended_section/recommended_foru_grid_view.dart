@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pickpay/features/categories_pages/electronics/presentation/views/electronics_view.dart';
 import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product1.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product13.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product14.dart';
 import 'package:pickpay/features/home/presentation/views/card_item.dart';
 
 class RecommendedForuGridView extends StatefulWidget {
@@ -31,7 +33,7 @@ class _RecommendedForuGridView extends State<RecommendedForuGridView> {
       'price': '33.199',
       'rating': 4.6,
       'reviewCount': 150,
-      'detailPage': const ElectronicsView(),
+      'detailPage': const Product13View(),
     },
     {
       'imagePath': 'assets/videogames_products/Controllers/controller4/1.png',
@@ -48,7 +50,7 @@ class _RecommendedForuGridView extends State<RecommendedForuGridView> {
       'price': '7199.00',
       'rating': 4.4,
       'reviewCount': 19,
-      'detailPage': const ElectronicsView(),
+      'detailPage': const Product14View(),
     },
   ];
 
