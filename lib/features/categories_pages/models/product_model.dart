@@ -90,6 +90,20 @@ class ProductsViewsModel {
   final List<String>? colorOptions;
   final List<String>? scentOption;
 
+  // fashion information
+  final String? careInstruction;
+  final String? closureType;
+  final String? soleMaterial;
+  final String? outerMaterial;
+  final String? innerMaterial;
+  final String? waterResistanceLevel;
+  final String? shaftHeight;
+  final String? lining;
+  final String? materialcomposition;
+  final List<String>? availableSizes;
+  final Map<String, bool>? sizeAvailability;
+  final Map<String, bool>? colorAvailability;
+
   ProductsViewsModel({
     required this.id,
     required this.title,
@@ -176,6 +190,18 @@ class ProductsViewsModel {
     this.fragranceConcentration,
     this.colorOptions,
     this.scentOption,
+    this.careInstruction,
+    this.closureType,
+    this.soleMaterial,
+    this.outerMaterial,
+    this.innerMaterial,
+    this.waterResistanceLevel,
+    this.shaftHeight,
+    this.lining,
+    this.materialcomposition,
+    this.availableSizes,
+    this.sizeAvailability,
+    this.colorAvailability,
   });
 
   factory ProductsViewsModel.fromJson(Map<String, dynamic> json) {

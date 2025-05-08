@@ -13,7 +13,7 @@ void setupGetit() {
   getIt.registerSingleton<FirebaseAuthService>(FirebaseAuthService());
   getIt.registerSingleton<DatabaseService>(FireStoreService());
 
-  getIt.registerSingleton<CartService>(CartService());
+  // getIt.registerSingleton<CartService>(CartService());
 
   getIt.registerSingleton<AuthRepo>(AuthRepoImplementation(
     firebaseAuthService: getIt<FirebaseAuthService>(),

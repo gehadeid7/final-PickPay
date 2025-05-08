@@ -2,28 +2,50 @@ import 'package:flutter/material.dart';
 import 'package:pickpay/features/categories_pages/models/product_model.dart';
 import 'package:pickpay/features/categories_pages/products_views/product_detail_view.dart';
 
-class FashionProduct extends StatelessWidget {
-  const FashionProduct({super.key});
+class FashionProduct3 extends StatelessWidget {
+  const FashionProduct3({super.key});
 
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: '',
-      title: '',
+      id: '68132a95ff7813b3d47f9da3',
+      title: 'American Eagle Womens Low-Rise Baggy Wide-Leg Jean',
       imagePaths: [
-        '',
+        'assets/Fashion_products/Women_Fashion/women_fashion3/1.png',
+        'assets/Fashion_products/Women_Fashion/women_fashion3/2.png',
+        // 'assets/Fashion_products/Women_Fashion/women_fashion3/3.png'
       ],
-      category: 'Fashion',
-      price: 9399.00,
-      originalPrice: 0.0,
+      price: 2700,
+      originalPrice: 2850,
       rating: 5.0,
       reviewCount: 88,
+      availableSizes: [
+        'XSmall',
+        'Small',
+        'Medium',
+        'Large',
+        'XLarge',
+        'XXLarge'
+      ],
+      sizeAvailability: {
+        'XSmall': false,
+        'Small': true,
+        'Medium': true,
+        'Large': true,
+        'XLarge': true,
+        'XXLarge': false,
+      },
+      color: 'Bright Star',
+      careInstruction: 'Machine Wash',
+      aboutThisItem: '''Brand: American Eagle
+Womens
+WOMENS DENIM''',
       deliveryDate: 'Sunday, 9 March',
       deliveryTimeLeft: '20hrs 36 mins',
       deliveryLocation: 'Egypt',
       inStock: true,
-      shipsFrom: 'Pickpay Warehouse',
-      soldBy: 'Pickpay Official',
+      shipsFrom: 'Pickpay ',
+      soldBy: 'Pickpay ',
     );
 
     return ProductDetailView(product: product);

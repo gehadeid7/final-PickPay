@@ -15,7 +15,6 @@ class Product4View extends StatelessWidget {
         'assets/electronics_products/mobile_and_tablet/mobile_and_tablet4/1.png',
       ],
       price: 141.25,
-      category: 'Electronics',
       originalPrice: 399.99,
       rating: 4.9,
       reviewCount: 3120,

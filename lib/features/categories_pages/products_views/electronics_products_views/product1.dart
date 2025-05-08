@@ -13,7 +13,6 @@ class Product1View extends StatelessWidget {
       imagePaths: [
         'assets/electronics_products/mobile_and_tablet/mobile_and_tablet1/1.png',
       ],
-      category: 'Electronics',
       price: 9399.00,
       originalPrice: 0.0,
       rating: 5.0,

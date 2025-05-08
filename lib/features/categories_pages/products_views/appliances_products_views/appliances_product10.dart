@@ -13,7 +13,6 @@ class AppliancesProduct10 extends StatelessWidget {
       imagePaths: [
         'assets/appliances/product10/1.png',
       ],
-      category: 'Appliances',
       price: 2830,
       originalPrice: 3100,
       rating: 4.6,

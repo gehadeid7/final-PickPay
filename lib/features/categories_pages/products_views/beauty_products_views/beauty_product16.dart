@@ -14,7 +14,6 @@ class BeautyProduct16 extends StatelessWidget {
         'assets/beauty_products/fragrance_1/1.png',
         'assets/beauty_products/fragrance_1/2.png',
       ],
-      category: 'Beauty',
       price: 434,
       originalPrice: 499,
       rating: 4.5,

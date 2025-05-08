@@ -4,10 +4,10 @@ import 'package:pickpay/core/utils/app_text_styles.dart';
 import 'package:pickpay/core/widgets/custom_button.dart';
 import 'package:pickpay/features/categories_pages/models/product_model.dart';
 import 'package:pickpay/features/categories_pages/widgets/color_option_selector.dart';
-import 'package:pickpay/features/categories_pages/widgets/dropdown_count.dart';
 import 'package:pickpay/features/categories_pages/widgets/info_icons_row.dart';
 import 'package:pickpay/features/categories_pages/widgets/product_rating.dart';
 import 'package:pickpay/features/categories_pages/widgets/scent_option.dart';
+import 'package:pickpay/features/categories_pages/widgets/size_option.dart';
 import 'package:pickpay/features/home/domain/models/cart_item_model.dart';
 import 'package:pickpay/features/home/presentation/cubits/cart_cubits/cart_cubit.dart';
 import 'package:pickpay/features/home/presentation/views/widgets/wishlist_button.dart';
@@ -53,16 +53,24 @@ class _ProductDetailViewState extends State<ProductDetailView> {
                 const SizedBox(height: 10),
                 ColorOptionSelector(
                   colorOptions: product.colorOptions ?? [],
-                  showLabel: true,
-                  onColorSelected: (selectedColorName) {
-                    debugPrint("Color: $selectedColorName");
-                  },
+                  colorAvailability: product.colorAvailability,
+                  // onColorSelected: (color) => print("Selected color: $color"),
                 ),
                 ScentOption(
                   scentOption: product.scentOption ?? [],
                   showLabel: true,
                   onScentSelected: (selectedScentName) {
                     debugPrint("Scent: $selectedScentName");
+                  },
+                ),
+                const SizedBox(height: 12),
+
+                SizeOptionSelector(
+                  availableSizes: product.availableSizes ?? [],
+                  showLabel: true,
+                  sizeAvailability: product.sizeAvailability,
+                  onSizeSelected: (selectedSize) {
+                    debugPrint("Size: $selectedSize");
                   },
                 ),
                 const SizedBox(height: 20),
@@ -213,9 +221,29 @@ class _ProductDetailViewState extends State<ProductDetailView> {
                   _ProductFeatureRow(
                       label: "Defrost System", value: product.defrostSystem),
                   _ProductFeatureRow(label: "Size", value: product.size),
+                  _ProductFeatureRow(
+                      label: "Care Instruction",
+                      value: product.careInstruction),
+                  _ProductFeatureRow(
+                      label: "Closure Type", value: product.closureType),
+                  _ProductFeatureRow(
+                      label: "Sole Material", value: product.soleMaterial),
+                  _ProductFeatureRow(
+                      label: "Outer Material", value: product.outerMaterial),
+                  _ProductFeatureRow(
+                      label: "Inner Material", value: product.innerMaterial),
+                  _ProductFeatureRow(
+                      label: "Water Resistance Level",
+                      value: product.waterResistanceLevel),
+                  _ProductFeatureRow(
+                      label: "Shaft Height", value: product.shaftHeight),
+                  _ProductFeatureRow(label: "Lining", value: product.lining),
+                  _ProductFeatureRow(
+                      label: "Material Composition",
+                      value: product.materialcomposition),
                 ]),
                 const SizedBox(height: 12),
-                QuantityDropdown(),
+                // QuantityDropdown(),
                 const SizedBox(height: 20),
                 _buildSectionTitle("About this item"),
                 Column(

@@ -14,7 +14,6 @@ class Product3View extends StatelessWidget {
         'assets/electronics_products/mobile_and_tablet/mobile_and_tablet3/1.png',
       ],
       price: 57555.00,
-      category: 'Electronics',
       originalPrice: 0,
       rating: 5.0,
       reviewCount: 88,

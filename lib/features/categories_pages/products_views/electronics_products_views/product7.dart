@@ -19,7 +19,6 @@ class Product7View extends StatelessWidget {
       originalPrice: 1599.00,
       rating: 4.7,
       reviewCount: 1288,
-      category: 'Electronics',
       brand: "ASUS",
       color: "Eclipse Gray",
       material: "Aluminum",

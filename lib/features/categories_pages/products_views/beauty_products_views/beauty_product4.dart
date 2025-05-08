@@ -14,7 +14,6 @@ class BeautyProduct4 extends StatelessWidget {
       imagePaths: [
         'assets/beauty_products/makeup_4/1.png',
       ],
-      category: 'Beauty',
       price: 62.00,
       originalPrice: 63.00,
       rating: 5.0,

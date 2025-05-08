@@ -15,7 +15,6 @@ class Product5View extends StatelessWidget {
       ],
       price: 199.00,
       originalPrice: 299.00,
-      category: 'Electronics',
       rating: 4.8,
       reviewCount: 2123,
       brand: "Apple",

@@ -16,7 +16,6 @@ class BeautyProduct11 extends StatelessWidget {
         'assets/beauty_products/haircare_1/3.png',
         'assets/beauty_products/haircare_1/4.png',
       ],
-      category: 'Beauty',
       price: 142.20,
       originalPrice: 0.00,
       rating: 4.4,

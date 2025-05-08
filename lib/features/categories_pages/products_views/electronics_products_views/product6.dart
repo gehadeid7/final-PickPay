@@ -17,7 +17,6 @@ class Product6View extends StatelessWidget {
       ],
       price: 18499.00,
       originalPrice: 19477.00,
-      category: 'Electronics',
       rating: 4.5,
       reviewCount: 954,
       brand: "Lenovo",

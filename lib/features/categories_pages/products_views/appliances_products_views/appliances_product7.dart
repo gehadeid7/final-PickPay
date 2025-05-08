@@ -15,7 +15,6 @@ class AppliancesProduct7 extends StatelessWidget {
         'assets/appliances/product7/2.png',
         'assets/appliances/product7/3.png',
       ],
-      category: 'Appliances',
       price: 930,
       originalPrice: 1680,
       rating: 3.1,
