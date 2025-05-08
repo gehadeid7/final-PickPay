@@ -127,23 +127,27 @@ class AppliancesViewBody extends StatelessWidget {
                 var productDetails = productData[product.id];
 
                 if (productDetails != null) {
-                  return ProductCard(
-                    id: product.id,
-                    name: product.name,
-                    imagePaths: product.imagePaths,
-                    price: product.price,
-                    originalPrice: product.originalPrice,
-                    rating: productDetails['rating'], // Dynamic rating
-                    reviewCount:
-                        productDetails['reviewCount'], // Dynamic review count
-                    onTap: () {
-                      // Single line for navigation and dynamic product details
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => productDetails['widget']),
-                      );
-                    },
+                  return Padding(
+                    padding: const EdgeInsets.only(
+                        bottom: 16), // Add space below each item
+                    child: ProductCard(
+                      id: product.id,
+                      name: product.name,
+                      imagePaths: product.imagePaths,
+                      price: product.price,
+                      originalPrice: product.originalPrice,
+                      rating: productDetails['rating'], // Dynamic rating
+                      reviewCount:
+                          productDetails['reviewCount'], // Dynamic review count
+                      onTap: () {
+                        // Single line for navigation and dynamic product details
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => productDetails['widget']),
+                        );
+                      },
+                    ),
                   );
                 } else {
                   return SizedBox
