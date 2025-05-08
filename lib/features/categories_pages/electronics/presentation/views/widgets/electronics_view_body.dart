@@ -2,12 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:pickpay/constants.dart';
 import 'package:pickpay/core/widgets/custom_app.dart';
 import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product1.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product10.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product11.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product12.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product13.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product14.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product15.dart';
 import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product2.dart';
 import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product3.dart';
 import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product4.dart';
 import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product5.dart';
 import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product6.dart';
 import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product7.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product8.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product9.dart';
 import 'package:pickpay/features/categories_pages/widgets/product_card.dart';
 
 class ElectronicsViewBody extends StatelessWidget {
@@ -25,14 +33,14 @@ class ElectronicsViewBody extends StatelessWidget {
             ProductCard(
               id: 'elec1',
               name:
-                  'Samsung Galaxy Tab A9 4G LTE, 8.7" Tablet, 8GB RAM, 128GB, Navy',
+                  'Samsung Galaxy Tab A9 4G LTE, 8.7 Inch Android Tablet, 8GB RAM, 128GB Storage, 8MP Rear Camera, Navy-1 Year Warranty/Local Version',
               imagePaths: [
                 'assets/electronics_products/mobile_and_tablet/mobile_and_tablet1/1.png',
               ],
               price: 9399.00,
-              originalPrice: 0,
-              rating: 5.0,
-              reviewCount: 88,
+              originalPrice: 9655.00,
+              rating: 3.1,
+              reviewCount: 9,
               onTap: () {
                 Navigator.push(
                   context,
@@ -46,14 +54,14 @@ class ElectronicsViewBody extends StatelessWidget {
             ProductCard(
               id: 'elec2',
               name:
-                  'Xiaomi Redmi Pad SE WiFi 11" FHD+, 8GB+256GB, Snapdragon 680',
+                  'Xiaomi Redmi Pad SE WiFi 11" FHD+ 90HZ refresh rate, Snapdragon 680 CPU, 8GB Ram+256GB ROM, Quad Speakers with Dolby Atmos, 8000mAh Bluetooth 5.3 8MP + Graphite Gray |1 year manufacturer warranty',
               imagePaths: [
                 'assets/electronics_products/mobile_and_tablet/mobile_and_tablet2/1.png',
               ],
-              price: 12999.99,
-              originalPrice: 0,
-              rating: 5.0,
-              reviewCount: 88,
+              price: 9888.00,
+              originalPrice: 10000.00,
+              rating: 4.7,
+              reviewCount: 2019,
               onTap: () {
                 Navigator.push(
                   context,
@@ -66,7 +74,7 @@ class ElectronicsViewBody extends StatelessWidget {
             // product 3
             ProductCard(
               id: 'elec3',
-              name: 'Apple iPhone 16 (128GB) - Ultramarine',
+              name: 'Apple iPhone 16 (128 GB) - Ultramarine',
               imagePaths: [
                 'assets/electronics_products/mobile_and_tablet/mobile_and_tablet3/1.png',
               ],
@@ -90,10 +98,10 @@ class ElectronicsViewBody extends StatelessWidget {
               imagePaths: [
                 'assets/electronics_products/mobile_and_tablet/mobile_and_tablet4/1.png',
               ],
-              price: 141.25,
-              originalPrice: 119.00,
-              rating: 5.0,
-              reviewCount: 92,
+              price: 110.00,
+              originalPrice: 129.00,
+              rating: 4.7,
+              reviewCount: 237,
               onTap: () {
                 Navigator.push(
                   context,
@@ -110,9 +118,9 @@ class ElectronicsViewBody extends StatelessWidget {
                 'assets/electronics_products/mobile_and_tablet/mobile_and_tablet5/1.png',
               ],
               price: 199.00,
-              originalPrice: 0,
-              rating: 5.0,
-              reviewCount: 88,
+              originalPrice: 220.00,
+              rating: 4.7,
+              reviewCount: 380,
               onTap: () {
                 Navigator.push(
                   context,
@@ -176,12 +184,12 @@ class ElectronicsViewBody extends StatelessWidget {
               originalPrice: 20999.00,
               rating: 4.0,
               reviewCount: 19,
-              // onTap: () {
-              //   Navigator.push(
-              //     context,
-              //     MaterialPageRoute(builder: (context) => const Product8View()),
-              //   );
-              // },
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Product8View()),
+                );
+              },
             ),
             SizedBox(height: 10),
 
@@ -197,12 +205,12 @@ class ElectronicsViewBody extends StatelessWidget {
               originalPrice: 23499.00,
               rating: 4.0,
               reviewCount: 19,
-              // onTap: () {
-              //   Navigator.push(
-              //     context,
-              //     MaterialPageRoute(builder: (context) => const Product9View()),
-              //   );
-              // },
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Product9View()),
+                );
+              },
             ),
             SizedBox(height: 10),
 
@@ -218,12 +226,13 @@ class ElectronicsViewBody extends StatelessWidget {
               originalPrice: 23999.00,
               rating: 4.5,
               reviewCount: 19,
-              // onTap: () {
-              //   Navigator.push(
-              //     context,
-              //     MaterialPageRoute(builder: (context) => const Product10View()),
-              //   );
-              // },
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const Product10View()),
+                );
+              },
             ),
             SizedBox(height: 10),
 
@@ -240,6 +249,13 @@ class ElectronicsViewBody extends StatelessWidget {
               originalPrice: 0,
               rating: 4,
               reviewCount: 19,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const Product11View()),
+                );
+              },
             ),
             SizedBox(height: 10),
             // product 12
@@ -254,6 +270,13 @@ class ElectronicsViewBody extends StatelessWidget {
               originalPrice: 0,
               rating: 4,
               reviewCount: 19,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const Product12View()),
+                );
+              },
             ),
             SizedBox(height: 10),
             // product 13
@@ -268,6 +291,13 @@ class ElectronicsViewBody extends StatelessWidget {
               originalPrice: 0,
               rating: 4,
               reviewCount: 19,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const Product13View()),
+                );
+              },
             ),
             SizedBox(height: 10),
             // product 14
@@ -282,6 +312,13 @@ class ElectronicsViewBody extends StatelessWidget {
               originalPrice: 0,
               rating: 4,
               reviewCount: 19,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const Product14View()),
+                );
+              },
             ),
             SizedBox(height: 10),
             // product 15
@@ -295,6 +332,13 @@ class ElectronicsViewBody extends StatelessWidget {
               originalPrice: 0,
               rating: 4,
               reviewCount: 19,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const Product15View()),
+                );
+              },
             ),
             SizedBox(height: 20),
           ]),

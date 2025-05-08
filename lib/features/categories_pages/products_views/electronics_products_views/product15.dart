@@ -9,14 +9,31 @@ class Product15View extends StatelessWidget {
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
       id: 'elec15',
-      title: 'Samsung Galaxy Tab A9 4G LTE, 8.7" Tablet, 8GB RAM, 128GB, Navy',
+      title: 'USB Cooling Pad Stand Fan Cooler for Laptop Notebook',
       imagePaths: [
-        'assets/electronics_products/mobile_and_tablet/mobile_and_tablet1/1.png',
+        'assets/electronics_products/Laptop/Laptop5/1.png',
+        'assets/electronics_products/Laptop/Laptop5/2.png',
+        'assets/electronics_products/Laptop/Laptop5/3.png',
       ],
-      price: 9399.00,
-      originalPrice: 0.0,
-      rating: 5.0,
-      reviewCount: 88,
+      price: 377.13,
+      originalPrice: 400.15,
+      rating: 3.5,
+      reviewCount: 83,
+      color: 'Generic',
+      brand: 'Generic',
+      material: 'Plastic',
+      itemWeight: '0.7 Kilograms',
+      dimensions: '3.75L x 2.9W x 0.42H Meters',
+      coolingMethod: 'Air',
+      manufacturer: 'Generic',
+      aboutThisItem:
+          '''Silent Fan Protector USB Cooling Pad Stand Fan Cooler for Laptop Notebook
+
+Silent Fan Protector USB Cooling Pad Stand Fan Cooler for Laptop Notebook
+
+Package height: 7.8 centimeters
+
+It works with perfection''',
       deliveryDate: 'Sunday, 9 March',
       deliveryTimeLeft: '20hrs 36 mins',
       deliveryLocation: 'Egypt',

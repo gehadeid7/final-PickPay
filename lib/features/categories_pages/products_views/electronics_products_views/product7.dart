@@ -11,26 +11,37 @@ class Product7View extends StatelessWidget {
     final product = ProductsViewsModel(
       id: 'elec7',
       title:
-          'Xiaomi TV A 43 2025, 43", FHD, HDR, Smart Google TV with Dolby Atmos',
+          'Xiaomi TV A 43 2025, 43", FHD, HDR, Cinematic Smart TV, 43-Inch Screen Size Google Assistant platform built-in receiver and Chromecast, metal finish Dolby Atoms 2 years local warranty',
       imagePaths: [
         'assets/electronics_products/tvscreens/tv2/1.png',
+        'assets/electronics_products/tvscreens/tv2/2.png',
+        'assets/electronics_products/tvscreens/tv2/3.png',
+        'assets/electronics_products/tvscreens/tv2/4.png',
       ],
-      price: 1399.00,
-      originalPrice: 1599.00,
-      rating: 4.7,
-      reviewCount: 1288,
-      brand: "ASUS",
-      color: "Eclipse Gray",
-      material: "Aluminum",
-      dimensions: "35.4 x 25.4 x 2.49 cm",
-      style: "Gaming Laptop",
-      installationType: "N/A",
-      accessLocation: "N/A",
-      settingsCount: 1,
-      powerSource: "Battery",
-      manufacturer: "ASUS",
+      price: 9999.00,
+      originalPrice: 10000.00,
+      rating: 3.8,
+      reviewCount: 264,
+      screenSize: '43 Inches',
+      brand: 'Xiaomi',
+      displayTechnology: 'LED',
+      resolution: '1080p',
+      modelName: 'L43MA-AUEU',
+      specialfeatures: 'chromecast',
+      supportedInternetServices: 'Netflix, YouTube, Amazon Prime Video, etc.',
+      connectivityTechnology: 'Bluetooth, USB, Ethernet, HDMI',
+      aspectRatio: '16:9',
+      dimensions: '21D x 95.7W x 59.8H centimeters',
       aboutThisItem:
-          "ASUS ROG Strix, high-performance gaming laptop with AMD Ryzen 9, NVIDIA RTX 4070, 16GB RAM, and 1TB SSD. Built for serious gamers.",
+          '''Enjoy an unparalleled visual experience thanks to an innovative frameless design. The exceptional screen-to-case ratio invites you to immerse yourself in a pure and uninterrupted visual experience.
+
+With FHD HDR resolution, you will enjoy spectacular and fluid content thanks to MEMC technology. This, together with the innovative DTS Virtual, transforms 2D audio into an immersive sound experience. Experience complete immersion with dual decoding of Dolby Audio and DTS-X, amplified by 10W speakers each.
+
+Google TV simplifies your entertainment by bringing movies, TV shows and more from all your subscriptions in one place. Discover personalized recommendations and search more than 10,000 apps with Google.
+
+Control the Xiaomi ecosystem from the comfort of your sofa. Whether via Xiaomi Home or with the "OK Google" command, you can control everything, from surveillance cameras to vacuum cleaner robots.
+
+Entertainment you love with a little help from Google''',
       deliveryDate: "Thursday, May 11th",
       deliveryTimeLeft: "3 hours 5 minutes",
       deliveryLocation: "Cairo, Egypt",

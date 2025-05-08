@@ -10,26 +10,39 @@ class Product8View extends StatelessWidget {
     final product = ProductsViewsModel(
       id: 'elec8',
       title:
-          'Xiaomi TV A 43 2025, 43", FHD, HDR, Smart Google TV with Dolby Atmos',
+          'Samsung 50 Inch TV Crystal Processor 4K LED - Titan Gray - UA50DU8000UXEG [2024 Model]',
       imagePaths: [
-        'assets/electronics_products/tvscreens/tv2/1.png',
+        'assets/electronics_products/tvscreens/tv3/1.png',
+        'assets/electronics_products/tvscreens/tv3/2.png',
+        'assets/electronics_products/tvscreens/tv3/3.png',
+        'assets/electronics_products/tvscreens/tv3/4.png',
+        'assets/electronics_products/tvscreens/tv3/5.png',
       ],
-      price: 1399.00,
-      originalPrice: 1599.00,
-      rating: 4.7,
-      reviewCount: 1288,
-      brand: "ASUS",
-      color: "Eclipse Gray",
-      material: "Aluminum",
-      dimensions: "35.4 x 25.4 x 2.49 cm",
-      style: "Gaming Laptop",
-      installationType: "N/A",
-      accessLocation: "N/A",
-      settingsCount: 1,
-      powerSource: "Battery",
-      manufacturer: "ASUS",
+      price: 19199.00,
+      originalPrice: 20999.00,
+      rating: 4.0,
+      reviewCount: 180,
+      screenSize: '50 Inches',
+      brand: 'SAMSUNG',
+      displayTechnology: '4K LED',
+      resolution: '4K',
+      size: '50 Inch',
+      specialfeatures: 'Browser',
+      includedComponents:
+          'User Manual - Remote Control - Power Cable - Full Motion Slim Mount (Y22)',
+      connectivityTechnology: 'Bluetooth - Wi-Fi - HDMI',
+      aspectRatio: '16:10',
+      dimensions: '2.6D x 111.8W x 64.5H centimeters',
       aboutThisItem:
-          "ASUS ROG Strix, high-performance gaming laptop with AMD Ryzen 9, NVIDIA RTX 4070, 16GB RAM, and 1TB SSD. Built for serious gamers.",
+          '''Samsung 50 Inches with resolution 3,840 x 2,160 - 50HZ Refresh Rate
+
+Crystal Processor 4K Picture Engine with High Dynamic Range, Mega Contrast, UHD Dimming and LED Clear Motion
+
+Smart Services: Tizen Operation System, Web Browser, SmartThings App Support and Media Home
+
+Smart Features: Mobile to TV - Mirroring, DLNA, Tap View, SmartThings Hub, WiFi Direct, TV Sound to Mobile and Microsoft 365 Web Service
+
+DVB-T2CS2 Digital Broadcasting, with Analog Tuner and TV Key''',
       deliveryDate: "Thursday, May 11th",
       deliveryTimeLeft: "3 hours 5 minutes",
       deliveryLocation: "Cairo, Egypt",
