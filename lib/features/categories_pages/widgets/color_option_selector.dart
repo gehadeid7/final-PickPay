@@ -73,6 +73,7 @@ class _ColorOptionSelectorState extends State<ColorOptionSelector> {
     return widget.selectionColor ?? Colors.blue.shade600; // Updated reference
   }
 
+  // ignore: unused_element
   Color _getOutOfStockColor(BuildContext context) {
     return widget.outOfStockColor ?? Theme.of(context).colorScheme.error;
   }
@@ -82,6 +83,7 @@ class _ColorOptionSelectorState extends State<ColorOptionSelector> {
     if (widget.colorOptions.isEmpty) return const SizedBox.shrink();
 
     final selectionColor = _getSelectionColor();
+    // ignore: deprecated_member_use
     final selectionLightColor = selectionColor.withOpacity(0.1);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
@@ -111,6 +113,7 @@ class _ColorOptionSelectorState extends State<ColorOptionSelector> {
                       style: widget.selectedColorStyle ??
                           TextStyle(
                             fontSize: 14,
+                            // ignore: deprecated_member_use
                             color: colorScheme.onSurface.withOpacity(0.6),
                           ),
                     ),

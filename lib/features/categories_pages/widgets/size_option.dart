@@ -54,6 +54,7 @@ class _SizeOptionSelectorState extends State<SizeOptionSelector> {
 
     // Use custom color if provided, otherwise use a nice blue shade
     final selectionColor = widget.selectedColor ?? Colors.blue.shade600;
+    // ignore: deprecated_member_use
     final selectionLightColor = selectionColor.withOpacity(0.15);
 
     return Column(

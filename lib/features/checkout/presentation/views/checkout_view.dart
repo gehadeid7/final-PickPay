@@ -25,7 +25,9 @@ class _CheckoutViewState extends State<CheckoutView> {
   late ShippingInfo _shippingInfo;
   String _paymentMethod = 'Credit Card';
   String _cardNumber = '';
+  // ignore: unused_field
   String _expiryDate = '';
+  // ignore: unused_field
   String _cvv = '';
 
   @override

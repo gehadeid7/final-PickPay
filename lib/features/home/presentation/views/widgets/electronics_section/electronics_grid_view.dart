@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pickpay/features/categories_pages/electronics/presentation/views/electronics_view.dart';
 import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product11.dart';
 import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product14.dart';
 import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product3.dart';
