@@ -104,6 +104,21 @@ class ProductsViewsModel {
   final Map<String, bool>? sizeAvailability;
   final Map<String, bool>? colorAvailability;
 
+// video games information
+  final String? compatibleDevices;
+  final String? controllerType;
+  final String? connectivityTechnology;
+  final String? buttonQuantity;
+  final String? itemPackageQuantity;
+  final String? hardwarePlatform;
+  final String? compatiblePhoneModels;
+  final String? includedComponents;
+  final String? inputVoltage;
+  final String? digitalStorageCapacity;
+  final String? hardDiskDescription;
+  final String? hardDiskFormFactor;
+  final String? connectorType;
+
   ProductsViewsModel({
     required this.id,
     required this.title,
@@ -202,6 +217,19 @@ class ProductsViewsModel {
     this.availableSizes,
     this.sizeAvailability,
     this.colorAvailability,
+    this.compatibleDevices,
+    this.controllerType,
+    this.connectivityTechnology,
+    this.buttonQuantity,
+    this.itemPackageQuantity,
+    this.hardwarePlatform,
+    this.compatiblePhoneModels,
+    this.includedComponents,
+    this.inputVoltage,
+    this.digitalStorageCapacity,
+    this.hardDiskDescription,
+    this.hardDiskFormFactor,
+    this.connectorType,
   });
 
   factory ProductsViewsModel.fromJson(Map<String, dynamic> json) {

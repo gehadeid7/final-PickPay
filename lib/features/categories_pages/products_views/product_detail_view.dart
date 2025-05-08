@@ -241,7 +241,43 @@ class _ProductDetailViewState extends State<ProductDetailView> {
                   _ProductFeatureRow(
                       label: "Material Composition",
                       value: product.materialcomposition),
+                  _ProductFeatureRow(
+                      label: "Compatible Devices",
+                      value: product.compatibleDevices),
+                  _ProductFeatureRow(
+                      label: "Controller Type", value: product.controllerType),
+                  _ProductFeatureRow(
+                      label: "Connectivity Technology",
+                      value: product.connectivityTechnology),
+                  _ProductFeatureRow(
+                      label: "Button Quantity", value: product.buttonQuantity),
+                  _ProductFeatureRow(
+                      label: "Item Package Quantity",
+                      value: product.itemPackageQuantity),
+                  _ProductFeatureRow(
+                      label: "Hardware Platform",
+                      value: product.hardwarePlatform),
+                  _ProductFeatureRow(
+                      label: "Compatible Phone Models",
+                      value: product.compatiblePhoneModels),
+                  _ProductFeatureRow(
+                      label: "Included Components",
+                      value: product.includedComponents),
+                  _ProductFeatureRow(
+                      label: "Input Voltage", value: product.inputVoltage),
+                  _ProductFeatureRow(
+                      label: "Digital Storage Capacity",
+                      value: product.digitalStorageCapacity),
+                  _ProductFeatureRow(
+                      label: "Hard Disk Description",
+                      value: product.hardDiskDescription),
+                  _ProductFeatureRow(
+                      label: "Hard Disk Form Factor",
+                      value: product.hardDiskFormFactor),
+                  _ProductFeatureRow(
+                      label: "Connector Type", value: product.connectorType),
                 ]),
+
                 const SizedBox(height: 12),
                 // QuantityDropdown(),
                 const SizedBox(height: 20),
