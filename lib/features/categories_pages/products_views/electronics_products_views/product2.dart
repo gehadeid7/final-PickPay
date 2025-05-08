@@ -8,7 +8,7 @@ class Product2View extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: '',
+      id: 'elec2',
       title: 'Xiaomi Redmi Pad SE WiFi 11" FHD+, 8GB+256GB, Snapdragon 680',
       imagePaths: [
         'assets/electronics_products/mobile_and_tablet/mobile_and_tablet2/1.png',

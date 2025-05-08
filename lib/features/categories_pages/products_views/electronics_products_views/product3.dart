@@ -8,7 +8,7 @@ class Product3View extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: 'electronics_product3',
+      id: 'elec3',
       title: "Apple iPhone 16 (128GB) - Ultramarine",
       imagePaths: [
         'assets/electronics_products/mobile_and_tablet/mobile_and_tablet3/1.png',

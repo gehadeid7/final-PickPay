@@ -8,7 +8,7 @@ class Product1View extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: 'product1',
+      id: 'elec1',
       title: 'Samsung Galaxy Tab A9 4G LTE, 8.7" Tablet, 8GB RAM, 128GB, Navy',
       imagePaths: [
         'assets/electronics_products/mobile_and_tablet/mobile_and_tablet1/1.png',

@@ -23,7 +23,7 @@ class ElectronicsViewBody extends StatelessWidget {
             SizedBox(height: kTopPadding),
             // product 1
             ProductCard(
-              id: '68132a95ff7813b3d47f9da5',
+              id: 'elec1',
               name:
                   'Samsung Galaxy Tab A9 4G LTE, 8.7" Tablet, 8GB RAM, 128GB, Navy',
               imagePaths: [
@@ -44,7 +44,7 @@ class ElectronicsViewBody extends StatelessWidget {
 
             // product 2
             ProductCard(
-              id: '68132a95ff7813b3d47f9da5',
+              id: 'elec2',
               name:
                   'Xiaomi Redmi Pad SE WiFi 11" FHD+, 8GB+256GB, Snapdragon 680',
               imagePaths: [
@@ -65,7 +65,7 @@ class ElectronicsViewBody extends StatelessWidget {
 
             // product 3
             ProductCard(
-              id: '68132a95ff7813b3d47f9da5',
+              id: 'elec3',
               name: 'Apple iPhone 16 (128GB) - Ultramarine',
               imagePaths: [
                 'assets/electronics_products/mobile_and_tablet/mobile_and_tablet3/1.png',
@@ -84,7 +84,7 @@ class ElectronicsViewBody extends StatelessWidget {
             SizedBox(height: 10),
             // product 4
             ProductCard(
-              id: '68132a95ff7813b3d47f9da5',
+              id: 'elec4',
               name:
                   'CANSHN Magnetic iPhone 16 Pro Max Case, Clear, Magsafe Compatible',
               imagePaths: [
@@ -104,7 +104,7 @@ class ElectronicsViewBody extends StatelessWidget {
             SizedBox(height: 10),
             // product 5
             ProductCard(
-              id: '68132a95ff7813b3d47f9da5',
+              id: 'elec5',
               name: 'Oraimo 18W USB-C Fast Charger, Dual Output, QC3.0 & PD3.0',
               imagePaths: [
                 'assets/electronics_products/mobile_and_tablet/mobile_and_tablet5/1.png',
@@ -124,7 +124,7 @@ class ElectronicsViewBody extends StatelessWidget {
 
 // product 6
             ProductCard(
-              id: '68132a95ff7813b3d47f9da5',
+              id: 'elec6',
               name:
                   'Samsung 55 Inch QLED Smart TV Neural HDR Quantum Processor Lite 4K - QA55QE1DAUXEG [2024 Model]',
               imagePaths: [
@@ -145,7 +145,7 @@ class ElectronicsViewBody extends StatelessWidget {
 
 // product 7
             ProductCard(
-              id: '68132a95ff7813b3d47f9da5',
+              id: 'elec7',
               name:
                   'Xiaomi TV A 43 2025, 43", FHD, HDR, Smart Google TV with Dolby Atmos',
               imagePaths: [
@@ -166,7 +166,7 @@ class ElectronicsViewBody extends StatelessWidget {
 
 // product 8
             ProductCard(
-              id: '68132a95ff7813b3d47f9da5',
+              id: 'elec8',
               name:
                   'Samsung 50 Inch TV Crystal Processor 4K LED - Titan Gray - UA50DU8000UXEG [2024 Model]',
               imagePaths: [
@@ -187,7 +187,7 @@ class ElectronicsViewBody extends StatelessWidget {
 
 // product 9
             ProductCard(
-              id: '68132a95ff7813b3d47f9da5',
+              id: 'elec9',
               name:
                   'SHARP 4K Smart Frameless TV 55 Inch Built-In Receiver 4T-C55FL6EX',
               imagePaths: [
@@ -208,7 +208,7 @@ class ElectronicsViewBody extends StatelessWidget {
 
 // product 10
             ProductCard(
-              id: '68132a95ff7813b3d47f9da5',
+              id: 'elec10',
               name:
                   'LG UHD 4K TV 60 Inch UQ7900 Series, Cinema Screen Design WebOS Smart AI ThinQ',
               imagePaths: [
@@ -230,7 +230,7 @@ class ElectronicsViewBody extends StatelessWidget {
             // product 11
 
             ProductCard(
-              id: '68132a95ff7813b3d47f9da5',
+              id: 'elec11',
               name:
                   'LENOVO ideapad slim3 15IRH8 -I5-13420H 8G-512SSD 83EM007LPS GREY',
               imagePaths: [
@@ -244,7 +244,7 @@ class ElectronicsViewBody extends StatelessWidget {
             SizedBox(height: 10),
             // product 12
             ProductCard(
-              id: '68132a95ff7813b3d47f9da5',
+              id: 'elec12',
               name:
                   'Lenovo Legion 5 15ACH6 Gaming Laptop - Ryzen 5-5600H, 16 GB RAM, 512 GB SSD, NVIDIA GeForce RTX 3050 Ti 4GB GDDR6 Graphics, 15.6" FHD (1920x1080) IPS 120Hz, Backlit Keyboard, WIN 11',
               imagePaths: [
@@ -258,7 +258,7 @@ class ElectronicsViewBody extends StatelessWidget {
             SizedBox(height: 10),
             // product 13
             ProductCard(
-              id: '68132a95ff7813b3d47f9da5',
+              id: 'elec13',
               name:
                   'HP Victus Gaming Laptop (15-fb1004ne), CPU: Ryzen 5-7535HS, 16GB DDR5 2DM 4800, NVIDIA RTX 2050, 15.6" FHD 144Hz, 512GB, Windows 11',
               imagePaths: [
@@ -272,7 +272,7 @@ class ElectronicsViewBody extends StatelessWidget {
             SizedBox(height: 10),
             // product 14
             ProductCard(
-              id: '68132a95ff7813b3d47f9da5',
+              id: 'elec14',
               name:
                   'HP OfficeJet Pro 9720 Wide Format All-in-One Printer - Print, Scan, Copy, Wireless, ADF, Duplex, Touchscreen - [53N94C]',
               imagePaths: [
@@ -286,7 +286,7 @@ class ElectronicsViewBody extends StatelessWidget {
             SizedBox(height: 10),
             // product 15
             ProductCard(
-              id: '68132a95ff7813b3d47f9da5',
+              id: 'elec15',
               name: 'USB Cooling Pad Stand Fan Cooler for Laptop Notebook',
               imagePaths: [
                 'assets/electronics_products/Laptop/Laptop5/1.png',

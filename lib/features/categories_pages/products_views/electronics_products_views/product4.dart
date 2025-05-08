@@ -8,7 +8,7 @@ class Product4View extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: 'electronics_product4',
+      id: 'elec4',
       title:
           "CANSHN Magnetic iPhone 16 Pro Max Case, Clear, Magsafe Compatible",
       imagePaths: [

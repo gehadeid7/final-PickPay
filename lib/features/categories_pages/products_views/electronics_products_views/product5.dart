@@ -8,7 +8,7 @@ class Product5View extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: '',
+      id: 'elec5',
       title: "Oraimo 18W USB-C Fast Charger, Dual Output, QC3.0 & PD3.0",
       imagePaths: [
         'assets/electronics_products/mobile_and_tablet/mobile_and_tablet5/1.png',
