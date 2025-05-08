@@ -18,7 +18,7 @@ class ProductsViewsModel {
   final String? shipsFrom;
   final String? soldBy;
 
-  // Product specifications
+  // appliances specifications
   final String? material;
   final String? dimensions;
   final String? style;
@@ -104,7 +104,7 @@ class ProductsViewsModel {
   final Map<String, bool>? sizeAvailability;
   final Map<String, bool>? colorAvailability;
 
-// video games information
+// video games & electronics information
   final String? compatibleDevices;
   final String? controllerType;
   final String? connectivityTechnology;
@@ -118,6 +118,35 @@ class ProductsViewsModel {
   final String? hardDiskDescription;
   final String? hardDiskFormFactor;
   final String? connectorType;
+  //
+  final String? patternName;
+  final String? memoryStorageCapacity;
+  final String? screenSize;
+  final String? displayResolution;
+  final String? operatingSystem;
+  final String? ramMemoryInstalled;
+  final String? generation;
+  final String? displayResolutionMaximum;
+  final String? modelYear;
+  final String? wirelessProvider;
+  final String? cellularTechnology;
+  final String? wirelessNetworkTechnology;
+  final String? pattern;
+  final String? embellishmentFeature;
+  final String? theme;
+  final String? resolution;
+  final String? refreshRate;
+  final String? aspectRatio;
+  final String? displayTechnology;
+  final String? supportedInternetServices;
+  final String? graphicsDescription;
+  final String? cpuModel;
+  final String? cpuSpeed;
+  final String? hardDiskSize;
+  final String? printerTechnology;
+  final String? printerOutput;
+  final String? maximumPrintSpeedColor;
+  final String? coolingMethod;
 
   ProductsViewsModel({
     required this.id,
@@ -230,6 +259,34 @@ class ProductsViewsModel {
     this.hardDiskDescription,
     this.hardDiskFormFactor,
     this.connectorType,
+    this.patternName,
+    this.memoryStorageCapacity,
+    this.screenSize,
+    this.displayResolution,
+    this.operatingSystem,
+    this.ramMemoryInstalled,
+    this.generation,
+    this.displayResolutionMaximum,
+    this.modelYear,
+    this.wirelessProvider,
+    this.cellularTechnology,
+    this.wirelessNetworkTechnology,
+    this.pattern,
+    this.embellishmentFeature,
+    this.theme,
+    this.resolution,
+    this.refreshRate,
+    this.aspectRatio,
+    this.displayTechnology,
+    this.supportedInternetServices,
+    this.graphicsDescription,
+    this.cpuModel,
+    this.cpuSpeed,
+    this.hardDiskSize,
+    this.printerTechnology,
+    this.printerOutput,
+    this.maximumPrintSpeedColor,
+    this.coolingMethod,
   });
 
   factory ProductsViewsModel.fromJson(Map<String, dynamic> json) {

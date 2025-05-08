@@ -276,6 +276,74 @@ class _ProductDetailViewState extends State<ProductDetailView> {
                       value: product.hardDiskFormFactor),
                   _ProductFeatureRow(
                       label: "Connector Type", value: product.connectorType),
+                  _ProductFeatureRow(
+                      label: "Pattern Name", value: product.patternName),
+                  _ProductFeatureRow(
+                      label: "Memory Storage Capacity",
+                      value: product.memoryStorageCapacity),
+                  _ProductFeatureRow(
+                      label: "Screen Size", value: product.screenSize),
+                  _ProductFeatureRow(
+                      label: "Display Resolution",
+                      value: product.displayResolution),
+                  _ProductFeatureRow(
+                      label: "Operating System",
+                      value: product.operatingSystem),
+                  _ProductFeatureRow(
+                      label: "Ram Memory Installed",
+                      value: product.ramMemoryInstalled),
+                  _ProductFeatureRow(
+                      label: "Generation", value: product.generation),
+                  _ProductFeatureRow(
+                      label: "Display Resolution Maximum",
+                      value: product.displayResolutionMaximum),
+                  _ProductFeatureRow(
+                      label: "Model Year", value: product.modelYear),
+                  _ProductFeatureRow(
+                      label: "wireless Provider",
+                      value: product.wirelessProvider),
+                  _ProductFeatureRow(
+                      label: "Cellular Technology",
+                      value: product.cellularTechnology),
+                  _ProductFeatureRow(
+                      label: "wireless Network Technology",
+                      value: product.wirelessNetworkTechnology),
+                  _ProductFeatureRow(label: "Pattern", value: product.pattern),
+                  _ProductFeatureRow(
+                      label: "Embellishment Feature",
+                      value: product.embellishmentFeature),
+                  _ProductFeatureRow(label: "Theme", value: product.theme),
+                  _ProductFeatureRow(
+                      label: "Resolution", value: product.resolution),
+                  _ProductFeatureRow(
+                      label: "Refresh Rate", value: product.refreshRate),
+                  _ProductFeatureRow(
+                      label: "Aspect Ratio", value: product.aspectRatio),
+                  _ProductFeatureRow(
+                      label: "Display Technology",
+                      value: product.displayTechnology),
+                  _ProductFeatureRow(
+                      label: "Supported Internet Services",
+                      value: product.supportedInternetServices),
+                  _ProductFeatureRow(
+                      label: "Graphics Description",
+                      value: product.graphicsDescription),
+                  _ProductFeatureRow(
+                      label: "CPU Model", value: product.cpuModel),
+                  _ProductFeatureRow(
+                      label: "CPU Speed", value: product.cpuSpeed),
+                  _ProductFeatureRow(
+                      label: "Hard Disk Size", value: product.hardDiskSize),
+                  _ProductFeatureRow(
+                      label: "Printer Technology",
+                      value: product.printerTechnology),
+                  _ProductFeatureRow(
+                      label: "Printer Output", value: product.printerOutput),
+                  _ProductFeatureRow(
+                      label: "maximum Print Speed (Color)",
+                      value: product.maximumPrintSpeedColor),
+                  _ProductFeatureRow(
+                      label: "Cooling Method", value: product.coolingMethod),
                 ]),
 
                 const SizedBox(height: 12),
