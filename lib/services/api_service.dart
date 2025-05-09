@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:pickpay/features/categories_pages/widgets/product_card.dart';  // Import ProductCard
+import 'package:pickpay/features/categories_pages/widgets/product_card.dart'; // Import ProductCard
 
 class ApiService {
   // Fetch products from the API and return a list of ProductCard widgets
@@ -19,7 +19,8 @@ class ApiService {
           name: productData['title'],
           imagePaths: List<String>.from(productData['images'] ?? []),
           price: productData['price'].toDouble(),
-          originalPrice: productData['originalPrice']?.toDouble() ?? productData['price'].toDouble(),
+          originalPrice: productData['originalPrice']?.toDouble() ??
+              productData['price'].toDouble(),
           rating: productData['rating']?.toDouble() ?? 0.0,
           reviewCount: productData['ratingsQuantity'] ?? 0,
         );
