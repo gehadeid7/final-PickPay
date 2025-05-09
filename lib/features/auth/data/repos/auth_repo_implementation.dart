@@ -1,15 +1,11 @@
 import 'dart:convert';
-import 'dart:developer';
-
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pickpay/constants.dart';
-import 'package:pickpay/core/errors/exceptions.dart';
 import 'package:pickpay/core/errors/failures.dart';
 import 'package:pickpay/core/services/database_services.dart';
 import 'package:pickpay/core/services/firebase_auth_service.dart';
 import 'package:pickpay/core/services/shared_preferences_singletone.dart';
-import 'package:pickpay/core/utils/backend_endpoints.dart';
 import 'package:pickpay/features/auth/data/models/user_model.dart';
 import 'package:pickpay/features/auth/domain/entities/user_entity.dart';
 import 'package:pickpay/features/auth/domain/repos/auth_repo.dart';
@@ -127,14 +123,14 @@ class AuthRepoImplementation extends AuthRepo {
     final jsonData = jsonEncode(UserModel.fromEntity(user).toMap());
     await Prefs.setString(kUserData, jsonData);
   }
-  
+
   @override
-  Future<Either<Failure, void>> sendPasswordResetEmail(String email) async{
-     try {
-    await firebaseAuthService.sendPasswordResetEmail(email: email);
-    return right(null);
-  } catch (e) {
-    return left(ServerFailure('Password reset failed: ${e.toString()}'));
+  Future<Either<Failure, void>> sendPasswordResetEmail(String email) async {
+    try {
+      await firebaseAuthService.sendPasswordResetEmail(email: email);
+      return right(null);
+    } catch (e) {
+      return left(ServerFailure('Password reset failed: ${e.toString()}'));
+    }
   }
-}
 }
