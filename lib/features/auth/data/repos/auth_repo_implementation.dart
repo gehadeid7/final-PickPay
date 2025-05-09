@@ -3,8 +3,8 @@ import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:http/http.dart';
 import 'package:pickpay/constants.dart';
-import 'package:pickpay/core/errors/exceptions.dart';
 import 'package:pickpay/core/errors/failures.dart';
 import 'package:pickpay/core/services/database_services.dart';
 import 'package:pickpay/core/services/firebase_auth_service.dart';
@@ -149,6 +149,7 @@ class AuthRepoImplementation extends AuthRepo {
   Future<Either<Failure, void>> sendEmailVerification() async{
       try {
     final user = FirebaseAuth.instance.currentUser;
+   print("👤 Current user: ${user?.email}, Verified: ${user?.emailVerified}");
 
     if (user != null && !user.emailVerified) {
       await user.sendEmailVerification();
@@ -162,4 +163,29 @@ class AuthRepoImplementation extends AuthRepo {
     return left(ServerFailure('فشل إرسال رابط التحقق: ${e.toString()}'));
   }
 }
+
+  @override
+  Future<Either<Failure, bool>> checkUserExists(String email)async {
+     try {
+    // التحقق من Firebase
+    final methods = await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
+    if (methods.isNotEmpty) {
+      return right(true);
+    }
+
+    // التحقق من الباك‌اند (اختياري حسب إذا كنت تقوم بتخزين المستخدمين أيضًا في قاعدة بيانات خارج Firebase)
+    final response = await ApiService().post(
+      endpoint: BackendEndpoints.isUserExists,
+      body: {'email': email},
+    );
+
+    final data = jsonDecode(response.body);
+    final exists = data['exists'] == true;
+
+    return right(exists);
+  } catch (e) {
+    log('Check user exists error: $e');
+    return left(ServerFailure('فشل التحقق من وجود المستخدم: ${e.toString()}'));
   }
+  }
+}

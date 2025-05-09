@@ -16,6 +16,19 @@ class SignupCubit extends Cubit<SignupState> {
   Future<void> createUserWithEmailAndPassword(
       String email, String password, String name) async {
     emit(SignupLoading());
+
+  final existsResult = await authRepo.checkUserExists(email);
+    if (existsResult.isLeft()) {
+      emit(SignupFailure(message: existsResult.fold((f) => f.message, (_) => 'حدث خطأ')));
+      return;
+    }
+
+    final userExists = existsResult.getOrElse(() => false);
+    if (userExists) {
+      emit(SignupFailure(message: 'هذا البريد الإلكتروني مستخدم بالفعل'));
+      return;
+    }
+
     final result =
         await authRepo.createUserWithEmailAndPassword(email, password, name);
     result.fold(

@@ -5,8 +5,7 @@ import 'package:pickpay/features/auth/presentation/cubits/verify_email_state.dar
 class VerifyEmailview extends StatelessWidget {
   const VerifyEmailview({super.key});
 
-    static const routeName = 'verify_email';
-
+  static const routeName = 'verify_email';
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +19,8 @@ class VerifyEmailview extends StatelessWidget {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('تم إرسال رابط التحقق')),
               );
+              // Navigate to home category view after successful verification email sending
+              Navigator.pushReplacementNamed(context, '/homecategory_view');
             } else if (state is VerifyEmailFailure) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(state.message)),
@@ -43,7 +44,7 @@ class VerifyEmailview extends StatelessWidget {
                         : ElevatedButton(
                             onPressed: () => context
                                 .read<VerifyEmailCubit>()
-                                .sendVerificationEmail(),
+                                .sendVerificationEmail(context),
                             child: const Text('إعادة إرسال رابط التحقق'),
                           ),
                   ],
