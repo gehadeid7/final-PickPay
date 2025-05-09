@@ -13,14 +13,17 @@ import 'package:pickpay/core/utils/backend_endpoints.dart';
 import 'package:pickpay/features/auth/data/models/user_model.dart';
 import 'package:pickpay/features/auth/domain/entities/user_entity.dart';
 import 'package:pickpay/features/auth/domain/repos/auth_repo.dart';
-
+import 'package:pickpay/services/api_service.dart';
 
 class AuthRepoImplementation extends AuthRepo {
   final FirebaseAuthService firebaseAuthService;
   final DatabaseService databaseService;
 
-  AuthRepoImplementation(
-      {required this.databaseService, required this.firebaseAuthService});
+  AuthRepoImplementation({
+    required this.databaseService,
+    required this.firebaseAuthService,
+  });
+
   @override
   Future<Either<Failure, UserEntity>> createUserWithEmailAndPassword(
       String email, String password, String fullName) async {
@@ -29,24 +32,18 @@ class AuthRepoImplementation extends AuthRepo {
       user = await firebaseAuthService.createUserWithEmailAndPassword(
           email: email, password: password);
 
-      var userEntity =
-          UserEntity(fullName: fullName, email: email, uId: user.uid);
+      final syncedUser = await ApiService().syncFirebaseUserToBackend(
+        name: fullName,
+        email: email,
+        firebaseUid: user.uid,
+      );
 
-      await addUserData(user: userEntity);
+      await saveUserData(user: syncedUser);
 
-      return right(userEntity);
-    } on CustomException catch (e) {
-      return left(ServerFailure(e.message));
+      return right(syncedUser);
     } catch (e) {
       await deleteUser(user);
-      log(
-        'Exception in AuthRepoImpl.createUserWithEmailAndPassword: ${e.toString()}',
-      );
-      return left(
-        ServerFailure(
-          'Unexpected error occurred: ${e.toString()}',
-        ),
-      );
+      return left(ServerFailure('Signup failed: ${e.toString()}'));
     }
   }
 
@@ -60,24 +57,20 @@ class AuthRepoImplementation extends AuthRepo {
   Future<Either<Failure, UserEntity>> signInWithEmailAndPassword(
       String email, String password) async {
     try {
-      var user = await firebaseAuthService.signInWithEmailAndPassword(
+      final user = await firebaseAuthService.signInWithEmailAndPassword(
           email: email, password: password);
 
-      var userEntity = await getUserData(userId: user.uid);
-      await saveUserData(user: userEntity);
+      final syncedUser = await ApiService().syncFirebaseUserToBackend(
+        name: user.displayName ?? '',
+        email: user.email ?? '',
+        firebaseUid: user.uid,
+      );
 
-      return right(userEntity);
-    } on CustomException catch (e) {
-      return left(ServerFailure(e.message));
+      await saveUserData(user: syncedUser);
+
+      return right(syncedUser);
     } catch (e) {
-      log(
-        'Exception in AuthRepoImpl.createUserWithEmailAndPassword: ${e.toString()}',
-      );
-      return left(
-        ServerFailure(
-          'try again',
-        ),
-      );
+      return left(ServerFailure('Login failed: ${e.toString()}'));
     }
   }
 
@@ -87,24 +80,17 @@ class AuthRepoImplementation extends AuthRepo {
     try {
       user = await firebaseAuthService.signInWithGoogle();
 
-      var userEntity = UserModel.fromFirebaseUser(user);
+      final syncedUser = await ApiService().syncFirebaseUserToBackend(
+        name: user.displayName ?? '',
+        email: user.email ?? '',
+        firebaseUid: user.uid,
+      );
 
-      var isUserExist = await databaseService.ckeckIfDataExists(
-          path: BackendEndpoints.isUserExists, documentId: user.uid);
-
-      if (isUserExist) {
-        await getUserData(userId: user.uid);
-      } else {
-        await addUserData(user: userEntity);
-      }
-
-      return right(userEntity);
+      await saveUserData(user: syncedUser);
+      return right(syncedUser);
     } catch (e) {
       await deleteUser(user);
-      log(
-        'Exception in AuthRepoImplementaion.signinWithGoogle : ${e.toString()}',
-      );
-      return left(ServerFailure('try again'));
+      return left(ServerFailure('Google sign-in failed'));
     }
   }
 
@@ -114,59 +100,31 @@ class AuthRepoImplementation extends AuthRepo {
     try {
       user = await firebaseAuthService.signInWithFacebook();
 
-      var userEntity = UserModel.fromFirebaseUser(user);
+      final syncedUser = await ApiService().syncFirebaseUserToBackend(
+        name: user.displayName ?? '',
+        email: user.email ?? '',
+        firebaseUid: user.uid,
+      );
 
-      var isUserExist = await databaseService.ckeckIfDataExists(
-          path: BackendEndpoints.isUserExists, documentId: user.uid);
-
-      if (isUserExist) {
-        await getUserData(userId: user.uid);
-      } else {
-        await addUserData(user: userEntity);
-      }
-
-      return right(userEntity);
+      await saveUserData(user: syncedUser);
+      return right(syncedUser);
     } catch (e) {
       await deleteUser(user);
-      log(
-        'Exception in AuthRepoImplementaion.signinWithGoogle : ${e.toString()}',
-      );
-      return left(ServerFailure('try again'));
+      return left(ServerFailure('Facebook sign-in failed'));
     }
   }
 
   @override
-  Future addUserData({required UserEntity user}) async {
-    try {
-      await databaseService.addData(
-        path: BackendEndpoints.addUserData,
-        data: UserModel.fromEntity(user).toMap(),
-        documentId: user.uId,
-      );
-    } catch (e) {
-      throw CustomException(message: 'something wrong happened');
-    }
-  }
+  Future addUserData({required UserEntity user}) async {}
 
   @override
   Future<UserEntity> getUserData({required String userId}) async {
-    var userData = await databaseService.getData(
-        path: BackendEndpoints.getUserData, documentId: userId);
-    return UserModel.fromJson(userData);
+    throw UnimplementedError();
   }
 
   @override
   Future saveUserData({required UserEntity user}) async {
-    var jsonData = jsonEncode(UserModel.fromEntity(user).toMap());
+    final jsonData = jsonEncode(UserModel.fromEntity(user).toMap());
     await Prefs.setString(kUserData, jsonData);
   }
 }
-
-// class BackendAuthRepoImplement extends AuthRepo {
-//   @override
-//   Future<Either<Failures, UserEntity>> createUserWithEmailAndPassword(
-//       String email, String password, String name) {
-// // TODO: implement createUserWithEmailAndPassword
-//     throw UnimplementedError();
-//   }
-// }
