@@ -6,6 +6,7 @@ import 'package:pickpay/core/widgets/custom_button.dart';
 import 'package:pickpay/core/widgets/custom_text_field.dart';
 import 'package:pickpay/core/widgets/password_field.dart';
 import 'package:pickpay/features/auth/presentation/cubits/signup_cubits/signup_cubit.dart';
+import 'package:pickpay/features/auth/presentation/views/verify_email_view.dart';
 import 'package:pickpay/features/auth/presentation/views/widgets/have_an_account.dart';
 import 'package:pickpay/features/auth/presentation/views/widgets/terms_and_conditions.dart';
 
@@ -71,7 +72,10 @@ class _SignUpViewBodyState extends State<SignUpViewBody> {
                         context
                             .read<SignupCubit>()
                             .createUserWithEmailAndPassword(
-                                email, password, fullName);
+                                email, password, fullName) .then((_) {
+                          // عند نجاح عملية التسجيل، اذهب إلى صفحة التحقق من البريد الإلكتروني
+                          Navigator.pushNamed(context, VerifyEmailview.routeName);
+                        });
                       } else {
                         buildErrorBar(context,
                             'terms and conditions acceptance is required');
