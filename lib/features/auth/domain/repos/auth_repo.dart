@@ -22,7 +22,7 @@ abstract class AuthRepo {
   Future saveUserData({required UserEntity user});
 
   Future<UserEntity> getUserData({required String userId});
-
+ Future<Either<Failure, void>> sendPasswordResetEmail(String email); 
 
 
  

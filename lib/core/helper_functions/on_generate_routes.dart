@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pickpay/features/auth/presentation/views/forgot_password_view.dart';
 import 'package:pickpay/features/categories_pages/appliances/presentation/views/appliances_view.dart';
 import 'package:pickpay/features/categories_pages/beauty/presentation/views/beauty_view.dart';
 import 'package:pickpay/features/categories_pages/fashion/presentation/views/fashion_view.dart';
@@ -65,7 +66,9 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
 
   case WishlistView.routeName:
       return MaterialPageRoute(builder: (context) => const WishlistView());
-
+      
+  case ForgotPasswordView.routeName:
+      return MaterialPageRoute(builder: (context) => const ForgotPasswordView());
 
 
     default:
