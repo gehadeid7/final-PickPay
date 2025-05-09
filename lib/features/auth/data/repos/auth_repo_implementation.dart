@@ -127,4 +127,14 @@ class AuthRepoImplementation extends AuthRepo {
     final jsonData = jsonEncode(UserModel.fromEntity(user).toMap());
     await Prefs.setString(kUserData, jsonData);
   }
+  
+  @override
+  Future<Either<Failure, void>> sendPasswordResetEmail(String email) async{
+     try {
+    await firebaseAuthService.sendPasswordResetEmail(email: email);
+    return right(null);
+  } catch (e) {
+    return left(ServerFailure('Password reset failed: ${e.toString()}'));
+  }
+}
 }

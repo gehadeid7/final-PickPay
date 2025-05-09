@@ -8,6 +8,7 @@ import 'package:pickpay/core/widgets/custom_button.dart';
 import 'package:pickpay/core/widgets/custom_text_field.dart';
 import 'package:pickpay/core/widgets/password_field.dart';
 import 'package:pickpay/features/auth/presentation/cubits/signin_cubit/signin_cubit.dart';
+import 'package:pickpay/features/auth/presentation/views/forgot_password_view.dart';
 import 'package:pickpay/features/auth/presentation/views/widgets/dont_have_an_account.dart';
 import 'package:pickpay/features/auth/presentation/views/widgets/or_divider.dart';
 import 'package:pickpay/features/auth/presentation/views/widgets/social_login_button.dart';
@@ -56,11 +57,14 @@ class _SigninViewBodyState extends State<SigninViewBody> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Text(
-                    'Forget Password?',
-                    style: TextStyles.semiBold13.copyWith(
-                      // ignore: deprecated_member_use
-                      color: AppColors.primaryColor.withOpacity(0.7),
+                  TextButton(
+                    onPressed: () => Navigator.pushNamed(context, ForgotPasswordView.routeName) ,
+                    child: Text(
+                      'Forget Password?',
+                      style: TextStyles.semiBold13.copyWith(
+                        // ignore: deprecated_member_use
+                        color: AppColors.primaryColor.withOpacity(0.7),
+                      ),
                     ),
                   ),
                 ],

@@ -153,4 +153,36 @@ class FirebaseAuthService {
     final digest = sha256.convert(bytes);
     return digest.toString();
   }
+Future<void> sendPasswordResetEmail({required String email}) async {
+  try {
+    await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+  } on FirebaseAuthException catch (e) {
+    log('Exception in FirebaseAuthService.sendPasswordResetEmail: ${e.toString()}');
+    
+    String errorMessage;
+    switch (e.code) {
+      case 'invalid-email':
+        errorMessage = 'The email address is badly formatted.';
+        break;
+      case 'user-not-found':
+        errorMessage = 'No user found with this email address.';
+        break;
+      case 'network-request-failed':
+        errorMessage = 'Make sure you are connected to the internet.';
+        break;
+      case 'too-many-requests':
+        errorMessage = 'Too many requests. Please try again later.';
+        break;
+      default:
+        errorMessage = 'An error occurred. Please try again later.';
+    }
+    
+    throw CustomException(message: errorMessage);
+  } catch (e) {
+    log('Unexpected error in FirebaseAuthService.sendPasswordResetEmail: ${e.toString()}');
+    throw CustomException(
+        message: 'An unexpected error occurred. Please try again.');
+  }
+}
+
 }
