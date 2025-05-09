@@ -31,6 +31,9 @@ class AuthRepoImplementation extends AuthRepo {
     try {
       user = await firebaseAuthService.createUserWithEmailAndPassword(
           email: email, password: password);
+          // to send email to user
+           await user.sendEmailVerification();
+
 
       final syncedUser = await ApiService().syncFirebaseUserToBackend(
         name: fullName,
@@ -59,6 +62,10 @@ class AuthRepoImplementation extends AuthRepo {
     try {
       final user = await firebaseAuthService.signInWithEmailAndPassword(
           email: email, password: password);
+           if (!user.emailVerified) {
+      await FirebaseAuth.instance.signOut(); // تسجيل الخروج
+      return left(ServerFailure('يرجى تأكيد بريدك الإلكتروني قبل تسجيل الدخول'));
+    }
 
       final syncedUser = await ApiService().syncFirebaseUserToBackend(
         name: user.displayName ?? '',
@@ -137,4 +144,22 @@ class AuthRepoImplementation extends AuthRepo {
     return left(ServerFailure('Password reset failed: ${e.toString()}'));
   }
 }
+
+  @override
+  Future<Either<Failure, void>> sendEmailVerification() async{
+      try {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user != null && !user.emailVerified) {
+      await user.sendEmailVerification();
+      return right(null);
+    } else if (user == null) {
+      return left(ServerFailure('لم يتم العثور على مستخدم مسجل حاليًا'));
+    } else {
+      return left(ServerFailure('البريد الإلكتروني تم التحقق منه بالفعل'));
+    }
+  } catch (e) {
+    return left(ServerFailure('فشل إرسال رابط التحقق: ${e.toString()}'));
+  }
 }
+  }
