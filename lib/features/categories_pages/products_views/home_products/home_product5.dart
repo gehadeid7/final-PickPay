@@ -8,13 +8,26 @@ class HomeProduct5 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: '',
-      title: "",
-      imagePaths: [],
-      price: 850,
-      originalPrice: 900,
-      rating: 3.1,
-      reviewCount: 81228,
+      id: 'home5',
+      title: "Janssen Almany Innerspring Mattress Height 25 cm - 120 x 195 cm",
+      imagePaths: [
+        'assets/Home_products/furniture/furniture5/1.png',
+      ],
+      price: 5120.00,
+      originalPrice: 5300.00,
+      rating: 3.9,
+      reviewCount: 58,
+      fillMaterial: 'Cotton',
+      itemWeight: '20 Kilograms',
+      brand: 'Janssen',
+      size: '120 x 195 cm',
+      dimensions: '195L x 120W x 25Th centimeters',
+      itemFirmnessDescription: 'Medium Firm',
+      specialfeatures: 'Cooling',
+      topStyle: 'Bonnet',
+      coverMatrial: 'Cotton',
+      aboutThisItem:
+          'Mattress height is: 24 cmCore: Bonnell springs.Anti-rust and anti-corrosion steel.Two layers of cotton felt.Two layers of cotton.Two layers of high quality sponge.Two layers of nonwoven fabric.High quality fabric.Four handles.Four ventilation valves for cooling.',
       deliveryDate: 'Sunday, 9 March',
       deliveryTimeLeft: '20hrs 36 mins',
       deliveryLocation: 'Egypt',

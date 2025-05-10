@@ -7,7 +7,7 @@ import 'package:pickpay/features/categories_pages/widgets/product_card.dart'; //
 class ApiService {
   Future<List<ProductCard>> loadProducts() async {
     final response = await http.get(
-      Uri.parse('http://192.168.1.4:3000/api/v1/products'),
+      Uri.parse('http://192.168.1.3:3000/api/v1/products'),
     );
 
     if (response.statusCode == 200) {
@@ -39,7 +39,7 @@ class ApiService {
     final token = await FirebaseAuth.instance.currentUser!.getIdToken();
 
     final response = await http.post(
-      Uri.parse('http://192.168.1.4:3000/api/v1/auth/firebase/sync'),
+      Uri.parse('http://192.168.1.3:3000/api/v1/auth/firebase/sync'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',

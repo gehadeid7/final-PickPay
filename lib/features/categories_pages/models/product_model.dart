@@ -166,7 +166,7 @@ class ProductsViewsModel {
   final String? itemFirmnessDescription;
   final String? topStyle;
   final String? coverMatrial;
-  final String? pileWeight;
+  final String? pileheight;
   final String? indoorOutdoorUsage;
   final String? isStainResistant;
   final String? displayType;
@@ -340,7 +340,7 @@ class ProductsViewsModel {
     this.itemFirmnessDescription,
     this.topStyle,
     this.coverMatrial,
-    this.pileWeight,
+    this.pileheight,
     this.indoorOutdoorUsage,
     this.isStainResistant,
     this.displayType,

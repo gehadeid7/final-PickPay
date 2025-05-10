@@ -386,7 +386,7 @@ class _ProductDetailViewState extends State<ProductDetailView> {
                   _ProductFeatureRow(
                       label: "Cover Matrial", value: product.coverMatrial),
                   _ProductFeatureRow(
-                      label: "Pile Weight", value: product.pileWeight),
+                      label: "Pile Height", value: product.pileheight),
                   _ProductFeatureRow(
                       label: "Indoor Outdoor Usage",
                       value: product.indoorOutdoorUsage),
