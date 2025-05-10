@@ -148,6 +148,42 @@ class ProductsViewsModel {
   final String? maximumPrintSpeedColor;
   final String? coolingMethod;
 
+  // home category information
+  final String? requiredAssembly;
+  final String? seatingCapacity;
+  final String? sofaType;
+  final String? upholsteryFabricType;
+  final String? itemShape;
+  final String? armStyle;
+  final String? fillMaterial;
+  final String? fabricType;
+  final String? maximumWeightRecommendation;
+  final String? frameMaterial;
+  final String? topMaterialType;
+  final String? productCareInstructions;
+  final String? backStyle;
+  final String? seatMaterial;
+  final String? itemFirmnessDescription;
+  final String? topStyle;
+  final String? coverMatrial;
+  final String? pileheight;
+  final String? indoorOutdoorUsage;
+  final String? isStainResistant;
+  final String? displayType;
+  final String? roomType;
+  final String? occasion;
+  final String? subjectCharacter;
+  final String? handleMaterial;
+  final String? closureMaterial;
+  final String? materialTypeFree;
+  final String? compatibilityOptions;
+  final String? numberOfPieces;
+  final String? upc;
+  final String? towelFormType;
+  final String? pillowType;
+  final String? blanketForm;
+  final String? threadCount;
+
   ProductsViewsModel({
     required this.id,
     required this.title,
@@ -287,6 +323,40 @@ class ProductsViewsModel {
     this.printerOutput,
     this.maximumPrintSpeedColor,
     this.coolingMethod,
+    this.requiredAssembly,
+    this.seatingCapacity,
+    this.sofaType,
+    this.upholsteryFabricType,
+    this.itemShape,
+    this.armStyle,
+    this.fillMaterial,
+    this.fabricType,
+    this.maximumWeightRecommendation,
+    this.frameMaterial,
+    this.topMaterialType,
+    this.productCareInstructions,
+    this.backStyle,
+    this.seatMaterial,
+    this.itemFirmnessDescription,
+    this.topStyle,
+    this.coverMatrial,
+    this.pileheight,
+    this.indoorOutdoorUsage,
+    this.isStainResistant,
+    this.displayType,
+    this.roomType,
+    this.occasion,
+    this.subjectCharacter,
+    this.handleMaterial,
+    this.closureMaterial,
+    this.materialTypeFree,
+    this.compatibilityOptions,
+    this.numberOfPieces,
+    this.upc,
+    this.towelFormType,
+    this.pillowType,
+    this.blanketForm,
+    this.threadCount,
   });
 
   factory ProductsViewsModel.fromJson(Map<String, dynamic> json) {

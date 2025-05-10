@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pickpay/constants.dart';
 import 'package:pickpay/core/widgets/custom_app.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product1.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product2.dart';
 import 'package:pickpay/features/categories_pages/widgets/product_card.dart';
 
 class VideogamesViewBody extends StatelessWidget {
@@ -17,7 +19,7 @@ class VideogamesViewBody extends StatelessWidget {
 
           // product 1
           ProductCard(
-            id: '68132a95ff7813b3d47f9da5',
+            id: 'vid1',
             name:
                 'Sony PlayStation 5 SLIM Disc [ NEW 2023 Model ] - International Version',
             imagePaths: [
@@ -27,12 +29,19 @@ class VideogamesViewBody extends StatelessWidget {
             originalPrice: 28.999,
             rating: 4.8,
             reviewCount: 88,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const VideoGamesProduct1()),
+              );
+            },
           ),
           SizedBox(height: 10),
 
           // product 2
           ProductCard(
-            id: '68132a95ff7813b3d47f9da5',
+            id: 'vid2',
             name: 'PlayStation 5 Digital Console (Slim)',
             imagePaths: [
               'assets/videogames_products/Consoles/console2/1.png',
@@ -41,12 +50,19 @@ class VideogamesViewBody extends StatelessWidget {
             originalPrice: 20.800,
             rating: 4.7,
             reviewCount: 3538,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const VideoGamesProduct2()),
+              );
+            },
           ),
           SizedBox(height: 10),
 
           // product 3
           ProductCard(
-            id: '68132a95ff7813b3d47f9da5',
+            id: 'vid3',
             name: ' PlayStation 5 Digital Edition Slim (Nordic)',
             imagePaths: [
               'assets/videogames_products/Consoles/console3/1.png',
@@ -60,7 +76,7 @@ class VideogamesViewBody extends StatelessWidget {
 
           // product 4
           ProductCard(
-            id: '68132a95ff7813b3d47f9da5',
+            id: 'vid4',
             name: 'Nintendo Switch OLED Mario Red Edition Gaming Console',
             imagePaths: [
               'assets/videogames_products/Consoles/console4/1.png',
@@ -74,7 +90,7 @@ class VideogamesViewBody extends StatelessWidget {
 
           // product 5
           ProductCard(
-            id: '68132a95ff7813b3d47f9da5',
+            id: 'vid5',
             name: 'Sony PlayStation 5 DualSense Wireless Controller',
             imagePaths: [
               'assets/videogames_products/Controllers/controller1/1.png',
@@ -88,7 +104,7 @@ class VideogamesViewBody extends StatelessWidget {
 
           // product 6
           ProductCard(
-            id: '68132a95ff7813b3d47f9da5',
+            id: 'vid6',
             name:
                 'PlayStation Sony DualSense wireless controller for PS5 White',
             imagePaths: [
@@ -103,7 +119,7 @@ class VideogamesViewBody extends StatelessWidget {
 
           // product 7
           ProductCard(
-            id: '68132a95ff7813b3d47f9da5',
+            id: 'vid7',
             name: 'PlayStation 5 Dual Sense Wireless Controller Cosmic Red',
             imagePaths: [
               'assets/videogames_products/Controllers/controller3/1.png',
@@ -117,7 +133,7 @@ class VideogamesViewBody extends StatelessWidget {
 
           // product 8
           ProductCard(
-            id: '68132a95ff7813b3d47f9da5',
+            id: 'vid8',
             name:
                 'PlayStation 5 DualSense Edge Wireless Controller (UAE Version)',
             imagePaths: [
@@ -132,7 +148,7 @@ class VideogamesViewBody extends StatelessWidget {
 
           // product 9
           ProductCard(
-            id: '68132a95ff7813b3d47f9da5',
+            id: 'vid9',
             name:
                 'Nintendo 160 2 Nintendo Switch Joy-Con Controllers (Pastel Purple/Pastel Green)',
             imagePaths: [
@@ -147,7 +163,7 @@ class VideogamesViewBody extends StatelessWidget {
 
           // product 10
           ProductCard(
-            id: '68132a95ff7813b3d47f9da5',
+            id: 'vid10',
             name:
                 ' Likorlove PS5 Controller Quick Charger, Dual USB Fast Charging Dock Station Stand for Playstation 5 DualSense Controllers Console with LED Indicator USB Type C Ports, White [2.5-3 Hours]',
             imagePaths: [
@@ -162,7 +178,7 @@ class VideogamesViewBody extends StatelessWidget {
 
           // product 11
           ProductCard(
-            id: '68132a95ff7813b3d47f9da5',
+            id: 'vid11',
             name:
                 'OIVO PS5 Charging Station, 2H Fast PS5 Controller Charger for Playstation 5 Dualsense Controller, Upgrade PS5 Charging Dock with 2 Types of Cable, PS5 Charger for Dual PS5 Controller',
             imagePaths: [
@@ -177,7 +193,7 @@ class VideogamesViewBody extends StatelessWidget {
 
           // product 12
           ProductCard(
-            id: '68132a95ff7813b3d47f9da5',
+            id: 'vid12',
             name:
                 'fanxiang S770 4TB NVMe M.2 SSD for PS5 - with Heatsink and DRAM, Up to 7300MB/s, PCIe 4.0, Suitable for Playstation 5 Memory Expansion, Game Enthusiasts, IT Professionals',
             imagePaths: [
@@ -192,7 +208,7 @@ class VideogamesViewBody extends StatelessWidget {
 
           // product 13
           ProductCard(
-            id: '68132a95ff7813b3d47f9da5',
+            id: 'vid13',
             name:
                 'Mcbazel PS5 Cooling Station and Charging Station, 3 Speed Fan, Controller Dock with LED Indicator and 11 Storage Discs - White(Not for PS5 Pro)',
             imagePaths: [
@@ -207,7 +223,7 @@ class VideogamesViewBody extends StatelessWidget {
 
           // product 14
           ProductCard(
-            id: '68132a95ff7813b3d47f9da5',
+            id: 'vid14',
             name: ' EA SPORTS FC 25 Standard Edition PS5 | VideoGame | English',
             imagePaths: [
               'assets/videogames_products/Accessories/accessories5/1.png',

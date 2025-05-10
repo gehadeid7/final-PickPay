@@ -344,6 +344,86 @@ class _ProductDetailViewState extends State<ProductDetailView> {
                       value: product.maximumPrintSpeedColor),
                   _ProductFeatureRow(
                       label: "Cooling Method", value: product.coolingMethod),
+                  _ProductFeatureRow(
+                      label: "Required Assembly",
+                      value: product.requiredAssembly),
+                  _ProductFeatureRow(
+                      label: "Seating Capacity",
+                      value: product.seatingCapacity),
+                  _ProductFeatureRow(
+                      label: "Sofa Type", value: product.sofaType),
+                  _ProductFeatureRow(
+                      label: "Upholstery Fabric Type",
+                      value: product.upholsteryFabricType),
+                  _ProductFeatureRow(
+                      label: "Item Shape", value: product.itemShape),
+                  _ProductFeatureRow(
+                      label: "Arm Style", value: product.armStyle),
+                  _ProductFeatureRow(
+                      label: "Fill Material", value: product.fillMaterial),
+                  _ProductFeatureRow(
+                      label: "Fabric Type", value: product.fabricType),
+                  _ProductFeatureRow(
+                      label: "Maximum Weight Recommendation",
+                      value: product.maximumWeightRecommendation),
+                  _ProductFeatureRow(
+                      label: "Frame Material", value: product.frameMaterial),
+                  _ProductFeatureRow(
+                      label: "Top Material Type",
+                      value: product.topMaterialType),
+                  _ProductFeatureRow(
+                      label: "Product Care Instructions",
+                      value: product.productCareInstructions),
+                  _ProductFeatureRow(
+                      label: "back Style", value: product.backStyle),
+                  _ProductFeatureRow(
+                      label: "seat Material", value: product.seatMaterial),
+                  _ProductFeatureRow(
+                      label: "item Firmness Description",
+                      value: product.itemFirmnessDescription),
+                  _ProductFeatureRow(
+                      label: "Top Style", value: product.topStyle),
+                  _ProductFeatureRow(
+                      label: "Cover Matrial", value: product.coverMatrial),
+                  _ProductFeatureRow(
+                      label: "Pile Height", value: product.pileheight),
+                  _ProductFeatureRow(
+                      label: "Indoor Outdoor Usage",
+                      value: product.indoorOutdoorUsage),
+                  _ProductFeatureRow(
+                      label: "is Stain Resistant",
+                      value: product.isStainResistant),
+                  _ProductFeatureRow(
+                      label: "Display Type", value: product.displayType),
+                  _ProductFeatureRow(
+                      label: "Room Type", value: product.roomType),
+                  _ProductFeatureRow(
+                      label: "Occasion", value: product.occasion),
+                  _ProductFeatureRow(
+                      label: "Subject Character",
+                      value: product.subjectCharacter),
+                  _ProductFeatureRow(
+                      label: "Handle Material", value: product.handleMaterial),
+                  _ProductFeatureRow(
+                      label: "Closure Material",
+                      value: product.closureMaterial),
+                  _ProductFeatureRow(
+                      label: "Material Type Free",
+                      value: product.materialTypeFree),
+                  _ProductFeatureRow(
+                      label: "Compatibility Options",
+                      value: product.compatibilityOptions),
+                  _ProductFeatureRow(
+                      label: "Number Of Pieces", value: product.numberOfPieces),
+                  _ProductFeatureRow(label: "UPC", value: product.upc),
+                  _ProductFeatureRow(
+                      label: "Towel Form Type", value: product.towelFormType),
+                  _ProductFeatureRow(
+                      label: "Pillow Type", value: product.pillowType),
+                  _ProductFeatureRow(
+                      label: "Blanket Form", value: product.blanketForm),
+                  _ProductFeatureRow(
+                      label: "Thread Count", value: product.threadCount),
                 ]),
 
                 const SizedBox(height: 12),

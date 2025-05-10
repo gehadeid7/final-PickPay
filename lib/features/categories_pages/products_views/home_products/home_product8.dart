@@ -8,13 +8,27 @@ class HomeProduct8 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: '',
-      title: "",
-      imagePaths: [],
-      price: 850,
-      originalPrice: 900,
-      rating: 3.1,
-      reviewCount: 81228,
+      id: 'home8',
+      title: "glass vase 15cm",
+      imagePaths: [
+        'assets/Home_products/home-decor/home_decor3/1.png',
+        'assets/Home_products/home-decor/home_decor3/2.png',
+      ],
+      price: 250.00,
+      originalPrice: 300.00,
+      rating: 2.8,
+      reviewCount: 9,
+      colorOptions: ['colorless'],
+      colorAvailability: {'colorless': true},
+      brand: 'Generic',
+      material: 'Glass',
+      dimensions: '15L x 15W x 15H centimeters',
+      itemShape: 'Jar',
+      style: 'Modern',
+      specialfeatures: 'Stain-Resistant',
+      aboutThisItem: '''Occasion type: Christmas
+Material: Glass
+Installation type: Tabletop''',
       deliveryDate: 'Sunday, 9 March',
       deliveryTimeLeft: '20hrs 36 mins',
       deliveryLocation: 'Egypt',

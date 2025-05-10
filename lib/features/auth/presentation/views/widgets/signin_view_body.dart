@@ -58,7 +58,8 @@ class _SigninViewBodyState extends State<SigninViewBody> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   TextButton(
-                    onPressed: () => Navigator.pushNamed(context, ForgotPasswordView.routeName) ,
+                    onPressed: () => Navigator.pushNamed(
+                        context, ForgotPasswordView.routeName),
                     child: Text(
                       'Forget Password?',
                       style: TextStyles.semiBold13.copyWith(

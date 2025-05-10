@@ -1,17 +1,19 @@
+// bottom_navigation_state.dart
 part of 'bottom_navigation_cubit.dart';
 
 sealed class BottomNavigationState extends Equatable {
-  const BottomNavigationState();
+  final int currentIndex;
+
+  const BottomNavigationState(this.currentIndex);
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [currentIndex];
 }
 
-final class BottomNavigationChanged extends BottomNavigationState {
-  final int index;
+class BottomNavigationInitial extends BottomNavigationState {
+  const BottomNavigationInitial(super.currentIndex);
+}
 
-  const BottomNavigationChanged({required this.index});
-
-  @override
-  List<Object> get props => [index];
+class BottomNavigationChanged extends BottomNavigationState {
+  const BottomNavigationChanged(super.currentIndex);
 }
