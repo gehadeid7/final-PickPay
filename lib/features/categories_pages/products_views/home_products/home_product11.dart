@@ -8,9 +8,13 @@ class HomeProduct11 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: '',
-      title: "",
-      imagePaths: [],
+      id: 'home11',
+      title: "Neoflam Pote Cookware Set 11-Pieces, Pink Marble",
+      imagePaths: [
+                      'assets/Home_products/kitchen/kitchen1/1.png',
+              'assets/Home_products/kitchen/kitchen1/1.png',
+
+      ],
       price: 850,
       originalPrice: 900,
       rating: 3.1,
