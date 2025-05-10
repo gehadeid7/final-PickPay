@@ -26,6 +26,13 @@ class HomeCategoryViewBody extends StatelessWidget {
             originalPrice: 0,
             rating: 5.0,
             reviewCount: 88,
+            // onTap: () {
+            //   Navigator.push(
+            //     context,
+            //     MaterialPageRoute(
+            //         builder: (context) => const ()),
+            //   );
+            // },
           ),
           SizedBox(height: 10),
 
