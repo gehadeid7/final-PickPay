@@ -24,17 +24,24 @@ class AuthRepoImplementation extends AuthRepo {
     required this.firebaseAuthService,
   });
 
+  // Create User
   @override
   Future<Either<Failure, UserEntity>> createUserWithEmailAndPassword(
-      String email, String password, String fullName) async {
+    String email,
+    String password,
+    String fullName,
+  ) async {
     User? user;
     try {
       user = await firebaseAuthService.createUserWithEmailAndPassword(
-          email: email, password: password);
-          // to send email to user
-           await user.sendEmailVerification();
+        email: email, 
+        password: password,
+      );
+      
+      // Send email verification
+      await user.sendEmailVerification();
 
-
+      // Sync Firebase user to backend
       final syncedUser = await ApiService().syncFirebaseUserToBackend(
         name: fullName,
         email: email,
@@ -50,23 +57,32 @@ class AuthRepoImplementation extends AuthRepo {
     }
   }
 
+  // Delete User
   Future<void> deleteUser(User? user) async {
     if (user != null) {
       await firebaseAuthService.deleteUser();
     }
   }
 
+  // Sign in with email and password
   @override
   Future<Either<Failure, UserEntity>> signInWithEmailAndPassword(
-      String email, String password) async {
+    String email,
+    String password,
+  ) async {
     try {
       final user = await firebaseAuthService.signInWithEmailAndPassword(
-          email: email, password: password);
-           if (!user.emailVerified) {
-      await FirebaseAuth.instance.signOut(); // تسجيل الخروج
-      return left(ServerFailure('يرجى تأكيد بريدك الإلكتروني قبل تسجيل الدخول'));
-    }
+        email: email, 
+        password: password,
+      );
+      
+      // Check if email is verified
+      if (!user.emailVerified) {
+        await FirebaseAuth.instance.signOut();
+        return left(ServerFailure('يرجى تأكيد بريدك الإلكتروني قبل تسجيل الدخول'));
+      }
 
+      // Sync Firebase user to backend
       final syncedUser = await ApiService().syncFirebaseUserToBackend(
         name: user.displayName ?? '',
         email: user.email ?? '',
@@ -81,6 +97,7 @@ class AuthRepoImplementation extends AuthRepo {
     }
   }
 
+  // Sign in with Google
   @override
   Future<Either<Failure, UserEntity>> signInWithGoogle() async {
     User? user;
@@ -101,6 +118,7 @@ class AuthRepoImplementation extends AuthRepo {
     }
   }
 
+  // Sign in with Facebook
   @override
   Future<Either<Failure, UserEntity>> signInWithFacebook() async {
     User? user;
@@ -121,71 +139,75 @@ class AuthRepoImplementation extends AuthRepo {
     }
   }
 
+  // Add User Data (if required in future)
   @override
   Future addUserData({required UserEntity user}) async {}
 
+  // Get User Data (optional method)
   @override
   Future<UserEntity> getUserData({required String userId}) async {
     throw UnimplementedError();
   }
 
+  // Save User Data in SharedPreferences
   @override
   Future saveUserData({required UserEntity user}) async {
     final jsonData = jsonEncode(UserModel.fromEntity(user).toMap());
     await Prefs.setString(kUserData, jsonData);
   }
-  
-  @override
-  Future<Either<Failure, void>> sendPasswordResetEmail(String email) async{
-     try {
-    await firebaseAuthService.sendPasswordResetEmail(email: email);
-    return right(null);
-  } catch (e) {
-    return left(ServerFailure('Password reset failed: ${e.toString()}'));
-  }
-}
 
+  // Send Password Reset Email
   @override
-  Future<Either<Failure, void>> sendEmailVerification() async{
-      try {
-    final user = FirebaseAuth.instance.currentUser;
-   print("👤 Current user: ${user?.email}, Verified: ${user?.emailVerified}");
-
-    if (user != null && !user.emailVerified) {
-      await user.sendEmailVerification();
+  Future<Either<Failure, void>> sendPasswordResetEmail(String email) async {
+    try {
+      await firebaseAuthService.sendPasswordResetEmail(email: email);
       return right(null);
-    } else if (user == null) {
-      return left(ServerFailure('لم يتم العثور على مستخدم مسجل حاليًا'));
-    } else {
-      return left(ServerFailure('البريد الإلكتروني تم التحقق منه بالفعل'));
+    } catch (e) {
+      return left(ServerFailure('Password reset failed: ${e.toString()}'));
     }
-  } catch (e) {
-    return left(ServerFailure('فشل إرسال رابط التحقق: ${e.toString()}'));
   }
-}
 
+  // Send Email Verification
   @override
-  Future<Either<Failure, bool>> checkUserExists(String email)async {
-     try {
-    // التحقق من Firebase
-    final methods = await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
-    if (methods.isNotEmpty) {
-      return right(true);
+  Future<Either<Failure, void>> sendEmailVerification() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null && !user.emailVerified) {
+        await user.sendEmailVerification();
+        return right(null);
+      } else if (user == null) {
+        return left(ServerFailure('لم يتم العثور على مستخدم مسجل حاليًا'));
+      } else {
+        return left(ServerFailure('البريد الإلكتروني تم التحقق منه بالفعل'));
+      }
+    } catch (e) {
+      return left(ServerFailure('فشل إرسال رابط التحقق: ${e.toString()}'));
     }
-
-    // التحقق من الباك‌اند (اختياري حسب إذا كنت تقوم بتخزين المستخدمين أيضًا في قاعدة بيانات خارج Firebase)
-    final response = await ApiService().post(
-      endpoint: BackendEndpoints.isUserExists,
-      body: {'email': email},
-    );
-
-    final data = jsonDecode(response.body);
-    final exists = data['exists'] == true;
-
-    return right(exists);
-  } catch (e) {
-    log('Check user exists error: $e');
-    return left(ServerFailure('فشل التحقق من وجود المستخدم: ${e.toString()}'));
   }
+
+  // Check if User Exists
+  @override
+  Future<Either<Failure, bool>> checkUserExists(String email) async {
+    try {
+      // Check in Firebase
+      final methods = await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
+      if (methods.isNotEmpty) {
+        return right(true);
+      }
+
+      // Check in backend if needed
+      final response = await ApiService().post(
+        endpoint: BackendEndpoints.isUserExists,
+        body: {'email': email},
+      );
+
+      final data = jsonDecode(response.body);
+      final exists = data['exists'] == true;
+
+      return right(exists);
+    } catch (e) {
+      log('Check user exists error: $e');
+      return left(ServerFailure('فشل التحقق من وجود المستخدم: ${e.toString()}'));
+    }
   }
 }

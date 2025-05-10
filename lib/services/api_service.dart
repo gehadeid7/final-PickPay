@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 import 'package:pickpay/features/auth/data/models/user_model.dart';
-import 'package:pickpay/features/categories_pages/widgets/product_card.dart';
+import 'package:pickpay/features/categories_pages/widgets/product_card.dart'; // Import ProductCard
 
 class ApiService {
   Future<List<ProductCard>> loadProducts() async {
@@ -20,7 +20,8 @@ class ApiService {
           name: productData['title'],
           imagePaths: List<String>.from(productData['images'] ?? []),
           price: productData['price'].toDouble(),
-          originalPrice: productData['originalPrice']?.toDouble() ?? productData['price'].toDouble(),
+          originalPrice: productData['originalPrice']?.toDouble() ??
+              productData['price'].toDouble(),
           rating: productData['rating']?.toDouble() ?? 0.0,
           reviewCount: productData['ratingsQuantity'] ?? 0,
         );
