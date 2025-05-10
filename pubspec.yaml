@@ -63,6 +63,9 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   hive_generator: ^2.0.1
+  google_sign_in_android: ^6.2.1
+  path_provider: ^2.1.2
+  path_provider_android: ^2.2.17
 
 dev_dependencies:
   flutter_test:

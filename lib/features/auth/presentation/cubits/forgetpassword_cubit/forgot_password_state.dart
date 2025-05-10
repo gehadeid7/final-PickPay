@@ -1,15 +1,42 @@
 part of 'forgot_password_cubit.dart';
 
 @immutable
-sealed class ForgotPasswordState {}
+sealed class ForgotPasswordState {
+  const ForgotPasswordState();
+}
 
-final class ForgotPasswordInitial extends ForgotPasswordState {}
+final class ForgotPasswordInitial extends ForgotPasswordState {
+  const ForgotPasswordInitial();
+}
 
-final class ForgotPasswordLoading extends ForgotPasswordState {}
+final class ForgotPasswordLoading extends ForgotPasswordState {
+  const ForgotPasswordLoading();
+}
 
-final class ForgotPasswordSuccess extends ForgotPasswordState {}
+final class ForgotPasswordSuccess extends ForgotPasswordState {
+  final int cooldown;
+  const ForgotPasswordSuccess({required this.cooldown});
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is ForgotPasswordSuccess && other.cooldown == cooldown;
+  }
+
+  @override
+  int get hashCode => cooldown.hashCode;
+}
 
 final class ForgotPasswordFailure extends ForgotPasswordState {
   final String message;
-  ForgotPasswordFailure({required this.message});
+  const ForgotPasswordFailure({required this.message});
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is ForgotPasswordFailure && other.message == message;
+  }
+
+  @override
+  int get hashCode => message.hashCode;
 }

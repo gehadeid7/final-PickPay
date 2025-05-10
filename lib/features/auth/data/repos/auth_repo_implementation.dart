@@ -140,6 +140,12 @@ class AuthRepoImplementation extends AuthRepo {
       return left(ServerFailure('Password reset failed: ${e.toString()}'));
     }
   }
+
+  @override
+  Future<Either<Failure, void>> sendEmailVerification() {
+    // TODO: implement sendEmailVerification
+    throw UnimplementedError();
+  }
 }
 
 @override

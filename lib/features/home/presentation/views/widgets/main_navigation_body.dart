@@ -1,3 +1,4 @@
+// main_navigation_body.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pickpay/features/home/presentation/cubits/bottom_navigation_cubits/bottom_navigation_cubit.dart';
@@ -13,10 +14,8 @@ class MainNavigationScreenBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<BottomNavigationCubit, BottomNavigationState>(
       builder: (context, state) {
-        final index = state is BottomNavigationChanged ? state.index : 0;
-
         return IndexedStack(
-          index: index,
+          index: state.currentIndex,
           children: const [
             HomeView(),
             CategoriesView(),
