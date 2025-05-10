@@ -15,7 +15,8 @@ class SignupViewBodyBlocConsumer extends StatelessWidget {
     return BlocConsumer<SignupCubit, SignupState>(
       listener: (context, state) {
         if (state is SignupSuccess) {
-          Navigator.pop(context);
+          // بعد نجاح التسجيل، توجيه المستخدم إلى صفحة التحقق مباشرةً
+          Navigator.pushNamed(context, '/verify_email');
         }
         if (state is SignupFailure) {
           buildErrorBar(context, state.message);
@@ -23,8 +24,9 @@ class SignupViewBodyBlocConsumer extends StatelessWidget {
       },
       builder: (context, state) {
         return ModalProgressHUD(
-            inAsyncCall: state is SignupLoading ? true : false,
-            child: SignUpViewBody());
+          inAsyncCall: state is SignupLoading ? true : false,
+          child: SignUpViewBody(),
+        );
       },
     );
   }

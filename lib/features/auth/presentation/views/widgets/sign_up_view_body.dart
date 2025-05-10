@@ -74,7 +74,7 @@ class _SignUpViewBodyState extends State<SignUpViewBody> {
                             .createUserWithEmailAndPassword(
                                 email, password, fullName) .then((_) {
                           // عند نجاح عملية التسجيل، اذهب إلى صفحة التحقق من البريد الإلكتروني
-                          Navigator.pushNamed(context, VerifyEmailview.routeName);
+                          Navigator.pushNamed(context, VerifyEmailView.routeName);
                         });
                       } else {
                         buildErrorBar(context,

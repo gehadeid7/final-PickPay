@@ -1,4 +1,5 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+ <manifest xmlns:android="http://schemas.android.com/apk/res/android">
    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
@@ -71,4 +72,4 @@
             <data android:mimeType="text/plain"/>
         </intent>
     </queries>
-</manifest>
+</manifest> 

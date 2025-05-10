@@ -1,50 +1,86 @@
+import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:pickpay/core/errors/failures.dart';
+import 'package:flutter/material.dart';
 import 'package:pickpay/features/auth/domain/repos/auth_repo.dart';
 import 'package:get_it/get_it.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+import 'package:pickpay/features/auth/presentation/views/signin_view.dart';
 
 part 'verify_email_state.dart';
 
 class VerifyEmailCubit extends Cubit<VerifyEmailState> {
   final AuthRepo authRepo;
+  Timer? _timer;
+  Timer? _autoCheckTimer;
+  int _countdown = 10;
+  bool isSending = false;
+  StreamController<int> countdownController = StreamController<int>();
 
-  VerifyEmailCubit() : 
-    authRepo = GetIt.I<AuthRepo>(), 
-    super(VerifyEmailInitial());
+  VerifyEmailCubit() : authRepo = GetIt.I<AuthRepo>(), super(VerifyEmailInitial());
 
-  Future<void> sendVerificationEmail(BuildContext context) async {
-    emit(VerifyEmailLoading());
+  void startCountdown() {
+    _countdown = 10;
+    emit(VerifyEmailButtonDisabled());
+    countdownController.add(_countdown);
 
-    final result = await authRepo.sendEmailVerification();
-
-    result.fold(
-      (failure) => emit(VerifyEmailFailure(failure.message)),
-      (_) {
-        emit(VerifyEmailSuccess());
-        // After sending the email verification link, check the status
-        _checkEmailVerificationStatus(context);
-      },
-    );
+    _timer?.cancel();
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      _countdown--;
+      countdownController.add(_countdown);
+      if (_countdown <= 0) {
+        timer.cancel();
+        emit(VerifyEmailButtonEnabled());
+      }
+    });
   }
 
-  // Method to check email verification status
-  Future<void> _checkEmailVerificationStatus(BuildContext context) async {
+  Future<void> sendVerificationEmail(BuildContext context) async {
+    if (isSending) return;
+    isSending = true;
+    emit(VerifyEmailLoading());
+
     final user = FirebaseAuth.instance.currentUser;
-
-    // Reload the user data to check for verification
-    await user?.reload();
-
-    if (user != null && user.emailVerified) {
-      // If email is verified, navigate to the Home screen
-      Navigator.pushReplacementNamed(context, '/homecategory_view');
-    } else {
-      // If email is not verified, show the user an alert
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('يرجى التحقق من بريدك الإلكتروني')),
-      );
-      // Optionally, set a timer to keep checking email verification status in the background
+    if (user == null) {
+      emit(VerifyEmailFailure('لم يتم العثور على مستخدم حاليًا'));
+      isSending = false;
+      return;
     }
+
+    if (user.emailVerified) {
+      emit(VerifyEmailFailure('البريد الإلكتروني تم التحقق منه بالفعل'));
+      isSending = false;
+      return;
+    }
+
+    try {
+      await user.sendEmailVerification();
+      emit(VerifyEmailSuccess());
+      startCountdown();
+    } on FirebaseAuthException catch (e) {
+      emit(VerifyEmailFailure('فشل إرسال رابط التحقق: ${e.message}'));
+    } catch (e) {
+      emit(VerifyEmailFailure('فشل غير متوقع: ${e.toString()}'));
+    } finally {
+      isSending = false;
+    }
+  }
+
+  void startAutoRedirect(BuildContext context) {
+    _autoCheckTimer = Timer.periodic(const Duration(seconds: 3), (_) async {
+      final user = FirebaseAuth.instance.currentUser;
+      await user?.reload();
+      if (user?.emailVerified == true) {
+        _autoCheckTimer?.cancel();
+        Navigator.pushReplacementNamed(context, SigninView.routeName);
+      }
+    });
+  }
+
+  @override
+  Future<void> close() {
+    countdownController.close();
+    _timer?.cancel();
+    _autoCheckTimer?.cancel();
+    return super.close();
   }
 }

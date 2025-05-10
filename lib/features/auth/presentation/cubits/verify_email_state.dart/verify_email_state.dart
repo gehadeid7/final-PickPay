@@ -12,3 +12,9 @@ class VerifyEmailFailure extends VerifyEmailState {
   final String message;
   VerifyEmailFailure(this.message);
 }
+
+class VerifyEmailButtonDisabled extends VerifyEmailState {}
+
+class VerifyEmailButtonEnabled extends VerifyEmailState {}
+
+class VerifyEmailRefreshed extends VerifyEmailState {}
