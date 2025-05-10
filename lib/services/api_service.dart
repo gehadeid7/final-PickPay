@@ -58,4 +58,33 @@ class ApiService {
       throw Exception('Failed to sync Firebase user: ${response.body}');
     }
   }
+  Future<http.Response> post({
+    required String endpoint,
+    required Map<String, dynamic> body,
+    Map<String, String>? headers,
+    bool authorized = false,
+  }) async {
+    const String baseUrl = 'http://192.168.1.4:3000/api/v1/';
+    String url = '$baseUrl$endpoint';
+
+    Map<String, String> requestHeaders = {
+      'Content-Type': 'application/json',
+      ...?headers,
+    };
+
+    if (authorized) {
+      final token = await FirebaseAuth.instance.currentUser?.getIdToken();
+      if (token != null) {
+        requestHeaders['Authorization'] = 'Bearer $token';
+      }
+    }
+
+    final response = await http.post(
+      Uri.parse(url),
+      headers: requestHeaders,
+      body: jsonEncode(body),
+    );
+
+    return response;
+  }
 }
