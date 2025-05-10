@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:pickpay/features/categories_pages/homeCategory/presentation/views/home_category_view.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product11.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product18.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product2.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product6.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product8.dart';
 import 'package:pickpay/features/home/presentation/views/card_item.dart';
 
 class HomeSectionGrid extends StatefulWidget {
@@ -21,7 +25,7 @@ class _HomeSectionGrid extends State<HomeSectionGrid> {
       'price': '1699.00',
       'rating': 5.0,
       'reviewCount': 954,
-      'detailPage': const HomeCategoryView(),
+      'detailPage': const HomeProduct2(),
     },
     {
       'imagePath': 'assets/Home_products/home-decor/home_decor1/1.png',
@@ -30,7 +34,7 @@ class _HomeSectionGrid extends State<HomeSectionGrid> {
       'price': '1128.00',
       'rating': 4.0,
       'reviewCount': 1288,
-      'detailPage': const HomeCategoryView(),
+      'detailPage': const HomeProduct6(),
     },
     {
       'imagePath': 'assets/Home_products/home-decor/home_decor3/1.png',
@@ -38,7 +42,7 @@ class _HomeSectionGrid extends State<HomeSectionGrid> {
       'price': '250.00',
       'rating': 4.6,
       'reviewCount': 1735,
-      'detailPage': const HomeCategoryView(),
+      'detailPage': const HomeProduct8(),
     },
     {
       'imagePath': 'assets/Home_products/bath_and_bedding/bath3/1.png',
@@ -47,7 +51,7 @@ class _HomeSectionGrid extends State<HomeSectionGrid> {
       'price': '604.00',
       'rating': 4.9,
       'reviewCount': 1893,
-      'detailPage': const HomeCategoryView(),
+      'detailPage': const HomeProduct18(),
     },
     {
       'imagePath': 'assets/Home_products/kitchen/kitchen1/1.png',
@@ -55,7 +59,7 @@ class _HomeSectionGrid extends State<HomeSectionGrid> {
       'price': '15.795',
       'rating': 4.9,
       'reviewCount': 1893,
-      'detailPage': const HomeCategoryView(),
+      'detailPage': const HomeProduct11(),
     },
   ];
 
