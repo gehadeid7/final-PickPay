@@ -43,10 +43,6 @@ class AccountViewBody extends StatelessWidget {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (_) => const WishlistView()));
               }, context),
-              _accountTile(
-                  Icons.location_on_outlined, "Addresses", () {}, context),
-              _accountTile(Icons.credit_card_outlined, "Payment Methods", () {},
-                  context),
             ], context),
             const SizedBox(height: 24),
             _buildSectionTitle('Settings', context),
