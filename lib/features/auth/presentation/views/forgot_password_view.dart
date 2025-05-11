@@ -45,7 +45,6 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
 
   Widget _buildFormContent(BuildContext context, ForgotPasswordState state) {
     final isSuccess = state is ForgotPasswordSuccess;
-    // ignore: unnecessary_cast
     final cooldown = isSuccess ? (state as ForgotPasswordSuccess).cooldown : 0;
     final isLoading = state is ForgotPasswordLoading;
 
@@ -77,7 +76,6 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
           decoration: InputDecoration(
             hintText: 'Enter your email address',
             hintStyle: TextStyles.regular13.copyWith(
-              // ignore: deprecated_member_use
               color: AppColors.secondColor.withOpacity(0.6),
             ),
             filled: true,
@@ -89,7 +87,6 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide(
-                // ignore: deprecated_member_use
                 color: AppColors.secondColor.withOpacity(0.3),
                 width: 1.0,
               ),
@@ -194,7 +191,6 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
         Text(
           'For security reasons, the reset link will expire in 1 hour',
           style: TextStyles.regular11.copyWith(
-            // ignore: deprecated_member_use
             color: AppColors.secondColor.withOpacity(0.6),
           ),
           textAlign: TextAlign.center,
@@ -265,6 +261,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
               ),
               backgroundColor: AppColors.primaryColor,
               behavior: SnackBarBehavior.floating,
+              duration: Duration(seconds: 3), // Set auto dismiss duration
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),

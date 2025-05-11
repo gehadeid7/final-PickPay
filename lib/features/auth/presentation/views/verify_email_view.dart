@@ -45,7 +45,7 @@ class VerifyEmailView extends StatelessWidget {
                     if (state is VerifyEmailLoading)
                       const CircularProgressIndicator(),
 
-                    StreamBuilder<int>(
+                    StreamBuilder<int>( 
                       stream: cubit.countdownController.stream,
                       builder: (context, snapshot) {
                         final countdown = snapshot.data ?? 0;
@@ -63,6 +63,7 @@ class VerifyEmailView extends StatelessWidget {
                       onPressed: (state is VerifyEmailLoading || state is VerifyEmailButtonDisabled)
                           ? null
                           : () {
+                              cubit.stopAutoRedirect(); // Stop auto redirection when resending email
                               cubit.sendVerificationEmail(context);
                             },
                       style: ElevatedButton.styleFrom(

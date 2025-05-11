@@ -14,6 +14,7 @@ class VerifyEmailCubit extends Cubit<VerifyEmailState> {
   Timer? _autoCheckTimer;
   int _countdown = 10;
   bool isSending = false;
+  bool isRedirectingAllowed = true;  // Flag to control redirection
   StreamController<int> countdownController = StreamController<int>();
 
   VerifyEmailCubit() : authRepo = GetIt.I<AuthRepo>(), super(VerifyEmailInitial());
@@ -82,14 +83,23 @@ class VerifyEmailCubit extends Cubit<VerifyEmailState> {
 
   // Check if the email has been verified and automatically redirect
   void startAutoRedirect(BuildContext context) {
-    _autoCheckTimer = Timer.periodic(const Duration(seconds: 3), (_) async {
-      final user = FirebaseAuth.instance.currentUser;
-      await user?.reload();
-      if (user?.emailVerified == true) {
-        _autoCheckTimer?.cancel();
-        Navigator.pushReplacementNamed(context, SigninView.routeName);
-      }
-    });
+    // Allow redirection only if it's not in the process of resending the email
+    if (isRedirectingAllowed) {
+      _autoCheckTimer = Timer.periodic(const Duration(seconds: 3), (_) async {
+        final user = FirebaseAuth.instance.currentUser;
+        await user?.reload();
+        if (user?.emailVerified == true) {
+          _autoCheckTimer?.cancel();
+          Navigator.pushReplacementNamed(context, SigninView.routeName);
+        }
+      });
+    }
+  }
+
+  // Prevent auto redirection when the user interacts with resending
+  void stopAutoRedirect() {
+    _autoCheckTimer?.cancel();
+    isRedirectingAllowed = false;
   }
 
   @override

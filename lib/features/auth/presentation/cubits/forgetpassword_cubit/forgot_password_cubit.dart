@@ -12,10 +12,12 @@ class ForgotPasswordCubit extends Cubit<ForgotPasswordState> {
   Timer? _resendTimer;
   int _resendCooldown = 30;
 
+  // Validate email format
   bool _isValidEmail(String email) {
     return RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(email);
   }
 
+  // Send reset email via backend
   Future<void> sendPasswordResetEmail(String email) async {
     if (email.isEmpty) {
       emit(ForgotPasswordFailure(message: 'Please enter your email'));
@@ -23,7 +25,7 @@ class ForgotPasswordCubit extends Cubit<ForgotPasswordState> {
     }
 
     if (!_isValidEmail(email)) {
-      emit(ForgotPasswordFailure(message: 'Please enter a valid email'));
+      emit(ForgotPasswordInvalidEmail(message: 'Please enter a valid email'));
       return;
     }
 
@@ -44,17 +46,24 @@ class ForgotPasswordCubit extends Cubit<ForgotPasswordState> {
     }
   }
 
+  // Start cooldown for "resend" button
   void _startResendTimer() {
     _resendTimer?.cancel();
-    _resendCooldown = 30;
+    _resendCooldown = 30; // Reset to 30 seconds when starting a new cooldown
     _resendTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_resendCooldown > 0) {
         _resendCooldown--;
         emit(ForgotPasswordSuccess(cooldown: _resendCooldown));
       } else {
         timer.cancel();
+        emit(ForgotPasswordReadyToResend());
       }
     });
+  }
+
+  // Reset the cooldown timer
+  void resetResendCooldown() {
+    _startResendTimer(); // Resets the timer to start from 30 seconds again
   }
 
   @override

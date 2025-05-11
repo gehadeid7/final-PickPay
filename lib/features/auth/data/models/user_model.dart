@@ -7,31 +7,41 @@ class UserModel extends UserEntity {
     required String fullName,
     required String email,
     required String uId,
-    required bool emailVerified, // Accept emailVerified as a parameter
+    required bool emailVerified,
   }) : super(
           fullName: fullName,
           email: email,
           uId: uId,
-          emailVerified: emailVerified, // Pass emailVerified to the UserEntity constructor
+          emailVerified: emailVerified,
         );
 
   // Factory method to create a UserModel from Firebase User
   factory UserModel.fromFirebaseUser(User user) {
     return UserModel(
-      fullName: user.displayName ?? '',
-      email: user.email ?? '',
+      fullName: user.displayName ?? 'Unknown', // Provide a default value
+      email: user.email ?? 'Unknown', // Provide a default value
       uId: user.uid,
-      emailVerified: user.emailVerified, // Set emailVerified from Firebase
+      emailVerified: user.emailVerified,
     );
   }
 
   // Factory method to create a UserModel from JSON
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      fullName: json['name'] ?? json['fullName'],
-      email: json['email'],
-      uId: json['uId'] ?? json['_id'],
-      emailVerified: json['emailVerified'] ?? false, // Assuming emailVerified is available in JSON
+      fullName: json['name'] ?? json['fullName'] ?? 'Unknown', // Default to 'Unknown'
+      email: json['email'] ?? 'Unknown', // Default to 'Unknown'
+      uId: json['uId'] ?? json['_id'] ?? 'Unknown', // Default to 'Unknown'
+      emailVerified: json['emailVerified'] ?? false, // Default to false
+    );
+  }
+
+  // Method to convert UserModel from a Map
+  factory UserModel.fromMap(Map<String, dynamic> map) {
+    return UserModel(
+      fullName: map['fullName'] ?? 'Unknown',
+      email: map['email'] ?? 'Unknown',
+      uId: map['uId'] ?? 'Unknown',
+      emailVerified: map['emailVerified'] ?? false,
     );
   }
 
@@ -41,7 +51,7 @@ class UserModel extends UserEntity {
       fullName: user.fullName,
       email: user.email,
       uId: user.uId,
-      emailVerified: user.emailVerified, // Access emailVerified from UserEntity
+      emailVerified: user.emailVerified,
     );
   }
 
@@ -51,7 +61,17 @@ class UserModel extends UserEntity {
       'fullName': fullName,
       'email': email,
       'uId': uId,
-      'emailVerified': emailVerified, // Add emailVerified to map
+      'emailVerified': emailVerified,
+    };
+  }
+
+  // Convert UserModel to JSON (useful for sending to backend)
+  Map<String, dynamic> toJson() {
+    return {
+      'name': fullName,
+      'email': email,
+      'uId': uId,
+      'emailVerified': emailVerified,
     };
   }
 }
