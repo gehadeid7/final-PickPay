@@ -48,8 +48,11 @@ class CustomTextFormField extends StatelessWidget {
         fillColor: isDarkMode
             ? theme.colorScheme.surfaceVariant
             : const Color(0xFFF9FAFA),
-        border: buildBorder(theme.colorScheme.outline),
-        enabledBorder: buildBorder(theme.colorScheme.outline),
+        border:
+            buildBorder(isDarkMode ? theme.colorScheme.outline : Colors.white),
+        enabledBorder: buildBorder(isDarkMode
+            ? theme.colorScheme.outline
+            : const Color.fromARGB(255, 230, 230, 230)),
         focusedBorder: buildBorder(theme.colorScheme.primary),
         errorBorder: buildBorder(theme.colorScheme.error),
         focusedErrorBorder: buildBorder(theme.colorScheme.error),

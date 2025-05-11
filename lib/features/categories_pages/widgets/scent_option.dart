@@ -72,6 +72,7 @@ class _ScentOptionState extends State<ScentOption> {
                       // ignore: deprecated_member_use
                       ? selectionColor.withOpacity(0.15)
                       : isDarkMode
+                          // ignore: deprecated_member_use
                           ? colorScheme.surfaceVariant
                           : null,
                 ),

@@ -69,6 +69,7 @@ class InfoIconsRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    // ignore: unused_local_variable
     final colorScheme = theme.colorScheme;
 
     return Row(
@@ -120,6 +121,7 @@ class _InfoItem extends StatelessWidget {
         CircleAvatar(
           radius: 24,
           backgroundColor:
+              // ignore: deprecated_member_use
               isDarkMode ? colorScheme.surfaceVariant : Colors.grey.shade100,
           child: Icon(
             icon,

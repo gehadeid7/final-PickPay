@@ -29,6 +29,7 @@ class CustomCheckbox extends StatelessWidget {
             width: 1.5,
             color: isChecked
                 ? Colors.transparent
+                // ignore: deprecated_member_use
                 : colorScheme.outline.withOpacity(0.5),
           ),
         ),

@@ -32,18 +32,21 @@ class FirebaseAuthService {
           .createUserWithEmailAndPassword(email: email, password: password);
 
       if (credential.user == null) {
-        throw CustomException(message: 'حدث خطأ غير متوقع. المستخدم غير موجود.');
+        throw CustomException(
+            message: 'حدث خطأ غير متوقع. المستخدم غير موجود.');
       }
 
       return credential.user!;
     } on FirebaseAuthException catch (e, stackTrace) {
-      log('FirebaseAuthException @createUserWithEmailAndPassword: ${e.code}', stackTrace: stackTrace);
+      log('FirebaseAuthException @createUserWithEmailAndPassword: ${e.code}',
+          stackTrace: stackTrace);
 
       switch (e.code) {
         case 'weak-password':
           throw CustomException(message: 'كلمة المرور ضعيفة جداً.');
         case 'email-already-in-use':
-          throw CustomException(message: 'هذا البريد الإلكتروني مستخدم بالفعل.');
+          throw CustomException(
+              message: 'هذا البريد الإلكتروني مستخدم بالفعل.');
         case 'invalid-email':
           throw CustomException(message: 'صيغة البريد الإلكتروني غير صحيحة.');
         case 'network-request-failed':
@@ -52,7 +55,8 @@ class FirebaseAuthService {
           throw CustomException(message: 'حدث خطأ، حاول مرة أخرى.');
       }
     } catch (e, stackTrace) {
-      log('Unexpected error @createUserWithEmailAndPassword: $e', stackTrace: stackTrace);
+      log('Unexpected error @createUserWithEmailAndPassword: $e',
+          stackTrace: stackTrace);
       throw CustomException(message: 'حدث خطأ غير متوقع، حاول لاحقًا.');
     }
   }
@@ -71,19 +75,22 @@ class FirebaseAuthService {
 
       return credential.user!;
     } on FirebaseAuthException catch (e, stackTrace) {
-      log("FirebaseAuthException @signInWithEmailAndPassword: ${e.code}", stackTrace: stackTrace);
+      log("FirebaseAuthException @signInWithEmailAndPassword: ${e.code}",
+          stackTrace: stackTrace);
       switch (e.code) {
         case 'user-not-found':
         case 'wrong-password':
         case 'invalid-credential':
-          throw CustomException(message: 'البريد الإلكتروني أو كلمة المرور غير صحيحة.');
+          throw CustomException(
+              message: 'البريد الإلكتروني أو كلمة المرور غير صحيحة.');
         case 'network-request-failed':
           throw CustomException(message: 'تأكد من اتصالك بالإنترنت.');
         default:
           throw CustomException(message: 'حدث خطأ، حاول مجددًا.');
       }
     } catch (e, stackTrace) {
-      log("Unexpected error @signInWithEmailAndPassword: $e", stackTrace: stackTrace);
+      log("Unexpected error @signInWithEmailAndPassword: $e",
+          stackTrace: stackTrace);
       throw CustomException(message: 'حدث خطأ، حاول مرة أخرى.');
     }
   }
@@ -93,7 +100,8 @@ class FirebaseAuthService {
       final googleUser = await GoogleSignIn().signIn();
 
       if (googleUser == null) {
-        throw CustomException(message: 'تم إلغاء تسجيل الدخول باستخدام Google.');
+        throw CustomException(
+            message: 'تم إلغاء تسجيل الدخول باستخدام Google.');
       }
 
       final googleAuth = await googleUser.authentication;
@@ -103,7 +111,8 @@ class FirebaseAuthService {
         idToken: googleAuth.idToken,
       );
 
-      final userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+      final userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
 
       if (userCredential.user == null) {
         throw CustomException(message: 'فشل تسجيل الدخول باستخدام Google.');
@@ -123,7 +132,8 @@ class FirebaseAuthService {
       final loginResult = await FacebookAuth.instance.login();
 
       if (loginResult.accessToken == null) {
-        throw CustomException(message: 'تم إلغاء تسجيل الدخول باستخدام Facebook.');
+        throw CustomException(
+            message: 'تم إلغاء تسجيل الدخول باستخدام Facebook.');
       }
 
       OAuthCredential facebookAuthCredential;
@@ -154,8 +164,8 @@ class FirebaseAuthService {
         );
       }
 
-      final userCredential =
-          await FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+      final userCredential = await FirebaseAuth.instance
+          .signInWithCredential(facebookAuthCredential);
 
       if (userCredential.user == null) {
         throw CustomException(message: 'فشل تسجيل الدخول باستخدام Facebook.');
@@ -176,13 +186,15 @@ class FirebaseAuthService {
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
     } on FirebaseAuthException catch (e, stackTrace) {
-      log('FirebaseAuthException @sendPasswordResetEmail: ${e.code}', stackTrace: stackTrace);
+      log('FirebaseAuthException @sendPasswordResetEmail: ${e.code}',
+          stackTrace: stackTrace);
 
       switch (e.code) {
         case 'invalid-email':
           throw CustomException(message: 'صيغة البريد الإلكتروني غير صحيحة.');
         case 'user-not-found':
-          throw CustomException(message: 'لا يوجد مستخدم بهذا البريد الإلكتروني.');
+          throw CustomException(
+              message: 'لا يوجد مستخدم بهذا البريد الإلكتروني.');
         case 'network-request-failed':
           throw CustomException(message: 'تحقق من اتصالك بالإنترنت.');
         case 'too-many-requests':
@@ -191,7 +203,8 @@ class FirebaseAuthService {
           throw CustomException(message: 'حدث خطأ، حاول مرة أخرى.');
       }
     } catch (e, stackTrace) {
-      log('Unexpected error @sendPasswordResetEmail: $e', stackTrace: stackTrace);
+      log('Unexpected error @sendPasswordResetEmail: $e',
+          stackTrace: stackTrace);
       throw CustomException(message: 'حدث خطأ غير متوقع، حاول لاحقًا.');
     }
   }
@@ -210,7 +223,8 @@ class FirebaseAuthService {
     const charset =
         '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
     final random = math.Random.secure();
-    return List.generate(length, (_) => charset[random.nextInt(charset.length)]).join();
+    return List.generate(length, (_) => charset[random.nextInt(charset.length)])
+        .join();
   }
 
   // Returns SHA256 hash of input

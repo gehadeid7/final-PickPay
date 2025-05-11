@@ -54,6 +54,7 @@ class _CheckoutViewState extends State<CheckoutView> {
           child: Text(
             'Your cart is empty',
             style: TextStyles.regular13.copyWith(
+              // ignore: deprecated_member_use
               color: theme.colorScheme.onBackground,
             ),
           ),
@@ -69,6 +70,7 @@ class _CheckoutViewState extends State<CheckoutView> {
 
     return Scaffold(
       appBar: buildAppBar(context: context, title: 'Checkout'),
+      // ignore: deprecated_member_use
       backgroundColor: theme.colorScheme.background,
       body: BlocListener<CheckoutCubit, CheckoutState>(
         listener: (context, state) {
@@ -146,6 +148,7 @@ class _CheckoutViewState extends State<CheckoutView> {
       child: Text(
         title,
         style: TextStyles.bold16.copyWith(
+          // ignore: deprecated_member_use
           color: theme.colorScheme.onBackground,
         ),
       ),
@@ -192,6 +195,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                   child: Text(
                     'Total',
                     style: TextStyles.bold16.copyWith(
+                      // ignore: deprecated_member_use
                       color: theme.colorScheme.onBackground,
                     ),
                   ),

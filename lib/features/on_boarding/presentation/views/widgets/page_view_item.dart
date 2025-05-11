@@ -23,6 +23,7 @@ class PageViewItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    // ignore: deprecated_member_use
     final textColor = theme.colorScheme.onBackground;
 
     return Column(
@@ -55,6 +56,7 @@ class PageViewItem extends StatelessWidget {
                     child: Text(
                       'Skip',
                       style: TextStyles.semiBold16.copyWith(
+                        // ignore: deprecated_member_use
                         color: theme.colorScheme.onSurface.withOpacity(0.7),
                       ),
                     ),
@@ -76,6 +78,7 @@ class PageViewItem extends StatelessWidget {
             subTitle,
             textAlign: TextAlign.center,
             style: TextStyles.semiBold16.copyWith(
+              // ignore: deprecated_member_use
               color: theme.colorScheme.onSurface.withOpacity(0.7),
             ),
           ),

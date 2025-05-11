@@ -8,6 +8,7 @@ class AppThemes {
       primary: Colors.blue,
       secondary: Colors.blueAccent,
       surface: Colors.white,
+      // ignore: deprecated_member_use
       background: Colors.white,
     ),
     scaffoldBackgroundColor: Colors.white,
@@ -37,6 +38,7 @@ class AppThemes {
       primary: Colors.blue,
       secondary: Colors.blueAccent,
       surface: Color(0xFF121212),
+      // ignore: deprecated_member_use
       background: Color(0xFF121212),
     ),
     scaffoldBackgroundColor: const Color(0xFF121212),

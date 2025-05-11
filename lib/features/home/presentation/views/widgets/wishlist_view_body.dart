@@ -174,6 +174,7 @@ class WishlistViewBody extends StatelessWidget {
                           width: 80,
                           height: 80,
                           color: isDarkMode
+                              // ignore: deprecated_member_use
                               ? colorScheme.surfaceVariant
                               : Colors.grey.shade200,
                           child: Icon(
@@ -251,6 +252,7 @@ class WishlistViewBody extends StatelessWidget {
         ),
         duration: const Duration(seconds: 1),
         behavior: SnackBarBehavior.floating,
+        // ignore: deprecated_member_use
         backgroundColor: theme.colorScheme.surfaceVariant,
       ),
     );
