@@ -6,25 +6,37 @@ import 'package:pickpay/features/auth/presentation/cubits/signup_cubits/signup_c
 import 'package:pickpay/features/auth/presentation/views/widgets/sign_up_view_body.dart';
 
 class SignupViewBodyBlocConsumer extends StatelessWidget {
-  const SignupViewBodyBlocConsumer({
-    super.key,
-  });
+  const SignupViewBodyBlocConsumer({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<SignupCubit, SignupState>(
-      listener: (context, state) {
+      listener: (context, state) async {
         if (state is SignupSuccess) {
-          // بعد نجاح التسجيل، توجيه المستخدم إلى صفحة التحقق مباشرةً
-          Navigator.pushNamed(context, '/verify_email');
+          // After successful signup, check if the email is verified.
+          final userExists = await context.read<SignupCubit>().checkIfUserExists(state.userEntity.email);
+
+          if (userExists) {
+            // If user exists and email is verified, navigate to home
+            if (state.userEntity.emailVerified) {
+              Navigator.pushNamed(context, '/home');
+            } else {
+              // Otherwise, navigate to the email verification page
+              Navigator.pushNamed(context, '/verify_email');
+            }
+          } else {
+            // If user does not exist, handle accordingly (e.g., show error or retry)
+            buildErrorBar(context, 'User does not exist');
+          }
         }
+
         if (state is SignupFailure) {
           buildErrorBar(context, state.message);
         }
       },
       builder: (context, state) {
         return ModalProgressHUD(
-          inAsyncCall: state is SignupLoading ? true : false,
+          inAsyncCall: state is SignupLoading,  // Simplified condition
           child: SignUpViewBody(),
         );
       },

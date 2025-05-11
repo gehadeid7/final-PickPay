@@ -27,69 +27,74 @@ class _SignUpViewBodyState extends State<SignUpViewBody> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: khorizontalPadding),
-        child: Form(
-          key: formKey,
-          autovalidateMode: autovalidateMode,
-          child: Column(
-            children: [
-              SizedBox(height: 50),
-              CustomTextFormField(
-                onSaved: (value) {
-                  fullName = value!;
-                },
-                hintText: 'Enter your full name',
-                textInputType: TextInputType.name,
-              ),
-              SizedBox(height: 16),
-              CustomTextFormField(
-                onSaved: (value) {
-                  email = value!;
-                },
-                hintText: 'Enter a valid email address',
-                textInputType: TextInputType.emailAddress,
-              ),
-              SizedBox(height: 16),
-              PasswordField(
-                onSaved: (value) {
-                  password = value!;
-                },
-              ),
-              SizedBox(height: 16),
-              TermsAndConditions(
-                onChanged: (value) {
-                  isTermsAccepted = value;
-                },
-              ),
-              SizedBox(height: 16),
-              CustomButton(
-                  onPressed: () {
-                    if (formKey.currentState!.validate()) {
-                      formKey.currentState!.save();
-                      if (isTermsAccepted) {
-                        context
-                            .read<SignupCubit>()
-                            .createUserWithEmailAndPassword(
-                                email, password, fullName) .then((_) {
-                          // عند نجاح عملية التسجيل، اذهب إلى صفحة التحقق من البريد الإلكتروني
-                          Navigator.pushNamed(context, VerifyEmailView.routeName);
-                        });
-                      } else {
-                        buildErrorBar(context,
-                            'terms and conditions acceptance is required');
-                      }
-                    } else {
-                      setState(() {
-                        autovalidateMode = AutovalidateMode.always;
-                      });
-                    }
+    return BlocListener<SignupCubit, SignupState>(
+      listener: (context, state) {
+        if (state is SignupSuccess) {
+          // If sign-up is successful, navigate to email verification page
+          Navigator.pushNamed(context, VerifyEmailView.routeName);
+        } else if (state is SignupFailure) {
+          // If sign-up fails, show error message
+          buildErrorBar(context, state.message);
+        }
+      },
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: khorizontalPadding),
+          child: Form(
+            key: formKey,
+            autovalidateMode: autovalidateMode,
+            child: Column(
+              children: [
+                SizedBox(height: 50),
+                CustomTextFormField(
+                  onSaved: (value) {
+                    fullName = value!;
                   },
-                  buttonText: 'Create account'),
-              SizedBox(height: 16),
-              HaveAnAccount(),
-            ],
+                  hintText: 'Enter your full name',
+                  textInputType: TextInputType.name,
+                ),
+                SizedBox(height: 16),
+                CustomTextFormField(
+                  onSaved: (value) {
+                    email = value!;
+                  },
+                  hintText: 'Enter a valid email address',
+                  textInputType: TextInputType.emailAddress,
+                ),
+                SizedBox(height: 16),
+                PasswordField(
+                  onSaved: (value) {
+                    password = value!;
+                  },
+                ),
+                SizedBox(height: 16),
+                TermsAndConditions(
+                  onChanged: (value) {
+                    isTermsAccepted = value;
+                  },
+                ),
+                SizedBox(height: 16),
+                CustomButton(
+                    onPressed: () {
+                      if (formKey.currentState!.validate()) {
+                        formKey.currentState!.save();
+                        if (isTermsAccepted) {
+                          context.read<SignupCubit>().createUserWithEmailAndPassword(
+                            email, password, fullName);
+                        } else {
+                          buildErrorBar(context, 'Terms and conditions acceptance is required');
+                        }
+                      } else {
+                        setState(() {
+                          autovalidateMode = AutovalidateMode.always;
+                        });
+                      }
+                    },
+                    buttonText: 'Create account'),
+                SizedBox(height: 16),
+                HaveAnAccount(),
+              ],
+            ),
           ),
         ),
       ),

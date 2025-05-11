@@ -30,7 +30,7 @@ class ApiService {
       throw Exception('Failed to load products');
     }
   }
-
+   
   Future<UserModel> syncFirebaseUserToBackend({
     required String name,
     required String email,
