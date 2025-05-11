@@ -1,4 +1,3 @@
-// custom_bottom_navigation_bar.dart
 import 'package:flutter/material.dart';
 import 'package:pickpay/features/home/domain/entities/bottom_navigation_bar_entity.dart';
 import 'package:pickpay/features/home/presentation/views/widgets/bottom_navigation/navigation_bar_item.dart';
@@ -15,18 +14,26 @@ class CustomBottomNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Container(
       height: kBottomNavigationBarHeight + 10,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardTheme.color,
         boxShadow: [
           BoxShadow(
             // ignore: deprecated_member_use
-            color: Colors.black.withOpacity(0.1),
+            color: theme.shadowColor.withOpacity(0.1),
             blurRadius: 10,
             offset: const Offset(0, -5),
           ),
         ],
+        border: Border(
+          top: BorderSide(
+            color: theme.dividerColor,
+            width: 1,
+          ),
+        ),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,

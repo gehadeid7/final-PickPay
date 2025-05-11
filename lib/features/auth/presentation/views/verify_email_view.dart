@@ -41,10 +41,8 @@ class VerifyEmailView extends StatelessWidget {
                       style: TextStyle(fontSize: 16),
                     ),
                     const SizedBox(height: 20),
-
                     if (state is VerifyEmailLoading)
                       const CircularProgressIndicator(),
-
                     StreamBuilder<int>(
                       stream: cubit.countdownController.stream,
                       builder: (context, snapshot) {
@@ -58,15 +56,16 @@ class VerifyEmailView extends StatelessWidget {
                       },
                     ),
                     const SizedBox(height: 20),
-
                     ElevatedButton(
-                      onPressed: (state is VerifyEmailLoading || state is VerifyEmailButtonDisabled)
+                      onPressed: (state is VerifyEmailLoading ||
+                              state is VerifyEmailButtonDisabled)
                           ? null
                           : () {
                               cubit.sendVerificationEmail(context);
                             },
                       style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 24, vertical: 12),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -75,15 +74,15 @@ class VerifyEmailView extends StatelessWidget {
                       ),
                       child: const Text('إعادة إرسال رابط التحقق'),
                     ),
-
                     const SizedBox(height: 20),
-
                     ElevatedButton(
                       onPressed: () {
-                        Navigator.pushReplacementNamed(context, SigninView.routeName);
+                        Navigator.pushReplacementNamed(
+                            context, SigninView.routeName);
                       },
                       style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 24, vertical: 12),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),

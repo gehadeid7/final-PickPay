@@ -2,7 +2,6 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pickpay/core/services/get_it_service.dart';
-import 'package:pickpay/core/utils/app_colors.dart';
 import 'package:pickpay/core/utils/app_text_styles.dart';
 import 'package:pickpay/core/widgets/custom_app.dart';
 import 'package:pickpay/features/auth/domain/repos/auth_repo.dart';
@@ -44,8 +43,9 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
   }
 
   Widget _buildFormContent(BuildContext context, ForgotPasswordState state) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     final isSuccess = state is ForgotPasswordSuccess;
-    // ignore: unnecessary_cast
     final cooldown = isSuccess ? (state as ForgotPasswordSuccess).cooldown : 0;
     final isLoading = state is ForgotPasswordLoading;
 
@@ -57,31 +57,31 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
           'Forgot Password?',
           style: TextStyles.bold16.copyWith(
             fontSize: 24,
-            color: AppColors.primaryColor,
+            color: colorScheme.primary,
           ),
         ),
         const SizedBox(height: 8),
         Text(
           'Enter your email to receive a password reset link',
           style: TextStyles.regular13.copyWith(
-            color: AppColors.secondColor,
+            color: colorScheme.onSurface.withOpacity(0.7),
           ),
         ),
         const SizedBox(height: 32),
         TextFormField(
           controller: _emailController,
-          cursorColor: AppColors.primaryColor,
+          cursorColor: colorScheme.primary,
           autofocus: true,
           textInputAction: TextInputAction.done,
           autofillHints: const [AutofillHints.email],
+          style: TextStyle(color: colorScheme.onSurface),
           decoration: InputDecoration(
             hintText: 'Enter your email address',
             hintStyle: TextStyles.regular13.copyWith(
-              // ignore: deprecated_member_use
-              color: AppColors.secondColor.withOpacity(0.6),
+              color: colorScheme.onSurface.withOpacity(0.5),
             ),
             filled: true,
-            fillColor: Colors.white,
+            fillColor: colorScheme.surfaceVariant,
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 16,
               vertical: 14,
@@ -89,29 +89,28 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide(
-                // ignore: deprecated_member_use
-                color: AppColors.secondColor.withOpacity(0.3),
+                color: colorScheme.outline.withOpacity(0.5),
                 width: 1.0,
               ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide(
-                color: AppColors.primaryColor,
+                color: colorScheme.primary,
                 width: 2.0,
               ),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(
-                color: Colors.red,
+              borderSide: BorderSide(
+                color: colorScheme.error,
                 width: 1.0,
               ),
             ),
             focusedErrorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(
-                color: Colors.red,
+              borderSide: BorderSide(
+                color: colorScheme.error,
                 width: 2.0,
               ),
             ),
@@ -147,7 +146,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
                     }
                   },
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primaryColor,
+              backgroundColor: colorScheme.primary,
               padding: const EdgeInsets.symmetric(vertical: 16),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
@@ -167,13 +166,13 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
                     ? Text(
                         'Resend in ${cooldown}s',
                         style: TextStyles.semiBold13.copyWith(
-                          color: Colors.white,
+                          color: colorScheme.onPrimary,
                         ),
                       )
                     : Text(
                         'Send Reset Link',
                         style: TextStyles.semiBold13.copyWith(
-                          color: Colors.white,
+                          color: colorScheme.onPrimary,
                         ),
                       ),
           ),
@@ -185,7 +184,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
             child: Text(
               'Back to Sign In',
               style: TextStyles.semiBold13.copyWith(
-                color: AppColors.primaryColor,
+                color: colorScheme.primary,
               ),
             ),
           ),
@@ -194,8 +193,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
         Text(
           'For security reasons, the reset link will expire in 1 hour',
           style: TextStyles.regular11.copyWith(
-            // ignore: deprecated_member_use
-            color: AppColors.secondColor.withOpacity(0.6),
+            color: colorScheme.onSurface.withOpacity(0.6),
           ),
           textAlign: TextAlign.center,
         ),
@@ -204,18 +202,21 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
   }
 
   Widget _buildSuccessUI() {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Icon(
           Icons.check_circle,
-          color: AppColors.primaryColor,
+          color: colorScheme.primary,
           size: 72,
         ),
         const SizedBox(height: 24),
         Text(
           'Email Sent!',
-          style: TextStyles.bold23.copyWith(color: AppColors.primaryColor),
+          style: TextStyles.bold23.copyWith(color: colorScheme.primary),
         ),
         const SizedBox(height: 16),
         Padding(
@@ -224,7 +225,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
             'Check your inbox for the password reset link. If you don\'t see it, please check your spam folder.',
             textAlign: TextAlign.center,
             style: TextStyles.regular13.copyWith(
-              color: AppColors.secondColor,
+              color: colorScheme.onSurface.withOpacity(0.7),
             ),
           ),
         ),
@@ -234,7 +235,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
           child: ElevatedButton(
             onPressed: () => Navigator.pop(context),
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primaryColor,
+              backgroundColor: colorScheme.primary,
               padding: const EdgeInsets.symmetric(vertical: 16),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
@@ -243,7 +244,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
             child: Text(
               'Return to Login',
               style: TextStyles.semiBold13.copyWith(
-                color: Colors.white,
+                color: colorScheme.onPrimary,
               ),
             ),
           ),
@@ -254,6 +255,9 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return BlocConsumer<ForgotPasswordCubit, ForgotPasswordState>(
       listener: (context, state) {
         if (state is ForgotPasswordSuccess) {
@@ -261,9 +265,11 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
             SnackBar(
               content: Text(
                 'Password reset email sent successfully',
-                style: TextStyles.regular11.copyWith(color: Colors.white),
+                style: TextStyles.regular11.copyWith(
+                  color: colorScheme.onPrimary,
+                ),
               ),
-              backgroundColor: AppColors.primaryColor,
+              backgroundColor: colorScheme.primary,
               behavior: SnackBarBehavior.floating,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
@@ -275,9 +281,11 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
             SnackBar(
               content: Text(
                 state.message,
-                style: TextStyles.regular13.copyWith(color: Colors.white),
+                style: TextStyles.regular13.copyWith(
+                  color: colorScheme.onError,
+                ),
               ),
-              backgroundColor: Colors.red,
+              backgroundColor: colorScheme.error,
               behavior: SnackBarBehavior.floating,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),

@@ -51,6 +51,7 @@ dependencies:
   flutter_facebook_auth: ^7.1.2
   sign_in_with_apple: ^7.0.1
   crypto: ^3.0.6
+  provider: ^6.0.5
   cloud_firestore: ^5.6.6
   standard_searchbar: ^2.1.1
   custom_navigation_bar: ^0.8.2

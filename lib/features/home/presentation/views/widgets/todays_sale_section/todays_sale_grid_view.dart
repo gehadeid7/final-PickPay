@@ -49,6 +49,9 @@ class _TodaysSaleGridViewState extends State<TodaysSaleGridView> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+
     final List<Map<String, dynamic>> saleProducts = [
       {
         'imagePath': 'assets/appliances/product8/1.png',
@@ -73,20 +76,19 @@ class _TodaysSaleGridViewState extends State<TodaysSaleGridView> {
     return Container(
       height: 330,
       padding: const EdgeInsets.symmetric(horizontal: 10),
-      color: const Color.fromARGB(255, 241, 241, 241),
+      color: isDarkMode ? Colors.grey[900] : const Color(0xFFF1F1F1),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 5),
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 12),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12),
             child: Center(
               child: Text(
-                "Today’s Sale Ends In:",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+                "Today's Sale Ends In:",
+                style: theme.textTheme.titleLarge?.copyWith(
                   color: Colors.red,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
@@ -96,42 +98,43 @@ class _TodaysSaleGridViewState extends State<TodaysSaleGridView> {
             child: Center(
               child: Text(
                 _formattedTime(_duration),
-                style: const TextStyle(
-                  fontSize: 20,
+                style: theme.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w600,
-                  color: Colors.black87,
+                  color: isDarkMode ? Colors.white : Colors.black87,
                 ),
               ),
             ),
           ),
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: 180 / 230,
-              mainAxisSpacing: 12,
-              crossAxisSpacing: 16,
+          Expanded(
+            child: GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 0.75, // Better aspect ratio for cards
+                mainAxisSpacing: 12,
+                crossAxisSpacing: 16,
+              ),
+              itemCount: saleProducts.length,
+              itemBuilder: (context, index) {
+                final product = saleProducts[index];
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => product['detailPage']),
+                    );
+                  },
+                  child: CardItem(
+                    imagePath: product['imagePath'],
+                    productName: product['productName'],
+                    price: product['price'],
+                    rating: product['rating'],
+                    reviewCount: product['reviewCount'],
+                  ),
+                );
+              },
             ),
-            itemCount: saleProducts.length,
-            itemBuilder: (context, index) {
-              final product = saleProducts[index];
-              return GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => product['detailPage']),
-                  );
-                },
-                child: CardItem(
-                  imagePath: product['imagePath'],
-                  productName: product['productName'],
-                  price: product['price'],
-                  rating: product['rating'],
-                  reviewCount: product['reviewCount'],
-                ),
-              );
-            },
           ),
         ],
       ),

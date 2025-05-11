@@ -16,7 +16,9 @@ class VerifyEmailCubit extends Cubit<VerifyEmailState> {
   bool isSending = false;
   StreamController<int> countdownController = StreamController<int>();
 
-  VerifyEmailCubit() : authRepo = GetIt.I<AuthRepo>(), super(VerifyEmailInitial());
+  VerifyEmailCubit()
+      : authRepo = GetIt.I<AuthRepo>(),
+        super(VerifyEmailInitial());
 
   // Start the countdown for resending the email
   void startCountdown() {

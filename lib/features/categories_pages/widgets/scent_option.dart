@@ -23,15 +23,21 @@ class _ScentOptionState extends State<ScentOption> {
   Widget build(BuildContext context) {
     if (widget.scentOption.isEmpty) return const SizedBox.shrink();
 
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDarkMode = theme.brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (widget.showLabel)
-          const Padding(
-            padding: EdgeInsets.only(bottom: 8),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8),
             child: Text(
               'Scent',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         Wrap(
@@ -40,6 +46,7 @@ class _ScentOptionState extends State<ScentOption> {
           children: List.generate(widget.scentOption.length, (index) {
             final scentName = widget.scentOption[index];
             final isSelected = index == selectedIndex;
+            final selectionColor = colorScheme.primary; // Blue from theme
 
             return GestureDetector(
               onTap: () {
@@ -52,15 +59,33 @@ class _ScentOptionState extends State<ScentOption> {
                 padding:
                     const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                 decoration: BoxDecoration(
-                  border:
-                      Border.all(color: isSelected ? Colors.blue : Colors.grey),
-                  borderRadius: BorderRadius.circular(6),
-                  // ignore: deprecated_member_use
-                  color: isSelected ? Colors.blue.withOpacity(0.1) : null,
+                  border: Border.all(
+                    color: isSelected
+                        ? selectionColor
+                        : isDarkMode
+                            ? colorScheme.outline
+                            : Colors.grey.shade300,
+                    width: isSelected ? 1.5 : 1,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                  color: isSelected
+                      // ignore: deprecated_member_use
+                      ? selectionColor.withOpacity(0.15)
+                      : isDarkMode
+                          ? colorScheme.surfaceVariant
+                          : null,
                 ),
                 child: Text(
                   scentName,
-                  style: const TextStyle(color: Colors.black),
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: isSelected
+                        ? selectionColor
+                        : isDarkMode
+                            ? colorScheme.onSurface
+                            : Colors.black,
+                    fontWeight:
+                        isSelected ? FontWeight.bold : FontWeight.normal,
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ),

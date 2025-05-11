@@ -7,42 +7,54 @@ class SearchTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return TextField(
       keyboardType: TextInputType.text,
+      style: TextStyles.regular16.copyWith(
+        color: Theme.of(context).textTheme.bodyLarge?.color,
+      ),
       decoration: InputDecoration(
         isCollapsed: true,
-        contentPadding: EdgeInsets.symmetric(vertical: 8),
+        contentPadding: const EdgeInsets.symmetric(vertical: 8),
         hintStyle: TextStyles.regular16.copyWith(
-          color: Color(0xFF949D9E),
+          color: isDarkMode ? Colors.grey[400] : const Color(0xFF949D9E),
         ),
         hintText: 'Search...',
         filled: true,
-        fillColor: Color(0xFFF9FAFA),
+        fillColor: isDarkMode ? Colors.grey[800] : const Color(0xFFF9FAFA),
         prefixIcon: Padding(
-          padding: EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(8.0),
           child: Image.asset(
             Assets.search,
             width: 20,
             height: 20,
             fit: BoxFit.contain,
+            color: isDarkMode ? Colors.grey[400] : null,
           ),
         ),
-        prefixIconConstraints: BoxConstraints(
+        prefixIconConstraints: const BoxConstraints(
           minWidth: 40,
           minHeight: 40,
         ),
-        border: buildBorder(const Color(0xFFE6E9E9)),
-        enabledBorder: buildBorder(const Color(0xFFE6E9E9)),
+        border: _buildBorder(context, isDarkMode),
+        enabledBorder: _buildBorder(context, isDarkMode),
+        focusedBorder: _buildBorder(context, isDarkMode, isFocused: true),
       ),
     );
   }
 
-  OutlineInputBorder buildBorder(Color color) {
+  OutlineInputBorder _buildBorder(BuildContext context, bool isDarkMode,
+      {bool isFocused = false}) {
     return OutlineInputBorder(
       borderRadius: BorderRadius.circular(8),
       borderSide: BorderSide(
         width: 1,
-        color: Colors.white,
+        color: isFocused
+            ? Theme.of(context).colorScheme.primary
+            : isDarkMode
+                ? Colors.grey[700]!
+                : const Color(0xFFE6E9E9),
       ),
     );
   }

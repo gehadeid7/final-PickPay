@@ -24,6 +24,11 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
+
     int fullStars = rating.floor();
     bool hasHalfStar = (rating - fullStars) >= 0.5;
 
@@ -32,14 +37,19 @@ class ProductCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isDarkMode
+              ? colorScheme.surface
+              : Colors.white, // White in light mode
           borderRadius: BorderRadius.circular(12),
-          // ignore: deprecated_member_use
-          border: Border.all(color: Colors.black.withOpacity(0.1)),
+          border: Border.all(
+            color: isDarkMode
+                ? theme.dividerColor
+                : Colors.grey.shade200, // Lighter border in light mode
+          ),
           boxShadow: [
             BoxShadow(
               // ignore: deprecated_member_use
-              color: Colors.black.withOpacity(0.05),
+              color: theme.shadowColor.withOpacity(0.1),
               blurRadius: 8,
               offset: const Offset(0, 4),
             ),
@@ -61,6 +71,12 @@ class ProductCard extends StatelessWidget {
                         return Image.asset(
                           imagePaths[index],
                           fit: BoxFit.contain,
+                          errorBuilder: (context, error, stackTrace) => Icon(
+                            Icons.image_not_supported,
+                            // ignore: deprecated_member_use
+                            color: colorScheme.onSurface.withOpacity(0.3),
+                            size: 40,
+                          ),
                         );
                       },
                     ),
@@ -71,9 +87,11 @@ class ProductCard extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               name,
-              style: const TextStyle(
-                fontSize: 14,
+              style: textTheme.bodyMedium?.copyWith(
                 fontWeight: FontWeight.w600,
+                color: isDarkMode
+                    ? colorScheme.onSurface
+                    : Colors.black, // Black text in light mode
               ),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
@@ -83,23 +101,25 @@ class ProductCard extends StatelessWidget {
               children: [
                 Text(
                   '\$${price.toStringAsFixed(2)}',
-                  style: const TextStyle(
-                    fontSize: 14,
+                  style: textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: Colors.green,
+                    color: Colors.green, // Keeping green for price
                   ),
                 ),
                 const SizedBox(width: 10),
                 Text(
                   '\$${originalPrice.toStringAsFixed(2)}',
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey,
+                  style: textTheme.bodyMedium?.copyWith(
+                    color: isDarkMode
+                        // ignore: deprecated_member_use
+                        ? colorScheme.onSurface.withOpacity(0.6)
+                        : Colors.grey[600],
                     decoration: TextDecoration.lineThrough,
                   ),
                 ),
               ],
             ),
+            const SizedBox(height: 6),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -118,24 +138,15 @@ class ProductCard extends StatelessWidget {
                     const SizedBox(width: 4),
                     Text(
                       '($reviewCount)',
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.black54,
+                      style: textTheme.bodySmall?.copyWith(
+                        color: isDarkMode
+                            // ignore: deprecated_member_use
+                            ? colorScheme.onSurface.withOpacity(0.6)
+                            : Colors.grey[600],
                       ),
                     ),
                   ],
                 ),
-                // CircleAvatar(
-                //   radius: 17,
-                //   backgroundColor: Colors.black,
-                //   child: IconButton(
-                //     icon: const Icon(Icons.add, color: Colors.white, size: 23),
-                //     padding: EdgeInsets.zero,
-                //     onPressed: () {
-                //       // Add to cart logic
-                //     },
-                //   ),
-                // ),
               ],
             ),
           ],

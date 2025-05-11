@@ -1,9 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
-
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:http/http.dart';
 import 'package:pickpay/constants.dart';
 import 'package:pickpay/core/errors/failures.dart';
 import 'package:pickpay/core/services/database_services.dart';
@@ -34,10 +32,10 @@ class AuthRepoImplementation extends AuthRepo {
     User? user;
     try {
       user = await firebaseAuthService.createUserWithEmailAndPassword(
-        email: email, 
+        email: email,
         password: password,
       );
-      
+
       // Send email verification
       await user.sendEmailVerification();
 
@@ -72,14 +70,15 @@ class AuthRepoImplementation extends AuthRepo {
   ) async {
     try {
       final user = await firebaseAuthService.signInWithEmailAndPassword(
-        email: email, 
+        email: email,
         password: password,
       );
-      
+
       // Check if email is verified
       if (!user.emailVerified) {
         await FirebaseAuth.instance.signOut();
-        return left(ServerFailure('يرجى تأكيد بريدك الإلكتروني قبل تسجيل الدخول'));
+        return left(
+            ServerFailure('يرجى تأكيد بريدك الإلكتروني قبل تسجيل الدخول'));
       }
 
       // Sync Firebase user to backend
@@ -190,7 +189,8 @@ class AuthRepoImplementation extends AuthRepo {
   Future<Either<Failure, bool>> checkUserExists(String email) async {
     try {
       // Check in Firebase
-      final methods = await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
+      final methods =
+          await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
       if (methods.isNotEmpty) {
         return right(true);
       }
@@ -207,7 +207,8 @@ class AuthRepoImplementation extends AuthRepo {
       return right(exists);
     } catch (e) {
       log('Check user exists error: $e');
-      return left(ServerFailure('فشل التحقق من وجود المستخدم: ${e.toString()}'));
+      return left(
+          ServerFailure('فشل التحقق من وجود المستخدم: ${e.toString()}'));
     }
   }
 }

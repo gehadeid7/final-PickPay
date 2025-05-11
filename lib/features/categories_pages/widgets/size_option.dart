@@ -8,7 +8,7 @@ class SizeOptionSelector extends StatefulWidget {
   final bool showOutOfStock;
   final Map<String, bool>? sizeAvailability;
   final EdgeInsetsGeometry? padding;
-  final Color? selectedColor; // New parameter for selection color
+  final Color? selectedColor;
 
   const SizeOptionSelector({
     super.key,
@@ -19,7 +19,7 @@ class SizeOptionSelector extends StatefulWidget {
     this.showOutOfStock = true,
     this.sizeAvailability,
     this.padding,
-    this.selectedColor, // Added parameter
+    this.selectedColor, // Can override the default blue if needed
   });
 
   @override
@@ -48,12 +48,23 @@ class _SizeOptionSelectorState extends State<SizeOptionSelector> {
     return widget.sizeAvailability?[size] ?? true;
   }
 
+  Color _getSelectionColor(BuildContext context) {
+    // Use custom color if provided, otherwise use theme's primary (blue)
+    return widget.selectedColor ?? Theme.of(context).colorScheme.primary;
+  }
+
+  Color _getOutOfStockColor(BuildContext context) {
+    return Theme.of(context).colorScheme.error;
+  }
+
   @override
   Widget build(BuildContext context) {
     if (widget.availableSizes.isEmpty) return const SizedBox.shrink();
 
-    // Use custom color if provided, otherwise use a nice blue shade
-    final selectionColor = widget.selectedColor ?? Colors.blue.shade600;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDarkMode = theme.brightness == Brightness.dark;
+    final selectionColor = _getSelectionColor(context);
     // ignore: deprecated_member_use
     final selectionLightColor = selectionColor.withOpacity(0.15);
 
@@ -65,9 +76,13 @@ class _SizeOptionSelectorState extends State<SizeOptionSelector> {
             padding: const EdgeInsets.only(bottom: 8),
             child: Row(
               children: [
-                const Text(
+                Text(
                   'Size',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: colorScheme.onSurface,
+                  ),
                 ),
                 if (_selectedSize != null)
                   Padding(
@@ -76,7 +91,8 @@ class _SizeOptionSelectorState extends State<SizeOptionSelector> {
                       'Selected: $_selectedSize',
                       style: TextStyle(
                         fontSize: 14,
-                        color: Theme.of(context).hintColor,
+                        // ignore: deprecated_member_use
+                        color: colorScheme.onSurface.withOpacity(0.6),
                       ),
                     ),
                   ),
@@ -109,14 +125,18 @@ class _SizeOptionSelectorState extends State<SizeOptionSelector> {
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: isSelected
-                            ? selectionColor // Use our custom blue color
-                            : Colors.grey.shade300,
+                            ? selectionColor // Blue selection border
+                            : isDarkMode
+                                ? Colors.grey.shade700
+                                : Colors.grey.shade300,
                         width: isSelected ? 2 : 1,
                       ),
                       borderRadius: BorderRadius.circular(8),
                       color: isSelected
-                          ? selectionLightColor // Light blue background
-                          : Colors.transparent,
+                          ? selectionLightColor // Light blue background when selected
+                          : isDarkMode
+                              ? Colors.grey.shade800
+                              : Colors.transparent,
                     ),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
@@ -129,22 +149,15 @@ class _SizeOptionSelectorState extends State<SizeOptionSelector> {
                             color: isAvailable
                                 ? isSelected
                                     ? selectionColor // Blue text when selected
-                                    : Colors.black
-                                : Colors.grey,
+                                    : isDarkMode
+                                        ? Colors.white
+                                        : Colors.black
+                                : _getOutOfStockColor(context),
                             decoration: !isAvailable && widget.showOutOfStock
                                 ? TextDecoration.lineThrough
                                 : null,
                           ),
                         ),
-                        // if (!isAvailable && widget.showOutOfStock)
-                        //   const Text(
-                        //     'X',
-                        //     style: TextStyle(
-                        //       fontSize: 10,
-                        //       color: Colors.red,
-                        //       fontWeight: FontWeight.bold,
-                        //     ),
-                        //   ),
                       ],
                     ),
                   ),

@@ -1,20 +1,3 @@
-// import 'package:flutter/material.dart';
-// import 'package:pickpay/features/checkout/presentation/views/widgets/order_summary_widget.dart';
-
-// class PaymentSection extends StatelessWidget {
-//   const PaymentSection({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Column(
-//       children: [
-//         SizedBox(height: 24),
-//         OrderSummaryWidget(),
-//       ],
-//     );
-//   }
-// }
-// features/checkout/presentation/widgets/payment_method_selector.dart
 import 'package:flutter/material.dart';
 
 class PaymentMethodSelector extends StatefulWidget {
@@ -49,124 +32,194 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        DropdownButtonFormField<String>(
-          value: _selectedMethod,
-          items: const [
-            DropdownMenuItem(
-              value: 'Credit Card',
-              child: Text('Credit Card'),
-            ),
-            DropdownMenuItem(
-              value: 'Cash on Delivery',
-              child: Text('Cash on Delivery'),
-            ),
-          ],
-          onChanged: (value) {
-            setState(() {
-              _selectedMethod = value!;
-            });
-            widget.onMethodSelected(value!);
-          },
-          decoration: const InputDecoration(
-            border: OutlineInputBorder(),
-            contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          ),
-        ),
-        if (_selectedMethod == 'Credit Card') ...[
-          const SizedBox(height: 16),
-          Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                TextFormField(
-                  controller: _cardNumberController,
-                  decoration: const InputDecoration(
-                    labelText: 'Card Number',
-                    prefixIcon: Icon(Icons.credit_card),
-                  ),
-                  keyboardType: TextInputType.number,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter card number';
-                    }
-                    if (value.length < 16) {
-                      return 'Card number must be 16 digits';
-                    }
-                    return null;
-                  },
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return Card(
+      color: colorScheme.surface,
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            DropdownButtonFormField<String>(
+              value: _selectedMethod,
+              items: const [
+                DropdownMenuItem(
+                  value: 'Credit Card',
+                  child: Text('Credit Card'),
                 ),
-                const SizedBox(height: 12),
-                Row(
+                DropdownMenuItem(
+                  value: 'Cash on Delivery',
+                  child: Text('Cash on Delivery'),
+                ),
+              ],
+              onChanged: (value) {
+                setState(() {
+                  _selectedMethod = value!;
+                });
+                widget.onMethodSelected(value!);
+              },
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: colorScheme.outline),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: colorScheme.outline),
+                ),
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              ),
+              style: TextStyle(color: colorScheme.onSurface),
+              dropdownColor: colorScheme.surface,
+            ),
+            if (_selectedMethod == 'Credit Card') ...[
+              const SizedBox(height: 16),
+              Form(
+                key: _formKey,
+                child: Column(
                   children: [
-                    Expanded(
-                      child: TextFormField(
-                        controller: _expiryController,
-                        decoration: const InputDecoration(
-                          labelText: 'Expiry (MM/YY)',
-                          prefixIcon: Icon(Icons.calendar_today),
+                    TextFormField(
+                      controller: _cardNumberController,
+                      style: TextStyle(color: colorScheme.onSurface),
+                      decoration: InputDecoration(
+                        labelText: 'Card Number',
+                        labelStyle: TextStyle(
+                            // ignore: deprecated_member_use
+                            color: colorScheme.onSurface.withOpacity(0.7)),
+                        prefixIcon: Icon(Icons.credit_card,
+                            // ignore: deprecated_member_use
+                            color: colorScheme.onSurface.withOpacity(0.7)),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              // ignore: deprecated_member_use
+                              color: colorScheme.outline.withOpacity(0.5)),
                         ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter expiry date';
-                          }
-                          if (!RegExp(r'^(0[1-9]|1[0-2])\/?([0-9]{2})$')
-                              .hasMatch(value)) {
-                            return 'Invalid format (MM/YY)';
-                          }
-                          return null;
-                        },
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: colorScheme.primary),
+                        ),
                       ),
+                      keyboardType: TextInputType.number,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter card number';
+                        }
+                        if (value.length < 16) {
+                          return 'Card number must be 16 digits';
+                        }
+                        return null;
+                      },
                     ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: TextFormField(
-                        controller: _cvvController,
-                        decoration: const InputDecoration(
-                          labelText: 'CVV',
-                          prefixIcon: Icon(Icons.lock),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            controller: _expiryController,
+                            style: TextStyle(color: colorScheme.onSurface),
+                            decoration: InputDecoration(
+                              labelText: 'Expiry (MM/YY)',
+                              labelStyle: TextStyle(
+                                  color:
+                                      // ignore: deprecated_member_use
+                                      colorScheme.onSurface.withOpacity(0.7)),
+                              prefixIcon: Icon(Icons.calendar_today,
+                                  color:
+                                      // ignore: deprecated_member_use
+                                      colorScheme.onSurface.withOpacity(0.7)),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color:
+                                        // ignore: deprecated_member_use
+                                        colorScheme.outline.withOpacity(0.5)),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: colorScheme.primary),
+                              ),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter expiry date';
+                              }
+                              if (!RegExp(r'^(0[1-9]|1[0-2])\/?([0-9]{2})$')
+                                  .hasMatch(value)) {
+                                return 'Invalid format (MM/YY)';
+                              }
+                              return null;
+                            },
+                          ),
                         ),
-                        keyboardType: TextInputType.number,
-                        obscureText: true,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter CVV';
-                          }
-                          if (value.length < 3) {
-                            return 'CVV must be 3-4 digits';
-                          }
-                          return null;
-                        },
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: TextFormField(
+                            controller: _cvvController,
+                            style: TextStyle(color: colorScheme.onSurface),
+                            decoration: InputDecoration(
+                              labelText: 'CVV',
+                              labelStyle: TextStyle(
+                                  color:
+                                      // ignore: deprecated_member_use
+                                      colorScheme.onSurface.withOpacity(0.7)),
+                              prefixIcon: Icon(Icons.lock,
+                                  color:
+                                      // ignore: deprecated_member_use
+                                      colorScheme.onSurface.withOpacity(0.7)),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color:
+                                        // ignore: deprecated_member_use
+                                        colorScheme.outline.withOpacity(0.5)),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: colorScheme.primary),
+                              ),
+                            ),
+                            keyboardType: TextInputType.number,
+                            obscureText: true,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter CVV';
+                              }
+                              if (value.length < 3) {
+                                return 'CVV must be 3-4 digits';
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    ElevatedButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          widget.onCardDetailsSaved(
+                            _cardNumberController.text,
+                            _expiryController.text,
+                            _cvvController.text,
+                          );
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: colorScheme.primary,
+                        foregroundColor: colorScheme.onPrimary,
+                        minimumSize: const Size(double.infinity, 48),
                       ),
+                      child: const Text('Save Card Details'),
                     ),
                   ],
                 ),
-                const SizedBox(height: 12),
-                ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      widget.onCardDetailsSaved(
-                        _cardNumberController.text,
-                        _expiryController.text,
-                        _cvvController.text,
-                      );
-                    }
-                  },
-                  style: ButtonStyle(
-                    backgroundColor:
-                        WidgetStateProperty.all<Color>(Colors.blue),
-                    foregroundColor:
-                        WidgetStateProperty.all<Color>(Colors.white),
-                  ),
-                  child: const Text('Save Card Details'),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ],
+              ),
+            ],
+          ],
+        ),
+      ),
     );
   }
 }

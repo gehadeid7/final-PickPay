@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pickpay/core/utils/app_colors.dart';
 import 'package:pickpay/core/utils/app_images.dart';
 
 class CustomCheckbox extends StatelessWidget {
@@ -11,33 +10,37 @@ class CustomCheckbox extends StatelessWidget {
 
   final bool isChecked;
   final ValueChanged<bool> onChecked;
+
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return GestureDetector(
-      onTap: () {
-        onChecked(!isChecked);
-      },
+      onTap: () => onChecked(!isChecked),
       child: AnimatedContainer(
+        duration: const Duration(milliseconds: 100),
         width: 24,
         height: 24,
-        duration: Duration(milliseconds: 100),
-        decoration: ShapeDecoration(
-          color: isChecked ? AppColors.primaryColor : Colors.white,
-          shape: RoundedRectangleBorder(
-            side: BorderSide(
-              width: 1.50,
-              color: isChecked ? Colors.transparent : Colors.grey,
-            ),
-            borderRadius: BorderRadius.circular(8),
+        decoration: BoxDecoration(
+          color: isChecked ? colorScheme.primary : colorScheme.surface,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            width: 1.5,
+            color: isChecked
+                ? Colors.transparent
+                : colorScheme.outline.withOpacity(0.5),
           ),
         ),
-        child:
-            isChecked
-                ? Padding(
-                  padding: const EdgeInsets.all(3.0),
-                  child: Image.asset(Assets.checkIcon, color: Colors.white),
-                )
-                : SizedBox(),
+        child: isChecked
+            ? Padding(
+                padding: const EdgeInsets.all(3.0),
+                child: Image.asset(
+                  Assets.checkIcon,
+                  color: colorScheme.onPrimary,
+                ),
+              )
+            : const SizedBox(),
       ),
     );
   }

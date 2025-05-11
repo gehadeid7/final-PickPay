@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pickpay/core/utils/app_colors.dart';
 import 'package:pickpay/core/utils/app_text_styles.dart';
 import 'package:pickpay/core/widgets/custom_app.dart';
 import 'package:pickpay/core/widgets/custom_button.dart';
@@ -25,9 +24,7 @@ class _CheckoutViewState extends State<CheckoutView> {
   late ShippingInfo _shippingInfo;
   String _paymentMethod = 'Credit Card';
   String _cardNumber = '';
-  // ignore: unused_field
   String _expiryDate = '';
-  // ignore: unused_field
   String _cvv = '';
 
   @override
@@ -46,14 +43,20 @@ class _CheckoutViewState extends State<CheckoutView> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final cartCubit = context.read<CartCubit>();
     final cartState = cartCubit.state;
 
     if (cartState is! CartLoaded || cartState.items.isEmpty) {
       return Scaffold(
         appBar: buildAppBar(context: context, title: 'Checkout'),
-        body: const Center(
-          child: Text('Your cart is empty'),
+        body: Center(
+          child: Text(
+            'Your cart is empty',
+            style: TextStyles.regular13.copyWith(
+              color: theme.colorScheme.onBackground,
+            ),
+          ),
         ),
       );
     }
@@ -66,13 +69,11 @@ class _CheckoutViewState extends State<CheckoutView> {
 
     return Scaffold(
       appBar: buildAppBar(context: context, title: 'Checkout'),
+      backgroundColor: theme.colorScheme.background,
       body: BlocListener<CheckoutCubit, CheckoutState>(
         listener: (context, state) {
           if (state is CheckoutSuccess) {
-            // Clear cart on successful checkout
             cartCubit.clearCart();
-
-            // Navigate to order confirmation
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
@@ -81,7 +82,10 @@ class _CheckoutViewState extends State<CheckoutView> {
             );
           } else if (state is CheckoutError) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: theme.colorScheme.error,
+              ),
             );
           }
         },
@@ -92,20 +96,15 @@ class _CheckoutViewState extends State<CheckoutView> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Order Summary
-                _buildSectionTitle('Order Summary'),
-                _buildOrderSummary(items, total),
+                _buildSectionTitle('Order Summary', theme),
+                _buildOrderSummary(items, total, theme),
                 const SizedBox(height: 24),
-
-                // Shipping Information
-                _buildSectionTitle('Shipping Information'),
+                _buildSectionTitle('Shipping Information', theme),
                 ShippingInfoForm(
                   onSaved: (info) => _shippingInfo = info,
                 ),
                 const SizedBox(height: 24),
-
-                // Payment Method
-                _buildSectionTitle('Payment Method'),
+                _buildSectionTitle('Payment Method', theme),
                 PaymentMethodSelector(
                   onMethodSelected: (method) => _paymentMethod = method,
                   onCardDetailsSaved: (number, expiry, cvv) {
@@ -115,8 +114,6 @@ class _CheckoutViewState extends State<CheckoutView> {
                   },
                 ),
                 const SizedBox(height: 32),
-
-                // Checkout Button
                 BlocBuilder<CheckoutCubit, CheckoutState>(
                   builder: (context, state) {
                     return CustomButton(
@@ -143,19 +140,22 @@ class _CheckoutViewState extends State<CheckoutView> {
     );
   }
 
-  Widget _buildSectionTitle(String title) {
+  Widget _buildSectionTitle(String title, ThemeData theme) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Text(
         title,
-        style: TextStyles.bold16.copyWith(color: AppColors.primaryColor),
+        style: TextStyles.bold16.copyWith(
+          color: theme.colorScheme.onBackground,
+        ),
       ),
     );
   }
 
-  Widget _buildOrderSummary(List<CartItemModel> items, double total) {
+  Widget _buildOrderSummary(
+      List<CartItemModel> items, double total, ThemeData theme) {
     return Card(
-      color: const Color.fromARGB(255, 243, 243, 243),
+      color: theme.cardColor,
       elevation: 2,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
@@ -171,12 +171,16 @@ class _CheckoutViewState extends State<CheckoutView> {
                       Expanded(
                         child: Text(
                           '${item.product.title} x ${item.quantity}',
-                          style: TextStyles.regular13,
+                          style: TextStyles.regular13.copyWith(
+                            color: theme.colorScheme.onSurface,
+                          ),
                         ),
                       ),
                       Text(
                         'EGP ${(item.product.price * item.quantity).toStringAsFixed(2)}',
-                        style: TextStyles.semiBold11,
+                        style: TextStyles.semiBold11.copyWith(
+                          color: theme.colorScheme.onSurface,
+                        ),
                       ),
                     ],
                   ),
@@ -187,13 +191,15 @@ class _CheckoutViewState extends State<CheckoutView> {
                 Expanded(
                   child: Text(
                     'Total',
-                    style: TextStyles.bold16,
+                    style: TextStyles.bold16.copyWith(
+                      color: theme.colorScheme.onBackground,
+                    ),
                   ),
                 ),
                 Text(
                   'EGP ${total.toStringAsFixed(2)}',
                   style: TextStyles.bold16.copyWith(
-                    color: AppColors.primaryColor,
+                    color: theme.colorScheme.primary,
                   ),
                 ),
               ],
@@ -213,7 +219,6 @@ class _CheckoutViewState extends State<CheckoutView> {
 
     _formKey.currentState!.save();
 
-    // Simulate payment processing
     final paymentInfo = PaymentInfo(
       method: _paymentMethod,
       cardLastFour: _cardNumber.length > 4

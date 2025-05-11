@@ -1,9 +1,6 @@
-// features/checkout/presentation/views/order_confirmation_view.dart
 import 'package:flutter/material.dart';
-import 'package:pickpay/core/utils/app_colors.dart';
 import 'package:pickpay/core/utils/app_text_styles.dart';
 import 'package:pickpay/core/widgets/custom_app.dart';
-import 'package:pickpay/core/widgets/custom_button.dart';
 import 'package:pickpay/features/checkout/domain/models/checkout_model.dart';
 import 'package:pickpay/features/home/presentation/views/home_view.dart';
 
@@ -14,14 +11,19 @@ class OrderConfirmationView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return Scaffold(
       appBar: buildAppBar(context: context, title: 'Order Confirmation'),
+      // ignore: deprecated_member_use
+      backgroundColor: colorScheme.background,
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Icon(
+            Icon(
               Icons.check_circle,
               color: Colors.green,
               size: 80,
@@ -29,25 +31,40 @@ class OrderConfirmationView extends StatelessWidget {
             const SizedBox(height: 16),
             Text(
               'Thank you for your order!',
-              style: TextStyles.bold19.copyWith(color: AppColors.primaryColor),
+              style: TextStyles.bold19.copyWith(color: colorScheme.primary),
             ),
             const SizedBox(height: 8),
             Text(
               'Your order has been placed successfully',
-              style: TextStyles.regular16,
+              style:
+                  TextStyles.regular16.copyWith(color: colorScheme.onSurface),
             ),
             const SizedBox(height: 24),
-            _buildOrderInfoCard(),
+            _buildOrderInfoCard(context),
             const SizedBox(height: 24),
-            _buildShippingInfoCard(),
+            _buildShippingInfoCard(context),
             const SizedBox(height: 24),
-            _buildPaymentInfoCard(),
+            _buildPaymentInfoCard(context),
             const SizedBox(height: 32),
-            CustomButton(
-              onPressed: () {
-                Navigator.of(context).pushReplacementNamed(HomeView.routeName);
-              },
-              buttonText: 'Continue Shopping',
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context)
+                      .pushReplacementNamed(HomeView.routeName);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: colorScheme.primary,
+                  foregroundColor: colorScheme.onPrimary,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                ),
+                child: Text(
+                  'Continue Shopping',
+                  style: TextStyles.semiBold13.copyWith(
+                    color: colorScheme.onPrimary,
+                  ),
+                ),
+              ),
             ),
           ],
         ),
@@ -55,9 +72,12 @@ class OrderConfirmationView extends StatelessWidget {
     );
   }
 
-  Widget _buildOrderInfoCard() {
+  Widget _buildOrderInfoCard(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return Card(
-      color: const Color.fromARGB(255, 243, 243, 243),
+      color: colorScheme.surface,
       elevation: 2,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
@@ -69,19 +89,23 @@ class OrderConfirmationView extends StatelessWidget {
           children: [
             Text(
               'Order Details',
-              style: TextStyles.bold16.copyWith(color: AppColors.primaryColor),
+              style: TextStyles.bold16.copyWith(color: colorScheme.primary),
             ),
             const SizedBox(height: 12),
-            _buildInfoRow('Order Number', order.id),
-            _buildInfoRow('Order Date',
-                '${order.date.day}/${order.date.month}/${order.date.year}'),
-            _buildInfoRow('Status', order.status),
+            _buildInfoRow('Order Number', order.id, context),
+            _buildInfoRow(
+                'Order Date',
+                '${order.date.day}/${order.date.month}/${order.date.year}',
+                context),
+            _buildInfoRow('Status', order.status, context),
             const SizedBox(height: 12),
-            const Divider(),
+            // ignore: deprecated_member_use
+            Divider(color: colorScheme.outline.withOpacity(0.5)),
             const SizedBox(height: 12),
             Text(
               'Items (${order.items.length})',
-              style: TextStyles.semiBold13,
+              style:
+                  TextStyles.semiBold13.copyWith(color: colorScheme.onSurface),
             ),
             const SizedBox(height: 8),
             ...order.items.map((item) => Padding(
@@ -91,32 +115,34 @@ class OrderConfirmationView extends StatelessWidget {
                       Expanded(
                         child: Text(
                           '${item.product.title} x ${item.quantity}',
-                          style: TextStyles.regular13,
+                          style: TextStyles.regular13
+                              .copyWith(color: colorScheme.onSurface),
                         ),
                       ),
                       Text(
                         'EGP ${(item.product.price * item.quantity).toStringAsFixed(2)}',
-                        style: TextStyles.semiBold13,
+                        style: TextStyles.semiBold13
+                            .copyWith(color: colorScheme.onSurface),
                       ),
                     ],
                   ),
                 )),
             const SizedBox(height: 12),
-            const Divider(),
+            // ignore: deprecated_member_use
+            Divider(color: colorScheme.outline.withOpacity(0.5)),
             const SizedBox(height: 12),
             Row(
               children: [
                 Expanded(
                   child: Text(
                     'Total',
-                    style: TextStyles.bold16,
+                    style: TextStyles.bold16
+                        .copyWith(color: colorScheme.onSurface),
                   ),
                 ),
                 Text(
                   'EGP ${order.total.toStringAsFixed(2)}',
-                  style: TextStyles.bold16.copyWith(
-                    color: AppColors.primaryColor,
-                  ),
+                  style: TextStyles.bold16.copyWith(color: colorScheme.primary),
                 ),
               ],
             ),
@@ -126,9 +152,12 @@ class OrderConfirmationView extends StatelessWidget {
     );
   }
 
-  Widget _buildShippingInfoCard() {
+  Widget _buildShippingInfoCard(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return Card(
-      color: const Color.fromARGB(255, 243, 243, 243),
+      color: colorScheme.surface,
       elevation: 2,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
@@ -140,23 +169,26 @@ class OrderConfirmationView extends StatelessWidget {
           children: [
             Text(
               'Shipping Information',
-              style: TextStyles.bold16.copyWith(color: AppColors.primaryColor),
+              style: TextStyles.bold16.copyWith(color: colorScheme.primary),
             ),
             const SizedBox(height: 12),
-            _buildInfoRow('Name', order.shippingInfo.name),
-            _buildInfoRow('Address', order.shippingInfo.address),
-            _buildInfoRow('City', order.shippingInfo.city),
-            _buildInfoRow('Phone', order.shippingInfo.phone),
-            _buildInfoRow('Email', order.shippingInfo.email),
+            _buildInfoRow('Name', order.shippingInfo.name, context),
+            _buildInfoRow('Address', order.shippingInfo.address, context),
+            _buildInfoRow('City', order.shippingInfo.city, context),
+            _buildInfoRow('Phone', order.shippingInfo.phone, context),
+            _buildInfoRow('Email', order.shippingInfo.email, context),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildPaymentInfoCard() {
+  Widget _buildPaymentInfoCard(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return Card(
-      color: const Color.fromARGB(255, 243, 243, 243),
+      color: colorScheme.surface,
       elevation: 2,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
@@ -168,14 +200,15 @@ class OrderConfirmationView extends StatelessWidget {
           children: [
             Text(
               'Payment Information',
-              style: TextStyles.bold16.copyWith(color: AppColors.primaryColor),
+              style: TextStyles.bold16.copyWith(color: colorScheme.primary),
             ),
             const SizedBox(height: 12),
-            _buildInfoRow('Method', order.paymentInfo.method),
+            _buildInfoRow('Method', order.paymentInfo.method, context),
             if (order.paymentInfo.method == 'Credit Card') ...[
               _buildInfoRow('Card Number',
-                  '•••• •••• •••• ${order.paymentInfo.cardLastFour}'),
-              _buildInfoRow('Transaction ID', order.paymentInfo.transactionId),
+                  '•••• •••• •••• ${order.paymentInfo.cardLastFour}', context),
+              _buildInfoRow(
+                  'Transaction ID', order.paymentInfo.transactionId, context),
             ],
           ],
         ),
@@ -183,7 +216,10 @@ class OrderConfirmationView extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoRow(String label, String value) {
+  Widget _buildInfoRow(String label, String value, BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Row(
@@ -193,15 +229,17 @@ class OrderConfirmationView extends StatelessWidget {
             width: 100,
             child: Text(
               label,
-              style:
-                  TextStyles.semiBold13.copyWith(color: Colors.grey.shade600),
+              style: TextStyles.semiBold13
+                  // ignore: deprecated_member_use
+                  .copyWith(color: colorScheme.onSurface.withOpacity(0.7)),
             ),
           ),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
               value,
-              style: TextStyles.regular13,
+              style:
+                  TextStyles.regular13.copyWith(color: colorScheme.onSurface),
             ),
           ),
         ],

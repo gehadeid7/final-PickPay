@@ -18,11 +18,13 @@ class PageViewItem extends StatelessWidget {
   final String image, backgroundimage;
   final String subTitle;
   final Widget title;
-
   final bool isVisible;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final textColor = theme.colorScheme.onBackground;
+
     return Column(
       children: [
         SizedBox(
@@ -39,7 +41,6 @@ class PageViewItem extends StatelessWidget {
                 right: 0,
                 child: Image.asset(image, width: 200, height: 200),
               ),
-              // Positioned "Skip" text at top-right corner
               Positioned(
                 top: 15,
                 right: 20,
@@ -48,13 +49,14 @@ class PageViewItem extends StatelessWidget {
                   child: GestureDetector(
                     onTap: () {
                       Prefs.setBool(kIsOnBoardingViewSeen, true);
-                      Navigator.of(
-                        context,
-                      ).pushReplacementNamed(SigninView.routeName);
+                      Navigator.of(context)
+                          .pushReplacementNamed(SigninView.routeName);
                     },
                     child: Text(
                       'Skip',
-                      style: TextStyles.semiBold16.copyWith(color: Colors.grey),
+                      style: TextStyles.semiBold16.copyWith(
+                        color: theme.colorScheme.onSurface.withOpacity(0.7),
+                      ),
                     ),
                   ),
                 ),
@@ -62,16 +64,19 @@ class PageViewItem extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(height: 24),
-        title,
-        SizedBox(height: 24),
+        const SizedBox(height: 24),
+        DefaultTextStyle.merge(
+          style: TextStyle(color: textColor),
+          child: title,
+        ),
+        const SizedBox(height: 24),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 40),
           child: Text(
             subTitle,
             textAlign: TextAlign.center,
             style: TextStyles.semiBold16.copyWith(
-              color: const Color.fromARGB(255, 83, 83, 83),
+              color: theme.colorScheme.onSurface.withOpacity(0.7),
             ),
           ),
         ),

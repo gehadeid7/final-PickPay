@@ -13,6 +13,9 @@ class CartViewBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+
     return Scaffold(
       appBar: buildAppBar(context: context, title: 'Your Cart'),
       body: BlocConsumer<CartCubit, CartState>(
@@ -28,10 +31,13 @@ class CartViewBody extends StatelessWidget {
         builder: (context, state) {
           if (state is CartInitial ||
               (state is CartLoaded && state.items.isEmpty)) {
-            return const Center(
+            return Center(
               child: Text(
                 "Your cart is empty.",
-                style: TextStyle(fontSize: 18, color: Colors.grey),
+                style: TextStyle(
+                  fontSize: 18,
+                  color: isDarkMode ? Colors.grey[400] : Colors.grey,
+                ),
               ),
             );
           }
@@ -59,13 +65,19 @@ class CartViewBody extends StatelessWidget {
                           ? "You have 1 item in your cart"
                           : "You have $totalItems items in your cart",
                       style: TextStyles.semiBold16.copyWith(
-                        color: Colors.grey.shade600,
+                        color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
                       ),
                     ),
                   ],
                 ),
               ),
-              const Divider(height: 1, thickness: 1, indent: 16, endIndent: 16),
+              Divider(
+                height: 1,
+                thickness: 1,
+                indent: 16,
+                endIndent: 16,
+                color: isDarkMode ? Colors.grey[700] : Colors.grey[300],
+              ),
 
               // Product List
               Expanded(
@@ -88,15 +100,17 @@ class CartViewBody extends StatelessWidget {
                             horizontal: 16, vertical: 8),
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color:
+                              isDarkMode ? theme.cardTheme.color : Colors.white,
                           borderRadius: BorderRadius.circular(12),
                           boxShadow: [
                             BoxShadow(
-                              // ignore: deprecated_member_use
-                              color: Colors.grey.withOpacity(0.4),
-                              spreadRadius: 2,
-                              blurRadius: 6,
-                              offset: const Offset(0, 3),
+                              color: Colors.black
+                                  // ignore: deprecated_member_use
+                                  .withOpacity(isDarkMode ? 0.2 : 0.1),
+                              spreadRadius: 1,
+                              blurRadius: 4,
+                              offset: const Offset(0, 2),
                             ),
                           ],
                         ),
@@ -120,9 +134,15 @@ class CartViewBody extends StatelessWidget {
                                             Container(
                                       width: 80,
                                       height: 80,
-                                      color: Colors.grey.shade200,
-                                      child:
-                                          const Icon(Icons.image_not_supported),
+                                      color: isDarkMode
+                                          ? Colors.grey[800]
+                                          : Colors.grey.shade200,
+                                      child: Icon(
+                                        Icons.image_not_supported,
+                                        color: isDarkMode
+                                            ? Colors.grey[400]
+                                            : Colors.grey,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -131,13 +151,21 @@ class CartViewBody extends StatelessWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(item.product.title ?? "Unnamed Product",
-                                      style: TextStyles.bold16),
+                                  Text(
+                                    item.product.title ?? "Unnamed Product",
+                                    style: TextStyles.bold16.copyWith(
+                                      color: isDarkMode
+                                          ? Colors.white
+                                          : Colors.black,
+                                    ),
+                                  ),
                                   const SizedBox(height: 4),
                                   Text(
-                                      "Price: EGP ${item.product.price?.toStringAsFixed(2) ?? '0.00'}",
-                                      style: TextStyles.semiBold13.copyWith(
-                                          color: AppColors.primaryColor)),
+                                    "Price: EGP ${item.product.price?.toStringAsFixed(2) ?? '0.00'}",
+                                    style: TextStyles.semiBold13.copyWith(
+                                      color: AppColors.primaryColor,
+                                    ),
+                                  ),
                                   const SizedBox(height: 10),
                                 ],
                               ),
@@ -148,7 +176,7 @@ class CartViewBody extends StatelessWidget {
                                 Padding(
                                   padding: const EdgeInsets.only(bottom: 5),
                                   child: IconButton(
-                                    icon: const Icon(Icons.delete,
+                                    icon: Icon(Icons.delete,
                                         color: Colors.redAccent),
                                     onPressed: () {
                                       context
@@ -161,8 +189,10 @@ class CartViewBody extends StatelessWidget {
                                   height: 30,
                                   width: 30,
                                   decoration: BoxDecoration(
-                                    color: const Color.fromARGB(
-                                        255, 183, 183, 183),
+                                    color: isDarkMode
+                                        ? Colors.grey[700]
+                                        : const Color.fromARGB(
+                                            255, 183, 183, 183),
                                     borderRadius: BorderRadius.circular(30),
                                     boxShadow: [
                                       BoxShadow(
@@ -187,8 +217,14 @@ class CartViewBody extends StatelessWidget {
                                   ),
                                 ),
                                 const SizedBox(width: 10),
-                                Text("${item.quantity}",
-                                    style: TextStyles.bold16),
+                                Text(
+                                  "${item.quantity}",
+                                  style: TextStyles.bold16.copyWith(
+                                    color: isDarkMode
+                                        ? Colors.white
+                                        : Colors.black,
+                                  ),
+                                ),
                                 const SizedBox(width: 10),
                                 Container(
                                   height: 30,
@@ -237,20 +273,25 @@ class CartViewBody extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   decoration: BoxDecoration(
-                    color: const Color.fromARGB(83, 217, 217, 217),
+                    color: isDarkMode
+                        // ignore: deprecated_member_use
+                        ? Colors.grey[800]!.withOpacity(0.5)
+                        : const Color.fromARGB(83, 217, 217, 217),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text.rich(
                     TextSpan(
                       style: TextStyles.bold16.copyWith(
-                        color: const Color.fromARGB(255, 69, 69, 69),
+                        color: isDarkMode ? Colors.white : Colors.black,
                       ),
                       children: [
                         const TextSpan(text: "Subtotal"),
                         const WidgetSpan(child: SizedBox(width: 20)),
                         TextSpan(
                           text: "EGP ${totalPrice.toStringAsFixed(2)}",
-                          style: const TextStyle(color: Colors.black),
+                          style: TextStyle(
+                            color: isDarkMode ? Colors.white : Colors.black,
+                          ),
                         ),
                       ],
                     ),
@@ -261,11 +302,12 @@ class CartViewBody extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: CustomButton(
-                    onPressed: () {
-                      Navigator.of(context)
-                          .pushReplacementNamed(CheckoutView.routeName);
-                    },
-                    buttonText: 'Checkout'),
+                  onPressed: () {
+                    Navigator.of(context)
+                        .pushReplacementNamed(CheckoutView.routeName);
+                  },
+                  buttonText: 'Checkout',
+                ),
               ),
               const SizedBox(height: 10),
             ],
@@ -276,8 +318,14 @@ class CartViewBody extends StatelessWidget {
   }
 
   void _showMessage(BuildContext context, String message) {
+    final theme = Theme.of(context);
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), duration: const Duration(seconds: 2)),
+      SnackBar(
+        content: Text(message),
+        duration: const Duration(seconds: 2),
+        backgroundColor:
+            theme.brightness == Brightness.dark ? Colors.grey[800] : null,
+      ),
     );
   }
 }

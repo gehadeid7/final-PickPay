@@ -9,6 +9,7 @@ class CustomTextFormField extends StatelessWidget {
     this.suffixicon,
     this.onSaved,
     this.obsecureText = false,
+    this.validator,
   });
 
   final String hintText;
@@ -16,28 +17,46 @@ class CustomTextFormField extends StatelessWidget {
   final Widget? suffixicon;
   final void Function(String?)? onSaved;
   final bool obsecureText;
+  final String? Function(String?)? validator;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+
     return TextFormField(
       obscureText: obsecureText,
       onSaved: onSaved,
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'This feild is required';
-        }
-        return null;
-      },
+      validator: validator ??
+          (value) {
+            if (value == null || value.isEmpty) {
+              return 'This field is required';
+            }
+            return null;
+          },
       keyboardType: textInputType,
+      style: TextStyle(color: theme.colorScheme.onSurface),
       decoration: InputDecoration(
         suffixIcon: suffixicon,
         hintText: hintText,
-        hintStyle: TextStyles.bold13.copyWith(color: Colors.grey),
+        hintStyle: TextStyles.bold13.copyWith(
+          color: isDarkMode
+              ? theme.colorScheme.onSurface.withOpacity(0.5)
+              : Colors.grey,
+        ),
         filled: true,
-        fillColor: const Color(0xFFF9FAFA),
-        border: buildBorder(const Color(0xFFE6E9E9)),
-        enabledBorder: buildBorder(const Color(0xFFE6E9E9)),
-        focusedBorder: buildBorder(Colors.blueAccent),
+        fillColor: isDarkMode
+            ? theme.colorScheme.surfaceVariant
+            : const Color(0xFFF9FAFA),
+        border: buildBorder(theme.colorScheme.outline),
+        enabledBorder: buildBorder(theme.colorScheme.outline),
+        focusedBorder: buildBorder(theme.colorScheme.primary),
+        errorBorder: buildBorder(theme.colorScheme.error),
+        focusedErrorBorder: buildBorder(theme.colorScheme.error),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 14,
+        ),
       ),
     );
   }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class ColorOptionSelector extends StatefulWidget {
   final List<String> colorOptions;
-  final String? selectedColor; // Currently selected color value
+  final String? selectedColor;
   final ValueChanged<String>? onColorSelected;
   final bool showLabel;
   final bool showOutOfStock;
@@ -11,7 +11,7 @@ class ColorOptionSelector extends StatefulWidget {
   final Map<String, Color>? colorValues;
   final double swatchSize;
   final EdgeInsetsGeometry? padding;
-  final Color? selectionColor; // Color for selection highlight (renamed)
+  final Color? selectionColor;
   final Color? outOfStockColor;
   final double selectedBorderWidth;
   final BorderRadius? borderRadius;
@@ -30,7 +30,7 @@ class ColorOptionSelector extends StatefulWidget {
     this.colorValues,
     this.swatchSize = 24.0,
     this.padding,
-    this.selectionColor, // Renamed parameter
+    this.selectionColor,
     this.outOfStockColor,
     this.selectedBorderWidth = 2.0,
     this.borderRadius,
@@ -70,10 +70,9 @@ class _ColorOptionSelectorState extends State<ColorOptionSelector> {
   }
 
   Color _getSelectionColor() {
-    return widget.selectionColor ?? Colors.blue.shade600; // Updated reference
+    return widget.selectionColor ?? Theme.of(context).colorScheme.primary;
   }
 
-  // ignore: unused_element
   Color _getOutOfStockColor(BuildContext context) {
     return widget.outOfStockColor ?? Theme.of(context).colorScheme.error;
   }
@@ -82,11 +81,12 @@ class _ColorOptionSelectorState extends State<ColorOptionSelector> {
   Widget build(BuildContext context) {
     if (widget.colorOptions.isEmpty) return const SizedBox.shrink();
 
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDarkMode = theme.brightness == Brightness.dark;
     final selectionColor = _getSelectionColor();
     // ignore: deprecated_member_use
     final selectionLightColor = selectionColor.withOpacity(0.1);
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -147,14 +147,20 @@ class _ColorOptionSelectorState extends State<ColorOptionSelector> {
                             vertical: 12, horizontal: 16),
                     decoration: BoxDecoration(
                       border: Border.all(
-                        color:
-                            isSelected ? selectionColor : Colors.grey.shade300,
+                        color: isSelected
+                            ? selectionColor
+                            : isDarkMode
+                                ? Colors.grey.shade700
+                                : Colors.grey.shade300,
                         width: isSelected ? widget.selectedBorderWidth : 1.0,
                       ),
                       borderRadius:
                           widget.borderRadius ?? BorderRadius.circular(8),
-                      color:
-                          isSelected ? selectionLightColor : Colors.transparent,
+                      color: isSelected
+                          ? selectionLightColor
+                          : isDarkMode
+                              ? Colors.grey.shade800
+                              : Colors.transparent,
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -170,7 +176,9 @@ class _ColorOptionSelectorState extends State<ColorOptionSelector> {
                               border: Border.all(
                                 color: isSelected
                                     ? selectionColor
-                                    : Colors.grey.shade300,
+                                    : isDarkMode
+                                        ? Colors.grey.shade700
+                                        : Colors.grey.shade300,
                                 width: 1,
                               ),
                             ),
@@ -183,22 +191,15 @@ class _ColorOptionSelectorState extends State<ColorOptionSelector> {
                             color: isAvailable
                                 ? isSelected
                                     ? selectionColor
-                                    : Colors.black
-                                : Colors.grey,
+                                    : isDarkMode
+                                        ? Colors.white
+                                        : Colors.black
+                                : _getOutOfStockColor(context),
                             decoration: !isAvailable && widget.showOutOfStock
                                 ? TextDecoration.lineThrough
                                 : null,
                           ),
                         ),
-                        // if (!isAvailable && widget.showOutOfStock)
-                        //   const Text(
-                        //     'X',
-                        //     style: TextStyle(
-                        //       fontSize: 12,
-                        //       color: Colors.red,
-                        //       fontWeight: FontWeight.bold,
-                        //     ),
-                        //   ),
                       ],
                     ),
                   ),
