@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pickpay/core/utils/app_images.dart';
-import 'package:pickpay/core/widgets/custom_app.dart';
+import 'package:pickpay/core/widgets/build_appbar.dart';
 import 'package:pickpay/features/auth/presentation/views/signin_view.dart';
 import 'package:pickpay/features/home/presentation/views/cart_view.dart';
 import 'package:pickpay/features/home/presentation/views/wishlist_view.dart';
@@ -25,7 +25,14 @@ class AccountViewBody extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: isDarkMode ? Colors.grey[900] : Colors.white,
-      appBar: buildAppBar(context: context, title: 'Account'),
+      appBar: buildAppBar(
+        context: context,
+        title: 'Account',
+        onBackPressed: () {
+          // Add any custom logic if needed before popping
+          Navigator.pushNamed(context, '/main-navigation');
+        },
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Column(

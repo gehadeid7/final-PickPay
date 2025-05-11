@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pickpay/core/services/get_it_service.dart';
-import 'package:pickpay/core/widgets/custom_app.dart';
+import 'package:pickpay/core/widgets/build_appbar.dart';
 import 'package:pickpay/features/auth/domain/repos/auth_repo.dart';
 import 'package:pickpay/features/auth/presentation/cubits/signup_cubits/signup_cubit.dart';
 

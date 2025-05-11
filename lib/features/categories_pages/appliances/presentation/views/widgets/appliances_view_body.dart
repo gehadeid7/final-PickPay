@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pickpay/core/widgets/custom_app.dart';
+import 'package:pickpay/core/widgets/build_appbar.dart';
 import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product1.dart';
 import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product10.dart';
 import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product11.dart';

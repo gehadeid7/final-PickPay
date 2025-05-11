@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pickpay/constants.dart';
-import 'package:pickpay/core/widgets/custom_app.dart';
+import 'package:pickpay/core/widgets/build_appbar.dart';
 import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product1.dart';
 import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product10.dart';
 import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product11.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pickpay/core/utils/app_text_styles.dart';
-import 'package:pickpay/core/widgets/custom_app.dart';
+import 'package:pickpay/core/widgets/build_appbar.dart';
 import 'package:pickpay/features/checkout/domain/models/checkout_model.dart';
 import 'package:pickpay/features/home/presentation/views/home_view.dart';
 

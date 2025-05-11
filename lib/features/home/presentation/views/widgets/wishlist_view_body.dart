@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pickpay/core/utils/app_colors.dart';
-import 'package:pickpay/core/widgets/custom_app.dart';
+import 'package:pickpay/core/widgets/build_appbar.dart';
 import 'package:pickpay/features/categories_pages/models/product_model.dart';
 import 'package:pickpay/features/categories_pages/products_views/product_detail_view.dart';
 import 'package:pickpay/features/home/presentation/cubits/wishlist_cubits/wishlist_cubit.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pickpay/core/utils/app_text_styles.dart';
-import 'package:pickpay/core/widgets/custom_app.dart';
+import 'package:pickpay/core/widgets/build_appbar.dart';
 import 'package:pickpay/core/widgets/custom_button.dart';
 import 'package:pickpay/features/checkout/domain/models/checkout_model.dart';
 import 'package:pickpay/features/checkout/presentation/cubits/cubit/checkout_cubit.dart';
@@ -49,7 +49,14 @@ class _CheckoutViewState extends State<CheckoutView> {
 
     if (cartState is! CartLoaded || cartState.items.isEmpty) {
       return Scaffold(
-        appBar: buildAppBar(context: context, title: 'Checkout'),
+        appBar: buildAppBar(
+          context: context,
+          title: 'Checkout',
+          onBackPressed: () {
+            // Add any custom logic if needed before popping
+            Navigator.pushNamed(context, 'Cart_View');
+          },
+        ),
         body: Center(
           child: Text(
             'Your cart is empty',

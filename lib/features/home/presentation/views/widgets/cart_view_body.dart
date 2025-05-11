@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pickpay/core/utils/app_colors.dart';
 import 'package:pickpay/core/utils/app_text_styles.dart';
-import 'package:pickpay/core/widgets/custom_app.dart';
+import 'package:pickpay/core/widgets/build_appbar.dart';
 import 'package:pickpay/core/widgets/custom_button.dart';
 import 'package:pickpay/features/categories_pages/products_views/product_detail_view.dart';
 import 'package:pickpay/features/checkout/presentation/views/checkout_view.dart';
@@ -17,7 +17,14 @@ class CartViewBody extends StatelessWidget {
     final isDarkMode = theme.brightness == Brightness.dark;
 
     return Scaffold(
-      appBar: buildAppBar(context: context, title: 'Your Cart'),
+      appBar: buildAppBar(
+        context: context,
+        title: 'Your Cart',
+        onBackPressed: () {
+          // Add any custom logic if needed before popping
+          Navigator.pushNamed(context, '/main-navigation');
+        },
+      ),
       body: BlocConsumer<CartCubit, CartState>(
         listener: (context, state) {
           if (state is CartLoaded) {
