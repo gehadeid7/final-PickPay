@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pickpay/features/auth/presentation/cubits/verify_email_state.dart/verify_email_cubit.dart';
-import 'package:pickpay/features/auth/presentation/views/signin_view.dart'; // for correct route name
+import 'package:pickpay/features/auth/presentation/views/signin_view.dart';
 
 class VerifyEmailView extends StatelessWidget {
   const VerifyEmailView({super.key});
@@ -61,6 +61,8 @@ class VerifyEmailView extends StatelessWidget {
                               state is VerifyEmailButtonDisabled)
                           ? null
                           : () {
+                              cubit
+                                  .stopAutoRedirect(); // Stop auto redirection when resending email
                               cubit.sendVerificationEmail(context);
                             },
                       style: ElevatedButton.styleFrom(

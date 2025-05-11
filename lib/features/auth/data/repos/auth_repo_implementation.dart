@@ -16,10 +16,12 @@ import 'package:pickpay/services/api_service.dart';
 class AuthRepoImplementation extends AuthRepo {
   final FirebaseAuthService firebaseAuthService;
   final DatabaseService databaseService;
+  final ApiService apiService;
 
   AuthRepoImplementation({
     required this.databaseService,
     required this.firebaseAuthService,
+    required this.apiService,
   });
 
   // Create User
@@ -40,7 +42,7 @@ class AuthRepoImplementation extends AuthRepo {
       await user.sendEmailVerification();
 
       // Sync Firebase user to backend
-      final syncedUser = await ApiService().syncFirebaseUserToBackend(
+      final syncedUser = await apiService.syncFirebaseUserToBackend(
         name: fullName,
         email: email,
         firebaseUid: user.uid,
@@ -82,7 +84,7 @@ class AuthRepoImplementation extends AuthRepo {
       }
 
       // Sync Firebase user to backend
-      final syncedUser = await ApiService().syncFirebaseUserToBackend(
+      final syncedUser = await apiService.syncFirebaseUserToBackend(
         name: user.displayName ?? '',
         email: user.email ?? '',
         firebaseUid: user.uid,
@@ -103,7 +105,7 @@ class AuthRepoImplementation extends AuthRepo {
     try {
       user = await firebaseAuthService.signInWithGoogle();
 
-      final syncedUser = await ApiService().syncFirebaseUserToBackend(
+      final syncedUser = await apiService.syncFirebaseUserToBackend(
         name: user.displayName ?? '',
         email: user.email ?? '',
         firebaseUid: user.uid,
@@ -113,7 +115,7 @@ class AuthRepoImplementation extends AuthRepo {
       return right(syncedUser);
     } catch (e) {
       await deleteUser(user);
-      return left(ServerFailure('Google sign-in failed'));
+      return left(ServerFailure('Google sign-in failed: ${e.toString()}'));
     }
   }
 
@@ -124,7 +126,7 @@ class AuthRepoImplementation extends AuthRepo {
     try {
       user = await firebaseAuthService.signInWithFacebook();
 
-      final syncedUser = await ApiService().syncFirebaseUserToBackend(
+      final syncedUser = await apiService.syncFirebaseUserToBackend(
         name: user.displayName ?? '',
         email: user.email ?? '',
         firebaseUid: user.uid,
@@ -134,25 +136,55 @@ class AuthRepoImplementation extends AuthRepo {
       return right(syncedUser);
     } catch (e) {
       await deleteUser(user);
-      return left(ServerFailure('Facebook sign-in failed'));
+      return left(ServerFailure('Facebook sign-in failed: ${e.toString()}'));
+    }
+  }
+
+  // Sign out
+  @override
+  Future<Either<Failure, void>> signOut() async {
+    try {
+      await firebaseAuthService.signOut();
+      await Prefs.remove(kUserData);
+      return right(null);
+    } catch (e) {
+      return left(ServerFailure('Sign out failed: ${e.toString()}'));
     }
   }
 
   // Add User Data (if required in future)
   @override
-  Future addUserData({required UserEntity user}) async {}
+  Future<Either<Failure, void>> addUserData({required UserEntity user}) async {
+    // Implement this method if needed
+    return right(null);
+  }
 
   // Get User Data (optional method)
   @override
-  Future<UserEntity> getUserData({required String userId}) async {
-    throw UnimplementedError();
+  Future<Either<Failure, UserEntity>> getUserData({required String userId}) async {
+    try {
+      final response = await apiService.get(
+        endpoint: '${BackendEndpoints.getUserData}/$userId',
+      );
+
+      final data = jsonDecode(response.body);
+      final userModel = UserModel.fromMap(data);
+      return right(userModel);
+    } catch (e) {
+      return left(ServerFailure('Failed to get user data: ${e.toString()}'));
+    }
   }
 
   // Save User Data in SharedPreferences
   @override
-  Future saveUserData({required UserEntity user}) async {
-    final jsonData = jsonEncode(UserModel.fromEntity(user).toMap());
-    await Prefs.setString(kUserData, jsonData);
+  Future<Either<Failure, void>> saveUserData({required UserEntity user}) async {
+    try {
+      final jsonData = jsonEncode(UserModel.fromEntity(user).toMap());
+      await Prefs.setString(kUserData, jsonData);
+      return right(null);
+    } catch (e) {
+      return left(ServerFailure('Failed to save user data: ${e.toString()}'));
+    }
   }
 
   // Send Password Reset Email
@@ -196,8 +228,8 @@ class AuthRepoImplementation extends AuthRepo {
       }
 
       // Check in backend if needed
-      final response = await ApiService().post(
-        endpoint: BackendEndpoints.isUserExists,
+      final response = await apiService.post(
+        endpoint: BackendEndpoints.checkUserExists,
         body: {'email': email},
       );
 
@@ -209,6 +241,33 @@ class AuthRepoImplementation extends AuthRepo {
       log('Check user exists error: $e');
       return left(
           ServerFailure('فشل التحقق من وجود المستخدم: ${e.toString()}'));
+    }
+  }
+
+  // Reset Password via Backend
+  @override
+  Future<Either<Failure, void>> resetPassword({
+    required String token,
+    required String password,
+    required String passwordConfirm,
+  }) async {
+    try {
+      final response = await apiService.post(
+        endpoint: BackendEndpoints.resetPassword,
+        body: {
+          'token': token,
+          'password': password,
+          'passwordConfirm': passwordConfirm,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return right(null);
+      } else {
+        return left(ServerFailure('Reset password failed: ${response.body}'));
+      }
+    } catch (e) {
+      return left(ServerFailure('Reset password failed: ${e.toString()}'));
     }
   }
 }

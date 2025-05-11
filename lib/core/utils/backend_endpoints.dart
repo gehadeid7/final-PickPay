@@ -1,13 +1,12 @@
 class BackendEndpoints {
-  /// Endpoint for adding user data or creating a user.
-  static const String addUserData = 'users';
+  // 👤 User endpoints
+  static const String createUser = 'users'; // لإنشاء أو إضافة بيانات المستخدم
+  static const String getUserData = 'users'; // لجلب بيانات المستخدم
+  static const String checkUserExists = 'users/exist'; // تحقق من وجود المستخدم
 
-  /// Endpoint for retrieving user data.
-  static const String getUserData = 'users';
+  // 🛒 Product endpoints
+  static const String getProducts = 'products'; // جلب المنتجات
 
-  /// Endpoint to check if a user exists based on email.
-  static const String isUserExists = 'users';
-
-  /// Endpoint for fetching products.
-  static const String getProducts = 'products';
+  // 🔒 Password Reset
+  static const String resetPassword = 'auth/resetPassword'; // لإعادة تعيين كلمة المرور
 }

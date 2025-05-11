@@ -64,6 +64,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
         Text(
           'Enter your email to receive a password reset link',
           style: TextStyles.regular13.copyWith(
+            // ignore: deprecated_member_use
             color: colorScheme.onSurface.withOpacity(0.7),
           ),
         ),
@@ -78,9 +79,11 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
           decoration: InputDecoration(
             hintText: 'Enter your email address',
             hintStyle: TextStyles.regular13.copyWith(
+              // ignore: deprecated_member_use
               color: colorScheme.onSurface.withOpacity(0.5),
             ),
             filled: true,
+            // ignore: deprecated_member_use
             fillColor: colorScheme.surfaceVariant,
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 16,
@@ -89,6 +92,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide(
+                // ignore: deprecated_member_use
                 color: colorScheme.outline.withOpacity(0.5),
                 width: 1.0,
               ),
@@ -193,6 +197,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
         Text(
           'For security reasons, the reset link will expire in 1 hour',
           style: TextStyles.regular11.copyWith(
+            // ignore: deprecated_member_use
             color: colorScheme.onSurface.withOpacity(0.6),
           ),
           textAlign: TextAlign.center,
@@ -225,6 +230,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
             'Check your inbox for the password reset link. If you don\'t see it, please check your spam folder.',
             textAlign: TextAlign.center,
             style: TextStyles.regular13.copyWith(
+              // ignore: deprecated_member_use
               color: colorScheme.onSurface.withOpacity(0.7),
             ),
           ),
@@ -271,6 +277,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
               ),
               backgroundColor: colorScheme.primary,
               behavior: SnackBarBehavior.floating,
+              duration: Duration(seconds: 3), // Set auto dismiss duration
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),

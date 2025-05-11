@@ -9,6 +9,8 @@ final class ForgotPasswordInitial extends ForgotPasswordState {
   const ForgotPasswordInitial();
 }
 
+class ForgotPasswordReadyToResend extends ForgotPasswordState {}
+
 final class ForgotPasswordLoading extends ForgotPasswordState {
   const ForgotPasswordLoading();
 }
@@ -35,6 +37,20 @@ final class ForgotPasswordFailure extends ForgotPasswordState {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     return other is ForgotPasswordFailure && other.message == message;
+  }
+
+  @override
+  int get hashCode => message.hashCode;
+}
+
+final class ForgotPasswordInvalidEmail extends ForgotPasswordState {
+  final String message;
+  const ForgotPasswordInvalidEmail({required this.message});
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is ForgotPasswordInvalidEmail && other.message == message;
   }
 
   @override
