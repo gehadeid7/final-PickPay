@@ -8,13 +8,33 @@ class HomeProduct16 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: '',
-      title: "",
-      imagePaths: [],
-      price: 850,
-      originalPrice: 900,
-      rating: 3.1,
-      reviewCount: 81228,
+      id: 'home16',
+      title: "Banotex Cotton Towel 50x100 (Sugar)",
+      imagePaths: [
+        'assets/Home_products/bath_and_bedding/bath1/1.png',
+        'assets/Home_products/bath_and_bedding/bath1/2.png',
+      ],
+      price: 200.00,
+      originalPrice: 220.00,
+      rating: 4.4,
+      reviewCount: 9,
+      color: 'Sugary',
+      brand: 'Banotex',
+      towelFormType: 'Bath Towel',
+      specialfeatures:
+          '100% Cotton High Water Absorption Superior Color Fastness Proudly Made In Egypt',
+      material: 'Cotton',
+      numberofitems: '1',
+      style: 'cotton terry',
+      productCareInstructions:
+          'Machine wash in warm water with a mild detergent. Avoid bleach. Tumble dry on low heat or air dry.',
+      itemShape: 'Rectangular',
+      dimensions: '100L x 50W centimeters',
+      aboutThisItem: '''100% Cotton
+High Water Absorption
+High Color Fastness
+Chic Bath Towel
+Made in Egypt''',
       deliveryDate: 'Sunday, 9 March',
       deliveryTimeLeft: '20hrs 36 mins',
       deliveryLocation: 'Egypt',

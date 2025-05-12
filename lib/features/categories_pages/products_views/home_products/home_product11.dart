@@ -11,14 +11,31 @@ class HomeProduct11 extends StatelessWidget {
       id: 'home11',
       title: "Neoflam Pote Cookware Set 11-Pieces, Pink Marble",
       imagePaths: [
-                      'assets/Home_products/kitchen/kitchen1/1.png',
-              'assets/Home_products/kitchen/kitchen1/1.png',
-
+        'assets/Home_products/kitchen/kitchen1/1.png',
+        'assets/Home_products/kitchen/kitchen1/2.png',
       ],
-      price: 850,
-      originalPrice: 900,
-      rating: 3.1,
-      reviewCount: 81228,
+      price: 15999.00,
+      originalPrice: 17000.00,
+      rating: 4.3,
+      reviewCount: 43,
+      colorOptions: ['Pink Marble'],
+      colorAvailability: {'Pink Marble': true},
+      size: 'Assorted Pack',
+      handleMaterial: 'Aluminum',
+      material: 'Aluminum',
+      brand: 'Neoflam',
+      closureMaterial: 'Aluminum',
+      materialTypeFree: 'Perfluorooctanoic Acid (PFOA) Free',
+      compatibilityOptions: 'Induction',
+      numberOfPieces: '11',
+      includedComponents:
+          '1 x Neoflam Pote Cookware Set 11-Pieces, Pink Marble',
+      aboutThisItem:
+          '''A top level, harder nonstick granite material with Ultra Non-stick performance
+
+This cookware ensures your daily cooking is always safer and healthier
+
+Made with a flat bottom, the cookware could be placed evenly over heat source''',
       deliveryDate: 'Sunday, 9 March',
       deliveryTimeLeft: '20hrs 36 mins',
       deliveryLocation: 'Egypt',

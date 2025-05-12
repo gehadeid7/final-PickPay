@@ -122,7 +122,7 @@ class _InfoItem extends StatelessWidget {
           radius: 24,
           backgroundColor:
               // ignore: deprecated_member_use
-              isDarkMode ? colorScheme.surfaceVariant : Colors.grey.shade100,
+              isDarkMode ? Colors.grey.shade800 : Colors.grey.shade200,
           child: Icon(
             icon,
             color: colorScheme.primary,
