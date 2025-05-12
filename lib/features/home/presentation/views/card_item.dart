@@ -23,7 +23,7 @@ class CardItem extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: isDarkMode ? theme.cardColor : Colors.white,
+        color: isDarkMode ? Colors.grey.shade800 : Colors.white,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: isDarkMode
