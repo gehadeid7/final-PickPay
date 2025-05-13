@@ -22,70 +22,64 @@ class SigninViewBody extends StatefulWidget {
 
 class _SigninViewBodyState extends State<SigninViewBody> {
   AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   late String email, password;
 
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  void _submit() {
+    if (formKey.currentState!.validate()) {
+      formKey.currentState!.save();
+      context.read<SigninCubit>().signin(email, password);
+    } else {
+      setState(() {
+        autovalidateMode = AutovalidateMode.always;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: khorizontalPadding),
+      padding: const EdgeInsets.symmetric(horizontal: khorizontalPadding),
       child: SingleChildScrollView(
         child: Form(
           key: formKey,
           autovalidateMode: autovalidateMode,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Text('Welcome Back!',
-              //     style: TextStyles.bold16.copyWith(
-              //       fontSize: 24,
-              //     )),
-              SizedBox(height: 50),
+              const SizedBox(height: 50),
               CustomTextFormField(
-                onSaved: (value) {
-                  email = value!;
-                },
+                onSaved: (value) => email = value!,
                 hintText: 'Enter a valid email address',
                 textInputType: TextInputType.emailAddress,
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               PasswordField(
-                onSaved: (value) {
-                  password = value!;
-                },
+                onSaved: (value) => password = value!,
               ),
-              SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
-                    onPressed: () => Navigator.pushNamed(
-                        context, ForgotPasswordView.routeName),
-                    child: Text(
-                      'Forget Password?',
-                      style: TextStyles.semiBold13.copyWith(
-                        // ignore: deprecated_member_use
-                        color: AppColors.primaryColor.withOpacity(0.7),
-                      ),
+              const SizedBox(height: 16),
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, ForgotPasswordView.routeName);
+                  },
+                  child: Text(
+                    'Forget Password?',
+                    style: TextStyles.semiBold13.copyWith(
+                      color: AppColors.primaryColor.withOpacity(0.7),
                     ),
                   ),
-                ],
+                ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               CustomButton(
-                  onPressed: () {
-                    if (formKey.currentState!.validate()) {
-                      formKey.currentState!.save();
-
-                      context.read<SigninCubit>().signin(email, password);
-                    } else {
-                      autovalidateMode = AutovalidateMode.always;
-                      setState(() {});
-                    }
-                  },
-                  buttonText: 'Log In'),
-              SizedBox(height: 20),
-              OrDivider(),
-              SizedBox(height: 24),
+                onPressed: _submit,
+                buttonText: 'Log In',
+              ),
+              const SizedBox(height: 20),
+              const OrDivider(),
+              const SizedBox(height: 24),
               SocialLoginButton(
                 onPressed: () {
                   context.read<SigninCubit>().signInWithGoogle();
@@ -93,16 +87,16 @@ class _SigninViewBodyState extends State<SigninViewBody> {
                 socialButtonIconImage: Assets.googleIcon,
                 socialButtonTitle: 'Sign in with Google',
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               SocialLoginButton(
                 onPressed: () {
                   context.read<SigninCubit>().signInWithFacebook();
                 },
                 socialButtonIconImage: Assets.facebookIcon,
-                socialButtonTitle: 'Sign in with facebook',
+                socialButtonTitle: 'Sign in with Facebook',
               ),
-              SizedBox(height: 24),
-              DontHaveAccount(),
+              const SizedBox(height: 24),
+              const DontHaveAccount(),
             ],
           ),
         ),

@@ -18,6 +18,10 @@ abstract class AuthRepo {
   );
   Future<Either<Failure, UserEntity>> signInWithGoogle();
   Future<Either<Failure, UserEntity>> signInWithFacebook();
+  
+  // 🍏 Added: Sign in with Apple
+  Future<Either<Failure, UserEntity>> signInWithApple(); // New function for Apple sign-in
+  
   Future<Either<Failure, void>> signOut();
 
   // 🧩 Account Management
@@ -33,4 +37,10 @@ abstract class AuthRepo {
     required String password,
     required String passwordConfirm,
   });
+
+  // ✅ Added: Useful Real-World Features
+  Future<Either<Failure, bool>> isUserLoggedIn(); // For auto login
+  Future<Either<Failure, UserEntity>> getCurrentUser(); // Fetch logged-in user
+  Future<Either<Failure, bool>> isEmailVerified(); // Check if email is verified
+  Future<Either<Failure, void>> updateUserData(UserEntity user); // Update profile
 }

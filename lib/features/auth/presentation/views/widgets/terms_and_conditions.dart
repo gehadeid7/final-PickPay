@@ -2,9 +2,10 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:pickpay/core/utils/app_colors.dart';
 import 'package:pickpay/core/utils/app_text_styles.dart';
+import 'package:pickpay/core/widgets/app_flushbar.dart';
 import 'package:pickpay/features/auth/presentation/views/widgets/custom_checkbox.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:webview_flutter/webview_flutter.dart';  // Importing correct WebView package
+import 'package:webview_flutter/webview_flutter.dart'; // Importing AppFlushbar
 
 class TermsAndConditions extends StatefulWidget {
   const TermsAndConditions({super.key, required this.onChanged});
@@ -58,6 +59,8 @@ class _TermsAndConditionsState extends State<TermsAndConditions> {
                       if (await canLaunchUrl(termsUrl)) {
                         await launchUrl(termsUrl, mode: LaunchMode.externalApplication);
                       } else {
+                        // Show error message with Flushbar if URL cannot be launched
+                        AppFlushbar.showError(context, 'Unable to open Terms & Conditions.');
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -84,6 +87,8 @@ class _TermsAndConditionsState extends State<TermsAndConditions> {
                       if (await canLaunchUrl(privacyUrl)) {
                         await launchUrl(privacyUrl, mode: LaunchMode.externalApplication);
                       } else {
+                        // Show error message with Flushbar if URL cannot be launched
+                        AppFlushbar.showError(context, 'Unable to open Privacy Policy.');
                         Navigator.push(
                           context,
                           MaterialPageRoute(

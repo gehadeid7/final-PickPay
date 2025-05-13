@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pickpay/constants.dart';
-import 'package:pickpay/core/helper_functions/build_error_bar.dart';
+import 'package:pickpay/core/widgets/app_flushbar.dart';
 import 'package:pickpay/core/widgets/custom_button.dart';
 import 'package:pickpay/core/widgets/custom_text_field.dart';
 import 'package:pickpay/core/widgets/password_field.dart';
@@ -31,10 +31,11 @@ class _SignUpViewBodyState extends State<SignUpViewBody> {
       listener: (context, state) {
         if (state is SignupSuccess) {
           // If sign-up is successful, navigate to email verification page
+          AppFlushbar.showSuccess(context, 'Account created successfully');
           Navigator.pushNamed(context, VerifyEmailView.routeName);
         } else if (state is SignupFailure) {
-          // If sign-up fails, show error message
-          buildErrorBar(context, state.message);
+          // If sign-up fails, show error message using AppFlushbar
+          AppFlushbar.showError(context, state.message);
         }
       },
       child: SingleChildScrollView(
@@ -80,9 +81,9 @@ class _SignUpViewBodyState extends State<SignUpViewBody> {
                         formKey.currentState!.save();
                         if (isTermsAccepted) {
                           context.read<SignupCubit>().createUserWithEmailAndPassword(
-                            email, password, fullName);
+                            email, password, fullName, context); // Passing context
                         } else {
-                          buildErrorBar(context, 'Terms and conditions acceptance is required');
+                          AppFlushbar.showError(context, 'Terms and conditions acceptance is required');
                         }
                       } else {
                         setState(() {

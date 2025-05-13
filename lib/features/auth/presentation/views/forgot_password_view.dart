@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:another_flushbar/flushbar.dart';
 import 'package:pickpay/core/services/get_it_service.dart';
 import 'package:pickpay/core/utils/app_text_styles.dart';
 import 'package:pickpay/core/widgets/build_appbar.dart';
@@ -64,7 +65,6 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
         Text(
           'Enter your email to receive a password reset link',
           style: TextStyles.regular13.copyWith(
-            // ignore: deprecated_member_use
             color: colorScheme.onSurface.withOpacity(0.7),
           ),
         ),
@@ -77,13 +77,11 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
           autofillHints: const [AutofillHints.email],
           style: TextStyle(color: colorScheme.onSurface),
           decoration: InputDecoration(
-            hintText: 'Enter your email address',
+            hintText: 'Email address',
             hintStyle: TextStyles.regular13.copyWith(
-              // ignore: deprecated_member_use
               color: colorScheme.onSurface.withOpacity(0.5),
             ),
             filled: true,
-            // ignore: deprecated_member_use
             fillColor: colorScheme.surfaceVariant,
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 16,
@@ -92,7 +90,6 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide(
-                // ignore: deprecated_member_use
                 color: colorScheme.outline.withOpacity(0.5),
                 width: 1.0,
               ),
@@ -166,19 +163,12 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
                       color: Colors.white,
                     ),
                   )
-                : cooldown > 0
-                    ? Text(
-                        'Resend in ${cooldown}s',
-                        style: TextStyles.semiBold13.copyWith(
-                          color: colorScheme.onPrimary,
-                        ),
-                      )
-                    : Text(
-                        'Send Reset Link',
-                        style: TextStyles.semiBold13.copyWith(
-                          color: colorScheme.onPrimary,
-                        ),
-                      ),
+                : Text(
+                    cooldown > 0 ? 'Resend in ${cooldown}s' : 'Send Reset link',
+                    style: TextStyles.semiBold13.copyWith(
+                      color: colorScheme.onPrimary,
+                    ),
+                  ),
           ),
         ),
         const SizedBox(height: 16),
@@ -197,7 +187,6 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
         Text(
           'For security reasons, the reset link will expire in 1 hour',
           style: TextStyles.regular11.copyWith(
-            // ignore: deprecated_member_use
             color: colorScheme.onSurface.withOpacity(0.6),
           ),
           textAlign: TextAlign.center,
@@ -207,17 +196,12 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
   }
 
   Widget _buildSuccessUI() {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(
-          Icons.check_circle,
-          color: colorScheme.primary,
-          size: 72,
-        ),
+        Icon(Icons.check_circle, color: colorScheme.primary, size: 72),
         const SizedBox(height: 24),
         Text(
           'Email Sent!',
@@ -230,7 +214,6 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
             'Check your inbox for the password reset link. If you don\'t see it, please check your spam folder.',
             textAlign: TextAlign.center,
             style: TextStyles.regular13.copyWith(
-              // ignore: deprecated_member_use
               color: colorScheme.onSurface.withOpacity(0.7),
             ),
           ),
@@ -259,45 +242,48 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
     );
   }
 
+  void _showFlushbar({
+    required BuildContext context,
+    required String message,
+    required Color backgroundColor,
+    required Color textColor,
+    IconData? icon,
+  }) {
+    Flushbar(
+      messageText: Text(
+        message,
+        style: TextStyles.regular13.copyWith(color: textColor),
+      ),
+      icon: icon != null ? Icon(icon, color: textColor) : null,
+      backgroundColor: backgroundColor,
+      duration: const Duration(seconds: 3),
+      borderRadius: BorderRadius.circular(8),
+      margin: const EdgeInsets.all(16),
+      flushbarPosition: FlushbarPosition.TOP,
+    ).show(context);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return BlocConsumer<ForgotPasswordCubit, ForgotPasswordState>(
       listener: (context, state) {
         if (state is ForgotPasswordSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                'Password reset email sent successfully',
-                style: TextStyles.regular11.copyWith(
-                  color: colorScheme.onPrimary,
-                ),
-              ),
-              backgroundColor: colorScheme.primary,
-              behavior: SnackBarBehavior.floating,
-              duration: Duration(seconds: 3), // Set auto dismiss duration
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
+          _showFlushbar(
+            context: context,
+            message: 'Password reset email sent successfully',
+            backgroundColor: colorScheme.primary,
+            textColor: colorScheme.onPrimary,
+            icon: Icons.check_circle,
           );
         } else if (state is ForgotPasswordFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                state.message,
-                style: TextStyles.regular13.copyWith(
-                  color: colorScheme.onError,
-                ),
-              ),
-              backgroundColor: colorScheme.error,
-              behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
+          _showFlushbar(
+            context: context,
+            message: state.message,
+            backgroundColor: colorScheme.error,
+            textColor: colorScheme.onError,
+            icon: Icons.error,
           );
         }
       },
