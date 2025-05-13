@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pickpay/features/auth/presentation/views/change_password_view.dart';
 import 'package:pickpay/features/auth/presentation/views/forgot_password_view.dart';
 import 'package:pickpay/features/auth/presentation/views/verify_email_view.dart';
 import 'package:pickpay/features/categories_pages/appliances/presentation/views/appliances_view.dart';
@@ -65,15 +66,19 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
     case BeautyView.routeName:
       return MaterialPageRoute(builder: (context) => const BeautyView());
 
-  case WishlistView.routeName:
+    case WishlistView.routeName:
       return MaterialPageRoute(builder: (context) => const WishlistView());
-      
-  case ForgotPasswordView.routeName:
-      return MaterialPageRoute(builder: (context) => const ForgotPasswordView());
-      
-  case VerifyEmailView.routeName:
+
+    case ForgotPasswordView.routeName:
+      return MaterialPageRoute(
+          builder: (context) => const ForgotPasswordView());
+
+    case VerifyEmailView.routeName:
       return MaterialPageRoute(builder: (context) => const VerifyEmailView());
 
+    case ChangePasswordView.routeName:
+      return MaterialPageRoute(
+          builder: (context) => const ChangePasswordView());
 
     default:
       return MaterialPageRoute(builder: (context) => const Scaffold());

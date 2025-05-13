@@ -9,11 +9,12 @@ class ThemeSwitchButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
+    final isDarkMode = themeProvider.isDarkMode;
 
     return IconButton(
       icon: Icon(
-        themeProvider.isDarkMode ? Icons.light_mode : Icons.dark_mode,
-        color: Theme.of(context).iconTheme.color,
+        isDarkMode ? Icons.dark_mode : Icons.light_mode,
+        color: isDarkMode ? Colors.white : Colors.black,
       ),
       onPressed: () {
         themeProvider.toggleTheme();

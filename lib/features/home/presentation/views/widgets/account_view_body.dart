@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pickpay/core/utils/app_images.dart';
 import 'package:pickpay/core/widgets/build_appbar.dart';
+import 'package:pickpay/features/auth/presentation/views/change_password_view.dart';
 import 'package:pickpay/features/auth/presentation/views/signin_view.dart';
 import 'package:pickpay/features/home/presentation/views/cart_view.dart';
 import 'package:pickpay/features/home/presentation/views/wishlist_view.dart';
@@ -54,8 +55,12 @@ class AccountViewBody extends StatelessWidget {
             const SizedBox(height: 24),
             _buildSectionTitle('Settings', context),
             _buildSectionContainer([
-              _accountTile(
-                  Icons.lock_outline, "Change Password", () {}, context),
+              _accountTile(Icons.lock_outline, "Change Password", () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => const ChangePasswordView()));
+              }, context),
               _accountTile(Icons.notifications_outlined, "Notifications", () {},
                   context),
               _accountTile(Icons.language_outlined, "Language", () {}, context),
