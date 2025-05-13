@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
-import 'package:pickpay/core/helper_functions/build_error_bar.dart';
+import 'package:pickpay/core/widgets/app_flushbar.dart';
 import 'package:pickpay/features/auth/presentation/cubits/signup_cubits/signup_cubit.dart';
 import 'package:pickpay/features/auth/presentation/views/widgets/sign_up_view_body.dart';
 
@@ -25,13 +25,14 @@ class SignupViewBodyBlocConsumer extends StatelessWidget {
               Navigator.pushNamed(context, '/verify_email');
             }
           } else {
-            // If user does not exist, handle accordingly (e.g., show error or retry)
-            buildErrorBar(context, 'User does not exist');
+            // If user does not exist, show an error message with Flushbar
+            AppFlushbar.showError(context, 'User does not exist');
           }
         }
 
         if (state is SignupFailure) {
-          buildErrorBar(context, state.message);
+          // Show error using Flushbar instead of buildErrorBar
+          AppFlushbar.showError(context, state.message);
         }
       },
       builder: (context, state) {
