@@ -9,10 +9,12 @@ final class ForgotPasswordInitial extends ForgotPasswordState {
   const ForgotPasswordInitial();
 }
 
-class ForgotPasswordReadyToResend extends ForgotPasswordState {}
-
 final class ForgotPasswordLoading extends ForgotPasswordState {
   const ForgotPasswordLoading();
+}
+
+final class ForgotPasswordLinkSent extends ForgotPasswordState {
+  const ForgotPasswordLinkSent(); // ✅ Shown only once
 }
 
 final class ForgotPasswordSuccess extends ForgotPasswordState {
@@ -28,6 +30,8 @@ final class ForgotPasswordSuccess extends ForgotPasswordState {
   @override
   int get hashCode => cooldown.hashCode;
 }
+
+final class ForgotPasswordReadyToResend extends ForgotPasswordState {}
 
 final class ForgotPasswordFailure extends ForgotPasswordState {
   final String message;

@@ -11,7 +11,7 @@ import 'package:pickpay/features/auth/data/models/user_model.dart';
 import 'package:pickpay/features/categories_pages/widgets/product_card.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://192.168.1.7:3000/api/v1/';
+  static const String baseUrl = 'http://192.168.1.4:3000/api/v1/';
 
   // Method to perform a GET request
   Future<http.Response> get({
@@ -132,60 +132,110 @@ class ApiService {
   }
 
   // Sync Firebase user to backend
-  Future<UserModel> syncFirebaseUserToBackend({
-    required String name,
-    required String email,
-    required String firebaseUid,
-  }) async {
-    try {
-      final token = await FirebaseAuth.instance.currentUser!.getIdToken();
-
-      final response = await http.post(
-        Uri.parse('${baseUrl}auth/firebase/sync'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-        body: jsonEncode({
-          'name': name,
-          'email': email,
-          'uid': firebaseUid,
-        }),
-      );
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body)['data'];
-        return UserModel.fromJson(data);
-      } else {
-        throw Exception('Failed to sync Firebase user: ${response.body}');
-      }
-    } catch (e) {
-      throw Exception('Error syncing Firebase user: ${e.toString()}');
+Future<UserModel> syncFirebaseUserToBackend({
+  required String name,
+  required String email,
+  required String firebaseUid,
+}) async {
+  try {
+    final token = await FirebaseAuth.instance.currentUser?.getIdToken();
+    if (token == null) {
+      throw Exception('Token is null. User is not authenticated.');
     }
-  }
 
-  // Forgot Password
-  Future<http.Response> forgotPassword(String email) async {
-    return await post(
+    final response = await http.post(
+      Uri.parse('${baseUrl}auth/firebase/sync'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode({
+        'name': name,
+        'email': email,
+        'uid': firebaseUid,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body)['data'];
+      return UserModel.fromJson(data);
+    } else {
+      throw Exception('Failed to sync Firebase user: ${response.body}');
+    }
+  } catch (e) {
+    throw Exception('Error syncing Firebase user: ${e.toString()}');
+  }
+}
+
+// ✅ Forgot Password (ensures user is synced with backend)
+Future<http.Response> forgotPassword(String email) async {
+  try {
+    // Check Firebase sign-in methods to ensure user exists
+    final methods = await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
+    if (methods.isEmpty) {
+      throw Exception("No Firebase user found with this email.");
+    }
+
+    // Get Firebase user (currently signed in)
+    final firebaseUser = FirebaseAuth.instance.currentUser;
+
+    if (firebaseUser == null || firebaseUser.email != email) {
+      throw Exception("User not authenticated with this email.");
+    }
+
+    final idToken = await firebaseUser.getIdToken();
+
+    // Sync user to backend if necessary
+    await syncFirebaseUserToBackend(
+      name: firebaseUser.displayName ?? 'No Name',
+      email: firebaseUser.email!,
+      firebaseUid: firebaseUser.uid,
+    );
+
+    // Call backend forgot password endpoint
+    final response = await post(
       endpoint: 'auth/forgotPassword',
       body: {'email': email},
+      authorized: false,
     );
-  }
 
-  // Reset Password using the generic PUT method
-  Future<http.Response> resetPassword({
-    required String token,
-    required String password,
-    required String passwordConfirm,
-  }) async {
-    return await put(
-      endpoint: 'auth/resetPassword/$token',
-      body: {
-        'password': password,
-        'passwordConfirm': passwordConfirm,
-      },
-    );
+    if (response.statusCode == 200) {
+      return response;
+    } else {
+      throw Exception('Failed to send reset code: ${response.body}');
+    }
+  } catch (e) {
+    throw Exception('Error in forgotPassword: ${e.toString()}');
   }
+}
+
+
+
+ // ✅ Reset Password (after user verifies code)
+Future<http.Response> resetPassword({
+  required String email,
+  required String newPassword,
+}) async {
+  try {
+    final response = await put(
+      endpoint: 'auth/resetPassword',
+      body: {
+        'email': email,
+        'newPassword': newPassword,
+      },
+      authorized: false,
+    );
+
+    if (response.statusCode == 200) {
+      return response;
+    } else {
+      throw Exception('Reset password failed: ${response.body}');
+    }
+  } catch (e) {
+    throw Exception('Error in resetPassword: ${e.toString()}');
+  }
+}
+
 
   // Refresh Firebase token
   Future<String?> refreshToken() async {

@@ -10,6 +10,7 @@ class BackendEndpoints {
 
   // 🔒 Password Reset
   static const String resetPassword = 'auth/resetPassword'; // لإعادة تعيين كلمة المرور
+  static const String forgotPassword = 'auth/forgotPassword'; // لإنشاء رابط إعادة تعيين كلمة المرور
 
   // 👩‍💻 Third-party authentication (for Google, Facebook, Apple)
   static const String googleSignIn = 'auth/googleSignIn'; // تسجيل الدخول عبر Google

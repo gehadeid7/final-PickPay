@@ -21,6 +21,7 @@ class ChangePasswordSuccess extends ChangePasswordState {
 
 class ChangePasswordFailure extends ChangePasswordState {
   final String message;
+
   const ChangePasswordFailure(this.message);
 
   @override

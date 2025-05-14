@@ -76,6 +76,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
           textInputAction: TextInputAction.done,
           autofillHints: const [AutofillHints.email],
           style: TextStyle(color: colorScheme.onSurface),
+          enabled: !isLoading,
           decoration: InputDecoration(
             hintText: 'Email address',
             hintStyle: TextStyles.regular13.copyWith(
@@ -269,7 +270,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
 
     return BlocConsumer<ForgotPasswordCubit, ForgotPasswordState>(
       listener: (context, state) {
-        if (state is ForgotPasswordSuccess) {
+        if (state is ForgotPasswordLinkSent) {
           _showFlushbar(
             context: context,
             message: 'Password reset email sent successfully',
@@ -300,7 +301,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
                 autovalidateMode: _autovalidateMode,
                 child: AnimatedSwitcher(
                   duration: const Duration(milliseconds: 300),
-                  child: state is ForgotPasswordSuccess
+                  child: state is ForgotPasswordLinkSent
                       ? _buildSuccessUI()
                       : _buildFormContent(context, state),
                 ),

@@ -1,4 +1,4 @@
-// main_navigation_screen.dart
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pickpay/features/home/presentation/cubits/bottom_navigation_cubits/bottom_navigation_cubit.dart';
@@ -24,20 +24,42 @@ class _MainNavigationView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBody: true,
-      body: const SafeArea(
-        child: MainNavigationScreenBody(),
-      ),
-      bottomNavigationBar:
-          BlocBuilder<BottomNavigationCubit, BottomNavigationState>(
-        builder: (context, state) {
-          return CustomBottomNavigationBar(
-            selectedIndex: state.currentIndex,
-            onItemSelected: (index) =>
-                context.read<BottomNavigationCubit>().changeTab(index),
-          );
-        },
+    return WillPopScope(
+      onWillPop: () async {
+        final shouldExit = await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('هل تريد الخروج؟'),
+            content: const Text('هل أنت متأكد أنك تريد الخروج من التطبيق؟'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text('لا'),
+              ),
+              TextButton(
+                onPressed: () => exit(0), // أو استخدم SystemNavigator.pop() لإغلاق التطبيق
+                child: const Text('نعم'),
+              ),
+            ],
+          ),
+        );
+        return shouldExit ?? false;
+      },
+      child: Scaffold(
+        extendBody: true,
+        body: const SafeArea(
+          child: MainNavigationScreenBody(),
+        ),
+        bottomNavigationBar:
+            BlocBuilder<BottomNavigationCubit, BottomNavigationState>(
+          builder: (context, state) {
+            return CustomBottomNavigationBar(
+              selectedIndex: state.currentIndex,
+              onItemSelected: (index) =>
+                  context.read<BottomNavigationCubit>().changeTab(index),
+            );
+          },
+        ),
       ),
     );
   }
