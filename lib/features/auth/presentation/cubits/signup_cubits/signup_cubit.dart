@@ -23,12 +23,15 @@ class SignupCubit extends Cubit<SignupState> {
       if (currentUser != null && currentUser.email == email) {
         await currentUser.reload(); // Reload user data
         if (!currentUser.emailVerified) {
-          AppFlushbar.showError(context, 'يرجى تأكيد بريدك الإلكتروني قبل تسجيل الدخول');
-          emit(SignupFailure(message: 'يرجى تأكيد بريدك الإلكتروني قبل تسجيل الدخول'));
+          AppFlushbar.showError(
+              context, 'يرجى تأكيد بريدك الإلكتروني قبل تسجيل الدخول');
+          emit(SignupFailure(
+              message: 'يرجى تأكيد بريدك الإلكتروني قبل تسجيل الدخول'));
           return;
         } else {
           AppFlushbar.showSuccess(context, 'تم تسجيل الدخول بنجاح');
-          emit(SignupSuccess(userEntity: UserEntity.fromFirebaseUser(currentUser)));
+          emit(SignupSuccess(
+              userEntity: UserEntity.fromFirebaseUser(currentUser)));
           return;
         }
       }
@@ -36,7 +39,8 @@ class SignupCubit extends Cubit<SignupState> {
       // Check if user already exists in backend
       final existsResult = await authRepo.checkUserExists(email);
       if (existsResult.isLeft()) {
-        final message = existsResult.fold((f) => f.message, (_) => 'حدث خطأ أثناء التحقق من المستخدم');
+        final message = existsResult.fold(
+            (f) => f.message, (_) => 'حدث خطأ أثناء التحقق من المستخدم');
         AppFlushbar.showError(context, message);
         emit(SignupFailure(message: message));
         return;
@@ -50,7 +54,8 @@ class SignupCubit extends Cubit<SignupState> {
       }
 
       // Proceed with sign-up
-      final result = await authRepo.createUserWithEmailAndPassword(email, password, name);
+      final result =
+          await authRepo.createUserWithEmailAndPassword(email, password, name);
       result.fold(
         (failure) {
           AppFlushbar.showError(context, failure.message);

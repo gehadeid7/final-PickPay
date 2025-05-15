@@ -5,8 +5,10 @@ class PasswordField extends StatefulWidget {
   const PasswordField({
     super.key,
     this.onSaved,
+    this.validator, // Added validator parameter
   });
   final void Function(String?)? onSaved;
+  final String? Function(String?)? validator; // New validator
 
   @override
   State<PasswordField> createState() => _PasswordFieldState();
@@ -20,17 +22,17 @@ class _PasswordFieldState extends State<PasswordField> {
     return CustomTextFormField(
       obsecureText: obsecureText,
       onSaved: widget.onSaved,
+      validator: widget.validator, // Pass validator through
       suffixicon: GestureDetector(
         onTap: () {
-          obsecureText = !obsecureText;
-          setState(() {});
+          setState(() {
+            obsecureText = !obsecureText;
+          });
         },
-        child: obsecureText
-            ? Icon(Icons.remove_red_eye, color: Colors.grey)
-            : Icon(
-                Icons.visibility_off,
-                color: const Color.fromARGB(255, 89, 89, 89),
-              ),
+        child: Icon(
+          obsecureText ? Icons.visibility_off : Icons.visibility,
+          color: Colors.grey,
+        ),
       ),
       hintText: 'Enter a valid password',
       textInputType: TextInputType.visiblePassword,

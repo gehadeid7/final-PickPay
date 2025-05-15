@@ -15,6 +15,7 @@ import 'package:pickpay/features/home/presentation/views/cart_view.dart';
 import 'package:pickpay/features/home/presentation/views/categories_view.dart';
 import 'package:pickpay/features/home/presentation/views/home_view.dart';
 import 'package:pickpay/features/home/presentation/views/main_navigation_screen.dart';
+import 'package:pickpay/features/profile_change/views/profile_change_view.dart';
 import 'package:pickpay/features/home/presentation/views/wishlist_view.dart';
 
 import '../../features/auth/presentation/views/signin_view.dart';
@@ -79,6 +80,9 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
     case ChangePasswordView.routeName:
       return MaterialPageRoute(
           builder: (context) => const ChangePasswordView());
+
+    case ProfileChangeView.routeName:
+      return MaterialPageRoute(builder: (context) => const ProfileChangeView());
 
     default:
       return MaterialPageRoute(builder: (context) => const Scaffold());

@@ -5,6 +5,7 @@ import 'package:pickpay/core/widgets/build_appbar.dart';
 import 'package:pickpay/features/auth/presentation/views/change_password_view.dart';
 import 'package:pickpay/features/auth/presentation/views/signin_view.dart';
 import 'package:pickpay/features/home/presentation/views/cart_view.dart';
+import 'package:pickpay/features/profile_change/views/profile_change_view.dart';
 import 'package:pickpay/features/home/presentation/views/wishlist_view.dart';
 
 class AccountViewBody extends StatelessWidget {
@@ -30,7 +31,6 @@ class AccountViewBody extends StatelessWidget {
         context: context,
         title: 'Account',
         onBackPressed: () {
-          // Add any custom logic if needed before popping
           Navigator.pushNamed(context, '/main-navigation');
         },
       ),
@@ -61,8 +61,8 @@ class AccountViewBody extends StatelessWidget {
                     MaterialPageRoute(
                         builder: (_) => const ChangePasswordView()));
               }, context),
-              _accountTile(Icons.notifications_outlined, "Notifications", () {},
-                  context),
+              // _accountTile(Icons.notifications_outlined, "Notifications", () {},
+              //     context),
               _accountTile(Icons.language_outlined, "Language", () {}, context),
               _accountTile(
                   Icons.help_outline, "Help & Support", () {}, context),
@@ -81,58 +81,76 @@ class AccountViewBody extends StatelessWidget {
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
 
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: isDarkMode ? Colors.grey[800] : Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            // ignore: deprecated_member_use
-            color: Colors.black.withOpacity(isDarkMode ? 0.1 : 0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ProfileChangeView(), // Your profile edit view
           ),
-        ],
-        border: Border.all(
-            color: isDarkMode ? Colors.grey[700]! : Colors.grey.shade100),
-      ),
-      child: Row(
-        children: [
-          _buildUserAvatar(context),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  fullName,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: isDarkMode ? Colors.white : Colors.black,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  email,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: isDarkMode ? Colors.grey[400] : Colors.grey.shade500,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
+        );
+      },
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: isDarkMode ? Colors.grey[800] : Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(isDarkMode ? 0.1 : 0.05),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
             ),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.edit_outlined,
-                color: isDarkMode ? Colors.white : Colors.black),
-            splashRadius: 20,
-          ),
-        ],
+          ],
+          border: Border.all(
+              color: isDarkMode ? Colors.grey[700]! : Colors.grey.shade100),
+        ),
+        child: Row(
+          children: [
+            _buildUserAvatar(context),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    fullName,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: isDarkMode ? Colors.white : Colors.black,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    email,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color:
+                          isDarkMode ? Colors.grey[400] : Colors.grey.shade500,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+            IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ProfileChangeView(),
+                  ),
+                );
+              },
+              icon: Icon(Icons.edit_outlined,
+                  color: isDarkMode ? Colors.white : Colors.black),
+              splashRadius: 20,
+            ),
+          ],
+        ),
       ),
     );
   }
