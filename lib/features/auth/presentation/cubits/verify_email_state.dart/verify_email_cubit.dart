@@ -40,9 +40,11 @@ class VerifyEmailCubit extends Cubit<VerifyEmailState> {
 
   // Send verification email
   Future<void> sendVerificationEmail(BuildContext context) async {
+    // ignore: avoid_print
     print('[DEBUG] Resend verification triggered');
 
     if (isSending) {
+      // ignore: avoid_print
       print('[DEBUG] Email is already being sent. Ignoring request.');
       return;
     }
@@ -52,6 +54,7 @@ class VerifyEmailCubit extends Cubit<VerifyEmailState> {
 
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
+      // ignore: avoid_print
       print('[ERROR] No current user found');
       emit(VerifyEmailFailure('لم يتم العثور على مستخدم حاليًا'));
       isSending = false;
@@ -59,6 +62,7 @@ class VerifyEmailCubit extends Cubit<VerifyEmailState> {
     }
 
     if (user.emailVerified) {
+      // ignore: avoid_print
       print('[INFO] Email already verified');
       emit(VerifyEmailFailure('البريد الإلكتروني تم التحقق منه بالفعل'));
       isSending = false;
@@ -66,19 +70,24 @@ class VerifyEmailCubit extends Cubit<VerifyEmailState> {
     }
 
     try {
+      // ignore: avoid_print
       print('[INFO] Sending email verification...');
       await user.sendEmailVerification();
+      // ignore: avoid_print
       print('[SUCCESS] Verification email sent.');
       emit(VerifyEmailSuccess());
       startCountdown();
     } on FirebaseAuthException catch (e) {
+      // ignore: avoid_print
       print('[FIREBASE ERROR] ${e.message}');
       emit(VerifyEmailFailure('فشل إرسال رابط التحقق: ${e.message}'));
     } catch (e) {
+      // ignore: avoid_print
       print('[UNEXPECTED ERROR] $e');
       emit(VerifyEmailFailure('فشل غير متوقع: ${e.toString()}'));
     } finally {
       isSending = false;
+      // ignore: avoid_print
       print('[DEBUG] Finished sendVerificationEmail process');
     }
   }

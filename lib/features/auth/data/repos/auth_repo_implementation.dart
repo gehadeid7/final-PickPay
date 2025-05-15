@@ -1,10 +1,8 @@
 // 🧩 Imports
 import 'dart:convert';
 import 'dart:developer';
-
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:http/http.dart';
 import 'package:pickpay/constants.dart';
 import 'package:pickpay/core/errors/failures.dart';
 import 'package:pickpay/core/services/database_services.dart';
@@ -52,7 +50,7 @@ class AuthRepoImplementation extends AuthRepo {
 
       // Create a UserEntity from the Firebase user and sync with backend
       final syncedUser = await apiService.syncFirebaseUserToBackend(
-        name: fullName,  // Using the fullName passed to the function
+        name: fullName, // Using the fullName passed to the function
         email: email,
         firebaseUid: user.uid,
       );
@@ -83,7 +81,8 @@ class AuthRepoImplementation extends AuthRepo {
       // Check if email is verified
       if (!user.emailVerified) {
         await FirebaseAuth.instance.signOut();
-        return left(ServerFailure('يرجى تأكيد بريدك الإلكتروني قبل تسجيل الدخول'));
+        return left(
+            ServerFailure('يرجى تأكيد بريدك الإلكتروني قبل تسجيل الدخول'));
       }
 
       final syncedUser = await apiService.syncFirebaseUserToBackend(
@@ -112,7 +111,8 @@ class AuthRepoImplementation extends AuthRepo {
         return right(null); // Return success to suppress the error message
       } else {
         // Return a generic error message for other Firebase errors
-        return left(ServerFailure('فشل في إرسال رابط إعادة تعيين كلمة المرور: ${e.message}'));
+        return left(ServerFailure(
+            'فشل في إرسال رابط إعادة تعيين كلمة المرور: ${e.message}'));
       }
     } catch (e) {
       return left(ServerFailure('حدث خطأ غير متوقع: ${e.toString()}'));
@@ -247,7 +247,8 @@ class AuthRepoImplementation extends AuthRepo {
       await user.reload();
       return right(user.emailVerified);
     } catch (e) {
-      return left(ServerFailure('فشل التحقق من البريد الإلكتروني: ${e.toString()}'));
+      return left(
+          ServerFailure('فشل التحقق من البريد الإلكتروني: ${e.toString()}'));
     }
   }
 
@@ -267,7 +268,8 @@ class AuthRepoImplementation extends AuthRepo {
   }
 
   @override
-  Future<Either<Failure, UserEntity>> getUserData({required String userId}) async {
+  Future<Either<Failure, UserEntity>> getUserData(
+      {required String userId}) async {
     try {
       final response = await apiService.get(
         endpoint: '${BackendEndpoints.getUserData}/$userId',
@@ -332,6 +334,7 @@ class AuthRepoImplementation extends AuthRepo {
   Future<Either<Failure, UserEntity>> getCurrentUser() async {
     try {
       final data = Prefs.getString(kUserData);
+      // ignore: unnecessary_null_comparison
       if (data == null) {
         return left(ServerFailure('لا يوجد مستخدم محفوظ'));
       }
@@ -351,7 +354,10 @@ class AuthRepoImplementation extends AuthRepo {
   Future<Either<Failure, bool>> checkUserExists(String email) async {
     try {
       // تحقق من البريد الإلكتروني في Firebase
-      final methods = await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
+      final methods =
+          // ignore: deprecated_member_use
+          await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
+      // ignore: avoid_print
       print('Firebase methods: $methods'); // طباعة الطرق المسترجعة من Firebase
       if (methods.isNotEmpty) return right(true);
 
@@ -361,12 +367,15 @@ class AuthRepoImplementation extends AuthRepo {
         body: {'email': email},
       );
 
+      // ignore: avoid_print
       print('Backend response: ${response.body}'); // طباعة استجابة الـ Backend
       final data = jsonDecode(response.body);
       return right(data['exists'] == true);
     } catch (e) {
+      // ignore: avoid_print
       print('Error in checkUserExists: ${e.toString()}'); // طباعة أي خطأ يحدث
-      return left(ServerFailure('فشل التحقق من وجود المستخدم: ${e.toString()}'));
+      return left(
+          ServerFailure('فشل التحقق من وجود المستخدم: ${e.toString()}'));
     }
   }
 
@@ -385,9 +394,10 @@ class AuthRepoImplementation extends AuthRepo {
     // API logic here
     return left(ServerFailure('Not implemented yet'));
   }
+
 // TODO: Delete account - حذف الحساب
-Future<Either<Failure, void>> deleteAccount(String userId) async {
-  // API logic here
-  return left(ServerFailure('Not implemented yet'));
-}
+  Future<Either<Failure, void>> deleteAccount(String userId) async {
+    // API logic here
+    return left(ServerFailure('Not implemented yet'));
+  }
 }

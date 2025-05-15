@@ -47,6 +47,7 @@ class CustomTextFormField extends StatelessWidget {
         ),
         filled: true,
         fillColor: isDarkMode
+            // ignore: deprecated_member_use
             ? theme.colorScheme.surfaceVariant
             : const Color(0xFFF9FAFA),
         border:

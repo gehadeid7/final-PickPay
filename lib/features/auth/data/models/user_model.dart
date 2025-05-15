@@ -3,6 +3,7 @@ import 'package:pickpay/features/auth/domain/entities/user_entity.dart';
 
 class UserModel extends UserEntity {
   // Constructor for UserModel
+  // ignore: use_super_parameters
   UserModel({
     required String fullName,
     required String email,
@@ -28,7 +29,8 @@ class UserModel extends UserEntity {
   // Factory method to create a UserModel from JSON
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      fullName: json['name'] ?? json['fullName'] ?? 'Unknown', // Default to 'Unknown'
+      fullName:
+          json['name'] ?? json['fullName'] ?? 'Unknown', // Default to 'Unknown'
       email: json['email'] ?? 'Unknown', // Default to 'Unknown'
       uId: json['uId'] ?? json['_id'] ?? 'Unknown', // Default to 'Unknown'
       emailVerified: json['emailVerified'] ?? false, // Default to false

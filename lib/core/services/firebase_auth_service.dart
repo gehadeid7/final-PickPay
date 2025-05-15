@@ -132,6 +132,7 @@ class FirebaseAuthService {
   Future<User> signInWithFacebook() async {
     try {
       final rawNonce = generateNonce();
+      // ignore: unused_local_variable
       final nonce = sha256ofString(rawNonce);
       final loginResult = await FacebookAuth.instance.login();
 
@@ -159,6 +160,7 @@ class FirebaseAuthService {
               rawNonce: rawNonce,
             );
             break;
+          // ignore: unreachable_switch_default
           default:
             throw CustomException(message: 'نوع رمز غير معروف من Facebook.');
         }
@@ -190,6 +192,7 @@ class FirebaseAuthService {
     try {
       // Check if the email exists first
       var methods =
+          // ignore: deprecated_member_use
           await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
       if (methods.isEmpty) {
         // Log the message but don't throw an error.

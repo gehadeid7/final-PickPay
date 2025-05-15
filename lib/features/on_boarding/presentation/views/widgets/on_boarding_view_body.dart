@@ -36,6 +36,7 @@ class _OnBoardingViewBodyState extends State<OnBoardingViewBody> {
     super.dispose();
   }
 
+  // ignore: annotate_overrides
   Widget build(BuildContext context) {
     return Column(
       children: [

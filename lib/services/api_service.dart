@@ -248,6 +248,7 @@ class ApiService {
     try {
       // Check Firebase sign-in methods to ensure user exists
       final methods =
+          // ignore: deprecated_member_use
           await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
       if (methods.isEmpty) {
         throw Exception("No Firebase user found with this email.");
@@ -326,6 +327,7 @@ class ApiService {
   Future<Either<Failure, bool>> checkUserExists(String email) async {
     try {
       final methods =
+          // ignore: deprecated_member_use
           await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
       if (methods.isNotEmpty) {
         return right(true);

@@ -120,6 +120,7 @@ class WebViewPage extends StatefulWidget {
   const WebViewPage({super.key, required this.url});
 
   @override
+  // ignore: library_private_types_in_public_api
   _WebViewPageState createState() => _WebViewPageState();
 }
 
@@ -130,6 +131,7 @@ class _WebViewPageState extends State<WebViewPage> {
   void initState() {
     super.initState();
     // Initialize WebView controller
+    // ignore: no_leading_underscores_for_local_identifiers
     WebViewController _controller = WebViewController();
     _controller.loadRequest(
         Uri.parse(widget.url)); // Using the correct method to load URL

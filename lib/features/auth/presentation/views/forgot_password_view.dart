@@ -47,6 +47,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final isSuccess = state is ForgotPasswordSuccess;
+    // ignore: unnecessary_cast
     final cooldown = isSuccess ? (state as ForgotPasswordSuccess).cooldown : 0;
     final isLoading = state is ForgotPasswordLoading;
 
@@ -85,6 +86,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
               color: colorScheme.onSurface.withOpacity(0.5),
             ),
             filled: true,
+            // ignore: deprecated_member_use
             fillColor: colorScheme.surfaceVariant,
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 16,
