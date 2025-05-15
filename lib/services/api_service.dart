@@ -11,7 +11,7 @@ import 'package:pickpay/features/auth/data/models/user_model.dart';
 import 'package:pickpay/features/categories_pages/widgets/product_card.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://192.168.1.4:3000/api/v1/';
+  static const String baseUrl = 'http://192.168.1.7:3000/api/v1/';
 
   // Method to perform a GET request
   Future<http.Response> get({
@@ -19,7 +19,8 @@ class ApiService {
   }) async {
     final url = '$baseUrl$endpoint';
     try {
-      final response = await http.get(Uri.parse(url)).timeout(const Duration(seconds: 15));
+      final response =
+          await http.get(Uri.parse(url)).timeout(const Duration(seconds: 15));
       return response;
     } catch (e) {
       throw Exception('Error performing GET request: ${e.toString()}');
@@ -113,13 +114,15 @@ class ApiService {
             name: productData['title'],
             imagePaths: List<String>.from(productData['images'] ?? []),
             price: productData['price'].toDouble(),
-            originalPrice: productData['originalPrice']?.toDouble() ?? productData['price'].toDouble(),
+            originalPrice: productData['originalPrice']?.toDouble() ??
+                productData['price'].toDouble(),
             rating: productData['rating']?.toDouble() ?? 0.0,
             reviewCount: productData['ratingsQuantity'] ?? 0,
           );
         }).toList();
       } else {
-        final message = jsonDecode(response.body)['message'] ?? 'Unknown error occurred';
+        final message =
+            jsonDecode(response.body)['message'] ?? 'Unknown error occurred';
         throw Exception('Failed to load products: $message');
       }
     } on TimeoutException {
@@ -132,110 +135,108 @@ class ApiService {
   }
 
   // Sync Firebase user to backend
-Future<UserModel> syncFirebaseUserToBackend({
-  required String name,
-  required String email,
-  required String firebaseUid,
-}) async {
-  try {
-    final token = await FirebaseAuth.instance.currentUser?.getIdToken();
-    if (token == null) {
-      throw Exception('Token is null. User is not authenticated.');
-    }
+  Future<UserModel> syncFirebaseUserToBackend({
+    required String name,
+    required String email,
+    required String firebaseUid,
+  }) async {
+    try {
+      final token = await FirebaseAuth.instance.currentUser?.getIdToken();
+      if (token == null) {
+        throw Exception('Token is null. User is not authenticated.');
+      }
 
-    final response = await http.post(
-      Uri.parse('${baseUrl}auth/firebase/sync'),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-      body: jsonEncode({
-        'name': name,
-        'email': email,
-        'uid': firebaseUid,
-      }),
-    );
+      final response = await http.post(
+        Uri.parse('${baseUrl}auth/firebase/sync'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({
+          'name': name,
+          'email': email,
+          'uid': firebaseUid,
+        }),
+      );
 
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body)['data'];
-      return UserModel.fromJson(data);
-    } else {
-      throw Exception('Failed to sync Firebase user: ${response.body}');
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body)['data'];
+        return UserModel.fromJson(data);
+      } else {
+        throw Exception('Failed to sync Firebase user: ${response.body}');
+      }
+    } catch (e) {
+      throw Exception('Error syncing Firebase user: ${e.toString()}');
     }
-  } catch (e) {
-    throw Exception('Error syncing Firebase user: ${e.toString()}');
   }
-}
 
 // ✅ Forgot Password (ensures user is synced with backend)
-Future<http.Response> forgotPassword(String email) async {
-  try {
-    // Check Firebase sign-in methods to ensure user exists
-    final methods = await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
-    if (methods.isEmpty) {
-      throw Exception("No Firebase user found with this email.");
+  Future<http.Response> forgotPassword(String email) async {
+    try {
+      // Check Firebase sign-in methods to ensure user exists
+      final methods =
+          await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
+      if (methods.isEmpty) {
+        throw Exception("No Firebase user found with this email.");
+      }
+
+      // Get Firebase user (currently signed in)
+      final firebaseUser = FirebaseAuth.instance.currentUser;
+
+      if (firebaseUser == null || firebaseUser.email != email) {
+        throw Exception("User not authenticated with this email.");
+      }
+
+      final idToken = await firebaseUser.getIdToken();
+
+      // Sync user to backend if necessary
+      await syncFirebaseUserToBackend(
+        name: firebaseUser.displayName ?? 'No Name',
+        email: firebaseUser.email!,
+        firebaseUid: firebaseUser.uid,
+      );
+
+      // Call backend forgot password endpoint
+      final response = await post(
+        endpoint: 'auth/forgotPassword',
+        body: {'email': email},
+        authorized: false,
+      );
+
+      if (response.statusCode == 200) {
+        return response;
+      } else {
+        throw Exception('Failed to send reset code: ${response.body}');
+      }
+    } catch (e) {
+      throw Exception('Error in forgotPassword: ${e.toString()}');
     }
-
-    // Get Firebase user (currently signed in)
-    final firebaseUser = FirebaseAuth.instance.currentUser;
-
-    if (firebaseUser == null || firebaseUser.email != email) {
-      throw Exception("User not authenticated with this email.");
-    }
-
-    final idToken = await firebaseUser.getIdToken();
-
-    // Sync user to backend if necessary
-    await syncFirebaseUserToBackend(
-      name: firebaseUser.displayName ?? 'No Name',
-      email: firebaseUser.email!,
-      firebaseUid: firebaseUser.uid,
-    );
-
-    // Call backend forgot password endpoint
-    final response = await post(
-      endpoint: 'auth/forgotPassword',
-      body: {'email': email},
-      authorized: false,
-    );
-
-    if (response.statusCode == 200) {
-      return response;
-    } else {
-      throw Exception('Failed to send reset code: ${response.body}');
-    }
-  } catch (e) {
-    throw Exception('Error in forgotPassword: ${e.toString()}');
   }
-}
 
+  // ✅ Reset Password (after user verifies code)
+  Future<http.Response> resetPassword({
+    required String email,
+    required String newPassword,
+  }) async {
+    try {
+      final response = await put(
+        endpoint: 'auth/resetPassword',
+        body: {
+          'email': email,
+          'newPassword': newPassword,
+        },
+        authorized: false,
+      );
 
-
- // ✅ Reset Password (after user verifies code)
-Future<http.Response> resetPassword({
-  required String email,
-  required String newPassword,
-}) async {
-  try {
-    final response = await put(
-      endpoint: 'auth/resetPassword',
-      body: {
-        'email': email,
-        'newPassword': newPassword,
-      },
-      authorized: false,
-    );
-
-    if (response.statusCode == 200) {
-      return response;
-    } else {
-      throw Exception('Reset password failed: ${response.body}');
+      if (response.statusCode == 200) {
+        return response;
+      } else {
+        throw Exception('Reset password failed: ${response.body}');
+      }
+    } catch (e) {
+      throw Exception('Error in resetPassword: ${e.toString()}');
     }
-  } catch (e) {
-    throw Exception('Error in resetPassword: ${e.toString()}');
   }
-}
-
 
   // Refresh Firebase token
   Future<String?> refreshToken() async {
@@ -268,7 +269,8 @@ Future<http.Response> resetPassword({
       return right(exists);
     } catch (e) {
       log('Check user exists error: $e');
-      return left(ServerFailure('فشل التحقق من وجود المستخدم: ${e.toString()}'));
+      return left(
+          ServerFailure('فشل التحقق من وجود المستخدم: ${e.toString()}'));
     }
   }
 }
