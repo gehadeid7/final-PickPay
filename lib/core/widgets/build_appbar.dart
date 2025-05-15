@@ -28,12 +28,13 @@ AppBar buildAppBar({
             ),
             onPressed: onBackPressed ??
                 () {
-                  if (Navigator.canPop(context)) {
-                    Navigator.pop(context);
-                  } else {
-                    // If can't pop, maybe we're in a nested navigator
-                    Navigator.maybePop(context);
-                  }
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    if (Navigator.canPop(context)) {
+                      Navigator.pop(context);
+                    } else {
+                      Navigator.maybePop(context);
+                    }
+                  });
                 },
           )
         : null,
