@@ -18,36 +18,110 @@ import 'package:pickpay/features/categories_pages/products_views/appliances_prod
 import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product15.dart';
 import 'package:pickpay/features/categories_pages/widgets/product_card.dart';
 import 'package:pickpay/services/api_service.dart';
-import 'package:flutter/foundation.dart';
 
 class AppliancesViewBody extends StatelessWidget {
   const AppliancesViewBody({super.key});
 
+  // Map of key phrases to detail pages with their static data
+  static final Map<String, Map<String, dynamic>> productData = {
+    'TORNADO': {
+      'page': AppliancesProduct12(),
+      'rating': 4.5,
+      'reviewCount': 12,
+      'image': 'assets/appliances/product12/1.png',
+    },
+    'Vacuum Cleaner': {
+      'page': AppliancesProduct10(),
+      'rating': 4.6,
+      'reviewCount': 4576,
+      'image': 'assets/appliances/product10/1.png',
+    },
+    'Dough Mixer': {
+      'page': AppliancesProduct15(),
+      'rating': 4.6,
+      'reviewCount': 1735,
+      'image': 'assets/appliances/product15/1.png',
+    },
+    'Blender': {
+      'page': AppliancesProduct13(),
+      'rating': 4.9,
+      'reviewCount': 1439,
+      'image': 'assets/appliances/product13/1.png',
+    },
+    'Refrigerator': {
+      'page': AppliancesProduct3(),
+      'rating': 4.5,
+      'reviewCount': 12,
+      'image': 'assets/appliances/product3/1.png',
+    },
+    'Air Fryer': {
+      'page': AppliancesProduct6(),
+      'rating': 3.1,
+      'reviewCount': 9,
+      'image': 'assets/appliances/product6/1.png',
+    },
+    'Water Dispenser': {
+      'page': AppliancesProduct1(),
+      'rating': 3.9,
+      'reviewCount': 9,
+      'image': 'assets/appliances/product1/1.png',
+    },
+    'Stainless Steel Potato': {
+      'page': AppliancesProduct2(),
+      'rating': 3.1,
+      'reviewCount': 9,
+      'image': 'assets/appliances/product2/1.png',
+    },
+    'Washing Machine': {
+      'page': AppliancesProduct4(),
+      'rating': 4.2,
+      'reviewCount': 14,
+      'image': 'assets/appliances/product4/1.png',
+    },
+    'Dishwasher': {
+      'page': AppliancesProduct5(),
+      'rating': 4.0,
+      'reviewCount': 11,
+      'image': 'assets/appliances/product5/1.png',
+    },
+    'Coffee Maker': {
+      'page': AppliancesProduct7(),
+      'rating': 3.1,
+      'reviewCount': 1288,
+      'image': 'assets/appliances/product7/1.png',
+    },
+    'Toaster': {
+      'page': AppliancesProduct8(),
+      'rating': 4.6,
+      'reviewCount': 884,
+      'image': 'assets/appliances/product8/1.png',
+    },
+    'Iron': {
+      'page': AppliancesProduct9(),
+      'rating': 4.8,
+      'reviewCount': 1193,
+      'image': 'assets/appliances/product9/1.png',
+    },
+    'fan': {
+      'page': AppliancesProduct11(),
+      'rating': 4.4,
+      'reviewCount': 674,
+      'image': 'assets/appliances/product11/1.png',
+    },
+    'Kettle': {
+      'page': AppliancesProduct14(),
+      'rating': 4.5,
+      'reviewCount': 1162,
+      'image': 'assets/appliances/product14/1.png',
+    },
+  };
+
   // Helper function to find the correct detail page for a product
   static Widget? findDetailPage(String productTitle) {
-    // Map of key phrases to detail pages
-    final Map<String, Widget> titleToPage = {
-      'TORNADO': AppliancesProduct12(),
-      'Vacuum Cleaner': AppliancesProduct10(),
-      'Dough Mixer': AppliancesProduct15(),
-      'Blender': AppliancesProduct13(),
-      'Refrigerator': AppliancesProduct3(),
-      'Air Fryer': AppliancesProduct6(),
-      'Water Dispenser': AppliancesProduct1(),
-      'Stainless Steel Potato': AppliancesProduct2(),
-      'Washing Machine': AppliancesProduct4(),
-      'Dishwasher': AppliancesProduct5(),
-      'Coffee Maker': AppliancesProduct7(),
-      'Toaster': AppliancesProduct8(),
-      'Iron': AppliancesProduct9(),
-      'fan': AppliancesProduct11(),
-      'Kettle': AppliancesProduct14(),
-    };
-
     // Find the first matching key phrase
-    for (var key in titleToPage.keys) {
+    for (var key in productData.keys) {
       if (productTitle.toLowerCase().contains(key.toLowerCase())) {
-        return titleToPage[key];
+        return productData[key]!['page'] as Widget;
       }
     }
     return null;
@@ -122,16 +196,29 @@ class AppliancesViewBody extends StatelessWidget {
                   return const SizedBox.shrink();
                 }
 
+                // Get the static data for this product
+                String? key;
+                for (var k in productData.keys) {
+                  if (product.name.toLowerCase().contains(k.toLowerCase())) {
+                    key = k;
+                    break;
+                  }
+                }
+
+                if (key == null) return const SizedBox.shrink();
+
+                final staticData = productData[key]!;
+
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 16),
                   child: ProductCard(
                     id: product.id,
                     name: product.name,
-                    imagePaths: product.imagePaths,
+                    imagePaths: [staticData['image'] as String],
                     price: product.price,
                     originalPrice: product.originalPrice,
-                    rating: product.rating,
-                    reviewCount: product.reviewCount,
+                    rating: staticData['rating'] as double,
+                    reviewCount: staticData['reviewCount'] as int,
                     onTap: () {
                       Navigator.push(
                         context,
