@@ -34,11 +34,13 @@ class _CustomButtonState extends State<CustomButton> {
         decoration: BoxDecoration(
           color: widget.onPressed != null
               ? AppColors.primaryColor
+              // ignore: deprecated_member_use
               : AppColors.primaryColor.withOpacity(0.5),
           borderRadius: BorderRadius.circular(16),
           boxShadow: _isHovered && widget.onPressed != null
               ? [
                   BoxShadow(
+                    // ignore: deprecated_member_use
                     color: Colors.black.withOpacity(0.1),
                     blurRadius: 8,
                     offset: const Offset(0, 2),

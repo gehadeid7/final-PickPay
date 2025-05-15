@@ -26,7 +26,7 @@ class FirebaseAuthService {
   Future<User> createUserWithEmailAndPassword({
     required String email,
     required String password,
-    required String displayName,  // Add a display name parameter
+    required String displayName, // Add a display name parameter
   }) async {
     try {
       final credential = await FirebaseAuth.instance
@@ -189,7 +189,8 @@ class FirebaseAuthService {
   Future<void> sendPasswordResetEmail({required String email}) async {
     try {
       // Check if the email exists first
-      var methods = await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
+      var methods =
+          await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
       if (methods.isEmpty) {
         // Log the message but don't throw an error.
         log("No user found for email: $email, but proceeding to send reset link.");
@@ -199,7 +200,8 @@ class FirebaseAuthService {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
       log("Password reset email sent.");
     } on FirebaseAuthException catch (e, stackTrace) {
-      log('FirebaseAuthException @sendPasswordResetEmail: ${e.code}', stackTrace: stackTrace);
+      log('FirebaseAuthException @sendPasswordResetEmail: ${e.code}',
+          stackTrace: stackTrace);
 
       switch (e.code) {
         case 'invalid-email':
@@ -212,7 +214,8 @@ class FirebaseAuthService {
           throw CustomException(message: 'حدث خطأ، حاول مرة أخرى.');
       }
     } catch (e, stackTrace) {
-      log('Unexpected error @sendPasswordResetEmail: $e', stackTrace: stackTrace);
+      log('Unexpected error @sendPasswordResetEmail: $e',
+          stackTrace: stackTrace);
       throw CustomException(message: 'حدث خطأ غير متوقع، حاول لاحقًا.');
     }
   }
@@ -231,7 +234,8 @@ class FirebaseAuthService {
     const charset =
         '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
     final random = math.Random.secure();
-    return List.generate(length, (_) => charset[random.nextInt(charset.length)]).join();
+    return List.generate(length, (_) => charset[random.nextInt(charset.length)])
+        .join();
   }
 
   // Returns SHA256 hash of input

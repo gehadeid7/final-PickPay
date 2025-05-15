@@ -24,6 +24,7 @@ class _MainNavigationView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ignore: deprecated_member_use
     return WillPopScope(
       onWillPop: () async {
         final shouldExit = await showDialog<bool>(
@@ -37,7 +38,8 @@ class _MainNavigationView extends StatelessWidget {
                 child: const Text('لا'),
               ),
               TextButton(
-                onPressed: () => exit(0), // أو استخدم SystemNavigator.pop() لإغلاق التطبيق
+                onPressed: () =>
+                    exit(0), // أو استخدم SystemNavigator.pop() لإغلاق التطبيق
                 child: const Text('نعم'),
               ),
             ],

@@ -488,6 +488,7 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> {
                                   borderRadius: BorderRadius.circular(16),
                                 ),
                                 backgroundColor:
+                                    // ignore: deprecated_member_use
                                     AppColors.primaryColor.withOpacity(0.5),
                               ),
                               onPressed: null,

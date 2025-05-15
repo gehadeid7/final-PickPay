@@ -97,6 +97,7 @@ class _ChangePasswordFormState extends State<_ChangePasswordForm> {
                   fillColor: _getFillColor(context),
                   labelText: 'Current Password',
                   labelStyle: TextStyles.regular16.copyWith(
+                    // ignore: deprecated_member_use
                     color: theme.colorScheme.onSurface.withOpacity(0.6),
                   ),
                   prefixIcon: Icon(
@@ -150,6 +151,7 @@ class _ChangePasswordFormState extends State<_ChangePasswordForm> {
                   fillColor: _getFillColor(context),
                   labelText: 'New Password',
                   labelStyle: TextStyles.regular16.copyWith(
+                    // ignore: deprecated_member_use
                     color: theme.colorScheme.onSurface.withOpacity(0.6),
                   ),
                   prefixIcon: const Icon(
@@ -206,6 +208,7 @@ class _ChangePasswordFormState extends State<_ChangePasswordForm> {
                   fillColor: _getFillColor(context),
                   labelText: 'Confirm New Password',
                   labelStyle: TextStyles.regular16.copyWith(
+                    // ignore: deprecated_member_use
                     color: theme.colorScheme.onSurface.withOpacity(0.6),
                   ),
                   prefixIcon: const Icon(

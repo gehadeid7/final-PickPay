@@ -41,6 +41,7 @@ class CustomTextFormField extends StatelessWidget {
         hintText: hintText,
         hintStyle: TextStyles.bold13.copyWith(
           color: isDarkMode
+              // ignore: deprecated_member_use
               ? theme.colorScheme.onSurface.withOpacity(0.5)
               : Colors.grey,
         ),

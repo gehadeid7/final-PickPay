@@ -64,6 +64,7 @@ class VerifyEmailView extends StatelessWidget {
                     Text(
                       'We\'ve sent a verification link to your email. Please check your inbox and click the link to verify your account.',
                       style: theme.textTheme.bodyMedium?.copyWith(
+                        // ignore: deprecated_member_use
                         color: theme.colorScheme.onSurface.withOpacity(0.8),
                       ),
                       textAlign: TextAlign.center,
@@ -85,6 +86,7 @@ class VerifyEmailView extends StatelessWidget {
                                   'Resend link in $countdown seconds',
                                   style: theme.textTheme.bodyMedium?.copyWith(
                                     color: theme.colorScheme.onSurface
+                                        // ignore: deprecated_member_use
                                         .withOpacity(0.6),
                                   ),
                                 ),

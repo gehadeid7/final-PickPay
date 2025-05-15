@@ -14,7 +14,7 @@ class VerifyEmailCubit extends Cubit<VerifyEmailState> {
   Timer? _autoCheckTimer;
   int _countdown = 10;
   bool isSending = false;
-  bool isRedirectingAllowed = true;  // Flag to control redirection
+  bool isRedirectingAllowed = true; // Flag to control redirection
   StreamController<int> countdownController = StreamController<int>();
 
   VerifyEmailCubit()

@@ -57,14 +57,17 @@ class _TermsAndConditionsState extends State<TermsAndConditions> {
                   recognizer: TapGestureRecognizer()
                     ..onTap = () async {
                       if (await canLaunchUrl(termsUrl)) {
-                        await launchUrl(termsUrl, mode: LaunchMode.externalApplication);
+                        await launchUrl(termsUrl,
+                            mode: LaunchMode.externalApplication);
                       } else {
                         // Show error message with Flushbar if URL cannot be launched
-                        AppFlushbar.showError(context, 'Unable to open Terms & Conditions.');
+                        AppFlushbar.showError(
+                            context, 'Unable to open Terms & Conditions.');
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => WebViewPage(url: termsUrl.toString()),
+                            builder: (context) =>
+                                WebViewPage(url: termsUrl.toString()),
                           ),
                         );
                       }
@@ -85,14 +88,17 @@ class _TermsAndConditionsState extends State<TermsAndConditions> {
                   recognizer: TapGestureRecognizer()
                     ..onTap = () async {
                       if (await canLaunchUrl(privacyUrl)) {
-                        await launchUrl(privacyUrl, mode: LaunchMode.externalApplication);
+                        await launchUrl(privacyUrl,
+                            mode: LaunchMode.externalApplication);
                       } else {
                         // Show error message with Flushbar if URL cannot be launched
-                        AppFlushbar.showError(context, 'Unable to open Privacy Policy.');
+                        AppFlushbar.showError(
+                            context, 'Unable to open Privacy Policy.');
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => WebViewPage(url: privacyUrl.toString()),
+                            builder: (context) =>
+                                WebViewPage(url: privacyUrl.toString()),
                           ),
                         );
                       }
@@ -125,7 +131,8 @@ class _WebViewPageState extends State<WebViewPage> {
     super.initState();
     // Initialize WebView controller
     WebViewController _controller = WebViewController();
-    _controller.loadRequest(Uri.parse(widget.url)); // Using the correct method to load URL
+    _controller.loadRequest(
+        Uri.parse(widget.url)); // Using the correct method to load URL
     _webViewController = _controller; // Set it for later use
   }
 
