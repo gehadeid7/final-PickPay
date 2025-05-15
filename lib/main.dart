@@ -14,6 +14,9 @@ import 'package:pickpay/features/home/presentation/cubits/wishlist_cubits/wishli
 import 'package:pickpay/features/splash/presentation/views/splash_view.dart';
 import 'package:pickpay/firebase_options.dart';
 
+// Add RouteObserver at the top level
+final RouteObserver<ModalRoute> routeObserver = RouteObserver<ModalRoute>();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -53,6 +56,8 @@ class Pickpay extends StatelessWidget {
       onGenerateRoute: onGenerateRoute,
       initialRoute: SplashView.routeName,
       debugShowCheckedModeBanner: false,
+      // Add the routeObserver to navigatorObservers
+      navigatorObservers: [routeObserver],
       builder: (context, child) {
         return AnimatedTheme(
           data: themeProvider.isDarkMode

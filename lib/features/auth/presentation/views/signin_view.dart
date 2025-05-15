@@ -14,36 +14,36 @@ class SigninView extends StatelessWidget {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        // إظهار حوار تأكيد عند العودة
+        // Show confirmation dialog when going back
         return await showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text('هل أنت متأكد؟'),
-            content: Text('هل ترغب في الخروج من التطبيق؟'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context, false); // لا للخروج
-                },
-                child: Text('لا'),
+              context: context,
+              builder: (context) => AlertDialog(
+                title: Text('Are you sure?'),
+                content: Text('Do you want to exit the app?'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context, false); // No to exit
+                    },
+                    child: Text('No'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context, true); // Yes to exit
+                    },
+                    child: Text('Yes'),
+                  ),
+                ],
               ),
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context, true); // نعم للخروج
-                },
-                child: Text('نعم'),
-              ),
-            ],
-          ),
-        ) ??
-            false; // إذا ضغط على أي مكان آخر، يتم إلغاء العملية
+            ) ??
+            false; // If clicked elsewhere, cancel the operation
       },
       child: BlocProvider(
         create: (context) => SigninCubit(
           getIt.get<AuthRepo>(),
         ),
         child: Scaffold(
-          appBar: buildAppBar(context: context, title: 'تسجيل الدخول'),
+          appBar: buildAppBar(context: context, title: 'Sign In'),
           body: SigninViewBodyBlocConsumer(),
         ),
       ),
