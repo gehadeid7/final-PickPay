@@ -32,8 +32,7 @@ class _ProductDetailViewState extends State<ProductDetailView> {
     final product = widget.product;
 
     return Scaffold(
-      backgroundColor:
-          isDarkMode ? theme.scaffoldBackgroundColor : Colors.white,
+      backgroundColor: isDarkMode ? Colors.grey.shade900 : Colors.white,
       appBar: AppBar(
         backgroundColor:
             isDarkMode ? theme.appBarTheme.backgroundColor : Colors.white,

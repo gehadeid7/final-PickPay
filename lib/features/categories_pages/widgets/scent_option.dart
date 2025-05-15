@@ -4,12 +4,24 @@ class ScentOption extends StatefulWidget {
   final List<String> scentOption;
   final void Function(String selectedScent)? onScentSelected;
   final bool showLabel;
+  final EdgeInsetsGeometry? padding;
+  final Color? selectionColor;
+  final double selectedBorderWidth;
+  final BorderRadius? borderRadius;
+  final TextStyle? labelStyle;
+  final TextStyle? selectedScentStyle;
 
   const ScentOption({
     super.key,
     required this.scentOption,
     this.onScentSelected,
     this.showLabel = false,
+    this.padding,
+    this.selectionColor,
+    this.selectedBorderWidth = 1.5,
+    this.borderRadius,
+    this.labelStyle,
+    this.selectedScentStyle,
   });
 
   @override
@@ -19,6 +31,10 @@ class ScentOption extends StatefulWidget {
 class _ScentOptionState extends State<ScentOption> {
   int? selectedIndex;
 
+  Color _getSelectionColor(BuildContext context) {
+    return widget.selectionColor ?? Theme.of(context).colorScheme.primary;
+  }
+
   @override
   Widget build(BuildContext context) {
     if (widget.scentOption.isEmpty) return const SizedBox.shrink();
@@ -26,6 +42,7 @@ class _ScentOptionState extends State<ScentOption> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final isDarkMode = theme.brightness == Brightness.dark;
+    final selectionColor = _getSelectionColor(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -35,9 +52,11 @@ class _ScentOptionState extends State<ScentOption> {
             padding: const EdgeInsets.only(bottom: 8),
             child: Text(
               'Scent',
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              style: widget.labelStyle ??
+                  theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: colorScheme.onSurface,
+                  ),
             ),
           ),
         Wrap(
@@ -46,7 +65,6 @@ class _ScentOptionState extends State<ScentOption> {
           children: List.generate(widget.scentOption.length, (index) {
             final scentName = widget.scentOption[index];
             final isSelected = index == selectedIndex;
-            final selectionColor = colorScheme.primary; // Blue from theme
 
             return GestureDetector(
               onTap: () {
@@ -56,37 +74,36 @@ class _ScentOptionState extends State<ScentOption> {
                 widget.onScentSelected?.call(scentName);
               },
               child: Container(
-                padding:
+                padding: widget.padding ??
                     const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                 decoration: BoxDecoration(
                   border: Border.all(
                     color: isSelected
                         ? selectionColor
                         : isDarkMode
-                            ? colorScheme.outline
+                            ? Colors.grey.shade700
                             : Colors.grey.shade300,
-                    width: isSelected ? 1.5 : 1,
+                    width: isSelected ? widget.selectedBorderWidth : 1.0,
                   ),
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: widget.borderRadius ?? BorderRadius.circular(8),
                   color: isSelected
-                      // ignore: deprecated_member_use
                       ? selectionColor.withOpacity(0.15)
                       : isDarkMode
-                          // ignore: deprecated_member_use
-                          ? colorScheme.surfaceVariant
-                          : null,
+                          ? Colors.grey.shade800
+                          : Colors.transparent,
                 ),
                 child: Text(
                   scentName,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: isSelected
-                        ? selectionColor
-                        : isDarkMode
-                            ? colorScheme.onSurface
-                            : Colors.black,
-                    fontWeight:
-                        isSelected ? FontWeight.bold : FontWeight.normal,
-                  ),
+                  style: widget.selectedScentStyle ??
+                      theme.textTheme.bodyMedium?.copyWith(
+                        color: isSelected
+                            ? selectionColor
+                            : isDarkMode
+                                ? colorScheme.onSurfaceVariant
+                                : Colors.black,
+                        fontWeight:
+                            isSelected ? FontWeight.bold : FontWeight.normal,
+                      ),
                   textAlign: TextAlign.center,
                 ),
               ),

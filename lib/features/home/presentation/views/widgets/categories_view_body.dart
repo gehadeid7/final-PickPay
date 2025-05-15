@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pickpay/constants.dart';
+import 'package:pickpay/core/themes/theme_provider.dart';
 import 'package:pickpay/core/utils/app_text_styles.dart';
 import 'package:pickpay/features/home/presentation/cubits/categories_cubits/categories_cubits_cubit.dart';
 import 'package:pickpay/features/home/presentation/cubits/categories_cubits/categories_cubits_state.dart';
 import 'package:pickpay/features/home/presentation/views/widgets/category_navigation_helper.dart';
 import 'package:pickpay/features/home/presentation/views/widgets/custom_appbar.dart';
+import 'package:provider/provider.dart';
 
 class CategoriesViewBody extends StatelessWidget {
   const CategoriesViewBody({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final isDarkMode = themeProvider.isDarkMode;
+
     return Column(
       children: [
         SizedBox(height: kTopPadding),
@@ -46,7 +51,6 @@ class CategoriesViewBody extends StatelessWidget {
                           borderRadius: BorderRadius.circular(16),
                           boxShadow: [
                             BoxShadow(
-                              // ignore: deprecated_member_use
                               color: Colors.black.withOpacity(0.1),
                               blurRadius: 8,
                               offset: const Offset(0, 4),
@@ -64,12 +68,16 @@ class CategoriesViewBody extends StatelessWidget {
                               ),
                               Container(
                                 decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: isDarkMode
+                                        ? Colors.grey[900]!
+                                        : Colors.grey.shade100,
+                                  ),
                                   gradient: LinearGradient(
                                     begin: Alignment.bottomCenter,
                                     end: Alignment.topCenter,
                                     colors: [
-                                      // ignore: deprecated_member_use
-                                      Colors.black.withOpacity(0.5),
+                                      Colors.grey.shade900.withOpacity(0.5),
                                       Colors.transparent,
                                     ],
                                   ),
