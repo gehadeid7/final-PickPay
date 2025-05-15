@@ -38,6 +38,13 @@ class WishlistViewBody extends StatelessWidget {
           return Column(
             children: [
               _buildWishlistHeader(wishlistItems.length, theme, colorScheme),
+              Divider(
+                height: 1,
+                thickness: 1,
+                indent: 16,
+                endIndent: 16,
+                color: isDarkMode ? Colors.grey[700] : Colors.grey[300],
+              ),
               _buildWishlistItems(
                   wishlistItems, context, isDarkMode, colorScheme),
             ],
@@ -128,11 +135,11 @@ class WishlistViewBody extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: isDarkMode ? colorScheme.surface : Colors.white,
+        color: isDarkMode ? Colors.grey.shade900 : Colors.white,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: const Color.fromARGB(255, 82, 82, 82)
+            color: Color.fromARGB(255, 82, 82, 82)
                 // ignore: deprecated_member_use
                 .withOpacity(isDarkMode ? 0.1 : 0.05),
             spreadRadius: 6,
@@ -140,6 +147,9 @@ class WishlistViewBody extends StatelessWidget {
             offset: const Offset(0, 2),
           ),
         ],
+        border: Border.all(
+          color: isDarkMode ? Colors.grey.shade700 : Colors.grey.shade200,
+        ),
       ),
       child: Material(
         color: Colors.transparent,

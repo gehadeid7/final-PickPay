@@ -69,8 +69,10 @@ dependencies:
   webview_flutter: ^4.0.0
   another_flushbar: ^1.12.30
   intl: ^0.18.1
-  image_picker: ^1.1.2  # Update to latest stable
-  file_picker: ^10.1.9  # Update to latest stable
+  image_picker: ^1.1.2 
+  file_picker: ^10.1.9 
+  animated_text_kit: ^4.2.2
+
 
  
 
