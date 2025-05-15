@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
+import 'dart:developer' as dev;
 import 'package:pickpay/core/widgets/build_appbar.dart';
 import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product1.dart';
-import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product10.dart';
-import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product11.dart';
-import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product12.dart';
-import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product13.dart';
-import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product14.dart';
-import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product15.dart';
 import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product2.dart';
 import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product3.dart';
 import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product4.dart';
@@ -15,149 +10,141 @@ import 'package:pickpay/features/categories_pages/products_views/appliances_prod
 import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product7.dart';
 import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product8.dart';
 import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product9.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product10.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product11.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product12.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product13.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product14.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product15.dart';
 import 'package:pickpay/features/categories_pages/widgets/product_card.dart';
-import 'package:pickpay/services/api_service.dart'; // Import ApiService
+import 'package:pickpay/services/api_service.dart';
+import 'package:flutter/foundation.dart';
 
 class AppliancesViewBody extends StatelessWidget {
   const AppliancesViewBody({super.key});
 
-  // Mapping of product IDs to corresponding product details (Widget, Rating, Review Count)
-  final Map<String, Map<String, dynamic>> productData = const {
-    '68132a95ff7813b3d47f9da5': {
-      'widget': AppliancesProduct1(),
-      'rating': 3.1,
-      'reviewCount': 9,
-    },
-    '68132a95ff7813b3d47f9da6': {
-      'widget': AppliancesProduct2(),
-      'rating': 3.1,
-      'reviewCount': 9,
-    },
-    '68132a95ff7813b3d47f9da7': {
-      'widget': AppliancesProduct3(),
-      'rating': 4.5,
-      'reviewCount': 12,
-    },
-    '68132a95ff7813b3d47f9da8': {
-      'widget': AppliancesProduct4(),
-      'rating': 4.2,
-      'reviewCount': 14,
-    },
-    '68132a95ff7813b3d47f9da9': {
-      'widget': AppliancesProduct5(),
-      'rating': 4.0,
-      'reviewCount': 11,
-    },
-    '68132a95ff7813b3d47f9daa': {
-      'widget': AppliancesProduct6(),
-      'rating': 3.9,
-      'reviewCount': 9,
-    },
-    '68132a95ff7813b3d47f9dab': {
-      'widget': AppliancesProduct7(),
-      'rating': 3.1,
-      'reviewCount': 1288,
-    },
-    '68132a95ff7813b3d47f9dac': {
-      'widget': AppliancesProduct8(),
-      'rating': 4.6,
-      'reviewCount': 884,
-    },
-    '68132a95ff7813b3d47f9dad': {
-      'widget': AppliancesProduct9(),
-      'rating': 4.8,
-      'reviewCount': 1193,
-    },
-    '68132a95ff7813b3d47f9dae': {
-      'widget': AppliancesProduct10(),
-      'rating': 4.6,
-      'reviewCount': 4576,
-    },
-    '68132a95ff7813b3d47f9daf': {
-      'widget': AppliancesProduct11(),
-      'rating': 4.4,
-      'reviewCount': 674,
-    },
-    '68132a95ff7813b3d47f9db0': {
-      'widget': AppliancesProduct12(),
-      'rating': 4.5,
-      'reviewCount': 12,
-    },
-    '68132a95ff7813b3d47f9db1': {
-      'widget': AppliancesProduct13(),
-      'rating': 4.9,
-      'reviewCount': 1439,
-    },
-    '68132a95ff7813b3d47f9db2': {
-      'widget': AppliancesProduct14(),
-      'rating': 4.5,
-      'reviewCount': 1162,
-    },
-    '68132a95ff7813b3d47f9db3': {
-      'widget': AppliancesProduct15(),
-      'rating': 4.6,
-      'reviewCount': 1735,
-    },
-  };
+  // Helper function to find the correct detail page for a product
+  static Widget? findDetailPage(String productTitle) {
+    // Map of key phrases to detail pages
+    final Map<String, Widget> titleToPage = {
+      'TORNADO': AppliancesProduct12(),
+      'Vacuum Cleaner': AppliancesProduct10(),
+      'Dough Mixer': AppliancesProduct15(),
+      'Blender': AppliancesProduct13(),
+      'Refrigerator': AppliancesProduct3(),
+      'Air Fryer': AppliancesProduct6(),
+      'Water Dispenser': AppliancesProduct1(),
+      'Stainless Steel Potato': AppliancesProduct2(),
+      'Washing Machine': AppliancesProduct4(),
+      'Dishwasher': AppliancesProduct5(),
+      'Coffee Maker': AppliancesProduct7(),
+      'Toaster': AppliancesProduct8(),
+      'Iron': AppliancesProduct9(),
+      'fan': AppliancesProduct11(),
+      'Kettle': AppliancesProduct14(),
+    };
+
+    // Find the first matching key phrase
+    for (var key in titleToPage.keys) {
+      if (productTitle.toLowerCase().contains(key.toLowerCase())) {
+        return titleToPage[key];
+      }
+    }
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildAppBar(context: context, title: 'Appliances'),
       body: FutureBuilder<List<ProductCard>>(
-        // Fetch products from the API
         future: ApiService().loadProducts(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            // Show loading spinner while waiting for data
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            // Show error message if there is an error
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (snapshot.hasData) {
-            // If data is available, display the list of products
-            final products = snapshot.data!;
-            return ListView.builder(
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          if (snapshot.hasError) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.error_outline,
+                    color: Colors.red,
+                    size: 60,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Error: ${snapshot.error}',
+                    style: const TextStyle(fontSize: 16),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () {
+                      // Trigger a rebuild to retry loading
+                      (context as Element).markNeedsBuild();
+                    },
+                    child: const Text('Retry'),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(
+              child: Text(
+                'No appliances available at the moment.',
+                style: TextStyle(fontSize: 16),
+              ),
+            );
+          }
+
+          final products = snapshot.data!;
+
+          return RefreshIndicator(
+            onRefresh: () async {
+              // Trigger a rebuild to refresh the data
+              (context as Element).markNeedsBuild();
+            },
+            child: ListView.builder(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               itemCount: products.length,
               itemBuilder: (context, index) {
-                var product = products[index];
+                final product = products[index];
+                final productPage = findDetailPage(product.name);
 
-                // Get the product details dynamically
-                var productDetails = productData[product.id];
-
-                if (productDetails != null) {
-                  return Padding(
-                    padding: const EdgeInsets.only(
-                        bottom: 16), // Add space below each item
-                    child: ProductCard(
-                      id: product.id,
-                      name: product.name,
-                      imagePaths: product.imagePaths,
-                      price: product.price,
-                      originalPrice: product.originalPrice,
-                      rating: productDetails['rating'], // Dynamic rating
-                      reviewCount:
-                          productDetails['reviewCount'], // Dynamic review count
-                      onTap: () {
-                        // Single line for navigation and dynamic product details
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => productDetails['widget']),
-                        );
-                      },
-                    ),
-                  );
-                } else {
-                  return SizedBox
-                      .shrink(); // If no product data found, return an empty widget
+                if (productPage == null) {
+                  return const SizedBox.shrink();
                 }
+
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: ProductCard(
+                    id: product.id,
+                    name: product.name,
+                    imagePaths: product.imagePaths,
+                    price: product.price,
+                    originalPrice: product.originalPrice,
+                    rating: product.rating,
+                    reviewCount: product.reviewCount,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => productPage,
+                        ),
+                      );
+                    },
+                  ),
+                );
               },
-            );
-          } else {
-            return Center(child: Text('No products available.'));
-          }
+            ),
+          );
         },
       ),
     );
