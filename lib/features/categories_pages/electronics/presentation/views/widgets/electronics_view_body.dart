@@ -222,14 +222,20 @@ class _ElectronicsViewBodyState extends State<ElectronicsViewBody> {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         children: [
           SizedBox(height: kTopPadding),
-          BrandFilterWidget(
-            products: _allProducts,
-            selectedBrand: _selectedBrand,
-            onBrandChanged: (newBrand) {
-              setState(() {
-                _selectedBrand = newBrand;
-              });
-            },
+          Align(
+            alignment: Alignment.centerLeft,
+            child: SizedBox(
+              width: 150,
+              child: BrandFilterWidget(
+                products: _allProducts,
+                selectedBrand: _selectedBrand,
+                onBrandChanged: (newBrand) {
+                  setState(() {
+                    _selectedBrand = newBrand;
+                  });
+                },
+              ),
+            ),
           ),
           ..._filteredProducts.map((product) {
             return Column(

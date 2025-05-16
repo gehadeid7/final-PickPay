@@ -247,14 +247,20 @@ class _AppliancesViewBodyState extends State<AppliancesViewBody> {
               children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: BrandFilterWidget(
-                    products: snapshot.data!,
-                    selectedBrand: _selectedBrand,
-                    onBrandChanged: (newBrand) {
-                      setState(() {
-                        _selectedBrand = newBrand;
-                      });
-                    },
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: SizedBox(
+                      width: 150,
+                      child: BrandFilterWidget(
+                        products: snapshot.data!,
+                        selectedBrand: _selectedBrand,
+                        onBrandChanged: (newBrand) {
+                          setState(() {
+                            _selectedBrand = newBrand;
+                          });
+                        },
+                      ),
+                    ),
                   ),
                 ),
                 Expanded(
