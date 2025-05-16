@@ -27,6 +27,7 @@ class BrandFilterWidget extends StatelessWidget {
     final allBrands = ['All Brands', ...?brands];
 
     return SizedBox(
+      width: 140,
       child: Container(
         margin: const EdgeInsets.only(bottom: 16),
         decoration: BoxDecoration(
