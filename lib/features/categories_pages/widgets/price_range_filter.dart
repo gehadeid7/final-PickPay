@@ -14,16 +14,13 @@ class PriceRangeFilterWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ConstrainedBox(
-      constraints: const BoxConstraints(
-        minHeight: 80,
-        maxHeight: 100,
-      ),
+    return SizedBox(
+      height: 80,
       child: Card(
         elevation: 2,
         margin: EdgeInsets.zero,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -36,33 +33,40 @@ class PriceRangeFilterWidget extends StatelessWidget {
                   color: Colors.grey,
                 ),
               ),
+              const SizedBox(height: 4),
               Expanded(
-                child: RangeSlider(
-                  values: values,
-                  min: 0,
-                  max: maxPrice,
-                  divisions: maxPrice > 0 ? 10 : 1,
-                  activeColor: Colors.green,
-                  inactiveColor: Colors.blue[100],
-                  labels: RangeLabels(
-                    'EGP ${values.start.round()}',
-                    'EGP ${values.end.round()}',
+                child: SliderTheme(
+                  data: SliderTheme.of(context).copyWith(
+                    rangeThumbShape: RoundRangeSliderThumbShape(
+                      enabledThumbRadius: 8,
+                      disabledThumbRadius: 8,
+                    ),
+                    trackHeight: 4,
                   ),
-                  onChanged: onChanged,
+                  child: RangeSlider(
+                    values: values,
+                    min: 0,
+                    max: maxPrice,
+                    divisions: maxPrice > 0 ? 10 : 1,
+                    activeColor: Colors.green,
+                    inactiveColor: Colors.blue[100],
+                    onChanged: onChanged,
+                  ),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                padding:
+                    const EdgeInsets.only(left: 4, right: 4), // Reduced padding
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
                       'EGP ${values.start.round()}',
-                      style: const TextStyle(fontSize: 11),
+                      style: const TextStyle(fontSize: 10), // Reduced font size
                     ),
                     Text(
                       'EGP ${values.end.round()}',
-                      style: const TextStyle(fontSize: 11),
+                      style: const TextStyle(fontSize: 10), // Reduced font size
                     ),
                   ],
                 ),
