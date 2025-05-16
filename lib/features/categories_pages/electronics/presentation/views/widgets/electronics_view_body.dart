@@ -18,6 +18,8 @@ import 'package:pickpay/features/categories_pages/products_views/electronics_pro
 import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product8.dart';
 import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product9.dart';
 import 'package:pickpay/features/categories_pages/widgets/brand_filter_widget.dart';
+import 'package:pickpay/features/categories_pages/widgets/price_range_filter.dart';
+import 'package:pickpay/features/categories_pages/widgets/rating_filter.dart';
 import 'package:pickpay/features/categories_pages/widgets/product_card.dart';
 
 class ElectronicsViewBody extends StatefulWidget {
@@ -29,6 +31,9 @@ class ElectronicsViewBody extends StatefulWidget {
 
 class _ElectronicsViewBodyState extends State<ElectronicsViewBody> {
   String? _selectedBrand;
+  double _minRating = 0;
+  late RangeValues _priceRange; // Changed to late initialization
+
   final List<ProductsViewsModel> _allProducts = [
     ProductsViewsModel(
       id: 'elec1',
@@ -202,41 +207,92 @@ class _ElectronicsViewBodyState extends State<ElectronicsViewBody> {
       imagePaths: ['assets/electronics_products/Laptop/Laptop5/1.png'],
     ),
   ];
+  @override
+  void initState() {
+    super.initState();
+    // Initialize price range after products are available
+    final maxPrice = _allProducts
+        .map((product) => product.price)
+        .reduce((a, b) => a > b ? a : b);
+    _priceRange = RangeValues(0, maxPrice);
+  }
 
   List<ProductsViewsModel> get _filteredProducts {
-    if (_selectedBrand == null ||
-        _selectedBrand!.isEmpty ||
-        _selectedBrand == 'All Brands') {
-      return _allProducts;
-    }
-    return _allProducts
-        .where((product) => product.brand == _selectedBrand)
-        .toList();
+    return _allProducts.where((product) {
+      final brandMatch = _selectedBrand == null ||
+          _selectedBrand!.isEmpty ||
+          _selectedBrand == 'All Brands' ||
+          product.brand == _selectedBrand;
+
+      final ratingMatch =
+          product.rating != null && product.rating! >= _minRating;
+
+      final priceMatch = product.price >= _priceRange.start &&
+          product.price <= _priceRange.end;
+
+      return brandMatch && ratingMatch && priceMatch;
+    }).toList();
   }
 
   @override
   Widget build(BuildContext context) {
+    final maxPrice = _allProducts
+        .map((product) => product.price)
+        .reduce((a, b) => a > b ? a : b);
+
+    // Ensure current range values are within bounds
+    final currentValues = RangeValues(
+      _priceRange.start.clamp(0, maxPrice),
+      _priceRange.end.clamp(0, maxPrice),
+    );
+
     return Scaffold(
       appBar: buildAppBar(context: context, title: 'Electronics'),
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         children: [
-          SizedBox(height: kTopPadding),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: SizedBox(
-              width: 150,
-              child: BrandFilterWidget(
-                products: _allProducts,
-                selectedBrand: _selectedBrand,
-                onBrandChanged: (newBrand) {
-                  setState(() {
-                    _selectedBrand = newBrand;
-                  });
-                },
-              ),
+          // Filters section
+          Card(
+            elevation: 2,
+            child: BrandFilterWidget(
+              products: _allProducts,
+              selectedBrand: _selectedBrand,
+              onBrandChanged: (newBrand) {
+                setState(() {
+                  _selectedBrand = newBrand;
+                });
+              },
             ),
           ),
+          // Price and Rating filters in a row
+          Row(
+            children: [
+              // Price Filter (left side)
+              Expanded(
+                child: Card(
+                  elevation: 2,
+                  child: PriceRangeFilterWidget(
+                    values: currentValues,
+                    maxPrice: maxPrice,
+                    onChanged: (range) => setState(() => _priceRange = range),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              // Rating Filter (right side)
+              Expanded(
+                child: Card(
+                  elevation: 2,
+                  child: RatingFilterWidget(
+                    value: _minRating,
+                    onChanged: (rating) => setState(() => _minRating = rating),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          // Products list
           ..._filteredProducts.map((product) {
             return Column(
               children: [
@@ -299,8 +355,7 @@ class _ElectronicsViewBodyState extends State<ElectronicsViewBody> {
                         productDetailView = const Product15View();
                         break;
                       default:
-                        productDetailView =
-                            const Product1View(); // Default fallback
+                        productDetailView = const Product1View();
                     }
 
                     Navigator.push(

@@ -272,7 +272,6 @@ class _AppliancesViewBodyState extends State<AppliancesViewBody> {
                     },
                   ),
                 ),
-                const SizedBox(height: 8),
                 // Price and Rating filters in a row
                 Row(
                   children: [

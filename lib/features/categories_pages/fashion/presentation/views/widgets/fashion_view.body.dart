@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pickpay/constants.dart';
 import 'package:pickpay/core/widgets/build_appbar.dart';
 import 'package:pickpay/features/categories_pages/models/product_model.dart';
 import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product1.dart';
@@ -18,7 +17,9 @@ import 'package:pickpay/features/categories_pages/products_views/fashion_product
 import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product8.dart';
 import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product9.dart';
 import 'package:pickpay/features/categories_pages/widgets/brand_filter_widget.dart';
+import 'package:pickpay/features/categories_pages/widgets/price_range_filter.dart';
 import 'package:pickpay/features/categories_pages/widgets/product_card.dart';
+import 'package:pickpay/features/categories_pages/widgets/rating_filter.dart';
 
 class FashionViewBody extends StatefulWidget {
   const FashionViewBody({super.key});
@@ -29,6 +30,9 @@ class FashionViewBody extends StatefulWidget {
 
 class _FashionViewBodyState extends State<FashionViewBody> {
   String? _selectedBrand;
+  double _minRating = 0;
+  RangeValues _priceRange = const RangeValues(0, 900); // Initial safe value
+
   final List<ProductsViewsModel> _allProducts = [
     ProductsViewsModel(
       id: '68132a95ff7813b3d47f9da1',
@@ -195,41 +199,99 @@ class _FashionViewBodyState extends State<FashionViewBody> {
       imagePaths: ["assets/Fashion_products/Kids_Fashion/kids_fashion5/1.png"],
     ),
   ];
+  @override
+  void initState() {
+    super.initState();
+    // Update price range after widget is initialized
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final maxPrice = _allProducts
+          .map((product) => product.price)
+          .reduce((a, b) => a > b ? a : b);
+      setState(() {
+        _priceRange = RangeValues(0, maxPrice);
+      });
+    });
+  }
 
   List<ProductsViewsModel> get _filteredProducts {
-    if (_selectedBrand == null ||
-        _selectedBrand!.isEmpty ||
-        _selectedBrand == 'All Brands') {
-      return _allProducts;
-    }
-    return _allProducts
-        .where((product) => product.brand == _selectedBrand)
-        .toList();
+    return _allProducts.where((product) {
+      final brandMatch = _selectedBrand == null ||
+          _selectedBrand!.isEmpty ||
+          _selectedBrand == 'All Brands' ||
+          product.brand == _selectedBrand;
+
+      final ratingMatch =
+          product.rating != null && product.rating! >= _minRating;
+
+      final priceMatch = product.price >= _priceRange.start &&
+          product.price <= _priceRange.end;
+
+      return brandMatch && ratingMatch && priceMatch;
+    }).toList();
   }
 
   @override
   Widget build(BuildContext context) {
+    final maxPrice = _allProducts
+        .map((product) => product.price)
+        .reduce((a, b) => a > b ? a : b);
+
+    // Ensure current range values are within bounds
+    final currentValues = RangeValues(
+      _priceRange.start.clamp(0, maxPrice),
+      _priceRange.end.clamp(0, maxPrice),
+    );
     return Scaffold(
       appBar: buildAppBar(context: context, title: 'Fashion'),
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         children: [
-          SizedBox(height: kTopPadding),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: SizedBox(
-              width: 150,
-              child: BrandFilterWidget(
-                products: _allProducts,
-                selectedBrand: _selectedBrand,
-                onBrandChanged: (newBrand) {
-                  setState(() {
-                    _selectedBrand = newBrand;
-                  });
-                },
-              ),
+          // Filters section
+          Card(
+            elevation: 2,
+            child: BrandFilterWidget(
+              products: _allProducts,
+              selectedBrand: _selectedBrand,
+              onBrandChanged: (newBrand) {
+                setState(() {
+                  _selectedBrand = newBrand;
+                });
+              },
             ),
           ),
+          // Price and Rating filters in a row
+          Row(
+            children: [
+              // Price Filter (left side)
+              Expanded(
+                child: Card(
+                  elevation: 2,
+                  child: PriceRangeFilterWidget(
+                    values: currentValues,
+                    maxPrice: maxPrice,
+                    onChanged: (range) {
+                      setState(() {
+                        _priceRange = range;
+                      });
+                    },
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              // Rating Filter (right side)
+              Expanded(
+                child: Card(
+                  elevation: 2,
+                  child: RatingFilterWidget(
+                    value: _minRating,
+                    onChanged: (rating) => setState(() => _minRating = rating),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          // Products list
           ..._filteredProducts.map((product) {
             return Column(
               children: [
@@ -292,8 +354,7 @@ class _FashionViewBodyState extends State<FashionViewBody> {
                         productDetailView = const FashionProduct15();
                         break;
                       default:
-                        productDetailView =
-                            const FashionProduct1(); // Default fallback
+                        productDetailView = const FashionProduct1();
                     }
 
                     Navigator.push(

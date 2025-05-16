@@ -23,6 +23,8 @@ import 'package:pickpay/features/categories_pages/products_views/home_products/h
 import 'package:pickpay/features/categories_pages/products_views/home_products/home_product8.dart';
 import 'package:pickpay/features/categories_pages/products_views/home_products/home_product9.dart';
 import 'package:pickpay/features/categories_pages/widgets/brand_filter_widget.dart';
+import 'package:pickpay/features/categories_pages/widgets/price_range_filter.dart';
+import 'package:pickpay/features/categories_pages/widgets/rating_filter.dart';
 import 'package:pickpay/features/categories_pages/widgets/product_card.dart';
 
 class HomeCategoryViewBody extends StatefulWidget {
@@ -34,6 +36,9 @@ class HomeCategoryViewBody extends StatefulWidget {
 
 class _HomeCategoryViewBodyState extends State<HomeCategoryViewBody> {
   String? _selectedBrand;
+  double _minRating = 0;
+  RangeValues _priceRange = const RangeValues(0, 10000);
+
   final List<ProductsViewsModel> _allProducts = [
     ProductsViewsModel(
       id: 'home1',
@@ -246,39 +251,75 @@ class _HomeCategoryViewBodyState extends State<HomeCategoryViewBody> {
   ];
 
   List<ProductsViewsModel> get _filteredProducts {
-    if (_selectedBrand == null ||
-        _selectedBrand!.isEmpty ||
-        _selectedBrand == 'All Brands') {
-      return _allProducts;
-    }
-    return _allProducts
-        .where((product) => product.brand == _selectedBrand)
-        .toList();
+    return _allProducts.where((product) {
+      final brandMatch = _selectedBrand == null ||
+          _selectedBrand!.isEmpty ||
+          _selectedBrand == 'All Brands' ||
+          product.brand == _selectedBrand;
+
+      final ratingMatch =
+          product.rating != null && product.rating! >= _minRating;
+
+      final priceMatch = product.price >= _priceRange.start &&
+          product.price <= _priceRange.end;
+
+      return brandMatch && ratingMatch && priceMatch;
+    }).toList();
   }
 
   @override
   Widget build(BuildContext context) {
+    final maxPrice = _allProducts
+        .map((product) => product.price)
+        .reduce((a, b) => a > b ? a : b);
+
     return Scaffold(
       appBar: buildAppBar(context: context, title: 'Home'),
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         children: [
-          SizedBox(height: kTopPadding),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: SizedBox(
-              width: 150,
-              child: BrandFilterWidget(
-                products: _allProducts,
-                selectedBrand: _selectedBrand,
-                onBrandChanged: (newBrand) {
-                  setState(() {
-                    _selectedBrand = newBrand;
-                  });
-                },
-              ),
+          // Filters section
+          Card(
+            elevation: 2,
+            child: BrandFilterWidget(
+              products: _allProducts,
+              selectedBrand: _selectedBrand,
+              onBrandChanged: (newBrand) {
+                setState(() {
+                  _selectedBrand = newBrand;
+                });
+              },
             ),
           ),
+          // Price and Rating filters in a row
+          Row(
+            children: [
+              // Price Filter (left side)
+              Expanded(
+                child: Card(
+                  elevation: 2,
+                  child: PriceRangeFilterWidget(
+                    values: _priceRange,
+                    maxPrice: maxPrice,
+                    onChanged: (range) => setState(() => _priceRange = range),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              // Rating Filter (right side)
+              Expanded(
+                child: Card(
+                  elevation: 2,
+                  child: RatingFilterWidget(
+                    value: _minRating,
+                    onChanged: (rating) => setState(() => _minRating = rating),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          // Products list
           ..._filteredProducts.map((product) {
             return Column(
               children: [
