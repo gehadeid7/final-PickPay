@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pickpay/core/widgets/build_appbar.dart';
+import 'package:pickpay/features/categories_pages/models/product_model.dart';
 import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product1.dart';
 import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product2.dart';
 import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product3.dart';
@@ -15,109 +16,173 @@ import 'package:pickpay/features/categories_pages/products_views/appliances_prod
 import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product13.dart';
 import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product14.dart';
 import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product15.dart';
+import 'package:pickpay/features/categories_pages/widgets/brand_filter_widget.dart';
 import 'package:pickpay/features/categories_pages/widgets/product_card.dart';
 import 'package:pickpay/services/api_service.dart';
 
-class AppliancesViewBody extends StatelessWidget {
+class AppliancesViewBody extends StatefulWidget {
   const AppliancesViewBody({super.key});
+
+  @override
+  State<AppliancesViewBody> createState() => _AppliancesViewBodyState();
+}
+
+class _AppliancesViewBodyState extends State<AppliancesViewBody> {
+  String? _selectedBrand;
+  late Future<List<ProductsViewsModel>> _productsFuture;
 
   // Map of key phrases to detail pages with their static data
   static final Map<String, Map<String, dynamic>> productData = {
     'TORNADO': {
-      'page': AppliancesProduct12(),
+      'page': const AppliancesProduct12(),
       'rating': 4.5,
       'reviewCount': 12,
       'image': 'assets/appliances/product12/1.png',
+      'brand': 'Tornado',
     },
     'Vacuum Cleaner': {
-      'page': AppliancesProduct10(),
+      'page': const AppliancesProduct10(),
       'rating': 4.6,
       'reviewCount': 4576,
       'image': 'assets/appliances/product10/1.png',
+      'brand': 'Generic',
     },
     'Dough Mixer': {
-      'page': AppliancesProduct15(),
+      'page': const AppliancesProduct15(),
       'rating': 4.6,
       'reviewCount': 1735,
       'image': 'assets/appliances/product15/1.png',
+      'brand': 'Generic',
     },
     'Blender': {
-      'page': AppliancesProduct13(),
+      'page': const AppliancesProduct13(),
       'rating': 4.9,
       'reviewCount': 1439,
       'image': 'assets/appliances/product13/1.png',
+      'brand': 'Generic',
     },
     'Refrigerator': {
-      'page': AppliancesProduct3(),
+      'page': const AppliancesProduct3(),
       'rating': 4.5,
       'reviewCount': 12,
       'image': 'assets/appliances/product3/1.png',
+      'brand': 'Generic',
     },
     'Air Fryer': {
-      'page': AppliancesProduct6(),
+      'page': const AppliancesProduct6(),
       'rating': 3.1,
       'reviewCount': 9,
       'image': 'assets/appliances/product6/1.png',
+      'brand': 'Generic',
     },
     'Water Dispenser': {
-      'page': AppliancesProduct1(),
+      'page': const AppliancesProduct1(),
       'rating': 3.9,
       'reviewCount': 9,
       'image': 'assets/appliances/product1/1.png',
+      'brand': 'Generic',
     },
     'Stainless Steel Potato': {
-      'page': AppliancesProduct2(),
+      'page': const AppliancesProduct2(),
       'rating': 3.1,
       'reviewCount': 9,
       'image': 'assets/appliances/product2/1.png',
+      'brand': 'Generic',
     },
     'Washing Machine': {
-      'page': AppliancesProduct4(),
+      'page': const AppliancesProduct4(),
       'rating': 4.2,
       'reviewCount': 14,
       'image': 'assets/appliances/product4/1.png',
+      'brand': 'Generic',
     },
     'Dishwasher': {
-      'page': AppliancesProduct5(),
+      'page': const AppliancesProduct5(),
       'rating': 4.0,
       'reviewCount': 11,
       'image': 'assets/appliances/product5/1.png',
+      'brand': 'Generic',
     },
     'Coffee Maker': {
-      'page': AppliancesProduct7(),
+      'page': const AppliancesProduct7(),
       'rating': 3.1,
       'reviewCount': 1288,
       'image': 'assets/appliances/product7/1.png',
+      'brand': 'Generic',
     },
     'Toaster': {
-      'page': AppliancesProduct8(),
+      'page': const AppliancesProduct8(),
       'rating': 4.6,
       'reviewCount': 884,
       'image': 'assets/appliances/product8/1.png',
+      'brand': 'Generic',
     },
     'Iron': {
-      'page': AppliancesProduct9(),
+      'page': const AppliancesProduct9(),
       'rating': 4.8,
       'reviewCount': 1193,
       'image': 'assets/appliances/product9/1.png',
+      'brand': 'Generic',
     },
     'fan': {
-      'page': AppliancesProduct11(),
+      'page': const AppliancesProduct11(),
       'rating': 4.4,
       'reviewCount': 674,
       'image': 'assets/appliances/product11/1.png',
+      'brand': 'Generic',
     },
     'Kettle': {
-      'page': AppliancesProduct14(),
+      'page': const AppliancesProduct14(),
       'rating': 4.5,
       'reviewCount': 1162,
       'image': 'assets/appliances/product14/1.png',
+      'brand': 'Generic',
     },
   };
 
-  // Helper function to find the correct detail page for a product
-  static Widget? findDetailPage(String productTitle) {
-    // Find the first matching key phrase
+  @override
+  void initState() {
+    super.initState();
+    _productsFuture = _loadProducts();
+  }
+
+  Future<List<ProductsViewsModel>> _loadProducts() async {
+    final apiProducts = await ApiService().loadProducts();
+    return apiProducts.map((apiProduct) {
+      final matchingKey = productData.keys.firstWhere(
+        (key) => apiProduct.name.toLowerCase().contains(key.toLowerCase()),
+        orElse: () => '',
+      );
+
+      final brand = matchingKey.isNotEmpty
+          ? productData[matchingKey]!['brand'] as String
+          : 'Generic';
+
+      return ProductsViewsModel(
+        id: apiProduct.id,
+        title: apiProduct.name,
+        price: apiProduct.price,
+        originalPrice: apiProduct.originalPrice,
+        rating: productData[matchingKey]?['rating'] as double? ?? 4.0,
+        reviewCount: productData[matchingKey]?['reviewCount'] as int? ?? 0,
+        brand: brand,
+        imagePaths: [productData[matchingKey]?['image'] as String? ?? ''],
+      );
+    }).toList();
+  }
+
+  List<ProductsViewsModel> _filterProducts(List<ProductsViewsModel> products) {
+    if (_selectedBrand == null ||
+        _selectedBrand!.isEmpty ||
+        _selectedBrand == 'All Brands') {
+      return products;
+    }
+    return products
+        .where((product) => product.brand == _selectedBrand)
+        .toList();
+  }
+
+  Widget? _findDetailPage(String productTitle) {
     for (var key in productData.keys) {
       if (productTitle.toLowerCase().contains(key.toLowerCase())) {
         return productData[key]!['page'] as Widget;
@@ -130,13 +195,11 @@ class AppliancesViewBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildAppBar(context: context, title: 'Appliances'),
-      body: FutureBuilder<List<ProductCard>>(
-        future: ApiService().loadProducts(),
+      body: FutureBuilder<List<ProductsViewsModel>>(
+        future: _productsFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return const Center(child: CircularProgressIndicator());
           }
 
           if (snapshot.hasError) {
@@ -144,11 +207,7 @@ class AppliancesViewBody extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(
-                    Icons.error_outline,
-                    color: Colors.red,
-                    size: 60,
-                  ),
+                  const Icon(Icons.error_outline, color: Colors.red, size: 60),
                   const SizedBox(height: 16),
                   Text(
                     'Error: ${snapshot.error}',
@@ -157,10 +216,9 @@ class AppliancesViewBody extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   ElevatedButton(
-                    onPressed: () {
-                      // Trigger a rebuild to retry loading
-                      (context as Element).markNeedsBuild();
-                    },
+                    onPressed: () => setState(() {
+                      _productsFuture = _loadProducts();
+                    }),
                     child: const Text('Retry'),
                   ),
                 ],
@@ -177,58 +235,63 @@ class AppliancesViewBody extends StatelessWidget {
             );
           }
 
-          final products = snapshot.data!;
+          final filteredProducts = _filterProducts(snapshot.data!);
 
           return RefreshIndicator(
             onRefresh: () async {
-              // Trigger a rebuild to refresh the data
-              (context as Element).markNeedsBuild();
+              setState(() {
+                _productsFuture = _loadProducts();
+              });
             },
-            child: ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              itemCount: products.length,
-              itemBuilder: (context, index) {
-                final product = products[index];
-                final productPage = findDetailPage(product.name);
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: BrandFilterWidget(
+                    products: snapshot.data!,
+                    selectedBrand: _selectedBrand,
+                    onBrandChanged: (newBrand) {
+                      setState(() {
+                        _selectedBrand = newBrand;
+                      });
+                    },
+                  ),
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    itemCount: filteredProducts.length,
+                    itemBuilder: (context, index) {
+                      final product = filteredProducts[index];
+                      final productPage = _findDetailPage(product.title);
 
-                if (productPage == null) {
-                  return const SizedBox.shrink();
-                }
+                      if (productPage == null) {
+                        return const SizedBox.shrink();
+                      }
 
-                // Get the static data for this product
-                String? key;
-                for (var k in productData.keys) {
-                  if (product.name.toLowerCase().contains(k.toLowerCase())) {
-                    key = k;
-                    break;
-                  }
-                }
-
-                if (key == null) return const SizedBox.shrink();
-
-                final staticData = productData[key]!;
-
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: ProductCard(
-                    id: product.id,
-                    name: product.name,
-                    imagePaths: [staticData['image'] as String],
-                    price: product.price,
-                    originalPrice: product.originalPrice,
-                    rating: staticData['rating'] as double,
-                    reviewCount: staticData['reviewCount'] as int,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => productPage,
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 16),
+                        child: ProductCard(
+                          id: product.id,
+                          name: product.title,
+                          imagePaths: product.imagePaths ?? [],
+                          price: product.price,
+                          originalPrice: product.originalPrice ?? 0,
+                          rating: product.rating ?? 0,
+                          reviewCount: product.reviewCount ?? 0,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => productPage),
+                            );
+                          },
                         ),
                       );
                     },
                   ),
-                );
-              },
+                ),
+              ],
             ),
           );
         },

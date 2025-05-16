@@ -37,14 +37,10 @@ class ProductCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: isDarkMode
-              ? colorScheme.surface
-              : Colors.white, // White in light mode
+          color: isDarkMode ? Colors.grey.shade900 : Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isDarkMode
-                ? theme.dividerColor
-                : Colors.grey.shade200, // Lighter border in light mode
+            color: isDarkMode ? Colors.grey.shade700 : Colors.grey.shade200,
           ),
           boxShadow: [
             BoxShadow(

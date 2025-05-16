@@ -1,78 +1,79 @@
-// import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:pickpay/features/categories_pages/models/product_model.dart';
 
-// class BrandFilterWidget extends StatefulWidget {
-//   final List<String> availableBrands;
-//   final ValueChanged<List<String>> onBrandsSelected;
-//   final String title;
+class BrandFilterWidget extends StatelessWidget {
+  final List<ProductsViewsModel> products;
+  final String? selectedBrand;
+  final ValueChanged<String?> onBrandChanged;
 
-//   const BrandFilterWidget({
-//     Key? key,
-//     required this.availableBrands,
-//     required this.onBrandsSelected,
-//     this.title = 'Filter by Brand',
-//   }) : super(key: key);
+  const BrandFilterWidget({
+    super.key,
+    required this.products,
+    required this.selectedBrand,
+    required this.onBrandChanged,
+  });
 
-//   @override
-//   _BrandFilterWidgetState createState() => _BrandFilterWidgetState();
-// }
+  @override
+  Widget build(BuildContext context) {
+    // Extract unique brands from products
+    final brands = products
+        .map((p) => p.brand)
+        .where((brand) => brand != null && brand.isNotEmpty)
+        .toSet()
+        .toList()
+      ..sort((a, b) => a!.compareTo(b!));
 
-// class _BrandFilterWidgetState extends State<BrandFilterWidget> {
-//   final List<String> _selectedBrands = [];
+    // Add "All Brands" option at the beginning
+    final allBrands = ['All Brands', ...?brands];
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Column(
-//       crossAxisAlignment: CrossAxisAlignment.start,
-//       children: [
-//         Padding(
-//           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-//           child: Row(
-//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//             children: [
-//               Text(
-//                 widget.title,
-//                 style: const TextStyle(
-//                   fontSize: 18,
-//                   fontWeight: FontWeight.bold,
-//                 ),
-//               ),
-//               if (_selectedBrands.isNotEmpty)
-//                 TextButton(
-//                   onPressed: () {
-//                     setState(() {
-//                       _selectedBrands.clear();
-//                       widget.onBrandsSelected(_selectedBrands);
-//                     });
-//                   },
-//                   child: const Text('Clear'),
-//                 ),
-//             ],
-//           ),
-//         ),
-//         Wrap(
-//           spacing: 8.0,
-//           children: widget.availableBrands.map((brand) {
-//             final isSelected = _selectedBrands.contains(brand);
-//             return FilterChip(
-//               label: Text(brand),
-//               selected: isSelected,
-//               onSelected: (selected) {
-//                 setState(() {
-//                   if (selected) {
-//                     _selectedBrands.add(brand);
-//                   } else {
-//                     _selectedBrands.remove(brand);
-//                   }
-//                   widget.onBrandsSelected(_selectedBrands);
-//                 });
-//               },
-//               selectedColor: Theme.of(context).primaryColor.withOpacity(0.2),
-//               checkmarkColor: Theme.of(context).primaryColor,
-//             );
-//           }).toList(),
-//         ),
-//         const SizedBox(height: 16),
-//       ],
-//     );
-//   }
-// }
+    return SizedBox(
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 16),
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardColor,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            DropdownButtonFormField<String>(
+              value: selectedBrand ?? 'All Brands',
+              decoration: InputDecoration(
+                contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide(
+                    color: Theme.of(context).dividerColor,
+                  ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide(
+                    color: Theme.of(context).dividerColor,
+                  ),
+                ),
+              ),
+              items: allBrands.map((String? brand) {
+                return DropdownMenuItem<String>(
+                  value: brand,
+                  child: Text(brand ?? 'Unknown Brand'),
+                );
+              }).toList(),
+              onChanged: (String? newValue) {
+                onBrandChanged(newValue == 'All Brands' ? null : newValue);
+              },
+              isExpanded: true,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

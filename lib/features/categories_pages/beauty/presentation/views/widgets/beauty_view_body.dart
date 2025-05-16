@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pickpay/constants.dart';
 import 'package:pickpay/core/widgets/build_appbar.dart';
+import 'package:pickpay/features/categories_pages/models/product_model.dart';
 import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product1.dart';
 import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product10.dart';
 import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product11.dart';
@@ -21,10 +22,243 @@ import 'package:pickpay/features/categories_pages/products_views/beauty_products
 import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product7.dart';
 import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product8.dart';
 import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product9.dart';
+import 'package:pickpay/features/categories_pages/widgets/brand_filter_widget.dart';
 import 'package:pickpay/features/categories_pages/widgets/product_card.dart';
 
-class BeautyViewBody extends StatelessWidget {
+class BeautyViewBody extends StatefulWidget {
   const BeautyViewBody({super.key});
+
+  @override
+  State<BeautyViewBody> createState() => _BeautyViewBodyState();
+}
+
+class _BeautyViewBodyState extends State<BeautyViewBody> {
+  String? _selectedBrand;
+  final List<ProductsViewsModel> _allProducts = [
+    ProductsViewsModel(
+      id: '68132a95ff7813b3d47f9da1',
+      title:
+          'L\'Oréal Paris Volume Million Lashes Panorama Mascara in Black, 9.9 ml',
+      price: 401.00,
+      originalPrice: 730.00,
+      rating: 5.0,
+      reviewCount: 88,
+      brand: 'L\'Oréal Paris',
+      imagePaths: ['assets/beauty_products/makeup_1/1.png'],
+    ),
+    ProductsViewsModel(
+      id: '68132a95ff7813b3d47f9da2',
+      title:
+          'L\'Oréal Paris Infaillible 24H Matte Cover Foundation 200 Sable Dore - Oil Control, High Coverage',
+      price: 509.00,
+      originalPrice: 575.00,
+      rating: 5.0,
+      reviewCount: 88,
+      brand: 'L\'Oréal Paris',
+      imagePaths: ['assets/beauty_products/makeup_2/1.png'],
+    ),
+    ProductsViewsModel(
+      id: '68132a95ff7813b3d47f9da3',
+      title: 'Cybele Smooth N`Wear Powder Blush Corail 17 - 3.7gm',
+      price: 227.20,
+      originalPrice: 240.00,
+      rating: 5.0,
+      reviewCount: 88,
+      brand: 'Cybele',
+      imagePaths: ['assets/beauty_products/makeup_3/1.png'],
+    ),
+    ProductsViewsModel(
+      id: '68132a95ff7813b3d47f9da4',
+      title:
+          'Eva skin care cleansing & makeup remover facial wipes for normal/dry skin 20%',
+      price: 63.00,
+      originalPrice: 63.00,
+      rating: 5.0,
+      reviewCount: 92,
+      brand: 'Eva',
+      imagePaths: ['assets/beauty_products/makeup_4/1.png'],
+    ),
+    ProductsViewsModel(
+      id: '68132a95ff7813b3d47f9da5',
+      title: 'Maybelline New York Lifter Lip Gloss, 005 Petal',
+      price: 300.00,
+      originalPrice: 310.00,
+      rating: 5.0,
+      reviewCount: 88,
+      brand: 'Maybelline',
+      imagePaths: ['assets/beauty_products/makeup_5/1.png'],
+    ),
+    ProductsViewsModel(
+      id: '68132a95ff7813b3d47f9da6',
+      title: 'Care & More Soft Cream With Glycerin Mixed berries 75 ML',
+      price: 31.00,
+      originalPrice: 44.00,
+      rating: 4.0,
+      reviewCount: 19,
+      brand: 'Care & More',
+      imagePaths: ['assets/beauty_products/skincare_1/1.png'],
+    ),
+    ProductsViewsModel(
+      id: '68132a95ff7813b3d47f9da7',
+      title:
+          'La Roche-Posay Anthelios XL Non-perfumed Dry Touch oil control gel cream SPF50+ 50ml',
+      price: 1168.70,
+      originalPrice: 1168.70,
+      rating: 4.0,
+      reviewCount: 19,
+      brand: 'La Roche-Posay',
+      imagePaths: ['assets/beauty_products/skincare_2/1.png'],
+    ),
+    ProductsViewsModel(
+      id: '68132a95ff7813b3d47f9da8',
+      title:
+          'Eva Aloe skin clinic anti-ageing collagen toner for firmed and refined skin - 200ml',
+      price: 138.60,
+      originalPrice: 210.00,
+      rating: 4.0,
+      reviewCount: 19,
+      brand: 'Eva',
+      imagePaths: ['assets/beauty_products/skincare_3/1.png'],
+    ),
+    ProductsViewsModel(
+      id: '68132a95ff7813b3d47f9da9',
+      title:
+          'Eucerin DermoPurifyer Oil Control Skin Renewal Treatment Face Serum, 40ml',
+      price: 658.93,
+      originalPrice: 775.00,
+      rating: 4.0,
+      reviewCount: 19,
+      brand: 'Eucerin',
+      imagePaths: ['assets/beauty_products/skincare_4/1.png'],
+    ),
+    ProductsViewsModel(
+      id: '68132a95ff7813b3d47f9da10',
+      title: 'L\'Oréal Paris Hyaluron Expert Eye Serum - 20ml',
+      price: 429.00,
+      originalPrice: 0.00,
+      rating: 4.8,
+      reviewCount: 19,
+      brand: 'L\'Oréal Paris',
+      imagePaths: ['assets/beauty_products/skincare_5/1.png'],
+    ),
+    ProductsViewsModel(
+      id: '68132a95ff7813b3d47f9da11',
+      title: 'L\'Oréal Paris Elvive Hyaluron Pure Shampoo 400ML',
+      price: 142.20,
+      originalPrice: 0.00,
+      rating: 4.0,
+      reviewCount: 19,
+      brand: 'L\'Oréal Paris',
+      imagePaths: ['assets/beauty_products/haircare_1/1.png'],
+    ),
+    ProductsViewsModel(
+      id: '68132a95ff7813b3d47f9da12',
+      title: 'Raw African Booster Shea Set',
+      price: 650.00,
+      originalPrice: 0.00,
+      rating: 4.0,
+      reviewCount: 19,
+      brand: 'Raw African',
+      imagePaths: ['assets/beauty_products/haircare_2/1.png'],
+    ),
+    ProductsViewsModel(
+      id: '68132a95ff7813b3d47f9da13',
+      title:
+          'Garnier Color Naturals Permanent Crème Hair Color - 8.1 Light Ash Blonde',
+      price: 132.00,
+      originalPrice: 0.00,
+      rating: 4.0,
+      reviewCount: 19,
+      brand: 'Garnier',
+      imagePaths: ['assets/beauty_products/haircare_3/1.png'],
+    ),
+    ProductsViewsModel(
+      id: '68132a95ff7813b3d47f9da14',
+      title:
+          'L\'Oreal Professionnel Absolut Repair 10-In-1 Hair Serum Oil - 90ml',
+      price: 965.00,
+      originalPrice: 1214.00,
+      rating: 4.0,
+      reviewCount: 19,
+      brand: 'L\'Oreal Professionnel',
+      imagePaths: ['assets/beauty_products/haircare_4/1.png'],
+    ),
+    ProductsViewsModel(
+      id: '68132a95ff7813b3d47f9da15',
+      title:
+          'CORATED Heatless Curling Rod Headband Kit with Clips and Scrunchie',
+      price: 94.96,
+      originalPrice: 111.98,
+      rating: 4.0,
+      reviewCount: 19,
+      brand: 'CORATED',
+      imagePaths: ['assets/beauty_products/haircare_5/1.png'],
+    ),
+    ProductsViewsModel(
+      id: '68132a95ff7813b3d47f9da16',
+      title: 'Avon Far Away for Women, Floral Eau de Parfum 50ml',
+      price: 534.51,
+      originalPrice: 0.00,
+      rating: 4.0,
+      reviewCount: 19,
+      brand: 'Avon',
+      imagePaths: ['assets/beauty_products/fragrance_1/1.png'],
+    ),
+    ProductsViewsModel(
+      id: '68132a95ff7813b3d47f9da17',
+      title:
+          'Memwa Coco Memwa Long Lasting Perfume Fragrance Luxury Eau De Parfum EDP Perfume for Women',
+      price: 624.04,
+      originalPrice: 624.04,
+      rating: 4.0,
+      reviewCount: 19,
+      brand: 'Memwa',
+      imagePaths: ['assets/beauty_products/fragrance_2/1.png'],
+    ),
+    ProductsViewsModel(
+      id: '68132a95ff7813b3d47f9da18',
+      title:
+          'Bath Body Gingham Gorgeous Fine Fragrance Mist, Size/Volume: 8 fl oz / 236 mL',
+      price: 1350.00,
+      originalPrice: 1350.00,
+      rating: 4.0,
+      reviewCount: 19,
+      brand: 'Bath Body',
+      imagePaths: ['assets/beauty_products/fragrance_3/1.png'],
+    ),
+    ProductsViewsModel(
+      id: '68132a95ff7813b3d47f9da19',
+      title:
+          'NIVEA Antiperspirant Spray for Women, Pearl & Beauty Pearl Extracts, 150ml',
+      price: 123.00,
+      originalPrice: 123.00,
+      rating: 4.0,
+      reviewCount: 19,
+      brand: 'NIVEA',
+      imagePaths: ['assets/beauty_products/fragrance_4/1.png'],
+    ),
+    ProductsViewsModel(
+      id: '68132a95ff7813b3d47f9da20',
+      title: 'Jacques Bogart One Man Show for Men, Eau de Toilette - 100ml',
+      price: 840.00,
+      originalPrice: 900.00,
+      rating: 4.0,
+      reviewCount: 19,
+      brand: 'Jacques Bogart',
+      imagePaths: ['assets/beauty_products/fragrance_5/1.png'],
+    ),
+  ];
+
+  List<ProductsViewsModel> get _filteredProducts {
+    if (_selectedBrand == null ||
+        _selectedBrand!.isEmpty ||
+        _selectedBrand == 'All Brands') {
+      return _allProducts;
+    }
+    return _allProducts
+        .where((product) => product.brand == _selectedBrand)
+        .toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,430 +268,110 @@ class BeautyViewBody extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         children: [
           SizedBox(height: kTopPadding),
-
-          // Product 1
-          ProductCard(
-            id: '68132a95ff7813b3d47f9da1',
-            name:
-                'L’Oréal Paris Volume Million Lashes Panorama Mascara in Black, 9.9 ml',
-            imagePaths: [
-              'assets/beauty_products/makeup_1/1.png',
-            ],
-            price: 401.00,
-            originalPrice: 730.00,
-            rating: 5.0,
-            reviewCount: 88,
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const BeautyProduct1()),
-              );
+          BrandFilterWidget(
+            products: _allProducts,
+            selectedBrand: _selectedBrand,
+            onBrandChanged: (newBrand) {
+              setState(() {
+                _selectedBrand = newBrand;
+              });
             },
           ),
-          SizedBox(height: 10),
+          ..._filteredProducts.map((product) {
+            return Column(
+              children: [
+                ProductCard(
+                  id: product.id,
+                  name: product.title,
+                  imagePaths: product.imagePaths ?? [],
+                  price: product.price,
+                  originalPrice: product.originalPrice ?? 0,
+                  rating: product.rating ?? 0,
+                  reviewCount: product.reviewCount ?? 0,
+                  onTap: () {
+                    // Navigate to the appropriate product detail view
+                    // based on the product ID
+                    final productId = product.id;
+                    Widget productDetailView;
 
-          // Product 2
-          ProductCard(
-            id: '68132a95ff7813b3d47f9da2',
-            name:
-                'L\'Oréal Paris Infaillible 24H Matte Cover Foundation 200 Sable Dore - Oil Control, High Coverage',
-            imagePaths: [
-              'assets/beauty_products/makeup_2/1.png',
-            ],
-            price: 509.00,
-            originalPrice: 575.00,
-            rating: 5.0,
-            reviewCount: 88,
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const BeautyProduct2()),
-              );
-            },
-          ),
-          SizedBox(height: 10),
+                    switch (productId) {
+                      case '68132a95ff7813b3d47f9da1':
+                        productDetailView = const BeautyProduct1();
+                        break;
+                      case '68132a95ff7813b3d47f9da2':
+                        productDetailView = const BeautyProduct2();
+                        break;
+                      case '68132a95ff7813b3d47f9da3':
+                        productDetailView = const BeautyProduct3();
+                        break;
+                      case '68132a95ff7813b3d47f9da4':
+                        productDetailView = const BeautyProduct4();
+                        break;
+                      case '68132a95ff7813b3d47f9da5':
+                        productDetailView = const BeautyProduct5();
+                        break;
+                      case '68132a95ff7813b3d47f9da6':
+                        productDetailView = const BeautyProduct6();
+                        break;
+                      case '68132a95ff7813b3d47f9da7':
+                        productDetailView = const BeautyProduct7();
+                        break;
+                      case '68132a95ff7813b3d47f9da8':
+                        productDetailView = const BeautyProduct8();
+                        break;
+                      case '68132a95ff7813b3d47f9da9':
+                        productDetailView = const BeautyProduct9();
+                        break;
+                      case '68132a95ff7813b3d47f9da10':
+                        productDetailView = const BeautyProduct10();
+                        break;
+                      case '68132a95ff7813b3d47f9da11':
+                        productDetailView = const BeautyProduct11();
+                        break;
+                      case '68132a95ff7813b3d47f9da12':
+                        productDetailView = const BeautyProduct12();
+                        break;
+                      case '68132a95ff7813b3d47f9da13':
+                        productDetailView = const BeautyProduct13();
+                        break;
+                      case '68132a95ff7813b3d47f9da14':
+                        productDetailView = const BeautyProduct14();
+                        break;
+                      case '68132a95ff7813b3d47f9da15':
+                        productDetailView = const BeautyProduct15();
+                        break;
+                      case '68132a95ff7813b3d47f9da16':
+                        productDetailView = const BeautyProduct16();
+                        break;
+                      case '68132a95ff7813b3d47f9da17':
+                        productDetailView = const BeautyProduct17();
+                        break;
+                      case '68132a95ff7813b3d47f9da18':
+                        productDetailView = const BeautyProduct18();
+                        break;
+                      case '68132a95ff7813b3d47f9da19':
+                        productDetailView = const BeautyProduct19();
+                        break;
+                      case '68132a95ff7813b3d47f9da20':
+                        productDetailView = const BeautyProduct20();
+                        break;
+                      default:
+                        productDetailView =
+                            const BeautyProduct1(); // Default fallback
+                    }
 
-          // Product 3
-          ProductCard(
-            id: '68132a95ff7813b3d47f9da3',
-            name: 'Cybele Smooth N`Wear Powder Blush Corail 17 - 3.7gm',
-            imagePaths: [
-              'assets/beauty_products/makeup_3/1.png',
-            ],
-            price: 227.20,
-            originalPrice: 240.00,
-            rating: 5.0,
-            reviewCount: 88,
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const BeautyProduct3()),
-              );
-            },
-          ),
-          SizedBox(height: 10),
-
-          // Product 4
-          ProductCard(
-            id: '68132a95ff7813b3d47f9da4',
-            name:
-                'Eva skin care cleansing & makeup remover facial wipes for normal/dry skin 20%',
-            imagePaths: [
-              'assets/beauty_products/makeup_4/1.png',
-            ],
-            price: 63.00,
-            originalPrice: 63.00, // No old price in HTML, so same as current
-            rating: 5.0,
-            reviewCount: 92,
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const BeautyProduct4()),
-              );
-            },
-          ),
-          SizedBox(height: 10),
-
-          // Product 5
-          ProductCard(
-            id: '68132a95ff7813b3d47f9da5',
-            name: 'Maybelline New York Lifter Lip Gloss, 005 Petal',
-            imagePaths: [
-              'assets/beauty_products/makeup_5/1.png',
-            ],
-            price: 300.00,
-            originalPrice: 310.00,
-            rating: 5.0,
-            reviewCount: 88,
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const BeautyProduct5()),
-              );
-            },
-          ),
-          SizedBox(height: 10),
-
-// Product 6
-          ProductCard(
-            id: '68132a95ff7813b3d47f9da6',
-            name: 'Care & More Soft Cream With Glycerin Mixed berries 75 ML',
-            imagePaths: [
-              'assets/beauty_products/skincare_1/1.png',
-            ],
-            price: 31.00,
-            originalPrice: 44.00,
-            rating: 4.0,
-            reviewCount: 19,
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const BeautyProduct6()),
-              );
-            },
-          ),
-          SizedBox(height: 10),
-
-// Product 7
-          ProductCard(
-            id: '68132a95ff7813b3d47f9da7',
-            name:
-                'La Roche-Posay Anthelios XL Non-perfumed Dry Touch oil control gel cream SPF50+ 50ml',
-            imagePaths: [
-              'assets/beauty_products/skincare_2/1.png',
-            ],
-            price: 1168.70,
-            originalPrice: 1168.70, // No old price listed
-            rating: 4.0,
-            reviewCount: 19,
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const BeautyProduct7()),
-              );
-            },
-          ),
-          SizedBox(height: 10),
-
-// Product 8
-          ProductCard(
-            id: '68132a95ff7813b3d47f9da8',
-            name:
-                'Eva Aloe skin clinic anti-ageing collagen toner for firmed and refined skin - 200ml',
-            imagePaths: [
-              'assets/beauty_products/skincare_3/1.png',
-            ],
-            price: 138.60,
-            originalPrice: 210.00,
-            rating: 4.0,
-            reviewCount: 19,
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const BeautyProduct8()),
-              );
-            },
-          ),
-          SizedBox(height: 10),
-
-          // product 9
-          ProductCard(
-            id: '68132a95ff7813b3d47f9da9',
-            name:
-                'Eucerin DermoPurifyer Oil Control Skin Renewal Treatment Face Serum, 40ml',
-            imagePaths: [
-              'assets/beauty_products/skincare_4/1.png',
-            ],
-            price: 658.93,
-            originalPrice: 775.00,
-            rating: 4.0,
-            reviewCount: 19,
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const BeautyProduct9()),
-              );
-            },
-          ),
-          SizedBox(height: 10),
-
-          // product 10
-          ProductCard(
-            id: '68132a95ff7813b3d47f9da10',
-            name: 'L’Oréal Paris Hyaluron Expert Eye Serum - 20ml',
-            imagePaths: [
-              'assets/beauty_products/skincare_5/1.png',
-            ],
-            price: 429.00,
-            originalPrice: 0.00, // no original price shown
-            rating: 4.8,
-            reviewCount: 19,
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const BeautyProduct10()),
-              );
-            },
-          ),
-          SizedBox(height: 10),
-
-          // product 11
-          ProductCard(
-            id: '68132a95ff7813b3d47f9da11',
-            name: 'L’Oréal Paris Elvive Hyaluron Pure Shampoo 400ML',
-            imagePaths: [
-              'assets/beauty_products/haircare_1/1.png',
-            ],
-            price: 142.20,
-            originalPrice: 0.00,
-            rating: 4.0,
-            reviewCount: 19,
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const BeautyProduct11()),
-              );
-            },
-          ),
-          SizedBox(height: 10),
-
-          // product 12
-          ProductCard(
-            id: '68132a95ff7813b3d47f9da12',
-            name: 'Raw African Booster Shea Set',
-            imagePaths: [
-              'assets/beauty_products/haircare_2/1.png',
-            ],
-            price: 650.00,
-            originalPrice: 0.00,
-            rating: 4.0,
-            reviewCount: 19,
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const BeautyProduct12()),
-              );
-            },
-          ),
-          SizedBox(height: 10),
-
-          // product 13
-          ProductCard(
-            id: '68132a95ff7813b3d47f9da13',
-            name:
-                'Garnier Color Naturals Permanent Crème Hair Color - 8.1 Light Ash Blonde',
-            imagePaths: [
-              'assets/beauty_products/haircare_3/1.png',
-            ],
-            price: 132.00,
-            originalPrice: 0.00, // No original price shown
-            rating: 4.0,
-            reviewCount: 19,
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const BeautyProduct13()),
-              );
-            },
-          ),
-          SizedBox(height: 10),
-
-          // product 14
-          ProductCard(
-            id: '68132a95ff7813b3d47f9da14',
-            name:
-                "L'Oreal Professionnel Absolut Repair 10-In-1 Hair Serum Oil - 90ml",
-            imagePaths: [
-              'assets/beauty_products/haircare_4/1.png',
-            ],
-            price: 965.00,
-            originalPrice: 1214.00,
-            rating: 4.0,
-            reviewCount: 19,
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const BeautyProduct14()),
-              );
-            },
-          ),
-          SizedBox(height: 10),
-
-          // product 15
-          ProductCard(
-            id: '68132a95ff7813b3d47f9da15',
-            name:
-                'CORATED Heatless Curling Rod Headband Kit with Clips and Scrunchie',
-            imagePaths: [
-              'assets/beauty_products/haircare_5/1.png',
-            ],
-            price: 94.96,
-            originalPrice: 111.98,
-            rating: 4.0,
-            reviewCount: 19,
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const BeautyProduct15()),
-              );
-            },
-          ),
-          SizedBox(height: 10),
-
-          // product 16
-          ProductCard(
-            id: '68132a95ff7813b3d47f9da16',
-            name: 'Avon Far Away for Women, Floral Eau de Parfum 50ml',
-            imagePaths: [
-              'assets/beauty_products/fragrance_1/1.png',
-            ],
-            price: 534.51,
-            originalPrice: 0.00,
-            rating: 4.0,
-            reviewCount: 19,
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const BeautyProduct16()),
-              );
-            },
-          ),
-          SizedBox(height: 10),
-
-          // product 17
-          ProductCard(
-            id: '68132a95ff7813b3d47f9da17',
-            name:
-                'Memwa Coco Memwa Long Lasting Perfume Fragrance Luxury Eau De Parfum EDP Perfume for Women',
-            imagePaths: [
-              'assets/beauty_products/fragrance_2/1.png',
-            ],
-            price: 624.04,
-            originalPrice: 624.04,
-            rating: 4.0,
-            reviewCount: 19,
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const BeautyProduct17()),
-              );
-            },
-          ),
-          SizedBox(height: 10),
-
-          // product 18
-          ProductCard(
-            id: '68132a95ff7813b3d47f9da18',
-            name:
-                'Bath Body Gingham Gorgeous Fine Fragrance Mist, Size/Volume: 8 fl oz / 236 mL',
-            imagePaths: [
-              'assets/beauty_products/fragrance_3/1.png',
-            ],
-            price: 1350.00,
-            originalPrice: 1350.00,
-            rating: 4.0,
-            reviewCount: 19,
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const BeautyProduct18()),
-              );
-            },
-          ),
-          SizedBox(height: 10),
-
-          // product 19
-          ProductCard(
-            id: '68132a95ff7813b3d47f9da19',
-            name:
-                'NIVEA Antiperspirant Spray for Women, Pearl & Beauty Pearl Extracts, 150ml',
-            imagePaths: [
-              'assets/beauty_products/fragrance_4/1.png',
-            ],
-            price: 123.00,
-            originalPrice: 123.00,
-            rating: 4.0,
-            reviewCount: 19,
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const BeautyProduct19()),
-              );
-            },
-          ),
-          SizedBox(height: 10),
-
-          // product 20
-          ProductCard(
-            id: '68132a95ff7813b3d47f9da20',
-            name:
-                'Jacques Bogart One Man Show for Men, Eau de Toilette - 100ml',
-            imagePaths: [
-              'assets/beauty_products/fragrance_5/1.png',
-            ],
-            price: 840.00,
-            originalPrice: 900.00,
-            rating: 4.0,
-            reviewCount: 19,
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const BeautyProduct20()),
-              );
-            },
-          ),
-          SizedBox(height: 20),
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => productDetailView),
+                    );
+                  },
+                ),
+                const SizedBox(height: 10),
+              ],
+            );
+          }).toList(),
+          const SizedBox(height: 20),
         ],
       ),
     );
