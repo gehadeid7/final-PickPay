@@ -18,9 +18,70 @@ class ForgotPasswordView extends StatelessWidget {
     return BlocProvider(
       create: (context) => ForgotPasswordCubit(getIt<AuthRepo>()),
       child: Scaffold(
-        appBar: buildAppBar(context: context, title: 'Forgot Password'),
-        body: const ForgotPasswordForm(),
+        extendBodyBehindAppBar: true,
+        appBar: buildAppBar(context: context, title: 'Forgot Password', elevation: 0, backgroundColor: Colors.transparent),
+        body: Stack(
+          children: [
+            const AnimatedBackground(),
+            const ForgotPasswordForm(),
+          ],
+        ),
       ),
+    );
+  }
+}
+
+class AnimatedBackground extends StatefulWidget {
+  const AnimatedBackground({Key? key}) : super(key: key);
+
+  @override
+  State<AnimatedBackground> createState() => _AnimatedBackgroundState();
+}
+
+class _AnimatedBackgroundState extends State<AnimatedBackground> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<Color?> _colorAnimation1;
+  late Animation<Color?> _colorAnimation2;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(vsync: this, duration: const Duration(seconds: 10))
+      ..repeat(reverse: true);
+
+    _colorAnimation1 = ColorTween(
+      begin: Colors.blue.shade700,
+      end: Colors.blue.shade300,
+    ).animate(_controller);
+
+    _colorAnimation2 = ColorTween(
+      begin: Colors.purple.shade700,
+      end: Colors.purple.shade300,
+    ).animate(_controller);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) {
+        return Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [_colorAnimation1.value!, _colorAnimation2.value!],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        );
+      },
     );
   }
 }
@@ -53,67 +114,81 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 40),
+        const SizedBox(height: 120),
         Text(
           'Forgot Password?',
           style: TextStyles.bold16.copyWith(
-            fontSize: 24,
-            color: colorScheme.primary,
+            fontSize: 28,
+            color: Colors.white,
+            shadows: [
+              Shadow(
+                blurRadius: 6,
+                color: Colors.black38,
+                offset: Offset(0, 2),
+              ),
+            ],
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 12),
         Text(
           'Enter your email to receive a password reset link',
           style: TextStyles.regular13.copyWith(
-            color: colorScheme.onSurface.withOpacity(0.7),
+            color: Colors.white70,
+            shadows: [
+              Shadow(
+                blurRadius: 4,
+                color: Colors.black26,
+                offset: Offset(0, 1),
+              ),
+            ],
           ),
         ),
-        const SizedBox(height: 32),
+        const SizedBox(height: 40),
         TextFormField(
           controller: _emailController,
-          cursorColor: colorScheme.primary,
+          cursorColor: Colors.white,
           autofocus: true,
           textInputAction: TextInputAction.done,
           autofillHints: const [AutofillHints.email],
-          style: TextStyle(color: colorScheme.onSurface),
+          style: const TextStyle(color: Colors.white),
           enabled: !isLoading,
           decoration: InputDecoration(
             hintText: 'Email address',
             hintStyle: TextStyles.regular13.copyWith(
-              color: colorScheme.onSurface.withOpacity(0.5),
+              color: Colors.white70.withOpacity(0.7),
             ),
             filled: true,
-            fillColor: colorScheme.surfaceVariant,
+            fillColor: Colors.white24,
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 16,
-              vertical: 14,
+              vertical: 16,
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(
-                color: colorScheme.outline.withOpacity(0.5),
-                width: 1.0,
+                color: Colors.white38,
+                width: 1.2,
               ),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(
-                color: colorScheme.primary,
-                width: 2.0,
+                color: Colors.white,
+                width: 2,
               ),
             ),
             errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(
                 color: colorScheme.error,
-                width: 1.0,
+                width: 1.5,
               ),
             ),
             focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(
                 color: colorScheme.error,
-                width: 2.0,
+                width: 2,
               ),
             ),
           ),
@@ -128,7 +203,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
             return null;
           },
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: 32),
         SizedBox(
           width: double.infinity,
           child: ElevatedButton(
@@ -148,98 +223,110 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
                     }
                   },
             style: ElevatedButton.styleFrom(
-              backgroundColor: colorScheme.primary,
-              padding: const EdgeInsets.symmetric(vertical: 16),
+              backgroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(vertical: 18),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(12),
               ),
-              elevation: 0,
+              elevation: 4,
             ),
             child: isLoading
                 ? const SizedBox(
-                    width: 20,
-                    height: 20,
+                    width: 22,
+                    height: 22,
                     child: CircularProgressIndicator(
                       strokeWidth: 2,
-                      color: Colors.white,
+                      color: Colors.blueAccent,
                     ),
                   )
                 : Text(
-                    cooldown > 0 ? 'Resend in ${cooldown}s' : 'Send Reset link',
+                    cooldown > 0 ? 'Resend in ${cooldown}s' : 'Send Reset Link',
                     style: TextStyles.semiBold13.copyWith(
-                      color: colorScheme.onPrimary,
+                      color: Colors.blue.shade700,
                     ),
                   ),
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 20),
         Center(
           child: TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text(
               'Back to Sign In',
               style: TextStyles.semiBold13.copyWith(
-                color: colorScheme.primary,
+                color: Colors.white,
+                decoration: TextDecoration.underline,
               ),
             ),
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 12),
         Text(
           'For security reasons, the reset link will expire in 1 hour',
           style: TextStyles.regular11.copyWith(
-            color: colorScheme.onSurface.withOpacity(0.6),
+            color: Colors.white70,
           ),
           textAlign: TextAlign.center,
         ),
+        const SizedBox(height: 30),
       ],
     );
   }
 
   Widget _buildSuccessUI() {
-    final colorScheme = Theme.of(context).colorScheme;
-
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(Icons.check_circle, color: colorScheme.primary, size: 72),
-        const SizedBox(height: 24),
-        Text(
-          'Email Sent!',
-          style: TextStyles.bold23.copyWith(color: colorScheme.primary),
-        ),
-        const SizedBox(height: 16),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Text(
-            'Check your inbox for the password reset link. If you don\'t see it, please check your spam folder.',
-            textAlign: TextAlign.center,
-            style: TextStyles.regular13.copyWith(
-              color: colorScheme.onSurface.withOpacity(0.7),
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.check_circle, color: Colors.white, size: 80),
+          const SizedBox(height: 24),
+          Text(
+            'Email Sent!',
+            style: TextStyles.bold23.copyWith(
+              color: Colors.white,
+              shadows: [
+                Shadow(
+                  blurRadius: 6,
+                  color: Colors.black45,
+                  offset: Offset(0, 2),
+                ),
+              ],
             ),
           ),
-        ),
-        const SizedBox(height: 32),
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: () => Navigator.pop(context),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: colorScheme.primary,
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
+          const SizedBox(height: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 36),
             child: Text(
-              'Return to Login',
-              style: TextStyles.semiBold13.copyWith(
-                color: colorScheme.onPrimary,
+              'Check your inbox for the password reset link. If you don\'t see it, please check your spam folder.',
+              textAlign: TextAlign.center,
+              style: TextStyles.regular13.copyWith(
+                color: Colors.white70,
               ),
             ),
           ),
-        ),
-      ],
+          const SizedBox(height: 36),
+          SizedBox(
+            width: 180,
+            child: ElevatedButton(
+              onPressed: () => Navigator.pop(context),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                elevation: 4,
+              ),
+              child: Text(
+                'Return to Login',
+                style: TextStyles.semiBold13.copyWith(
+                  color: Colors.blue.shade700,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -274,8 +361,8 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
           _showFlushbar(
             context: context,
             message: 'Password reset email sent successfully',
-            backgroundColor: colorScheme.primary,
-            textColor: colorScheme.onPrimary,
+            backgroundColor: Colors.green.shade600,
+            textColor: Colors.white,
             icon: Icons.check_circle,
           );
         } else if (state is ForgotPasswordFailure) {
@@ -300,7 +387,9 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
                 key: _formKey,
                 autovalidateMode: _autovalidateMode,
                 child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 300),
+                  duration: const Duration(milliseconds: 400),
+                  switchInCurve: Curves.easeInOut,
+                  switchOutCurve: Curves.easeInOut,
                   child: state is ForgotPasswordLinkSent
                       ? _buildSuccessUI()
                       : _buildFormContent(context, state),

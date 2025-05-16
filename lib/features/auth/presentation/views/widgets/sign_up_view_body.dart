@@ -1,16 +1,87 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pickpay/animation/animated_form_field.dart';
-import 'package:pickpay/animation/shake_animation.dart';
 import 'package:pickpay/constants.dart';
 import 'package:pickpay/core/widgets/custom_button.dart';
 import 'package:pickpay/core/widgets/custom_text_field.dart';
 import 'package:pickpay/core/widgets/password_field.dart';
 import 'package:pickpay/features/auth/presentation/cubits/signup_cubits/signup_cubit.dart';
-import 'package:pickpay/features/auth/presentation/views/verify_email_view.dart';
 import 'package:pickpay/features/auth/presentation/views/widgets/have_an_account.dart';
 import 'package:pickpay/features/auth/presentation/views/widgets/terms_and_conditions.dart';
 import 'package:pickpay/main.dart';
+import 'package:pickpay/core/utils/app_colors.dart';
+
+class AnimatedBackground extends StatefulWidget {
+  final Widget child;
+  final Color primaryColor;
+
+  const AnimatedBackground({
+    super.key,
+    required this.child,
+    required this.primaryColor,
+  });
+
+  @override
+  State<AnimatedBackground> createState() => _AnimatedBackgroundState();
+}
+
+class _AnimatedBackgroundState extends State<AnimatedBackground>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 10),
+    )..repeat(reverse: true);
+    _animation = Tween<double>(begin: 0, end: 100).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _animation,
+      builder: (context, _) {
+        return CustomPaint(
+          painter: _BackgroundPainter(widget.primaryColor, _animation.value),
+          child: widget.child,
+        );
+      },
+    );
+  }
+}
+
+class _BackgroundPainter extends CustomPainter {
+  final Color color;
+  final double offset;
+
+  _BackgroundPainter(this.color, this.offset);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()..color = color.withOpacity(0.1);
+
+    canvas.drawCircle(Offset(size.width * 0.3, size.height * 0.3 + offset), 60, paint);
+    canvas.drawCircle(Offset(size.width * 0.7, size.height * 0.5 - offset), 100, paint);
+    canvas.drawCircle(Offset(size.width * 0.5, size.height * 0.8 + offset / 2), 80, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant _BackgroundPainter oldDelegate) {
+    return oldDelegate.offset != offset || oldDelegate.color != color;
+  }
+}
 
 class SignUpViewBody extends StatefulWidget {
   const SignUpViewBody({super.key});
@@ -26,7 +97,7 @@ class _SignUpViewBodyState extends State<SignUpViewBody>
   late AnimationController _shakeController;
   AutovalidateMode _autovalidateMode = AutovalidateMode.disabled;
   late String _email, _fullName, _password;
-  late bool _isTermsAccepted = false;
+  bool _isTermsAccepted = false;
 
   @override
   void initState() {
@@ -79,11 +150,12 @@ class _SignUpViewBodyState extends State<SignUpViewBody>
               _email,
               _password,
               _fullName,
-              context,
             );
       } else {
         _shakeController.forward(from: 0);
-        SnackbarUtil.showError(context, 'Please accept terms and conditions');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please accept terms and conditions')),
+        );
       }
     } else {
       setState(() => _autovalidateMode = AutovalidateMode.always);
@@ -100,16 +172,8 @@ class _SignUpViewBodyState extends State<SignUpViewBody>
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<SignupCubit, SignupState>(
-      listener: (context, state) {
-        if (state is SignupSuccess) {
-          SnackbarUtil.showSuccess(context, 'Account created successfully');
-          Navigator.pushNamed(context, VerifyEmailView.routeName);
-        } else if (state is SignupFailure) {
-          _shakeController.forward(from: 0);
-          SnackbarUtil.showError(context, state.message);
-        }
-      },
+    return AnimatedBackground(
+      primaryColor: AppColors.primaryColor,
       child: AnimatedBuilder(
         animation: _shakeController,
         builder: (context, child) {

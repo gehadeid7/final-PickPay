@@ -1,26 +1,35 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pickpay/core/services/get_it_service.dart';
+import 'package:pickpay/features/auth/domain/repos/auth_repo.dart';
 import 'package:pickpay/features/home/presentation/cubits/bottom_navigation_cubits/bottom_navigation_cubit.dart';
 import 'package:pickpay/features/home/presentation/views/widgets/bottom_navigation/custom_bottom_navigation_bar.dart';
 import 'package:pickpay/features/home/presentation/views/widgets/main_navigation_body.dart';
 
 class MainNavigationScreen extends StatelessWidget {
+
   const MainNavigationScreen({super.key});
 
   static const String routeName = '/main-navigation';
 
   @override
   Widget build(BuildContext context) {
+        final authRepo = getIt<AuthRepo>();
+
     return BlocProvider(
       create: (_) => BottomNavigationCubit(),
-      child: const _MainNavigationView(),
+      child: _MainNavigationView(authRepo: authRepo),
     );
   }
 }
 
 class _MainNavigationView extends StatelessWidget {
-  const _MainNavigationView();
+  final AuthRepo authRepo;  // non-nullable
+
+  const _MainNavigationView({
+    required this.authRepo,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +46,7 @@ class _MainNavigationView extends StatelessWidget {
                 child: const Text('لا'),
               ),
               TextButton(
-                onPressed: () => exit(0), // أو استخدم SystemNavigator.pop() لإغلاق التطبيق
+                onPressed: () => exit(0), // Or SystemNavigator.pop()
                 child: const Text('نعم'),
               ),
             ],
@@ -47,11 +56,10 @@ class _MainNavigationView extends StatelessWidget {
       },
       child: Scaffold(
         extendBody: true,
-        body: const SafeArea(
-          child: MainNavigationScreenBody(),
+        body: SafeArea(
+          child: MainNavigationScreenBody(authRepo: authRepo),  // Pass it here!
         ),
-        bottomNavigationBar:
-            BlocBuilder<BottomNavigationCubit, BottomNavigationState>(
+        bottomNavigationBar: BlocBuilder<BottomNavigationCubit, BottomNavigationState>(
           builder: (context, state) {
             return CustomBottomNavigationBar(
               selectedIndex: state.currentIndex,

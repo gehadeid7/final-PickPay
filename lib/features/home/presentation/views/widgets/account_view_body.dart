@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:pickpay/core/services/get_it_service.dart'; // make sure to import getIt here
 import 'package:pickpay/core/utils/app_images.dart';
 import 'package:pickpay/core/widgets/build_appbar.dart';
+import 'package:pickpay/features/auth/domain/repos/auth_repo.dart';
 import 'package:pickpay/features/auth/presentation/views/change_password_view.dart';
 import 'package:pickpay/features/auth/presentation/views/signin_view.dart';
 import 'package:pickpay/features/home/presentation/views/cart_view.dart';
@@ -13,6 +17,7 @@ class AccountViewBody extends StatelessWidget {
   final String email;
   final String imageUrl;
 
+  
   const AccountViewBody({
     super.key,
     required this.fullName,
@@ -22,6 +27,8 @@ class AccountViewBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authRepo = getIt<AuthRepo>();  // Inject AuthRepo here
+    
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
 
@@ -39,7 +46,7 @@ class AccountViewBody extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildUserInfoSection(context),
+            _buildUserInfoSection(context, authRepo),
             const SizedBox(height: 32),
             _buildSectionTitle('Quick Access', context),
             _buildSectionContainer([
@@ -61,11 +68,8 @@ class AccountViewBody extends StatelessWidget {
                     MaterialPageRoute(
                         builder: (_) => const ChangePasswordView()));
               }, context),
-              // _accountTile(Icons.notifications_outlined, "Notifications", () {},
-              //     context),
               _accountTile(Icons.language_outlined, "Language", () {}, context),
-              _accountTile(
-                  Icons.help_outline, "Help & Support", () {}, context),
+              _accountTile(Icons.help_outline, "Help & Support", () {}, context),
               _accountTile(Icons.info_outline, "About Us", () {}, context),
             ], context),
             const SizedBox(height: 32),
@@ -77,7 +81,7 @@ class AccountViewBody extends StatelessWidget {
     );
   }
 
-  Widget _buildUserInfoSection(BuildContext context) {
+  Widget _buildUserInfoSection(BuildContext context, AuthRepo authRepo) {
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
 
@@ -86,7 +90,8 @@ class AccountViewBody extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ProfileChangeView(), // Your profile edit view
+            builder: (context) => ProfileChangeView(
+            ),
           ),
         );
       },
@@ -141,7 +146,8 @@ class AccountViewBody extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ProfileChangeView(),
+                    builder: (context) => ProfileChangeView(
+                    ),
                   ),
                 );
               },
@@ -155,6 +161,7 @@ class AccountViewBody extends StatelessWidget {
     );
   }
 
+
   Widget _buildUserAvatar(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Container(
@@ -163,7 +170,6 @@ class AccountViewBody extends StatelessWidget {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         border: Border.all(
-          // ignore: deprecated_member_use
           color: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.3),
           width: 2,
         ),
@@ -241,7 +247,6 @@ class AccountViewBody extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            // ignore: deprecated_member_use
             color: Colors.black.withOpacity(isDarkMode ? 0.1 : 0.03),
             blurRadius: 6,
             offset: const Offset(0, 3),
@@ -279,7 +284,6 @@ class AccountViewBody extends StatelessWidget {
         width: 40,
         height: 40,
         decoration: BoxDecoration(
-          // ignore: deprecated_member_use
           color: iconColor.withOpacity(0.08),
           shape: BoxShape.circle,
         ),
@@ -323,29 +327,28 @@ class AccountViewBody extends StatelessWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Logout'),
-        content: const Text('Are you sure you want to logout?'),
+        content: const Text('Are you sure you want to log out?'),
         actions: [
           TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: const Text('Cancel')),
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
           TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Logout', style: TextStyle(color: Colors.red)),
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => const SigninView()),
+                (route) => false,
+              );
+            },
+            child: const Text('Logout'),
           ),
         ],
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
     );
 
-    if (confirmed == true) {
-      await FirebaseAuth.instance.signOut();
-      if (context.mounted) {
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (_) => const SigninView()),
-          (route) => false,
-        );
-      }
+    if (confirmed ?? false) {
+      // no further action needed
     }
   }
 }

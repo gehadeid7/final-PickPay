@@ -71,6 +71,8 @@ dependencies:
   intl: ^0.18.1
   image_picker: ^1.1.2  # Update to latest stable
   file_picker: ^10.1.9  # Update to latest stable
+  animated_background: ^2.0.0
+  firebase_storage: ^12.4.5
 
  
 

@@ -10,9 +10,13 @@ class ForgotPasswordCubit extends Cubit<ForgotPasswordState> {
 
   final AuthRepo authRepo;
   Timer? _resendTimer;
-  int _resendCooldown = 30;
+  static const int _maxCooldown = 30;
+  int _resendCooldown = 0;
+
+  int get cooldown => _resendCooldown;
 
   bool _isValidEmail(String email) {
+    // يمكن تحسين Regex لاحقًا أو استخدام مكتبة تحقق متخصصة
     return RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(email);
   }
 
@@ -21,7 +25,6 @@ class ForgotPasswordCubit extends Cubit<ForgotPasswordState> {
       emit(ForgotPasswordFailure(message: 'Please enter your email'));
       return;
     }
-
     if (!_isValidEmail(email)) {
       emit(ForgotPasswordInvalidEmail(message: 'Please enter a valid email'));
       return;
@@ -30,13 +33,12 @@ class ForgotPasswordCubit extends Cubit<ForgotPasswordState> {
     emit(ForgotPasswordLoading());
 
     try {
-      // Skip user existence check, send reset link to any email
       final resetResult = await authRepo.sendPasswordResetEmail(email);
 
       resetResult.fold(
         (failure) {
           emit(ForgotPasswordFailure(message: failure.message));
-          _resendTimer?.cancel(); // Cancel the timer in case of failure
+          _cancelResendTimer();
         },
         (_) {
           emit(ForgotPasswordLinkSent());
@@ -44,24 +46,31 @@ class ForgotPasswordCubit extends Cubit<ForgotPasswordState> {
         },
       );
     } catch (e) {
-      emit(ForgotPasswordFailure(
-        message: 'Failed to send reset email: ${e.toString()}',
-      ));
+      emit(ForgotPasswordFailure(message: 'Failed to send reset email: ${e.toString()}'));
+      _cancelResendTimer();
     }
   }
 
   void _startResendTimer() {
-    _resendTimer?.cancel();
-    _resendCooldown = 30;
+    _cancelResendTimer();
+    _resendCooldown = _maxCooldown;
+
     _resendTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_resendCooldown > 0) {
         _resendCooldown--;
         emit(ForgotPasswordSuccess(cooldown: _resendCooldown));
       } else {
-        timer.cancel();
+        _cancelResendTimer();
         emit(ForgotPasswordReadyToResend());
       }
     });
+  }
+
+  void _cancelResendTimer() {
+    if (_resendTimer != null) {
+      _resendTimer!.cancel();
+      _resendTimer = null;
+    }
   }
 
   void resetResendCooldown() {
@@ -70,7 +79,7 @@ class ForgotPasswordCubit extends Cubit<ForgotPasswordState> {
 
   @override
   Future<void> close() {
-    _resendTimer?.cancel();
+    _cancelResendTimer();
     return super.close();
   }
 }
