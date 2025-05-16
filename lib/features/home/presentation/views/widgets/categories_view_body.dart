@@ -51,6 +51,7 @@ class CategoriesViewBody extends StatelessWidget {
                           borderRadius: BorderRadius.circular(16),
                           boxShadow: [
                             BoxShadow(
+                              // ignore: deprecated_member_use
                               color: Colors.black.withOpacity(0.1),
                               blurRadius: 8,
                               offset: const Offset(0, 4),
@@ -77,6 +78,7 @@ class CategoriesViewBody extends StatelessWidget {
                                     begin: Alignment.bottomCenter,
                                     end: Alignment.topCenter,
                                     colors: [
+                                      // ignore: deprecated_member_use
                                       Colors.grey.shade900.withOpacity(0.5),
                                       Colors.transparent,
                                     ],

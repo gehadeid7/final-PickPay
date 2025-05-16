@@ -367,6 +367,7 @@ class _FashionViewBodyState extends State<FashionViewBody> {
                 const SizedBox(height: 10),
               ],
             );
+            // ignore: unnecessary_to_list_in_spreads
           }).toList(),
           const SizedBox(height: 20),
         ],

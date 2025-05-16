@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pickpay/constants.dart';
 import 'package:pickpay/core/widgets/build_appbar.dart';
 import 'package:pickpay/features/categories_pages/models/product_model.dart';
 import 'package:pickpay/features/categories_pages/products_views/home_products/home_product1.dart';
@@ -413,6 +412,7 @@ class _HomeCategoryViewBodyState extends State<HomeCategoryViewBody> {
                 const SizedBox(height: 10),
               ],
             );
+            // ignore: unnecessary_to_list_in_spreads
           }).toList(),
           const SizedBox(height: 20),
         ],

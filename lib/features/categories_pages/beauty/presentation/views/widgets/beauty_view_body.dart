@@ -438,6 +438,7 @@ class _BeautyViewBodyState extends State<BeautyViewBody> {
                 const SizedBox(height: 10),
               ],
             );
+            // ignore: unnecessary_to_list_in_spreads
           }).toList(),
           const SizedBox(height: 20),
         ],

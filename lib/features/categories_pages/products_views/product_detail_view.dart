@@ -692,6 +692,10 @@ class _ProductDetailViewState extends State<ProductDetailView> {
                       label: "Thread Count",
                       value: product.threadCount,
                       isDarkMode: isDarkMode),
+                  _ProductFeatureRow(
+                      label: "Amperage",
+                      value: product.amperage,
+                      isDarkMode: isDarkMode),
                 ], isDarkMode),
                 const SizedBox(height: 12),
                 _buildSectionTitle("About this item", isDarkMode),

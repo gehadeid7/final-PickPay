@@ -325,6 +325,7 @@ class _AppliancesViewBodyState extends State<AppliancesViewBody> {
                       },
                     ),
                   );
+                  // ignore: unnecessary_to_list_in_spreads
                 }).toList(),
               ],
             ),

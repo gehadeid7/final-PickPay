@@ -87,6 +87,7 @@ class _ScentOptionState extends State<ScentOption> {
                   ),
                   borderRadius: widget.borderRadius ?? BorderRadius.circular(8),
                   color: isSelected
+                      // ignore: deprecated_member_use
                       ? selectionColor.withOpacity(0.15)
                       : isDarkMode
                           ? Colors.grey.shade800

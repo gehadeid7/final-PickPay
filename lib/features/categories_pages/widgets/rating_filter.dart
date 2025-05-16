@@ -4,6 +4,7 @@ class RatingFilterWidget extends StatelessWidget {
   final double value;
   final ValueChanged<double> onChanged;
 
+  // ignore: use_super_parameters
   const RatingFilterWidget({
     Key? key,
     required this.value,
@@ -65,6 +66,7 @@ class RatingFilterWidget extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 6.0, vertical: 2.0),
                       decoration: BoxDecoration(
+                        // ignore: deprecated_member_use
                         color: Colors.amber.withOpacity(0.2),
                         borderRadius: BorderRadius.circular(10),
                       ),

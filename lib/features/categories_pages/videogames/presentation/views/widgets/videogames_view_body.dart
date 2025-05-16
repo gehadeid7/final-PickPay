@@ -1,9 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:pickpay/constants.dart';
 import 'package:pickpay/core/widgets/build_appbar.dart';
 import 'package:pickpay/features/categories_pages/models/product_model.dart';
 import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product1.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product10.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product11.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product12.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product13.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product14.dart';
 import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product2.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product3.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product4.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product5.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product6.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product7.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product8.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product9.dart';
 import 'package:pickpay/features/categories_pages/widgets/brand_filter_widget.dart';
 import 'package:pickpay/features/categories_pages/widgets/product_card.dart';
 import 'package:pickpay/features/categories_pages/widgets/price_range_filter.dart';
@@ -108,7 +119,7 @@ class _VideogamesViewBodyState extends State<VideogamesViewBody> {
       id: 'vid9',
       title:
           'Nintendo 160 2 Nintendo Switch Joy-Con Controllers (Pastel Purple/Pastel Green)',
-      price: 4499.00,
+      price: 4300.00,
       originalPrice: 4988.00,
       rating: 4.8,
       reviewCount: 2571,
@@ -130,10 +141,10 @@ class _VideogamesViewBodyState extends State<VideogamesViewBody> {
       id: 'vid11',
       title:
           'OIVO PS5 Charging Station, 2H Fast PS5 Controller Charger for Playstation 5 Dualsense Controller, Upgrade PS5 Charging Dock with 2 Types of Cable, PS5 Charger for Dual PS5 Controller',
-      price: 1375.00,
-      originalPrice: 1599.00,
-      rating: 4.8,
-      reviewCount: 2571,
+      price: 1200.00,
+      originalPrice: 1300.00,
+      rating: 4.6,
+      reviewCount: 15736,
       brand: 'OIVO',
       imagePaths: ['assets/videogames_products/Accessories/accessories2/1.png'],
     ),
@@ -143,8 +154,8 @@ class _VideogamesViewBodyState extends State<VideogamesViewBody> {
           'fanxiang S770 4TB NVMe M.2 SSD for PS5 - with Heatsink and DRAM, Up to 7300MB/s, PCIe 4.0, Suitable for Playstation 5 Memory Expansion, Game Enthusiasts, IT Professionals',
       price: 26200.00,
       originalPrice: 26999.00,
-      rating: 4.8,
-      reviewCount: 2571,
+      rating: 4.3,
+      reviewCount: 230,
       brand: 'fanxiang',
       imagePaths: ['assets/videogames_products/Accessories/accessories3/1.png'],
     ),
@@ -152,20 +163,20 @@ class _VideogamesViewBodyState extends State<VideogamesViewBody> {
       id: 'vid13',
       title:
           'Mcbazel PS5 Cooling Station and Charging Station, 3 Speed Fan, Controller Dock with LED Indicator and 11 Storage Discs - White(Not for PS5 Pro)',
-      price: 2122.00,
-      originalPrice: 2555.00,
-      rating: 4.8,
-      reviewCount: 2571,
+      price: 1999.00,
+      originalPrice: 2100.00,
+      rating: 3.9,
+      reviewCount: 38,
       brand: 'Mcbazel',
       imagePaths: ['assets/videogames_products/Accessories/accessories4/1.png'],
     ),
     ProductsViewsModel(
       id: 'vid14',
       title: 'EA SPORTS FC 25 Standard Edition PS5 | VideoGame | English',
-      price: 3216.00,
-      originalPrice: 3490.00,
-      rating: 4.8,
-      reviewCount: 2571,
+      price: 2800.00,
+      originalPrice: 2900.00,
+      rating: 4.5,
+      reviewCount: 1530,
       brand: 'EA Sports',
       imagePaths: ['assets/videogames_products/Accessories/accessories5/1.png'],
     ),
@@ -286,7 +297,42 @@ class _VideogamesViewBodyState extends State<VideogamesViewBody> {
                       case 'vid2':
                         productDetailView = const VideoGamesProduct2();
                         break;
-
+                      case 'vid3':
+                        productDetailView = const VideoGamesProduct3();
+                        break;
+                      case 'vid4':
+                        productDetailView = const VideoGamesProduct4();
+                        break;
+                      case 'vid5':
+                        productDetailView = const VideoGamesProduct5();
+                        break;
+                      case 'vid6':
+                        productDetailView = const VideoGamesProduct6();
+                        break;
+                      case 'vid7':
+                        productDetailView = const VideoGamesProduct7();
+                        break;
+                      case 'vid8':
+                        productDetailView = const VideoGamesProduct8();
+                        break;
+                      case 'vid9':
+                        productDetailView = const VideoGamesProduct9();
+                        break;
+                      case 'vid10':
+                        productDetailView = const VideoGamesProduct10();
+                        break;
+                      case 'vid11':
+                        productDetailView = const VideoGamesProduct11();
+                        break;
+                      case 'vid12':
+                        productDetailView = const VideoGamesProduct12();
+                        break;
+                      case 'vid13':
+                        productDetailView = const VideoGamesProduct13();
+                        break;
+                      case 'vid14':
+                        productDetailView = const VideoGamesProduct14();
+                        break;
                       // Add cases for other products as needed
                       default:
                         productDetailView = const VideoGamesProduct1();
@@ -302,6 +348,7 @@ class _VideogamesViewBodyState extends State<VideogamesViewBody> {
                 const SizedBox(height: 10),
               ],
             );
+            // ignore: unnecessary_to_list_in_spreads
           }).toList(),
           const SizedBox(height: 20),
         ],

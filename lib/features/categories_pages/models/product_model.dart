@@ -183,6 +183,7 @@ class ProductsViewsModel {
   final String? pillowType;
   final String? blanketForm;
   final String? threadCount;
+  final String? amperage;
 
   ProductsViewsModel({
     required this.id,
@@ -195,6 +196,7 @@ class ProductsViewsModel {
     this.reviewCount,
     this.brand,
     this.color,
+    this.amperage,
     this.aboutThisItem,
     this.deliveryDate,
     this.deliveryTimeLeft,
