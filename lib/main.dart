@@ -55,6 +55,7 @@ class Pickpay extends StatelessWidget {
       themeMode: themeProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light,
       onGenerateRoute: onGenerateRoute,
       initialRoute: SplashView.routeName,
+
       debugShowCheckedModeBanner: false,
       // Add the routeObserver to navigatorObservers
       navigatorObservers: [routeObserver],

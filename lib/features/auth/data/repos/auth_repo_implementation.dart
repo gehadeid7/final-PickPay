@@ -91,7 +91,8 @@ class AuthRepoImplementation extends AuthRepo {
 
       if (!user.emailVerified) {
         await FirebaseAuth.instance.signOut();
-        return left(ServerFailure('يرجى تأكيد بريدك الإلكتروني قبل تسجيل الدخول'));
+        return left(
+            ServerFailure('يرجى تأكيد بريدك الإلكتروني قبل تسجيل الدخول'));
       }
 
       final syncedUser = await apiService.syncFirebaseUserToBackend(
@@ -264,7 +265,8 @@ class AuthRepoImplementation extends AuthRepo {
       await user.reload();
       return right(user.emailVerified);
     } catch (e) {
-      return left(ServerFailure('فشل التحقق من البريد الإلكتروني: ${e.toString()}'));
+      return left(
+          ServerFailure('فشل التحقق من البريد الإلكتروني: ${e.toString()}'));
     }
   }
 
@@ -286,7 +288,8 @@ class AuthRepoImplementation extends AuthRepo {
   // 👤 GET USER DATA FROM BACKEND
   // ───────────────────────────────────────────────
   @override
-  Future<Either<Failure, UserEntity>> getUserData({required String userId}) async {
+  Future<Either<Failure, UserEntity>> getUserData(
+      {required String userId}) async {
     try {
       final response = await apiService.get(
         endpoint: '${BackendEndpoints.getUserData}/$userId',

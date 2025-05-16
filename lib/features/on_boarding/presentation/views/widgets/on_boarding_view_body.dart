@@ -6,7 +6,6 @@ import 'package:pickpay/core/services/shared_preferences_singletone.dart';
 import 'package:pickpay/core/utils/app_colors.dart';
 import 'package:pickpay/core/widgets/custom_button.dart';
 import 'package:pickpay/features/auth/presentation/views/signin_view.dart';
-import 'package:pickpay/features/home/presentation/views/main_navigation_screen.dart';
 import 'package:pickpay/features/on_boarding/presentation/views/widgets/on_boarding_page_view.dart';
 
 class OnBoardingViewBody extends StatefulWidget {
@@ -37,6 +36,7 @@ class _OnBoardingViewBodyState extends State<OnBoardingViewBody> {
     super.dispose();
   }
 
+  // ignore: annotate_overrides
   Widget build(BuildContext context) {
     return Column(
       children: [

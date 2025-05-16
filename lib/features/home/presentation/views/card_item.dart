@@ -27,7 +27,7 @@ class CardItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: isDarkMode
-              ? Colors.grey[800]!
+              ? Colors.grey[900]!
               : const Color.fromARGB(67, 158, 158, 158),
           width: 1,
         ),

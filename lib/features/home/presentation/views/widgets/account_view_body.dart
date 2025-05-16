@@ -33,7 +33,7 @@ class AccountViewBody extends StatelessWidget {
     final isDarkMode = theme.brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDarkMode ? Colors.grey[900] : Colors.white,
+      backgroundColor: isDarkMode ? Color(0xFF121212) : Colors.white,
       appBar: buildAppBar(
         context: context,
         title: 'Account',
@@ -103,6 +103,7 @@ class AccountViewBody extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
+              // ignore: deprecated_member_use
               color: Colors.black.withOpacity(isDarkMode ? 0.1 : 0.05),
               blurRadius: 8,
               offset: const Offset(0, 4),
@@ -252,6 +253,9 @@ class AccountViewBody extends StatelessWidget {
             offset: const Offset(0, 3),
           ),
         ],
+        border: Border.all(
+          color: isDarkMode ? Colors.grey.shade700 : Colors.grey.shade200,
+        ),
       ),
       child: Column(
         children: children.asMap().entries.map((entry) {

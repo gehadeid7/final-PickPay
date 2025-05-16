@@ -11,14 +11,29 @@ class TodaysSaleGridView extends StatefulWidget {
   State<TodaysSaleGridView> createState() => _TodaysSaleGridViewState();
 }
 
-class _TodaysSaleGridViewState extends State<TodaysSaleGridView> {
+class _TodaysSaleGridViewState extends State<TodaysSaleGridView>
+    with SingleTickerProviderStateMixin {
   late Timer _timer;
-  Duration _duration = const Duration(hours: 3); // Countdown from 3 hours
+  Duration _duration = const Duration(hours: 3);
+  late AnimationController _animationController;
+  late Animation<double> _scaleAnimation;
 
   @override
   void initState() {
     super.initState();
     _startTimer();
+
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1000),
+    )..repeat(reverse: true);
+
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.1).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.easeInOut,
+      ),
+    );
   }
 
   void _startTimer() {
@@ -44,6 +59,7 @@ class _TodaysSaleGridViewState extends State<TodaysSaleGridView> {
   @override
   void dispose() {
     _timer.cancel();
+    _animationController.dispose();
     super.dispose();
   }
 
@@ -76,7 +92,9 @@ class _TodaysSaleGridViewState extends State<TodaysSaleGridView> {
     return Container(
       height: 330,
       padding: const EdgeInsets.symmetric(horizontal: 10),
-      color: isDarkMode ? Colors.grey[900] : const Color(0xFFF1F1F1),
+      color: isDarkMode
+          ? const Color.fromARGB(103, 0, 0, 0)
+          : const Color(0xFFF1F1F1),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -84,11 +102,15 @@ class _TodaysSaleGridViewState extends State<TodaysSaleGridView> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 12),
             child: Center(
-              child: Text(
-                "Today's Sale Ends In:",
-                style: theme.textTheme.titleLarge?.copyWith(
-                  color: Colors.red,
-                  fontWeight: FontWeight.bold,
+              child: ScaleTransition(
+                scale: _scaleAnimation,
+                child: Text(
+                  "🔥 Today's Sale Ends In:",
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    color: Colors.red,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1.2,
+                  ),
                 ),
               ),
             ),
@@ -111,7 +133,7 @@ class _TodaysSaleGridViewState extends State<TodaysSaleGridView> {
               physics: const NeverScrollableScrollPhysics(),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                childAspectRatio: 0.75, // Better aspect ratio for cards
+                childAspectRatio: 0.75,
                 mainAxisSpacing: 12,
                 crossAxisSpacing: 16,
               ),
@@ -122,7 +144,9 @@ class _TodaysSaleGridViewState extends State<TodaysSaleGridView> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => product['detailPage']),
+                      MaterialPageRoute(
+                        builder: (_) => product['detailPage'],
+                      ),
                     );
                   },
                   child: CardItem(

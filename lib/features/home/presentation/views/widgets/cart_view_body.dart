@@ -112,14 +112,19 @@ class CartViewBody extends StatelessWidget {
                           borderRadius: BorderRadius.circular(12),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black
+                              color: Color.fromARGB(255, 82, 82, 82)
                                   // ignore: deprecated_member_use
-                                  .withOpacity(isDarkMode ? 0.2 : 0.1),
-                              spreadRadius: 1,
-                              blurRadius: 4,
+                                  .withOpacity(isDarkMode ? 0.1 : 0.05),
+                              spreadRadius: 6,
+                              blurRadius: 6,
                               offset: const Offset(0, 2),
                             ),
                           ],
+                          border: Border.all(
+                            color: isDarkMode
+                                ? Colors.grey.shade700
+                                : Colors.grey.shade200,
+                          ),
                         ),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -280,6 +285,9 @@ class CartViewBody extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   decoration: BoxDecoration(
+                    border: Border.all(
+                      color: isDarkMode ? Colors.grey.shade700 : Colors.white,
+                    ),
                     color: isDarkMode
                         // ignore: deprecated_member_use
                         ? Colors.grey[800]!.withOpacity(0.5)

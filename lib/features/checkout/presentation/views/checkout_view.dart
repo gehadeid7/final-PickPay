@@ -10,6 +10,7 @@ import 'package:pickpay/features/checkout/presentation/views/widgets/payment_sec
 import 'package:pickpay/features/checkout/presentation/views/widgets/shipping_section.dart';
 import 'package:pickpay/features/home/domain/models/cart_item_model.dart';
 import 'package:pickpay/features/home/presentation/cubits/cart_cubits/cart_cubit.dart';
+import 'package:pickpay/features/home/presentation/views/cart_view.dart';
 
 class CheckoutView extends StatefulWidget {
   const CheckoutView({super.key});
@@ -24,7 +25,9 @@ class _CheckoutViewState extends State<CheckoutView> {
   late ShippingInfo _shippingInfo;
   String _paymentMethod = 'Credit Card';
   String _cardNumber = '';
+  // ignore: unused_field
   String _expiryDate = '';
+  // ignore: unused_field
   String _cvv = '';
 
   @override
@@ -53,8 +56,11 @@ class _CheckoutViewState extends State<CheckoutView> {
           context: context,
           title: 'Checkout',
           onBackPressed: () {
-            // Add any custom logic if needed before popping
-            Navigator.pushNamed(context, 'Cart_View');
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (ModalRoute.of(context)?.settings.name != CartView.routeName) {
+                Navigator.pushReplacementNamed(context, CartView.routeName);
+              }
+            });
           },
         ),
         body: Center(
@@ -76,19 +82,30 @@ class _CheckoutViewState extends State<CheckoutView> {
     );
 
     return Scaffold(
-      appBar: buildAppBar(context: context, title: 'Checkout'),
+      appBar: buildAppBar(
+        context: context,
+        title: 'Checkout',
+        onBackPressed: () {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            Navigator.pushReplacementNamed(context, CartView.routeName);
+          });
+        },
+      ),
       // ignore: deprecated_member_use
       backgroundColor: theme.colorScheme.background,
       body: BlocListener<CheckoutCubit, CheckoutState>(
         listener: (context, state) {
           if (state is CheckoutSuccess) {
             cartCubit.clearCart();
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => OrderConfirmationView(order: state.order),
-              ),
-            );
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      OrderConfirmationView(order: state.order),
+                ),
+              );
+            });
           } else if (state is CheckoutError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -127,7 +144,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                   builder: (context, state) {
                     return CustomButton(
                       onPressed: state is CheckoutLoading
-                          ? () {} // Empty function instead of null
+                          ? () {}
                           : () {
                               if (_formKey.currentState!.validate()) {
                                 _formKey.currentState!.save();

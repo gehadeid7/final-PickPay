@@ -100,36 +100,109 @@ class ApiService {
   // Load Products with error handling
   Future<List<ProductCard>> loadProducts() async {
     try {
+      // 1. Get all categories
+      final categoriesResponse = await http
+          .get(Uri.parse('${baseUrl}categories'))
+          .timeout(const Duration(seconds: 15));
+
+      if (categoriesResponse.statusCode != 200) {
+        throw Exception('Failed to load categories');
+      }
+
+      final categoriesData = jsonDecode(categoriesResponse.body);
+      final categories = categoriesData['data'] as List;
+      log('Categories loaded: ${categories.length}');
+
+      // 2. Find the Appliances category
+      final appliancesCategory = categories.firstWhere(
+        (category) => category['name'] == 'Appliances',
+        orElse: () => throw Exception('Appliances category not found'),
+      );
+      log('Found Appliances category with ID: ${appliancesCategory['_id']}');
+
+      // 3. Use the ObjectId to fetch products
+      final productsUrl =
+          '${baseUrl}products?category=${appliancesCategory['_id']}';
+      log('Fetching products from: $productsUrl');
+
       final response = await http
-          .get(Uri.parse('${baseUrl}products'))
+          .get(Uri.parse(productsUrl))
           .timeout(const Duration(seconds: 15));
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        final products = data['data'] as List;
+        log('Products response: ${response.body}');
 
-        return products.map((productData) {
+        final products = data['data'] as List;
+        log('Number of products found: ${products.length}');
+
+        if (products.isEmpty) {
+          log('No products found for Appliances category');
+          return [];
+        }
+
+        // Log each product's details
+        log('=== Product Details ===');
+        for (var product in products) {
+          log('ID: ${product['_id']}');
+          log('Title: ${product['title']}');
+          log('Brand: ${product['brand']}');
+          log('Price: ${product['price']}');
+          log('-------------------');
+        }
+        log('=====================');
+
+        final productCards = products.map((productData) {
+          log('Processing product: ${productData['title']}');
+
+          // Handle image URLs - ensure they're absolute URLs
+          List<String> imagePaths = [];
+          if (productData['images'] != null) {
+            imagePaths = (productData['images'] as List).map((img) {
+              if (img.toString().startsWith('http')) {
+                return img.toString();
+              }
+              return '${baseUrl}products/$img';
+            }).toList();
+          }
+
+          // If no images, use the imageCover
+          if (imagePaths.isEmpty && productData['imageCover'] != null) {
+            String coverImage = productData['imageCover'];
+            if (!coverImage.startsWith('http')) {
+              coverImage = '${baseUrl}products/$coverImage';
+            }
+            imagePaths = [coverImage];
+          }
+
           return ProductCard(
             id: productData['_id'],
             name: productData['title'],
-            imagePaths: List<String>.from(productData['images'] ?? []),
-            price: productData['price'].toDouble(),
-            originalPrice: productData['originalPrice']?.toDouble() ??
-                productData['price'].toDouble(),
-            rating: productData['rating']?.toDouble() ?? 0.0,
+            imagePaths: imagePaths,
+            price: (productData['price'] as num).toDouble(),
+            originalPrice: (productData['originalPrice'] as num?)?.toDouble() ??
+                (productData['price'] as num).toDouble(),
+            rating: (productData['ratingsAverage'] as num?)?.toDouble() ?? 0.0,
             reviewCount: productData['ratingsQuantity'] ?? 0,
           );
         }).toList();
+
+        log('Successfully created ${productCards.length} ProductCard objects');
+        return productCards;
       } else {
         final message =
             jsonDecode(response.body)['message'] ?? 'Unknown error occurred';
+        log('Error response: ${response.body}');
         throw Exception('Failed to load products: $message');
       }
     } on TimeoutException {
+      log('Request timed out');
       throw Exception('Request timed out. Please try again later.');
     } on SocketException {
+      log('No internet connection');
       throw Exception('No internet connection. Please check your network.');
     } catch (e) {
+      log('Error in loadProducts: $e');
       throw Exception('Error loading products: ${e.toString()}');
     }
   }
@@ -175,6 +248,7 @@ class ApiService {
     try {
       // Check Firebase sign-in methods to ensure user exists
       final methods =
+          // ignore: deprecated_member_use
           await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
       if (methods.isEmpty) {
         throw Exception("No Firebase user found with this email.");
@@ -253,6 +327,7 @@ class ApiService {
   Future<Either<Failure, bool>> checkUserExists(String email) async {
     try {
       final methods =
+          // ignore: deprecated_member_use
           await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
       if (methods.isNotEmpty) {
         return right(true);
