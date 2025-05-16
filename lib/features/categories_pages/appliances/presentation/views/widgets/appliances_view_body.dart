@@ -17,6 +17,8 @@ import 'package:pickpay/features/categories_pages/products_views/appliances_prod
 import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product14.dart';
 import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product15.dart';
 import 'package:pickpay/features/categories_pages/widgets/brand_filter_widget.dart';
+import 'package:pickpay/features/categories_pages/widgets/price_range_filter.dart';
+import 'package:pickpay/features/categories_pages/widgets/rating_filter.dart';
 import 'package:pickpay/features/categories_pages/widgets/product_card.dart';
 import 'package:pickpay/services/api_service.dart';
 
@@ -29,6 +31,8 @@ class AppliancesViewBody extends StatefulWidget {
 
 class _AppliancesViewBodyState extends State<AppliancesViewBody> {
   String? _selectedBrand;
+  double _minRating = 0;
+  RangeValues _priceRange = const RangeValues(0, 10000);
   late Future<List<ProductsViewsModel>> _productsFuture;
 
   // Map of key phrases to detail pages with their static data
@@ -172,14 +176,20 @@ class _AppliancesViewBodyState extends State<AppliancesViewBody> {
   }
 
   List<ProductsViewsModel> _filterProducts(List<ProductsViewsModel> products) {
-    if (_selectedBrand == null ||
-        _selectedBrand!.isEmpty ||
-        _selectedBrand == 'All Brands') {
-      return products;
-    }
-    return products
-        .where((product) => product.brand == _selectedBrand)
-        .toList();
+    return products.where((product) {
+      final brandMatch = _selectedBrand == null ||
+          _selectedBrand!.isEmpty ||
+          _selectedBrand == 'All Brands' ||
+          product.brand == _selectedBrand;
+
+      final ratingMatch =
+          product.rating != null && product.rating! >= _minRating;
+
+      final priceMatch = product.price >= _priceRange.start &&
+          product.price <= _priceRange.end;
+
+      return brandMatch && ratingMatch && priceMatch;
+    }).toList();
   }
 
   Widget? _findDetailPage(String productTitle) {
@@ -236,6 +246,9 @@ class _AppliancesViewBodyState extends State<AppliancesViewBody> {
           }
 
           final filteredProducts = _filterProducts(snapshot.data!);
+          final maxPrice = snapshot.data!
+              .map((product) => product.price)
+              .reduce((a, b) => a > b ? a : b);
 
           return RefreshIndicator(
             onRefresh: () async {
@@ -243,60 +256,77 @@ class _AppliancesViewBodyState extends State<AppliancesViewBody> {
                 _productsFuture = _loadProducts();
               });
             },
-            child: Column(
+            child: ListView(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: SizedBox(
-                      width: 150,
-                      child: BrandFilterWidget(
-                        products: snapshot.data!,
-                        selectedBrand: _selectedBrand,
-                        onBrandChanged: (newBrand) {
-                          setState(() {
-                            _selectedBrand = newBrand;
-                          });
-                        },
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: ListView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    itemCount: filteredProducts.length,
-                    itemBuilder: (context, index) {
-                      final product = filteredProducts[index];
-                      final productPage = _findDetailPage(product.title);
-
-                      if (productPage == null) {
-                        return const SizedBox.shrink();
-                      }
-
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 16),
-                        child: ProductCard(
-                          id: product.id,
-                          name: product.title,
-                          imagePaths: product.imagePaths ?? [],
-                          price: product.price,
-                          originalPrice: product.originalPrice ?? 0,
-                          rating: product.rating ?? 0,
-                          reviewCount: product.reviewCount ?? 0,
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => productPage),
-                            );
-                          },
-                        ),
-                      );
+                // Filters section
+                Card(
+                  elevation: 2,
+                  child: BrandFilterWidget(
+                    products: snapshot.data!,
+                    selectedBrand: _selectedBrand,
+                    onBrandChanged: (newBrand) {
+                      setState(() {
+                        _selectedBrand = newBrand;
+                      });
                     },
                   ),
                 ),
+                const SizedBox(height: 8),
+                // Price and Rating filters in a row
+                Row(
+                  children: [
+                    // Price Filter (left side)
+                    Expanded(
+                      child: Card(
+                        elevation: 2,
+                        child: PriceRangeFilterWidget(
+                          values: _priceRange,
+                          maxPrice: maxPrice,
+                          onChanged: (range) =>
+                              setState(() => _priceRange = range),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    // Rating Filter (right side)
+                    Expanded(
+                      child: Card(
+                        elevation: 2,
+                        child: RatingFilterWidget(
+                          value: _minRating,
+                          onChanged: (rating) =>
+                              setState(() => _minRating = rating),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                // Products list
+                ...filteredProducts.map((product) {
+                  final productPage = _findDetailPage(product.title);
+                  if (productPage == null) return const SizedBox.shrink();
+
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: ProductCard(
+                      id: product.id,
+                      name: product.title,
+                      imagePaths: product.imagePaths ?? [],
+                      price: product.price,
+                      originalPrice: product.originalPrice ?? 0,
+                      rating: product.rating ?? 0,
+                      reviewCount: product.reviewCount ?? 0,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => productPage),
+                        );
+                      },
+                    ),
+                  );
+                }).toList(),
               ],
             ),
           );
