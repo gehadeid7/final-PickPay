@@ -84,12 +84,14 @@ class _SlidingFeaturedListState extends State<SlidingFeaturedList> {
               decoration: BoxDecoration(
                 color: _currentIndex == entry.key
                     ? const Color.fromRGBO(62, 133, 255, 1)
+                    // ignore: deprecated_member_use
                     : Colors.blueAccent.withOpacity(0.3),
                 borderRadius: BorderRadius.circular(6),
                 boxShadow: _currentIndex == entry.key
                     ? [
                         BoxShadow(
                           color: const Color.fromARGB(255, 30, 56, 102)
+                              // ignore: deprecated_member_use
                               .withOpacity(0.6),
                           blurRadius: 4,
                           offset: const Offset(0, 3),

@@ -77,6 +77,7 @@ class InfoSectionWithIcons extends StatelessWidget {
             text: 'Buy with installments and pay ',
             style: TextStyles.regular13.copyWith(
               color: isDarkMode
+                  // ignore: deprecated_member_use
                   ? colorScheme.onSurface.withOpacity(0.9)
                   : Colors.grey[800],
             ),
@@ -91,6 +92,7 @@ class InfoSectionWithIcons extends StatelessWidget {
                 text: 'for 48 months with select banks. ',
                 style: TextStyles.regular13.copyWith(
                   color: isDarkMode
+                      // ignore: deprecated_member_use
                       ? colorScheme.onSurface.withOpacity(0.9)
                       : Colors.grey[800],
                 ),
@@ -192,6 +194,7 @@ class _InfoItem extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
+            // ignore: deprecated_member_use
             color: color.withOpacity(0.1),
             shape: BoxShape.circle,
           ),

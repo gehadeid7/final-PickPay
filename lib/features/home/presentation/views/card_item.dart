@@ -78,6 +78,7 @@ class _CardItemState extends State<CardItem>
             ),
             boxShadow: [
               BoxShadow(
+                // ignore: deprecated_member_use
                 color: isDark ? Colors.black26 : Colors.grey.withOpacity(0.08),
                 blurRadius: 14,
                 offset: const Offset(0, 6),
@@ -114,6 +115,7 @@ class _CardItemState extends State<CardItem>
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
                 decoration: BoxDecoration(
+                  // ignore: deprecated_member_use
                   color: Colors.green.shade100.withOpacity(0.6),
                   borderRadius: BorderRadius.circular(20),
                 ),

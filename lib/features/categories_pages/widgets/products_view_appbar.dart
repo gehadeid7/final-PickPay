@@ -23,7 +23,9 @@ class ProductDetailAppBar extends StatelessWidget
     final isDarkMode = theme.brightness == Brightness.dark;
     final iconColor = isDarkMode ? Colors.white : Colors.black;
     final circleColor = isDarkMode
+        // ignore: deprecated_member_use
         ? Colors.white.withOpacity(0.2)
+        // ignore: deprecated_member_use
         : Colors.black.withOpacity(0.05);
 
     return AppBar(
@@ -75,12 +77,14 @@ class ProductDetailAppBar extends StatelessWidget
 
       if (!kIsWeb) {
         // For mobile - include more details
+        // ignore: deprecated_member_use
         await Share.share(
           shareText,
           subject: 'Check out ${product.title} on PickPay!',
         );
       } else {
         // For web - shorter version
+        // ignore: deprecated_member_use
         await Share.share(
           'Check out ${product.title} on PickPay! $productLink',
           subject: 'PickPay Product',

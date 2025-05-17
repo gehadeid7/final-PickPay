@@ -58,7 +58,8 @@ class _MainNavigationView extends StatelessWidget {
         body: SafeArea(
           child: MainNavigationScreenBody(authRepo: authRepo),
         ),
-        bottomNavigationBar: BlocBuilder<BottomNavigationCubit, BottomNavigationState>(
+        bottomNavigationBar:
+            BlocBuilder<BottomNavigationCubit, BottomNavigationState>(
           builder: (context, state) {
             return CustomBottomNavigationBar(
               selectedIndex: state.currentIndex,

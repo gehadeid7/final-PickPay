@@ -222,6 +222,7 @@ class _ProductDetailViewState extends State<ProductDetailView>
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
+              // ignore: deprecated_member_use
               color: Colors.black.withOpacity(0.6),
               borderRadius: BorderRadius.circular(20),
             ),
@@ -232,6 +233,7 @@ class _ProductDetailViewState extends State<ProductDetailView>
                 dotHeight: 6,
                 dotWidth: 6,
                 activeDotColor: Colors.white,
+                // ignore: deprecated_member_use
                 dotColor: Colors.white.withOpacity(0.5),
               ),
             ),
@@ -248,6 +250,7 @@ class _ProductDetailViewState extends State<ProductDetailView>
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
+            // ignore: deprecated_member_use
             color: Colors.black.withOpacity(0.1),
             blurRadius: 10,
             offset: const Offset(0, 4),
@@ -287,6 +290,7 @@ class _ProductDetailViewState extends State<ProductDetailView>
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
+                  // ignore: deprecated_member_use
                   color: Colors.red.shade100.withOpacity(0.3),
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(color: Colors.red.shade200),
@@ -947,6 +951,7 @@ class _ProductDetailViewState extends State<ProductDetailView>
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
+                    // ignore: deprecated_member_use
                     color: Colors.black.withOpacity(0.1),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
@@ -995,6 +1000,7 @@ class _ProductDetailViewState extends State<ProductDetailView>
                               horizontal: 12, vertical: 6),
                           decoration: BoxDecoration(
                             color: isDarkMode
+                                // ignore: deprecated_member_use
                                 ? Colors.blueAccent.withOpacity(0.2)
                                 : Colors.blue[50],
                             borderRadius: BorderRadius.circular(20),
@@ -1046,6 +1052,7 @@ class _ProductDetailViewState extends State<ProductDetailView>
     final textStyle = TextStyle(
       fontSize: 15,
       height: 1.5,
+      // ignore: deprecated_member_use
       color: isDarkMode ? Colors.white.withOpacity(0.9) : Colors.grey[800],
     );
 
@@ -1072,7 +1079,9 @@ class _ProductDetailViewState extends State<ProductDetailView>
               end: Alignment.bottomCenter,
               colors: [
                 isDarkMode
+                    // ignore: deprecated_member_use
                     ? Colors.grey[850]!.withOpacity(0)
+                    // ignore: deprecated_member_use
                     : Colors.white.withOpacity(0),
                 isDarkMode ? Colors.grey[850]! : Colors.white,
               ],
@@ -1100,6 +1109,7 @@ class _ProductDetailViewState extends State<ProductDetailView>
             border: Border.all(color: borderColor, width: 1),
             boxShadow: [
               BoxShadow(
+                // ignore: deprecated_member_use
                 color: Colors.black.withOpacity(isDarkMode ? 0.1 : 0.05),
                 blurRadius: 6,
                 offset: const Offset(0, 2),
@@ -1256,6 +1266,7 @@ class _ProductDetailViewState extends State<ProductDetailView>
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
+                // ignore: deprecated_member_use
                 color: Colors.black.withOpacity(isDarkMode ? 0.1 : 0.05),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
@@ -1270,6 +1281,7 @@ class _ProductDetailViewState extends State<ProductDetailView>
                   label: "Ships From",
                   value: product.shipsFrom,
                   backgroundColor: isDarkMode
+                      // ignore: deprecated_member_use
                       ? Colors.grey[800]!.withOpacity(0.7)
                       : Colors.white,
                   isDarkMode: isDarkMode,
@@ -1288,6 +1300,7 @@ class _ProductDetailViewState extends State<ProductDetailView>
                   label: "Sold By",
                   value: product.soldBy,
                   backgroundColor: isDarkMode
+                      // ignore: deprecated_member_use
                       ? Colors.grey[800]!.withOpacity(0.7)
                       : Colors.white,
                   isDarkMode: isDarkMode,
@@ -1307,6 +1320,7 @@ class _ProductDetailViewState extends State<ProductDetailView>
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
+            // ignore: deprecated_member_use
             color: Colors.black.withOpacity(0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),

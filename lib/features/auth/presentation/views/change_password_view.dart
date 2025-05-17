@@ -110,6 +110,7 @@ class _ChangePasswordFormState extends State<_ChangePasswordForm>
           BoxShadow(
             color: widget.isDarkMode
                 ? Colors.black45
+                // ignore: deprecated_member_use
                 : Colors.grey.withOpacity(0.2),
             blurRadius: 12,
             offset: const Offset(0, 6),
@@ -176,13 +177,16 @@ class _ChangePasswordFormState extends State<_ChangePasswordForm>
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
                 color: widget.isDarkMode
+                    // ignore: deprecated_member_use
                     ? Colors.black.withOpacity(0.6)
+                    // ignore: deprecated_member_use
                     : Colors.white.withOpacity(0.85),
                 borderRadius: BorderRadius.circular(25),
                 boxShadow: [
                   BoxShadow(
                     color: widget.isDarkMode
                         ? Colors.black54
+                        // ignore: deprecated_member_use
                         : Colors.grey.withOpacity(0.3),
                     blurRadius: 12,
                     offset: const Offset(0, 6),
@@ -228,8 +232,8 @@ class _ChangePasswordFormState extends State<_ChangePasswordForm>
               context: context,
               label: 'Current Password',
               obscureText: _obscureCurrentPassword,
-              onToggle: () => setState(() =>
-                  _obscureCurrentPassword = !_obscureCurrentPassword),
+              onToggle: () => setState(
+                  () => _obscureCurrentPassword = !_obscureCurrentPassword),
               controller: _currentPasswordController,
               icon: Icons.lock,
               validator: (value) => value == null || value.isEmpty
@@ -258,8 +262,8 @@ class _ChangePasswordFormState extends State<_ChangePasswordForm>
               context: context,
               label: 'Confirm New Password',
               obscureText: _obscureConfirmPassword,
-              onToggle: () => setState(() =>
-                  _obscureConfirmPassword = !_obscureConfirmPassword),
+              onToggle: () => setState(
+                  () => _obscureConfirmPassword = !_obscureConfirmPassword),
               controller: _confirmPasswordController,
               icon: Icons.lock_outline,
               validator: (value) {

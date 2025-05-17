@@ -26,6 +26,7 @@ class FooterWidget extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
+            // ignore: deprecated_member_use
             color: primaryColor.withOpacity(0.05),
             blurRadius: 24,
             offset: const Offset(0, -8),
@@ -180,6 +181,7 @@ class FooterWidget extends StatelessWidget {
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
+            // ignore: deprecated_member_use
             color: Colors.black.withOpacity(0.04),
             blurRadius: 8,
             offset: const Offset(0, 4),
@@ -200,6 +202,7 @@ class FooterWidget extends StatelessWidget {
       children: [
         Expanded(
           child: Divider(
+            // ignore: deprecated_member_use
             color: theme.primaryColor.withOpacity(0.2),
             thickness: 1,
             endIndent: 16,
@@ -208,6 +211,7 @@ class FooterWidget extends StatelessWidget {
         Icon(Icons.favorite, color: theme.primaryColor, size: 20),
         Expanded(
           child: Divider(
+            // ignore: deprecated_member_use
             color: theme.primaryColor.withOpacity(0.2),
             thickness: 1,
             indent: 16,

@@ -71,6 +71,7 @@ class CategoriesViewBody extends StatelessWidget {
                           state.message,
                           textAlign: TextAlign.center,
                           style: TextStyles.regular16.copyWith(
+                            // ignore: deprecated_member_use
                             color: colorScheme.onBackground.withOpacity(0.7),
                           ),
                         ),
@@ -209,7 +210,9 @@ class _AnimatedCategoryCardState extends State<AnimatedCategoryCard>
                       begin: Alignment.bottomCenter,
                       end: Alignment.topCenter,
                       colors: [
+                        // ignore: deprecated_member_use
                         widget.color.withOpacity(0.4),
+                        // ignore: deprecated_member_use
                         widget.color.withOpacity(0.2),
                       ],
                     ),

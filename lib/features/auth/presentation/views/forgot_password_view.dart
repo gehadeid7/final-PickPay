@@ -19,7 +19,11 @@ class ForgotPasswordView extends StatelessWidget {
       create: (context) => ForgotPasswordCubit(getIt<AuthRepo>()),
       child: Scaffold(
         extendBodyBehindAppBar: true,
-        appBar: buildAppBar(context: context, title: 'Forgot Password', elevation: 0, backgroundColor: Colors.transparent),
+        appBar: buildAppBar(
+            context: context,
+            title: 'Forgot Password',
+            elevation: 0,
+            backgroundColor: Colors.transparent),
         body: Stack(
           children: [
             const AnimatedBackground(),
@@ -38,7 +42,8 @@ class AnimatedBackground extends StatefulWidget {
   State<AnimatedBackground> createState() => _AnimatedBackgroundState();
 }
 
-class _AnimatedBackgroundState extends State<AnimatedBackground> with SingleTickerProviderStateMixin {
+class _AnimatedBackgroundState extends State<AnimatedBackground>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<Color?> _colorAnimation1;
   late Animation<Color?> _colorAnimation2;
@@ -47,8 +52,9 @@ class _AnimatedBackgroundState extends State<AnimatedBackground> with SingleTick
   void initState() {
     super.initState();
 
-    _controller = AnimationController(vsync: this, duration: const Duration(seconds: 10))
-      ..repeat(reverse: true);
+    _controller =
+        AnimationController(vsync: this, duration: const Duration(seconds: 10))
+          ..repeat(reverse: true);
 
     _colorAnimation1 = ColorTween(
       begin: Colors.blue.shade700,
@@ -156,6 +162,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
           decoration: InputDecoration(
             hintText: 'Email address',
             hintStyle: TextStyles.regular13.copyWith(
+              // ignore: deprecated_member_use
               color: Colors.white70.withOpacity(0.7),
             ),
             filled: true,

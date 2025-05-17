@@ -1,11 +1,9 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:http/http.dart';
 import 'package:pickpay/constants.dart';
 import 'package:pickpay/core/errors/failures.dart';
 import 'package:pickpay/core/services/database_services.dart';
@@ -121,7 +119,8 @@ class AuthRepoImplementation extends AuthRepo {
         log('No user found for email: $email, but sent reset if exists.');
         return right(null);
       } else {
-        return left(ServerFailure('فشل في إرسال رابط إعادة تعيين كلمة المرور: ${e.message}'));
+        return left(ServerFailure(
+            'فشل في إرسال رابط إعادة تعيين كلمة المرور: ${e.message}'));
       }
     } catch (e) {
       return left(ServerFailure('حدث خطأ غير متوقع: ${e.toString()}'));
@@ -316,14 +315,14 @@ class AuthRepoImplementation extends AuthRepo {
       String? photoUrl = user.photoUrl;
 
       // Upload profile image if local path (not URL)
-    if (photoUrl != null && !photoUrl.startsWith('http')) {
-  final file = File(photoUrl);
-  final uploadResult = await uploadProfileImage(currentUser.uid, file);
-  uploadResult.fold(
-    (failure) => throw Exception(failure.message),
-    (url) => photoUrl = url,
-  );
-}
+      if (photoUrl != null && !photoUrl.startsWith('http')) {
+        final file = File(photoUrl);
+        final uploadResult = await uploadProfileImage(currentUser.uid, file);
+        uploadResult.fold(
+          (failure) => throw Exception(failure.message),
+          (url) => photoUrl = url,
+        );
+      }
       // Update Firebase Auth profile
       await currentUser.updateDisplayName(user.fullName);
       if (photoUrl != null) {
@@ -340,11 +339,11 @@ class AuthRepoImplementation extends AuthRepo {
         photoUrl: photoUrl,
       );
 
-  final response = await apiService.put(
-  endpoint: BackendEndpoints.updateUserProfile(updatedUser.uId), // Pass userId here
-  body: UserModel.fromEntity(updatedUser).toMap(),
-);
-
+      final response = await apiService.put(
+        endpoint: BackendEndpoints.updateUserProfile(
+            updatedUser.uId), // Pass userId here
+        body: UserModel.fromEntity(updatedUser).toMap(),
+      );
 
       if (response.statusCode == 200) {
         await saveUserData(user: updatedUser);
@@ -395,7 +394,7 @@ class AuthRepoImplementation extends AuthRepo {
   @override
   Future<Either<Failure, UserEntity>> getCurrentUser() async {
     try {
-    final user = firebaseAuthService.getCurrentUser();
+      final user = firebaseAuthService.getCurrentUser();
       if (user == null) return left(ServerFailure('No user logged in'));
       final syncedUser = await apiService.syncFirebaseUserToBackend(
         name: user.displayName ?? '',
@@ -422,39 +421,44 @@ class AuthRepoImplementation extends AuthRepo {
       return left(ServerFailure('Failed to delete user: ${e.toString()}'));
     }
   }
-  
-@override
-Future<Either<Failure, bool>> checkUserExists(String email) async {
-  try {
-    // Check sign-in methods from Firebase Auth
-    final methods = await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
-    print('Firebase methods: $methods'); // Debug print
 
-    if (methods.isNotEmpty) return right(true);
+  @override
+  Future<Either<Failure, bool>> checkUserExists(String email) async {
+    try {
+      // Check sign-in methods from Firebase Auth
+      final methods =
+          await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
+      print('Firebase methods: $methods'); // Debug print
 
-    // Check if user exists in backend
-    final response = await apiService.post(
-      endpoint: BackendEndpoints.checkUserExists,
-      body: {'email': email},
-    );
+      if (methods.isNotEmpty) return right(true);
 
-    print('Backend response: ${response.body}'); // Debug print
+      // Check if user exists in backend
+      final response = await apiService.post(
+        endpoint: BackendEndpoints.checkUserExists,
+        body: {'email': email},
+      );
 
-    final data = jsonDecode(response.body);
-    return right(data['exists'] == true);
-  } catch (e) {
-    print('Error in checkUserExists: ${e.toString()}');
-    return left(ServerFailure('فشل التحقق من وجود المستخدم: ${e.toString()}'));
+      print('Backend response: ${response.body}'); // Debug print
+
+      final data = jsonDecode(response.body);
+      return right(data['exists'] == true);
+    } catch (e) {
+      print('Error in checkUserExists: ${e.toString()}');
+      return left(
+          ServerFailure('فشل التحقق من وجود المستخدم: ${e.toString()}'));
+    }
   }
-}
-@override
-Future<Either<Failure, String>> uploadProfileImage(String userId, File image) async {
-  try {
-    final imageUrl = await firebaseStorageService.uploadProfileImage(userId, image);
-    return right(imageUrl);
-  } catch (e) {
-    return left(ServerFailure('Failed to upload profile image: ${e.toString()}'));
-  }
-}
 
+  @override
+  Future<Either<Failure, String>> uploadProfileImage(
+      String userId, File image) async {
+    try {
+      final imageUrl =
+          await firebaseStorageService.uploadProfileImage(userId, image);
+      return right(imageUrl);
+    } catch (e) {
+      return left(
+          ServerFailure('Failed to upload profile image: ${e.toString()}'));
+    }
+  }
 }

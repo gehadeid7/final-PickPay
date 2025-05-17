@@ -7,7 +7,6 @@ import 'package:intl/intl.dart';
 import 'package:pickpay/core/services/firebase_auth_service.dart';
 import 'package:pickpay/core/services/get_it_service.dart';
 
-import 'package:pickpay/core/utils/app_colors.dart';
 import 'package:pickpay/core/utils/app_text_styles.dart';
 import 'package:pickpay/core/widgets/custom_button.dart';
 import 'package:pickpay/features/auth/domain/repos/auth_repo.dart';
@@ -184,8 +183,9 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> {
               builder: (context, state) {
                 return IconButton(
                   icon: const Icon(Icons.save),
-                  onPressed:
-                      state.status == ProfileStatus.loading ? null : _saveProfile,
+                  onPressed: state.status == ProfileStatus.loading
+                      ? null
+                      : _saveProfile,
                   tooltip: 'Save Profile',
                 );
               },
@@ -351,12 +351,15 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> {
                           (gender) => Expanded(
                             child: RadioListTile<String>(
                               contentPadding: EdgeInsets.zero,
-                              title: Text(gender, style: TextStyle(color: textColor)),
+                              title: Text(gender,
+                                  style: TextStyle(color: textColor)),
                               value: gender,
                               groupValue: state.gender,
                               onChanged: (value) {
                                 if (value != null) {
-                                  context.read<ProfileCubit>().updateGender(value);
+                                  context
+                                      .read<ProfileCubit>()
+                                      .updateGender(value);
                                 }
                               },
                             ),

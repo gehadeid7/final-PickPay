@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pickpay/animation/animated_form_field.dart';
-import 'package:pickpay/animation/shake_animation.dart';
 import 'package:pickpay/constants.dart';
 import 'package:pickpay/core/utils/app_colors.dart';
 import 'package:pickpay/core/utils/app_images.dart';
@@ -75,11 +74,15 @@ class _BackgroundPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    // ignore: deprecated_member_use
     final paint = Paint()..color = color.withOpacity(0.1);
 
-    canvas.drawCircle(Offset(size.width * 0.3, size.height * 0.3 + offset), 60, paint);
-    canvas.drawCircle(Offset(size.width * 0.7, size.height * 0.5 - offset), 100, paint);
-    canvas.drawCircle(Offset(size.width * 0.5, size.height * 0.8 + offset / 2), 80, paint);
+    canvas.drawCircle(
+        Offset(size.width * 0.3, size.height * 0.3 + offset), 60, paint);
+    canvas.drawCircle(
+        Offset(size.width * 0.7, size.height * 0.5 - offset), 100, paint);
+    canvas.drawCircle(
+        Offset(size.width * 0.5, size.height * 0.8 + offset / 2), 80, paint);
   }
 
   @override
@@ -227,8 +230,8 @@ class _SigninViewBodyState extends State<SigninViewBody>
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
-                    onPressed: () =>
-                        Navigator.pushNamed(context, ForgotPasswordView.routeName),
+                    onPressed: () => Navigator.pushNamed(
+                        context, ForgotPasswordView.routeName),
                     child: Text(
                       'Forgot Password?',
                       style: TextStyles.semiBold13.copyWith(

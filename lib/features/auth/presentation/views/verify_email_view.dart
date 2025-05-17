@@ -84,7 +84,9 @@ class _VerifyEmailViewState extends State<VerifyEmailView>
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
+                        // ignore: deprecated_member_use
                         theme.colorScheme.primary.withOpacity(0.8),
+                        // ignore: deprecated_member_use
                         theme.colorScheme.secondary.withOpacity(0.7),
                       ],
                       begin: Alignment.topLeft,
@@ -104,15 +106,19 @@ class _VerifyEmailViewState extends State<VerifyEmailView>
                         padding: const EdgeInsets.all(24),
                         decoration: BoxDecoration(
                           color: (isDarkMode
-                                  ? Colors.black.withOpacity(0.4)
-                                  : Colors.white.withOpacity(0.4)),
+                              // ignore: deprecated_member_use
+                              ? Colors.black.withOpacity(0.4)
+                              // ignore: deprecated_member_use
+                              : Colors.white.withOpacity(0.4)),
                           borderRadius: BorderRadius.circular(24),
                           border: Border.all(
+                            // ignore: deprecated_member_use
                             color: Colors.white.withOpacity(0.2),
                             width: 1.5,
                           ),
                           boxShadow: [
                             BoxShadow(
+                              // ignore: deprecated_member_use
                               color: theme.colorScheme.primary.withOpacity(0.3),
                               blurRadius: 20,
                               spreadRadius: 5,
@@ -132,6 +138,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView>
                                     boxShadow: [
                                       BoxShadow(
                                         color: theme.colorScheme.primary
+                                            // ignore: deprecated_member_use
                                             .withOpacity(_glowAnimation.value),
                                         blurRadius: 30,
                                         spreadRadius: 5,
@@ -155,7 +162,9 @@ class _VerifyEmailViewState extends State<VerifyEmailView>
                                 shadows: [
                                   Shadow(
                                     color:
-                                        theme.colorScheme.primary.withOpacity(0.5),
+                                        // ignore: deprecated_member_use
+                                        theme.colorScheme.primary
+                                            .withOpacity(0.5),
                                     blurRadius: 8,
                                   ),
                                 ],
@@ -166,7 +175,9 @@ class _VerifyEmailViewState extends State<VerifyEmailView>
                             Text(
                               'لقد أرسلنا رابط التحقق إلى بريدك. الرجاء التحقق من صندوق الوارد والنقر على الرابط لتفعيل حسابك.',
                               style: theme.textTheme.bodyMedium?.copyWith(
-                                color: theme.colorScheme.onSurface.withOpacity(0.8),
+                                // ignore: deprecated_member_use
+                                color: theme.colorScheme.onSurface
+                                    .withOpacity(0.8),
                               ),
                               textAlign: TextAlign.center,
                             ),
@@ -187,8 +198,10 @@ class _VerifyEmailViewState extends State<VerifyEmailView>
                                             vertical: 16),
                                         child: Text(
                                           'يمكنك إعادة إرسال الرابط بعد $countdown ثانية',
-                                          style: theme.textTheme.bodyMedium?.copyWith(
+                                          style: theme.textTheme.bodyMedium
+                                              ?.copyWith(
                                             color: theme.colorScheme.onSurface
+                                                // ignore: deprecated_member_use
                                                 .withOpacity(0.6),
                                             fontStyle: FontStyle.italic,
                                           ),
@@ -238,7 +251,8 @@ class _VerifyEmailViewState extends State<VerifyEmailView>
                                       context, SigninView.routeName);
                                 },
                                 style: OutlinedButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(vertical: 16),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 16),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12),
                                   ),

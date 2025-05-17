@@ -110,7 +110,9 @@ class _TodaysSaleGridViewState extends State<TodaysSaleGridView>
         boxShadow: [
           BoxShadow(
             color: isDarkMode
+                // ignore: deprecated_member_use
                 ? const Color.fromARGB(255, 38, 38, 38).withOpacity(0.6)
+                // ignore: deprecated_member_use
                 : const Color.fromARGB(255, 92, 92, 92).withOpacity(0.3),
             blurRadius: 12,
             offset: const Offset(0, 4),
@@ -170,6 +172,7 @@ class _TodaysSaleGridViewState extends State<TodaysSaleGridView>
                   shadows: isDarkMode
                       ? [
                           Shadow(
+                            // ignore: deprecated_member_use
                             color: Colors.black.withOpacity(0.7),
                             blurRadius: 6,
                             offset: const Offset(1, 1),
