@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dartz/dartz.dart';
 import 'package:pickpay/core/errors/failures.dart';
 import 'package:pickpay/features/auth/domain/entities/user_entity.dart';
@@ -10,6 +12,7 @@ abstract class AuthRepo {
     String password,
     String fullName,
   );
+  Future<Either<Failure, String>> uploadProfileImage(String userId, File image);
 
   // 🔐 Authentication
   Future<Either<Failure, UserEntity>> signInWithEmailAndPassword(

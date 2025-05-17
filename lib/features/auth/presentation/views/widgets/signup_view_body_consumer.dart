@@ -11,34 +11,24 @@ class SignupViewBodyBlocConsumer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<SignupCubit, SignupState>(
-      listener: (context, state) async {
+      listener: (context, state) {
         if (state is SignupSuccess) {
-          // After successful signup, check if the email is verified.
-          final userExists = await context.read<SignupCubit>().checkIfUserExists(state.userEntity.email);
-
-          if (userExists) {
-            // If user exists and email is verified, navigate to home
-            if (state.userEntity.emailVerified) {
-              Navigator.pushNamed(context, '/home');
-            } else {
-              // Otherwise, navigate to the email verification page
-              Navigator.pushNamed(context, '/verify_email');
-            }
+          // Navigate based on email verification status
+          if (state.userEntity.emailVerified) {
+            Navigator.pushNamed(context, '/home');
           } else {
-            // If user does not exist, show an error message with Flushbar
-            AppFlushbar.showError(context, 'User does not exist');
+            Navigator.pushNamed(context, '/verify_email');
           }
         }
 
         if (state is SignupFailure) {
-          // Show error using Flushbar instead of buildErrorBar
           AppFlushbar.showError(context, state.message);
         }
       },
       builder: (context, state) {
         return ModalProgressHUD(
-          inAsyncCall: state is SignupLoading,  // Simplified condition
-          child: SignUpViewBody(),
+          inAsyncCall: state is SignupLoading,
+          child: const SignUpViewBody(),
         );
       },
     );

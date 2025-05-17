@@ -16,6 +16,78 @@ import 'package:pickpay/features/auth/presentation/views/widgets/or_divider.dart
 import 'package:pickpay/features/auth/presentation/views/widgets/social_login_button.dart';
 import 'package:pickpay/main.dart';
 
+class AnimatedBackground extends StatefulWidget {
+  final Widget child;
+  final Color primaryColor;
+
+  const AnimatedBackground({
+    super.key,
+    required this.child,
+    required this.primaryColor,
+  });
+
+  @override
+  State<AnimatedBackground> createState() => _AnimatedBackgroundState();
+}
+
+class _AnimatedBackgroundState extends State<AnimatedBackground>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 10),
+    )..repeat(reverse: true);
+    _animation = Tween<double>(begin: 0, end: 100).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _animation,
+      builder: (context, _) {
+        return CustomPaint(
+          painter: _BackgroundPainter(widget.primaryColor, _animation.value),
+          child: widget.child,
+        );
+      },
+    );
+  }
+}
+
+class _BackgroundPainter extends CustomPainter {
+  final Color color;
+  final double offset;
+
+  _BackgroundPainter(this.color, this.offset);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()..color = color.withOpacity(0.1);
+
+    canvas.drawCircle(Offset(size.width * 0.3, size.height * 0.3 + offset), 60, paint);
+    canvas.drawCircle(Offset(size.width * 0.7, size.height * 0.5 - offset), 100, paint);
+    canvas.drawCircle(Offset(size.width * 0.5, size.height * 0.8 + offset / 2), 80, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant _BackgroundPainter oldDelegate) {
+    return oldDelegate.offset != offset || oldDelegate.color != color;
+  }
+}
+
 class SigninViewBody extends StatefulWidget {
   const SigninViewBody({super.key});
 
@@ -30,6 +102,9 @@ class _SigninViewBodyState extends State<SigninViewBody>
   late AnimationController _shakeController;
   AutovalidateMode _autovalidateMode = AutovalidateMode.disabled;
   String _email = '', _password = '';
+
+  // For button scale animation on tap
+  double _buttonScale = 1.0;
 
   @override
   void initState() {
@@ -93,13 +168,8 @@ class _SigninViewBodyState extends State<SigninViewBody>
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<SigninCubit, SigninState>(
-      listener: (context, state) {
-        if (state is SigninFailure) {
-          _shakeController.forward(from: 0);
-          SnackbarUtil.showError(context, state.message);
-        }
-      },
+    return AnimatedBackground(
+      primaryColor: AppColors.primaryColor,
       child: AnimatedBuilder(
         animation: _shakeController,
         builder: (context, child) {
@@ -157,8 +227,8 @@ class _SigninViewBodyState extends State<SigninViewBody>
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
-                    onPressed: () => Navigator.pushNamed(
-                        context, ForgotPasswordView.routeName),
+                    onPressed: () =>
+                        Navigator.pushNamed(context, ForgotPasswordView.routeName),
                     child: Text(
                       'Forgot Password?',
                       style: TextStyles.semiBold13.copyWith(
@@ -174,10 +244,25 @@ class _SigninViewBodyState extends State<SigninViewBody>
                     return AnimatedFormField(
                       animation: _animationController,
                       delay: 0.3,
-                      child: CustomButton(
-                        onPressed: state is SigninLoading ? null : _submit,
-                        buttonText: 'Log In',
-                        isLoading: state is SigninLoading,
+                      child: GestureDetector(
+                        onTapDown: state is SigninLoading
+                            ? null
+                            : (_) => setState(() => _buttonScale = 0.95),
+                        onTapUp: state is SigninLoading
+                            ? null
+                            : (_) {
+                                setState(() => _buttonScale = 1.0);
+                                _submit();
+                              },
+                        onTapCancel: () => setState(() => _buttonScale = 1.0),
+                        child: Transform.scale(
+                          scale: _buttonScale,
+                          child: CustomButton(
+                            onPressed: state is SigninLoading ? null : _submit,
+                            buttonText: 'Log In',
+                            isLoading: state is SigninLoading,
+                          ),
+                        ),
                       ),
                     );
                   },

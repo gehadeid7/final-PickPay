@@ -1,8 +1,11 @@
-// 🧩 Imports
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
+
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:http/http.dart';
 import 'package:pickpay/constants.dart';
 import 'package:pickpay/core/errors/failures.dart';
 import 'package:pickpay/core/services/database_services.dart';
@@ -15,21 +18,33 @@ import 'package:pickpay/features/auth/domain/repos/auth_repo.dart';
 import 'package:pickpay/services/api_service.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
+class FirebaseStorageService {
+  final FirebaseStorage _storage = FirebaseStorage.instance;
+
+  Future<String> uploadProfileImage(String userId, File imageFile) async {
+    final ref = _storage.ref().child('profile_images/$userId.jpg');
+    final uploadTask = await ref.putFile(imageFile);
+    final downloadUrl = await uploadTask.ref.getDownloadURL();
+    return downloadUrl;
+  }
+}
+
 class AuthRepoImplementation extends AuthRepo {
   final FirebaseAuthService firebaseAuthService;
   final DatabaseService databaseService;
   final ApiService apiService;
+  final FirebaseStorageService firebaseStorageService;
 
   AuthRepoImplementation({
     required this.databaseService,
     required this.firebaseAuthService,
     required this.apiService,
+    required this.firebaseStorageService,
   });
 
-  // ─────────────────────────────────────────────────────────────
-  // 🔐 AUTHENTICATION (Email & Password) - المصادقة بالبريد وكلمة المرور
-  // ─────────────────────────────────────────────────────────────
-
+  // ───────────────────────────────────────────────
+  // 🔐 EMAIL/PASSWORD SIGNUP
+  // ───────────────────────────────────────────────
   @override
   Future<Either<Failure, UserEntity>> createUserWithEmailAndPassword(
     String email,
@@ -38,35 +53,31 @@ class AuthRepoImplementation extends AuthRepo {
   ) async {
     User? user;
     try {
-      // Create the user with email and password using FirebaseAuth
       user = await firebaseAuthService.createUserWithEmailAndPassword(
         email: email,
         password: password,
         displayName: fullName,
       );
-
-      // Send email verification after signup
       await user.sendEmailVerification();
 
-      // Create a UserEntity from the Firebase user and sync with backend
       final syncedUser = await apiService.syncFirebaseUserToBackend(
-        name: fullName, // Using the fullName passed to the function
+        name: fullName,
         email: email,
         firebaseUid: user.uid,
       );
 
-      // Save the synced user data locally
       await saveUserData(user: syncedUser);
 
-      // Return the synced user as a result
       return right(syncedUser);
     } catch (e) {
-      // In case of error, delete the user if created
       await deleteUser(user);
       return left(ServerFailure('Signup failed: ${e.toString()}'));
     }
   }
 
+  // ───────────────────────────────────────────────
+  // 🔐 EMAIL/PASSWORD SIGNIN
+  // ───────────────────────────────────────────────
   @override
   Future<Either<Failure, UserEntity>> signInWithEmailAndPassword(
     String email,
@@ -78,7 +89,6 @@ class AuthRepoImplementation extends AuthRepo {
         password: password,
       );
 
-      // Check if email is verified
       if (!user.emailVerified) {
         await FirebaseAuth.instance.signOut();
         return left(
@@ -98,27 +108,29 @@ class AuthRepoImplementation extends AuthRepo {
     }
   }
 
+  // ───────────────────────────────────────────────
+  // 🔐 PASSWORD RESET EMAIL
+  // ───────────────────────────────────────────────
   @override
   Future<Either<Failure, void>> sendPasswordResetEmail(String email) async {
     try {
       await firebaseAuthService.sendPasswordResetEmail(email: email);
-      // Always return success regardless of whether the user exists
       return right(null);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        // Log the error to hide it from the user
-        log('No user found for email: $email, but the reset link has been sent if the email exists.');
-        return right(null); // Return success to suppress the error message
+        log('No user found for email: $email, but sent reset if exists.');
+        return right(null);
       } else {
-        // Return a generic error message for other Firebase errors
-        return left(ServerFailure(
-            'فشل في إرسال رابط إعادة تعيين كلمة المرور: ${e.message}'));
+        return left(ServerFailure('فشل في إرسال رابط إعادة تعيين كلمة المرور: ${e.message}'));
       }
     } catch (e) {
       return left(ServerFailure('حدث خطأ غير متوقع: ${e.toString()}'));
     }
   }
 
+  // ───────────────────────────────────────────────
+  // 🔐 RESET PASSWORD (Backend)
+  // ───────────────────────────────────────────────
   @override
   Future<Either<Failure, void>> resetPassword({
     required String token,
@@ -142,10 +154,9 @@ class AuthRepoImplementation extends AuthRepo {
     }
   }
 
-  // ─────────────────────────────────────────────────────────────
-  // 🌐 SOCIAL SIGN-IN (Google, Facebook, Apple) - تسجيل دخول اجتماعي
-  // ─────────────────────────────────────────────────────────────
-
+  // ───────────────────────────────────────────────
+  // 🌐 GOOGLE SIGN-IN
+  // ───────────────────────────────────────────────
   @override
   Future<Either<Failure, UserEntity>> signInWithGoogle() async {
     User? user;
@@ -166,6 +177,9 @@ class AuthRepoImplementation extends AuthRepo {
     }
   }
 
+  // ───────────────────────────────────────────────
+  // 🌐 FACEBOOK SIGN-IN
+  // ───────────────────────────────────────────────
   @override
   Future<Either<Failure, UserEntity>> signInWithFacebook() async {
     User? user;
@@ -186,23 +200,25 @@ class AuthRepoImplementation extends AuthRepo {
     }
   }
 
+  // ───────────────────────────────────────────────
+  // 🌐 APPLE SIGN-IN
+  // ───────────────────────────────────────────────
   @override
   Future<Either<Failure, UserEntity>> signInWithApple() async {
     try {
-      final AuthorizationCredentialAppleID appleIDCredential =
-          await SignInWithApple.getAppleIDCredential(
+      final appleIDCredential = await SignInWithApple.getAppleIDCredential(
         scopes: [
           AppleIDAuthorizationScopes.email,
           AppleIDAuthorizationScopes.fullName,
         ],
       );
 
-      final OAuthCredential credential = OAuthProvider('apple.com').credential(
+      final credential = OAuthProvider('apple.com').credential(
         idToken: appleIDCredential.identityToken,
         accessToken: appleIDCredential.authorizationCode,
       );
 
-      final UserCredential userCredential =
+      final userCredential =
           await FirebaseAuth.instance.signInWithCredential(credential);
 
       final syncedUser = await apiService.syncFirebaseUserToBackend(
@@ -218,10 +234,9 @@ class AuthRepoImplementation extends AuthRepo {
     }
   }
 
-  // ─────────────────────────────────────────────────────────────
-  // 📩 EMAIL VERIFICATION - التحقق من البريد الإلكتروني
-  // ─────────────────────────────────────────────────────────────
-
+  // ───────────────────────────────────────────────
+  // 📩 SEND EMAIL VERIFICATION
+  // ───────────────────────────────────────────────
   @override
   Future<Either<Failure, void>> sendEmailVerification() async {
     try {
@@ -239,6 +254,9 @@ class AuthRepoImplementation extends AuthRepo {
     }
   }
 
+  // ───────────────────────────────────────────────
+  // ✔️ CHECK EMAIL VERIFIED
+  // ───────────────────────────────────────────────
   @override
   Future<Either<Failure, bool>> isEmailVerified() async {
     try {
@@ -252,10 +270,9 @@ class AuthRepoImplementation extends AuthRepo {
     }
   }
 
-  // ─────────────────────────────────────────────────────────────
-  // 👤 USER DATA MANAGEMENT - إدارة بيانات المستخدم
-  // ─────────────────────────────────────────────────────────────
-
+  // ───────────────────────────────────────────────
+  // 👤 SAVE USER DATA LOCALLY
+  // ───────────────────────────────────────────────
   @override
   Future<Either<Failure, void>> saveUserData({required UserEntity user}) async {
     try {
@@ -267,6 +284,9 @@ class AuthRepoImplementation extends AuthRepo {
     }
   }
 
+  // ───────────────────────────────────────────────
+  // 👤 GET USER DATA FROM BACKEND
+  // ───────────────────────────────────────────────
   @override
   Future<Either<Failure, UserEntity>> getUserData(
       {required String userId}) async {
@@ -282,15 +302,52 @@ class AuthRepoImplementation extends AuthRepo {
     }
   }
 
+  // ───────────────────────────────────────────────
+  // 👤 UPDATE USER DATA (Including profile image upload)
+  // ───────────────────────────────────────────────
   @override
   Future<Either<Failure, void>> updateUserData(UserEntity user) async {
     try {
-      final response = await apiService.put(
-        endpoint: BackendEndpoints.updateUserProfile,
-        body: UserModel.fromEntity(user).toMap(),
+      final currentUser = FirebaseAuth.instance.currentUser;
+      if (currentUser == null) {
+        return left(ServerFailure('No logged-in user'));
+      }
+
+      String? photoUrl = user.photoUrl;
+
+      // Upload profile image if local path (not URL)
+    if (photoUrl != null && !photoUrl.startsWith('http')) {
+  final file = File(photoUrl);
+  final uploadResult = await uploadProfileImage(currentUser.uid, file);
+  uploadResult.fold(
+    (failure) => throw Exception(failure.message),
+    (url) => photoUrl = url,
+  );
+}
+      // Update Firebase Auth profile
+      await currentUser.updateDisplayName(user.fullName);
+      if (photoUrl != null) {
+        await currentUser.updatePhotoURL(photoUrl);
+      }
+      await currentUser.reload();
+
+      // Update backend profile
+      final updatedUser = UserEntity(
+        uId: user.uId,
+        email: user.email,
+        fullName: user.fullName,
+        emailVerified: user.emailVerified,
+        photoUrl: photoUrl,
       );
+
+  final response = await apiService.put(
+  endpoint: BackendEndpoints.updateUserProfile(updatedUser.uId), // Pass userId here
+  body: UserModel.fromEntity(updatedUser).toMap(),
+);
+
+
       if (response.statusCode == 200) {
-        await saveUserData(user: user);
+        await saveUserData(user: updatedUser);
         return right(null);
       } else {
         return left(ServerFailure('فشل تحديث البيانات: ${response.body}'));
@@ -302,13 +359,12 @@ class AuthRepoImplementation extends AuthRepo {
 
   @override
   Future<Either<Failure, void>> addUserData({required UserEntity user}) async {
-    return right(null); // Not used - يمكن تنفيذها لاحقًا إن لزم الأمر
+    return right(null);
   }
 
-  // ─────────────────────────────────────────────────────────────
-  // 🚪 SESSION HANDLING - إدارة الجلسات
-  // ─────────────────────────────────────────────────────────────
-
+  // ───────────────────────────────────────────────
+  // 🚪 SIGN OUT
+  // ───────────────────────────────────────────────
   @override
   Future<Either<Failure, void>> signOut() async {
     try {
@@ -320,6 +376,9 @@ class AuthRepoImplementation extends AuthRepo {
     }
   }
 
+  // ───────────────────────────────────────────────
+  // ✅ CHECK IF USER LOGGED IN
+  // ───────────────────────────────────────────────
   @override
   Future<Either<Failure, bool>> isUserLoggedIn() async {
     try {
@@ -330,74 +389,72 @@ class AuthRepoImplementation extends AuthRepo {
     }
   }
 
+  // ───────────────────────────────────────────────
+  // 👤 GET CURRENT USER
+  // ───────────────────────────────────────────────
   @override
   Future<Either<Failure, UserEntity>> getCurrentUser() async {
     try {
-      final data = Prefs.getString(kUserData);
-      // ignore: unnecessary_null_comparison
-      if (data == null) {
-        return left(ServerFailure('لا يوجد مستخدم محفوظ'));
-      }
-      final map = jsonDecode(data);
-      final user = UserModel.fromMap(map);
-      return right(user);
-    } catch (e) {
-      return left(ServerFailure('فشل في جلب المستخدم الحالي: ${e.toString()}'));
-    }
-  }
-
-  // ─────────────────────────────────────────────────────────────
-  // 🛠️ UTILITIES - أدوات مساعدة
-  // ─────────────────────────────────────────────────────────────
-
-  @override
-  Future<Either<Failure, bool>> checkUserExists(String email) async {
-    try {
-      // تحقق من البريد الإلكتروني في Firebase
-      final methods =
-          // ignore: deprecated_member_use
-          await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
-      // ignore: avoid_print
-      print('Firebase methods: $methods'); // طباعة الطرق المسترجعة من Firebase
-      if (methods.isNotEmpty) return right(true);
-
-      // التحقق من وجود المستخدم في Backend
-      final response = await apiService.post(
-        endpoint: BackendEndpoints.checkUserExists,
-        body: {'email': email},
+    final user = firebaseAuthService.getCurrentUser();
+      if (user == null) return left(ServerFailure('No user logged in'));
+      final syncedUser = await apiService.syncFirebaseUserToBackend(
+        name: user.displayName ?? '',
+        email: user.email ?? '',
+        firebaseUid: user.uid,
       );
-
-      // ignore: avoid_print
-      print('Backend response: ${response.body}'); // طباعة استجابة الـ Backend
-      final data = jsonDecode(response.body);
-      return right(data['exists'] == true);
+      return right(syncedUser);
     } catch (e) {
-      // ignore: avoid_print
-      print('Error in checkUserExists: ${e.toString()}'); // طباعة أي خطأ يحدث
-      return left(
-          ServerFailure('فشل التحقق من وجود المستخدم: ${e.toString()}'));
+      return left(ServerFailure('Failed to get current user: ${e.toString()}'));
     }
   }
 
-  Future<void> deleteUser(User? user) async {
-    if (user != null) {
-      await firebaseAuthService.deleteUser();
+  // ───────────────────────────────────────────────
+  // 🗑️ DELETE USER ACCOUNT
+  // ───────────────────────────────────────────────
+  @override
+  Future<Either<Failure, void>> deleteUser(User? user) async {
+    if (user == null) return right(null);
+    try {
+      await user.delete();
+      await Prefs.remove(kUserData);
+      return right(null);
+    } catch (e) {
+      return left(ServerFailure('Failed to delete user: ${e.toString()}'));
     }
   }
+  
+@override
+Future<Either<Failure, bool>> checkUserExists(String email) async {
+  try {
+    // Check sign-in methods from Firebase Auth
+    final methods = await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
+    print('Firebase methods: $methods'); // Debug print
 
-  // ─────────────────────────────────────────────────────────────
-  // 🚧 TO BE IMPLEMENTED - سيتم تنفيذها لاحقًا
-  // ─────────────────────────────────────────────────────────────
+    if (methods.isNotEmpty) return right(true);
 
-  // TODO: Block user - حظر المستخدم
-  Future<Either<Failure, void>> blockUser(String userId) async {
-    // API logic here
-    return left(ServerFailure('Not implemented yet'));
+    // Check if user exists in backend
+    final response = await apiService.post(
+      endpoint: BackendEndpoints.checkUserExists,
+      body: {'email': email},
+    );
+
+    print('Backend response: ${response.body}'); // Debug print
+
+    final data = jsonDecode(response.body);
+    return right(data['exists'] == true);
+  } catch (e) {
+    print('Error in checkUserExists: ${e.toString()}');
+    return left(ServerFailure('فشل التحقق من وجود المستخدم: ${e.toString()}'));
   }
-
-// TODO: Delete account - حذف الحساب
-  Future<Either<Failure, void>> deleteAccount(String userId) async {
-    // API logic here
-    return left(ServerFailure('Not implemented yet'));
+}
+@override
+Future<Either<Failure, String>> uploadProfileImage(String userId, File image) async {
+  try {
+    final imageUrl = await firebaseStorageService.uploadProfileImage(userId, image);
+    return right(imageUrl);
+  } catch (e) {
+    return left(ServerFailure('Failed to upload profile image: ${e.toString()}'));
   }
+}
+
 }

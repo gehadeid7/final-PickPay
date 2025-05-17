@@ -69,15 +69,12 @@ dependencies:
   webview_flutter: ^4.0.0
   another_flushbar: ^1.12.30
   intl: ^0.18.1
-  image_picker: ^1.1.2 
-  file_picker: ^10.1.9 
-  animated_text_kit: ^4.2.2
+  image_picker: ^1.1.2  # Update to latest stable
+  file_picker: ^10.1.9  # Update to latest stable
+  animated_background: ^2.0.0
+  firebase_storage: ^12.4.5
   font_awesome_flutter: ^10.6.0
   share_plus: ^11.0.0
-
-
-
-
 
  
 

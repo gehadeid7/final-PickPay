@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'dart:io';
 
-enum ProfileStatus { initial, loading, success, failure }
+enum ProfileStatus { initial, loading, loadSuccess, saveSuccess, error }
 
 class ProfileState extends Equatable {
   final String name;
@@ -11,8 +11,10 @@ class ProfileState extends Equatable {
   final String dob;
   final String age;
   final String address;
-  final File? profileImage;
+  final File? profileImage;      // Local image file (picked by user)
+  final String profileImageUrl;  // Remote image URL (from Firebase)
   final ProfileStatus status;
+  final String errorMessage;
 
   const ProfileState({
     this.name = '',
@@ -23,7 +25,9 @@ class ProfileState extends Equatable {
     this.age = '',
     this.address = '',
     this.profileImage,
+    this.profileImageUrl = '',
     this.status = ProfileStatus.initial,
+    this.errorMessage = '',
   });
 
   ProfileState copyWith({
@@ -35,7 +39,9 @@ class ProfileState extends Equatable {
     String? age,
     String? address,
     File? profileImage,
+    String? profileImageUrl,
     ProfileStatus? status,
+    String? errorMessage,
   }) {
     return ProfileState(
       name: name ?? this.name,
@@ -46,7 +52,9 @@ class ProfileState extends Equatable {
       age: age ?? this.age,
       address: address ?? this.address,
       profileImage: profileImage ?? this.profileImage,
+      profileImageUrl: profileImageUrl ?? this.profileImageUrl,
       status: status ?? this.status,
+      errorMessage: errorMessage ?? this.errorMessage,
     );
   }
 
@@ -60,6 +68,8 @@ class ProfileState extends Equatable {
         age,
         address,
         profileImage,
+        profileImageUrl,
         status,
+        errorMessage,
       ];
 }

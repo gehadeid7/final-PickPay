@@ -1,122 +1,102 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pickpay/features/auth/domain/repos/auth_repo.dart';
 import 'package:get_it/get_it.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:pickpay/features/auth/presentation/views/signin_view.dart';
 
 part 'verify_email_state.dart';
 
 class VerifyEmailCubit extends Cubit<VerifyEmailState> {
   final AuthRepo authRepo;
-  Timer? _timer;
+  Timer? _countdownTimer;
   Timer? _autoCheckTimer;
-  int _countdown = 10;
-  bool isSending = false;
-  bool isRedirectingAllowed = true; // Flag to control redirection
-  StreamController<int> countdownController = StreamController<int>();
+  int _countdownSeconds = 10;
+  bool _isSending = false;
+  bool _isAutoRedirectAllowed = true;
+
+  /// Stream controller to emit countdown seconds to UI
+  final StreamController<int> countdownController = StreamController<int>.broadcast();
 
   VerifyEmailCubit()
       : authRepo = GetIt.I<AuthRepo>(),
         super(VerifyEmailInitial());
 
-  // Start the countdown for resending the email
+  /// Starts countdown timer to disable resend button for [_countdownSeconds] seconds
   void startCountdown() {
-    _countdown = 10;
+    _countdownSeconds = 10;
     emit(VerifyEmailButtonDisabled());
-    countdownController.add(_countdown);
+    countdownController.add(_countdownSeconds);
 
-    _timer?.cancel();
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      _countdown--;
-      countdownController.add(_countdown);
-      if (_countdown <= 0) {
+    _countdownTimer?.cancel();
+    _countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      _countdownSeconds--;
+      countdownController.add(_countdownSeconds);
+
+      if (_countdownSeconds <= 0) {
         timer.cancel();
         emit(VerifyEmailButtonEnabled());
       }
     });
   }
 
-  // Send verification email
-  Future<void> sendVerificationEmail(BuildContext context) async {
-    // ignore: avoid_print
-    print('[DEBUG] Resend verification triggered');
-
-    if (isSending) {
-      // ignore: avoid_print
-      print('[DEBUG] Email is already being sent. Ignoring request.');
-      return;
-    }
-
-    isSending = true;
+  /// Sends verification email to the current user if possible
+  Future<void> sendVerificationEmail() async {
+    if (_isSending) return; // Prevent multiple concurrent sends
+    _isSending = true;
     emit(VerifyEmailLoading());
 
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
-      // ignore: avoid_print
-      print('[ERROR] No current user found');
       emit(VerifyEmailFailure('لم يتم العثور على مستخدم حاليًا'));
-      isSending = false;
+      _isSending = false;
       return;
     }
 
     if (user.emailVerified) {
-      // ignore: avoid_print
-      print('[INFO] Email already verified');
       emit(VerifyEmailFailure('البريد الإلكتروني تم التحقق منه بالفعل'));
-      isSending = false;
+      _isSending = false;
       return;
     }
 
     try {
-      // ignore: avoid_print
-      print('[INFO] Sending email verification...');
       await user.sendEmailVerification();
-      // ignore: avoid_print
-      print('[SUCCESS] Verification email sent.');
       emit(VerifyEmailSuccess());
       startCountdown();
-    } on FirebaseAuthException catch (e) {
-      // ignore: avoid_print
-      print('[FIREBASE ERROR] ${e.message}');
-      emit(VerifyEmailFailure('فشل إرسال رابط التحقق: ${e.message}'));
     } catch (e) {
-      // ignore: avoid_print
-      print('[UNEXPECTED ERROR] $e');
-      emit(VerifyEmailFailure('فشل غير متوقع: ${e.toString()}'));
+      emit(VerifyEmailFailure('فشل إرسال رابط التحقق: ${e.toString()}'));
     } finally {
-      isSending = false;
-      // ignore: avoid_print
-      print('[DEBUG] Finished sendVerificationEmail process');
+      _isSending = false;
     }
   }
 
-  // Check if the email has been verified and automatically redirect
-  void startAutoRedirect(BuildContext context) {
-    // Allow redirection only if it's not in the process of resending the email
-    if (isRedirectingAllowed) {
-      _autoCheckTimer = Timer.periodic(const Duration(seconds: 3), (_) async {
-        final user = FirebaseAuth.instance.currentUser;
-        await user?.reload();
-        if (user?.emailVerified == true) {
-          _autoCheckTimer?.cancel();
-          Navigator.pushReplacementNamed(context, SigninView.routeName);
-        }
-      });
-    }
-  }
-
-  // Prevent auto redirection when the user interacts with resending
-  void stopAutoRedirect() {
+  /// Starts periodic check every 3 seconds to detect if email has been verified
+  /// When detected, emits [VerifyEmailRefreshed] state
+  void startAutoRedirect() {
+    _isAutoRedirectAllowed = true;
     _autoCheckTimer?.cancel();
-    isRedirectingAllowed = false;
+    _autoCheckTimer = Timer.periodic(const Duration(seconds: 3), (_) async {
+      if (!_isAutoRedirectAllowed) return;
+
+      final user = FirebaseAuth.instance.currentUser;
+      await user?.reload();
+
+      if (user?.emailVerified == true) {
+        _autoCheckTimer?.cancel();
+        emit(VerifyEmailRefreshed());
+      }
+    });
+  }
+
+  /// Stops the automatic redirect timer and disables auto redirect
+  void stopAutoRedirect() {
+    _isAutoRedirectAllowed = false;
+    _autoCheckTimer?.cancel();
   }
 
   @override
   Future<void> close() {
     countdownController.close();
-    _timer?.cancel();
+    _countdownTimer?.cancel();
     _autoCheckTimer?.cancel();
     return super.close();
   }
