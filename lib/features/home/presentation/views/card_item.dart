@@ -55,14 +55,14 @@ class _CardItemState extends State<CardItem>
 
     final List<Color> gradientColors = isDark
         ? [
-            const Color(0xFF0D1B2A), // Deep twilight navy
-            const Color(0xFF1B3A57), // Soft desaturated steel blue
-            const Color(0xFF274C77), // Calm muted blue (close to #19558A)
+            const Color(0xFF1C1C1E), // Dark grey
+            const Color(0xFF3A3A3C), // Medium grey
+            const Color(0xFF8E8E93), // Light grey
           ]
         : [
-            const Color(0xFFFFFFFF), // White base
-            const Color(0xFFF4FAFC), // Soft pale sky
-            const Color(0xFFDFEEF6), // Muted icy blue
+            const Color(0xFFFFFFFF), // Pure white
+            const Color(0xFFF2F2F7), // Very light grey (Apple system gray6)
+            const Color(0xFFE5E5EA), // Light grey (Apple system gray5)
           ];
 
     return AnimatedBuilder(
