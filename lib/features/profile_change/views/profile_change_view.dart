@@ -1,20 +1,17 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:pickpay/core/services/firebase_auth_service.dart';
 import 'package:pickpay/core/services/get_it_service.dart';
-
-import 'package:pickpay/core/utils/app_colors.dart';
 import 'package:pickpay/core/utils/app_text_styles.dart';
-import 'package:pickpay/core/widgets/custom_button.dart';
 import 'package:pickpay/features/auth/domain/repos/auth_repo.dart';
 import 'package:pickpay/features/profile_change/cubits/cubit/profile_chnage_cubit.dart';
 import 'package:pickpay/features/profile_change/cubits/cubit/profile_chnage_state.dart';
 
-// Move genders list outside the widget class to a global constant
 const List<String> genders = ['Male', 'Female'];
 
 class ProfileChangeView extends StatelessWidget {
@@ -31,7 +28,7 @@ class ProfileChangeView extends StatelessWidget {
       create: (context) => ProfileCubit(
         authRepo: authRepo,
         firebaseAuthService: firebaseAuthService,
-      )..loadUserProfile(), // Load user data at start
+      )..loadUserProfile(),
       child: const _ProfileChangeViewContent(),
     );
   }
@@ -41,8 +38,7 @@ class _ProfileChangeViewContent extends StatefulWidget {
   const _ProfileChangeViewContent();
 
   @override
-  State<_ProfileChangeViewContent> createState() =>
-      _ProfileChangeViewContentState();
+  State<_ProfileChangeViewContent> createState() => _ProfileChangeViewContentState();
 }
 
 class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> {
@@ -54,6 +50,10 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> {
   late final TextEditingController _ageController;
   late final TextEditingController _dobController;
   late final TextEditingController _addressController;
+
+  String? _selectedGender;
+
+  bool _hasLoadedInitialData = false;
 
   @override
   void initState() {
@@ -88,6 +88,12 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> {
 
       if (pickedFile != null) {
         final file = File(pickedFile.path);
+        if (!file.existsSync()) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Selected image file does not exist.')),
+          );
+          return;
+        }
         context.read<ProfileCubit>().updateProfileImage(file);
       }
     } catch (e) {
@@ -105,62 +111,61 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> {
           : DateTime.now(),
       firstDate: DateTime(1900),
       lastDate: DateTime.now(),
+      helpText: 'Select your date of birth',
     );
     if (picked != null) {
       final dob = DateFormat('yyyy-MM-dd').format(picked);
       final age = (DateTime.now().year - picked.year).toString();
 
-      _dobController.text = dob;
-      _ageController.text = age;
+      setState(() {
+        _dobController.text = dob;
+        _ageController.text = age;
+        _hasLoadedInitialData = true;
+      });
 
       context.read<ProfileCubit>().updateDob(dob, age);
     }
   }
 
   Future<void> _saveProfile() async {
-    if (_formKey.currentState!.validate()) {
-      await context.read<ProfileCubit>().saveProfile();
-    }
+    if (!_formKey.currentState!.validate()) return;
+
+    await context.read<ProfileCubit>().saveProfile();
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
-    final textColor = isDarkMode ? Colors.white : Colors.black;
 
-    final fieldColor = isDarkMode ? Colors.grey[800] : Colors.grey[100];
-    final borderColor = isDarkMode ? Colors.grey[700] : Colors.grey[200];
+    final fieldColor = isDarkMode ? (Colors.grey[850] ?? Colors.grey) : Colors.white.withOpacity(0.9);
+    final borderColor = isDarkMode ? (Colors.grey[700] ?? Colors.grey) : (Colors.grey[300] ?? Colors.grey);
+
+    const Color gradientStart = Color(0xFF2193b0);
+    const Color gradientEnd = Color(0xFF6dd5ed);
 
     return BlocListener<ProfileCubit, ProfileState>(
       listener: (context, state) {
-        if (state.status == ProfileStatus.loadSuccess) {
-          // Populate text controllers only once when data is loaded
-          if (_nameController.text.isEmpty && state.name.isNotEmpty) {
-            _nameController.text = state.name;
-          }
-          if (_emailController.text.isEmpty && state.email.isNotEmpty) {
-            _emailController.text = state.email;
-          }
-          if (_phoneController.text.isEmpty && state.phone.isNotEmpty) {
-            _phoneController.text = state.phone;
-          }
-          if (_dobController.text.isEmpty && state.dob.isNotEmpty) {
-            _dobController.text = state.dob;
-          }
-          if (_ageController.text.isEmpty && state.age.isNotEmpty) {
-            _ageController.text = state.age;
-          }
-          if (_addressController.text.isEmpty && state.address.isNotEmpty) {
-            _addressController.text = state.address;
-          }
-        } else if (state.status == ProfileStatus.saveSuccess) {
+        if (state.status == ProfileStatus.loadSuccess && !_hasLoadedInitialData) {
+          _nameController.text = state.name;
+          _emailController.text = state.email;
+          _phoneController.text = state.phone;
+          _dobController.text = state.dob;
+          _ageController.text = state.age;
+          _addressController.text = state.address;
+          _selectedGender = state.gender.isNotEmpty ? state.gender : null;
+          _hasLoadedInitialData = true;
+        }
+
+        if (state.status == ProfileStatus.saveSuccess) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Profile updated successfully')),
           );
           context.read<ProfileCubit>().resetStatus();
           Navigator.pop(context);
-        } else if (state.status == ProfileStatus.error) {
+        }
+
+        if (state.status == ProfileStatus.error) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(state.errorMessage)),
           );
@@ -168,317 +173,257 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> {
         }
       },
       child: Scaffold(
+        extendBodyBehindAppBar: true,
+        backgroundColor: Colors.transparent,
         appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () => Navigator.pop(context),
           ),
-          title: const Text(
-            'Edit Profile',
-            style: TextStyles.bold19,
-          ),
+          title: const Text('Edit Profile', style: TextStyles.bold19),
           centerTitle: true,
-          backgroundColor: Colors.transparent,
           actions: [
             BlocBuilder<ProfileCubit, ProfileState>(
               builder: (context, state) {
                 return IconButton(
                   icon: const Icon(Icons.save),
-                  onPressed:
-                      state.status == ProfileStatus.loading ? null : _saveProfile,
                   tooltip: 'Save Profile',
+                  onPressed: state.status == ProfileStatus.loading ? null : _saveProfile,
                 );
               },
             ),
           ],
         ),
-        body: BlocBuilder<ProfileCubit, ProfileState>(
-          builder: (context, state) {
-            return SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Profile Image Section
-                    Center(
-                      child: GestureDetector(
-                        onTap: _pickImage,
-                        child: Stack(
-                          alignment: Alignment.bottomRight,
-                          children: [
-                            CircleAvatar(
-                              radius: 60,
-                              backgroundColor: isDarkMode
-                                  ? Colors.grey[700]
-                                  : Colors.grey[200],
-                              backgroundImage: state.profileImage != null
-                                  ? FileImage(state.profileImage!)
-                                  : (state.profileImageUrl.isNotEmpty
-                                      ? NetworkImage(state.profileImageUrl)
-                                      : null) as ImageProvider<Object>?,
-                              child: state.profileImage == null &&
-                                      state.profileImageUrl.isEmpty
-                                  ? const Icon(Icons.person, size: 60)
-                                  : null,
-                            ),
-                            Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: theme.primaryColor,
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(Icons.edit,
-                                  size: 20, color: Colors.white),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-
-                    // Personal Information Section
-                    Text('Personal Information',
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: textColor,
-                        )),
-                    const SizedBox(height: 16),
-
-                    // Name Field
-                    TextFormField(
-                      controller: _nameController,
-                      decoration: InputDecoration(
-                        labelText: 'Full Name',
-                        prefixIcon: const Icon(Icons.person_outline),
-                        filled: true,
-                        fillColor: fieldColor,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: borderColor!),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: borderColor),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: theme.primaryColor),
-                        ),
-                      ),
-                      style: TextStyle(color: textColor),
-                      onChanged: (value) =>
-                          context.read<ProfileCubit>().updateName(value),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter your name';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 16),
-
-                    // Email Field (read-only)
-                    TextFormField(
-                      controller: _emailController,
-                      decoration: InputDecoration(
-                        labelText: 'Email',
-                        prefixIcon: const Icon(Icons.email_outlined),
-                        filled: true,
-                        fillColor: fieldColor,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: borderColor),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: borderColor),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: theme.primaryColor),
-                        ),
-                      ),
-                      style: TextStyle(color: textColor),
-                      enabled: false,
-                    ),
-                    const SizedBox(height: 16),
-
-                    // Phone Field
-                    TextFormField(
-                      controller: _phoneController,
-                      decoration: InputDecoration(
-                        labelText: 'Phone Number',
-                        prefixIcon: const Icon(Icons.phone_outlined),
-                        filled: true,
-                        fillColor: fieldColor,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: borderColor),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: borderColor),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: theme.primaryColor),
-                        ),
-                      ),
-                      style: TextStyle(color: textColor),
-                      keyboardType: TextInputType.phone,
-                      onChanged: (value) =>
-                          context.read<ProfileCubit>().updatePhone(value),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter your phone number';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 16),
-
-                    // Gender Radio Buttons
-                    Row(
+        body: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [gradientStart, gradientEnd],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+          child: SafeArea(
+            child: BlocBuilder<ProfileCubit, ProfileState>(
+              builder: (context, state) {
+                return SingleChildScrollView(
+                  padding: const EdgeInsets.all(16),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'Gender:',
-                          style: TextStyles.medium15.copyWith(color: textColor),
-                        ),
-                        const SizedBox(width: 16),
-                        ...genders.map(
-                          (gender) => Expanded(
-                            child: RadioListTile<String>(
-                              contentPadding: EdgeInsets.zero,
-                              title: Text(gender, style: TextStyle(color: textColor)),
-                              value: gender,
-                              groupValue: state.gender,
-                              onChanged: (value) {
-                                if (value != null) {
-                                  context.read<ProfileCubit>().updateGender(value);
-                                }
-                              },
+                        Center(
+                          child: GestureDetector(
+                            onTap: _pickImage,
+                            child: Stack(
+                              alignment: Alignment.bottomRight,
+                              children: [
+                                CircleAvatar(
+                                  radius: 60,
+                                  backgroundColor: Colors.white.withOpacity(0.3),
+                                  backgroundImage: state.profileImage != null
+                                      ? FileImage(state.profileImage!)
+                                      : (state.profileImageUrl.isNotEmpty
+                                          ? NetworkImage(state.profileImageUrl)
+                                          : null) as ImageProvider<Object>?,
+                                  child: state.profileImage == null && state.profileImageUrl.isEmpty
+                                      ? const Icon(Icons.person, size: 60, color: Colors.white)
+                                      : null,
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    color: theme.primaryColor,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Icon(Icons.edit, size: 20, color: Colors.white),
+                                ),
+                              ],
                             ),
                           ),
                         ),
+                        const SizedBox(height: 24),
+
+                        Text('Personal Information',
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            )),
+                        const SizedBox(height: 16),
+
+                        TextFormField(
+                          controller: _nameController,
+                          onChanged: (val) => context.read<ProfileCubit>().updateName(val.trim()),
+                          decoration: _inputDecoration(
+                            context,
+                            label: 'Full Name',
+                            icon: Icons.person_outline,
+                            fieldColor: fieldColor,
+                            borderColor: borderColor,
+                          ),
+                          validator: (value) => value == null || value.isEmpty ? 'Name cannot be empty' : null,
+                        ),
+                        const SizedBox(height: 16),
+
+                        TextFormField(
+                          controller: _emailController,
+                          decoration: _inputDecoration(
+                            context,
+                            label: 'Email',
+                            icon: Icons.email_outlined,
+                            fieldColor: fieldColor,
+                            borderColor: borderColor,
+                          ),
+                          enabled: false,
+                        ),
+                        const SizedBox(height: 16),
+
+                        TextFormField(
+                          controller: _phoneController,
+                          keyboardType: TextInputType.phone,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                            LengthLimitingTextInputFormatter(11),
+                          ],
+                          decoration: _inputDecoration(
+                            context,
+                            label: 'رقم الهاتف',
+                            icon: Icons.phone_outlined,
+                            fieldColor: fieldColor,
+                            borderColor: borderColor,
+                          ).copyWith(prefixText: '+20 '),
+                          validator: (value) {
+                            if (value == null || value.length != 11) return 'أدخل 11 رقمًا صحيحًا';
+                            return null;
+                          },
+                          onChanged: (val) => context.read<ProfileCubit>().updatePhone(val.trim()),
+                        ),
+                        const SizedBox(height: 16),
+
+                        DropdownButtonFormField<String>(
+                          value: _selectedGender,
+                          items: genders.map((g) => DropdownMenuItem(value: g, child: Text(g))).toList(),
+                          onChanged: (value) {
+                            setState(() => _selectedGender = value);
+                            if (value != null) context.read<ProfileCubit>().updateGender(value);
+                          },
+                          decoration: _inputDecoration(
+                            context,
+                            label: 'Gender',
+                            icon: Icons.transgender_outlined,
+                            fieldColor: fieldColor,
+                            borderColor: borderColor,
+                          ),
+                          validator: (value) => value == null ? 'Select gender' : null,
+                        ),
+                        const SizedBox(height: 16),
+
+                        TextFormField(
+                          controller: _dobController,
+                          readOnly: true,
+                          decoration: _inputDecoration(
+                            context,
+                            label: 'Date of Birth',
+                            icon: Icons.calendar_today_outlined,
+                            fieldColor: fieldColor,
+                            borderColor: borderColor,
+                          ),
+                          onTap: () => _selectDate(context),
+                          validator: (value) => value == null || value.isEmpty ? 'Select date' : null,
+                        ),
+                        const SizedBox(height: 16),
+
+                        TextFormField(
+                          controller: _ageController,
+                          readOnly: true,
+                          decoration: _inputDecoration(
+                            context,
+                            label: 'Age',
+                            icon: Icons.cake_outlined,
+                            fieldColor: fieldColor,
+                            borderColor: borderColor,
+                          ),
+                          validator: (value) => value == null || value.isEmpty ? 'Age not calculated' : null,
+                        ),
+                        const SizedBox(height: 16),
+
+                        TextFormField(
+                          controller: _addressController,
+                          minLines: 2,
+                          maxLines: 5,
+                          onChanged: (val) => context.read<ProfileCubit>().updateAddress(val.trim()),
+                          decoration: _inputDecoration(
+                            context,
+                            label: 'Address',
+                            icon: Icons.home_outlined,
+                            fieldColor: fieldColor,
+                            borderColor: borderColor,
+                          ),
+                          validator: (value) => value == null || value.isEmpty ? 'Enter address' : null,
+                        ),
+                        const SizedBox(height: 32),
+
+                        BlocBuilder<ProfileCubit, ProfileState>(
+                          builder: (context, state) {
+                            return SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(vertical: 14),
+                                  textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                onPressed: state.status == ProfileStatus.loading ? null : _saveProfile,
+                                child: state.status == ProfileStatus.loading
+                                    ? const SizedBox(
+                                        height: 22,
+                                        width: 22,
+                                        child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                                      )
+                                    : const Text('Save Changes'),
+                              ),
+                            );
+                          },
+                        ),
                       ],
                     ),
-                    const SizedBox(height: 16),
-
-                    // Date of Birth Field with Date Picker
-                    TextFormField(
-                      controller: _dobController,
-                      readOnly: true,
-                      decoration: InputDecoration(
-                        labelText: 'Date of Birth',
-                        prefixIcon: const Icon(Icons.calendar_today_outlined),
-                        filled: true,
-                        fillColor: fieldColor,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: borderColor),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: borderColor),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: theme.primaryColor),
-                        ),
-                        suffixIcon: IconButton(
-                          icon: const Icon(Icons.date_range),
-                          onPressed: () => _selectDate(context),
-                        ),
-                      ),
-                      style: TextStyle(color: textColor),
-                      onTap: () => _selectDate(context),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please select your date of birth';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 16),
-
-                    // Age Field (read-only)
-                    TextFormField(
-                      controller: _ageController,
-                      decoration: InputDecoration(
-                        labelText: 'Age',
-                        prefixIcon: const Icon(Icons.cake_outlined),
-                        filled: true,
-                        fillColor: fieldColor,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: borderColor),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: borderColor),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: theme.primaryColor),
-                        ),
-                      ),
-                      style: TextStyle(color: textColor),
-                      enabled: false,
-                    ),
-                    const SizedBox(height: 16),
-
-                    // Address Field
-                    TextFormField(
-                      controller: _addressController,
-                      decoration: InputDecoration(
-                        labelText: 'Address',
-                        prefixIcon: const Icon(Icons.location_on_outlined),
-                        filled: true,
-                        fillColor: fieldColor,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: borderColor),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: borderColor),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: theme.primaryColor),
-                        ),
-                      ),
-                      style: TextStyle(color: textColor),
-                      maxLines: 3,
-                      onChanged: (value) =>
-                          context.read<ProfileCubit>().updateAddress(value),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter your address';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 24),
-
-                    // Save Button
-                    SizedBox(
-                      width: double.infinity,
-                      child: CustomButton(
-                        buttonText: 'Save Profile',
-                        onPressed: state.status == ProfileStatus.loading
-                            ? null
-                            : _saveProfile,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
+                  ),
+                );
+              },
+            ),
+          ),
         ),
+      ),
+    );
+  }
+
+  InputDecoration _inputDecoration(
+    BuildContext context, {
+    required String label,
+    required IconData icon,
+    required Color fieldColor,
+    required Color borderColor,
+  }) {
+    return InputDecoration(
+      labelText: label,
+      prefixIcon: Icon(icon),
+      filled: true,
+      fillColor: fieldColor,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: borderColor),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: borderColor),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: Theme.of(context).primaryColor),
       ),
     );
   }
