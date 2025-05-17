@@ -6,11 +6,11 @@ import 'package:pickpay/features/categories_pages/models/product_model.dart';
 import 'package:pickpay/features/categories_pages/widgets/color_option_selector.dart';
 import 'package:pickpay/features/categories_pages/widgets/info_icons_row.dart';
 import 'package:pickpay/features/categories_pages/widgets/product_rating.dart';
+import 'package:pickpay/features/categories_pages/widgets/products_view_appbar.dart';
 import 'package:pickpay/features/categories_pages/widgets/scent_option.dart';
 import 'package:pickpay/features/categories_pages/widgets/size_option.dart';
 import 'package:pickpay/features/home/domain/models/cart_item_model.dart';
 import 'package:pickpay/features/home/presentation/cubits/cart_cubits/cart_cubit.dart';
-import 'package:pickpay/features/home/presentation/views/widgets/wishlist_button.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class ProductDetailView extends StatefulWidget {
@@ -33,18 +33,9 @@ class _ProductDetailViewState extends State<ProductDetailView> {
 
     return Scaffold(
       backgroundColor: isDarkMode ? Colors.grey.shade900 : Colors.white,
-      appBar: AppBar(
-        backgroundColor:
-            isDarkMode ? theme.appBarTheme.backgroundColor : Colors.white,
-        elevation: 0.5,
-        title: Text(product.title,
-            style: TextStyles.bold16.copyWith(
-              color: isDarkMode ? Colors.white : Colors.black,
-            )),
-        centerTitle: true,
-        iconTheme: IconThemeData(
-          color: isDarkMode ? Colors.white : Colors.black,
-        ),
+      appBar: ProductDetailAppBar(
+        product: product,
+        onBackPressed: () => Navigator.of(context).pop(),
       ),
       body: Stack(
         children: [
@@ -54,7 +45,15 @@ class _ProductDetailViewState extends State<ProductDetailView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildImageSlider(product, isDarkMode),
-                const SizedBox(height: 24),
+                const SizedBox(height: 12),
+                // Product title moved here
+                Text(
+                  product.title,
+                  style: TextStyles.bold19.copyWith(
+                    color: isDarkMode ? Colors.white : Colors.black,
+                  ),
+                ),
+                const SizedBox(height: 12),
                 _buildPriceAndRating(product, isDarkMode),
                 const SizedBox(height: 12),
                 InfoSectionWithIcons(),
@@ -782,10 +781,8 @@ class _ProductDetailViewState extends State<ProductDetailView> {
                     ),
                   ),
                   iconColor: (product.inStock ?? false)
-                      ? Colors.green
-                          .shade600 // Changed to shade600 for better visibility
-                      : Colors.red
-                          .shade600, // Changed to shade600 for better visibility
+                      ? Colors.green.shade600
+                      : Colors.red.shade600,
                   isDarkMode: isDarkMode,
                 ),
                 const SizedBox(height: 16),
@@ -844,57 +841,40 @@ class _ProductDetailViewState extends State<ProductDetailView> {
   }
 
   Widget _buildImageSlider(ProductsViewsModel product, bool isDarkMode) {
-    return Stack(
+    return Column(
       children: [
-        Column(
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: SizedBox(
-                height: 260,
-                child: PageView.builder(
-                  controller: _pageController,
-                  itemCount: product.imagePaths?.length ?? 0,
-                  itemBuilder: (context, index) {
-                    return Image.asset(
-                      product.imagePaths![index],
-                      fit: BoxFit.contain,
-                      errorBuilder: (context, error, stackTrace) => Icon(
-                        Icons.image_not_supported,
-                        color: isDarkMode ? Colors.white54 : Colors.grey,
-                        size: 40,
-                      ),
-                    );
-                  },
-                ),
-              ),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(16),
+          child: SizedBox(
+            height: 260,
+            child: PageView.builder(
+              controller: _pageController,
+              itemCount: product.imagePaths?.length ?? 0,
+              itemBuilder: (context, index) {
+                return Image.asset(
+                  product.imagePaths![index],
+                  fit: BoxFit.contain,
+                  errorBuilder: (context, error, stackTrace) => Icon(
+                    Icons.image_not_supported,
+                    color: isDarkMode ? Colors.white54 : Colors.grey,
+                    size: 40,
+                  ),
+                );
+              },
             ),
-            const SizedBox(height: 10),
-            Center(
-              child: SmoothPageIndicator(
-                controller: _pageController,
-                count: product.imagePaths?.length ?? 0,
-                effect: WormEffect(
-                  dotHeight: 8,
-                  dotWidth: 8,
-                  activeDotColor: isDarkMode ? Colors.blueAccent : Colors.blue,
-                  dotColor: isDarkMode ? Colors.grey : Colors.grey[300]!,
-                ),
-              ),
-            ),
-          ],
+          ),
         ),
-        Positioned(
-          top: 8,
-          right: 8,
-          child: WishlistButton(
-            product: product,
-            backgroundColor: isDarkMode
-                // ignore: deprecated_member_use
-                ? Colors.grey[800]!.withOpacity(0.8)
-                // ignore: deprecated_member_use
-                : Colors.grey.shade200.withOpacity(0.8),
-            iconSize: 24,
+        const SizedBox(height: 10),
+        Center(
+          child: SmoothPageIndicator(
+            controller: _pageController,
+            count: product.imagePaths?.length ?? 0,
+            effect: WormEffect(
+              dotHeight: 8,
+              dotWidth: 8,
+              activeDotColor: isDarkMode ? Colors.blueAccent : Colors.blue,
+              dotColor: isDarkMode ? Colors.grey : Colors.grey[300]!,
+            ),
           ),
         ),
       ],
@@ -955,7 +935,7 @@ class _ProductDetailViewState extends State<ProductDetailView> {
   Widget _infoRow(
     IconData icon,
     Widget content, {
-    Color? iconColor, // Changed to optional parameter
+    Color? iconColor,
     required bool isDarkMode,
   }) {
     return Row(
@@ -963,7 +943,7 @@ class _ProductDetailViewState extends State<ProductDetailView> {
       children: [
         Icon(icon,
             color: iconColor ?? (isDarkMode ? Colors.white70 : Colors.black54),
-            size: 20), // Added explicit size
+            size: 20),
         const SizedBox(width: 8),
         Expanded(child: content),
       ],

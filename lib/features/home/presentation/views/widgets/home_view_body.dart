@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pickpay/core/widgets/footer_widget.dart';
 import 'package:pickpay/features/home/presentation/views/widgets/Fashion_section/fashion_grid.dart';
 import 'package:pickpay/features/home/presentation/views/widgets/Fashion_section/fashion_header.dart';
 import 'package:pickpay/features/home/presentation/views/widgets/appliances_section/appliances_grid.dart';
@@ -33,7 +34,7 @@ class _HomeViewBodyState extends State<HomeViewBody> {
         padding: const EdgeInsets.symmetric(horizontal: 12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
+          children: [
             SizedBox(height: 12),
             CustomHomeAppbar(),
             SlidingFeaturedList(),
@@ -68,6 +69,7 @@ class _HomeViewBodyState extends State<HomeViewBody> {
             SizedBox(height: 12),
             BeautyGrid(),
             SizedBox(height: 24),
+            FooterWidget()
           ],
         ),
       ),

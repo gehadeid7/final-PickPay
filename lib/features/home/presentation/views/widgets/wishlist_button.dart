@@ -5,14 +5,12 @@ import 'package:pickpay/features/home/presentation/cubits/wishlist_cubits/wishli
 
 class WishlistButton extends StatelessWidget {
   final ProductsViewsModel product;
-  final bool isMini;
   final Color? backgroundColor;
   final double? iconSize;
 
   const WishlistButton({
     super.key,
     required this.product,
-    this.isMini = false,
     this.backgroundColor,
     this.iconSize,
   });
@@ -20,26 +18,28 @@ class WishlistButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<WishlistCubit, WishlistState>(
-      listener: (context, state) {
-        // Empty listener to ensure rebuilds
-      },
+      listener: (context, state) {},
       builder: (context, state) {
-        // Get fresh state on every build
         final isInWishlist =
             context.read<WishlistCubit>().isInWishlist(product.id);
 
-        return FloatingActionButton(
-          heroTag: 'wishlist_${product.id}', // Unique hero tag
-          // ignore: deprecated_member_use
-          backgroundColor: backgroundColor ?? Colors.white.withOpacity(0.9),
-          mini: isMini,
-          elevation: 2,
-          child: Icon(
-            isInWishlist ? Icons.favorite : Icons.favorite_border,
-            color: isInWishlist ? Colors.red : Colors.black,
-            size: iconSize,
+        return Container(
+          margin: const EdgeInsets.symmetric(horizontal: 6.0),
+          height: 40,
+          width: 40,
+          decoration: BoxDecoration(
+            color: backgroundColor ?? const Color(0xFFF2F2F2),
+            shape: BoxShape.circle,
           ),
-          onPressed: () => _handleWishlistAction(context, isInWishlist),
+          child: IconButton(
+            padding: EdgeInsets.zero,
+            icon: Icon(
+              isInWishlist ? Icons.favorite : Icons.favorite_border,
+              color: isInWishlist ? Colors.red : Colors.black,
+              size: iconSize ?? 22,
+            ),
+            onPressed: () => _handleWishlistAction(context, isInWishlist),
+          ),
         );
       },
     );
@@ -58,18 +58,13 @@ class WishlistButton extends StatelessWidget {
   }
 
   void _showSnackBar(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).removeCurrentSnackBar(); // Remove previous
+    ScaffoldMessenger.of(context).removeCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(
-          message,
-          style: const TextStyle(color: Colors.white),
-        ),
+        content: Text(message, style: const TextStyle(color: Colors.white)),
         duration: const Duration(seconds: 1),
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         margin: const EdgeInsets.only(bottom: 70, left: 20, right: 20),
         backgroundColor: Colors.black87,
       ),
