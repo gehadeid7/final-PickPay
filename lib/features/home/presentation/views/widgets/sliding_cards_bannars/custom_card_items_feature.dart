@@ -18,34 +18,42 @@ class SlidingFeatureItem extends StatelessWidget {
     final itemWidth = MediaQuery.of(context).size.width;
 
     return Container(
-      width: itemWidth,
-      margin: const EdgeInsets.symmetric(horizontal: 6),
+      width: itemWidth * 0.97, // almost full width
+      margin: const EdgeInsets.symmetric(
+          horizontal: 4, vertical: 6), // tiny horizontal margin
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: const [
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
           BoxShadow(
-            color: Colors.black26,
-            blurRadius: 6,
-            offset: Offset(0, 3),
+            color: Colors.black.withOpacity(0.25),
+            blurRadius: 12,
+            offset: const Offset(0, 6),
+          ),
+          BoxShadow(
+            color: Colors.black.withOpacity(0.10),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(20),
         child: Stack(
           fit: StackFit.expand,
           children: [
+            // Image with subtle parallax-ish effect placeholder (for real parallax, wrap with a custom widget)
             Image.asset(
               imagePath,
               width: itemWidth,
               fit: BoxFit.cover,
+              colorBlendMode: BlendMode.darken,
             ),
+            // Gradient overlay (darker to transparent)
             Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    // ignore: deprecated_member_use
-                    Colors.black.withOpacity(0.6),
+                    Colors.black.withOpacity(0.7),
                     Colors.transparent,
                   ],
                   begin: Alignment.bottomCenter,
@@ -53,10 +61,11 @@ class SlidingFeatureItem extends StatelessWidget {
                 ),
               ),
             ),
+            // Text content
             Positioned(
-              bottom: 20,
-              left: 16,
-              right: 16,
+              bottom: 24,
+              left: 24,
+              right: 24,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -64,27 +73,28 @@ class SlidingFeatureItem extends StatelessWidget {
                     title,
                     style: TextStyles.bold13.copyWith(
                       color: Colors.white,
-                      fontSize: 20,
+                      fontSize: 24,
+                      letterSpacing: 1.1,
                       shadows: [
-                        const Shadow(
-                          blurRadius: 4,
+                        Shadow(
+                          blurRadius: 8,
                           color: Colors.black87,
-                          offset: Offset(1, 1),
+                          offset: const Offset(2, 2),
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 6),
                   Text(
                     subtitle,
                     style: TextStyles.semiBold11.copyWith(
                       color: Colors.white70,
-                      fontSize: 14,
+                      fontSize: 16,
                       shadows: [
-                        const Shadow(
-                          blurRadius: 4,
+                        Shadow(
+                          blurRadius: 6,
                           color: Colors.black54,
-                          offset: Offset(1, 1),
+                          offset: const Offset(1, 1),
                         ),
                       ],
                     ),

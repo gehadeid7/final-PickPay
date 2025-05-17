@@ -16,8 +16,6 @@ class ProductRating extends StatelessWidget {
       children: [
         const Icon(Icons.star, color: Colors.orange, size: 18),
         Text(rating.toString(), style: const TextStyle(fontSize: 14)),
-        Text(" ($reviewCount reviews)",
-            style: const TextStyle(fontSize: 12, color: Colors.grey)),
       ],
     );
   }

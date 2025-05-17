@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pickpay/core/widgets/build_appbar.dart';
+import 'package:pickpay/core/widgets/footer_widget.dart';
 import 'package:pickpay/features/categories_pages/models/product_model.dart';
 import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product1.dart';
 import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product10.dart';
@@ -370,6 +371,7 @@ class _ElectronicsViewBodyState extends State<ElectronicsViewBody> {
             // ignore: unnecessary_to_list_in_spreads
           }).toList(),
           const SizedBox(height: 20),
+          FooterWidget(),
         ],
       ),
     );

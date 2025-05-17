@@ -92,9 +92,32 @@ class _TodaysSaleGridViewState extends State<TodaysSaleGridView>
     return Container(
       height: 330,
       padding: const EdgeInsets.symmetric(horizontal: 10),
-      color: isDarkMode
-          ? const Color.fromARGB(103, 0, 0, 0)
-          : const Color(0xFFF1F1F1),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: isDarkMode
+              ? [
+                  Colors.grey.shade800,
+                  Colors.grey.shade900,
+                ]
+              : [
+                  const Color.fromARGB(
+                      255, 248, 250, 253), // very soft light blue
+                  const Color.fromARGB(255, 228, 228, 228), // soft baby blue
+                ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: isDarkMode
+                ? const Color.fromARGB(255, 38, 38, 38).withOpacity(0.6)
+                : const Color.fromARGB(255, 92, 92, 92).withOpacity(0.3),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+        borderRadius: BorderRadius.circular(16),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -107,9 +130,29 @@ class _TodaysSaleGridViewState extends State<TodaysSaleGridView>
                 child: Text(
                   "🔥 Today's Sale Ends In:",
                   style: theme.textTheme.titleLarge?.copyWith(
-                    color: Colors.red,
+                    color: isDarkMode
+                        ? const Color(0xFFFFA726) // bright orange for dark mode
+                        : const Color(0xFFFF6F00), // deep orange for light mode
                     fontWeight: FontWeight.bold,
-                    letterSpacing: 1.2,
+                    letterSpacing: 1.5,
+                    shadows: [
+                      Shadow(
+                        color: isDarkMode
+                            ? const Color(
+                                0x99FFB74D) // transparent yellow-orange glow for dark mode
+                            : const Color(0x99FFB74D), // same for light mode
+                        blurRadius: 5,
+                        offset: const Offset(0, 0),
+                      ),
+                      Shadow(
+                        color: isDarkMode
+                            ? const Color(
+                                0x55FF8F00) // softer transparent orange glow
+                            : const Color(0x55FF8F00),
+                        blurRadius: 5,
+                        offset: const Offset(0, 0),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -121,8 +164,18 @@ class _TodaysSaleGridViewState extends State<TodaysSaleGridView>
               child: Text(
                 _formattedTime(_duration),
                 style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: isDarkMode ? Colors.white : Colors.black87,
+                  fontWeight: FontWeight.w700,
+                  color: isDarkMode ? Colors.white70 : Colors.black87,
+                  letterSpacing: 1.3,
+                  shadows: isDarkMode
+                      ? [
+                          Shadow(
+                            color: Colors.black.withOpacity(0.7),
+                            blurRadius: 6,
+                            offset: const Offset(1, 1),
+                          )
+                        ]
+                      : null,
                 ),
               ),
             ),
