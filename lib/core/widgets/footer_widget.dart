@@ -16,7 +16,7 @@ class FooterWidget extends StatelessWidget {
         gradient: LinearGradient(
           colors: isDark
               ? [Colors.grey.shade900, Colors.black]
-              : [Colors.purple.shade50, Colors.white],
+              : [Colors.blue.shade50, Colors.white],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
