@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pickpay/core/utils/app_text_styles.dart';
-import 'package:pickpay/core/widgets/custom_button.dart';
 import 'package:pickpay/features/categories_pages/models/product_model.dart';
 import 'package:pickpay/features/categories_pages/widgets/color_option_selector.dart';
 import 'package:pickpay/features/categories_pages/widgets/info_icons_row.dart';
@@ -112,7 +111,7 @@ class _ProductDetailViewState extends State<ProductDetailView>
                         product.title,
                         style: TextStyles.bold19.copyWith(
                           color: isDarkMode ? Colors.white : Colors.black,
-                          fontSize: 22,
+                          fontSize: 18,
                           fontWeight: FontWeight.w800,
                         ),
                       ),
@@ -123,19 +122,18 @@ class _ProductDetailViewState extends State<ProductDetailView>
                     InfoSectionWithIcons(),
                     const SizedBox(height: 16),
                     _buildOptionsSection(product, isDarkMode),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 10),
                     _buildSectionTitle("Product Details", isDarkMode),
                     _buildFeatureBox(
                         _buildProductDetails(product, isDarkMode), isDarkMode),
                     const SizedBox(height: 24),
-                    _buildSectionTitle("About this item", isDarkMode),
                     _buildAboutItem(product, isDarkMode),
                     const SizedBox(height: 24),
                     _buildSectionTitle("Delivery", isDarkMode),
                     _buildDeliveryInfo(product, isDarkMode),
                     const SizedBox(height: 24),
                     _buildSellerInfo(product, isDarkMode),
-                    const SizedBox(height: 100),
+                    const SizedBox(height: 10),
                   ],
                 ),
               ),
@@ -143,21 +141,31 @@ class _ProductDetailViewState extends State<ProductDetailView>
           ),
           AnimatedPositioned(
             duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-            bottom: _showAddToCartButton ? 30 : -100,
+            bottom: _showAddToCartButton ? 20 : -100,
             left: 16,
             right: 16,
-            child: SlideTransition(
-              position: Tween<Offset>(
-                begin: const Offset(0, 1),
-                end: Offset.zero,
-              ).animate(CurvedAnimation(
-                parent: _animationController,
-                curve: const Interval(0.6, 1.0, curve: Curves.easeOut),
-              )),
-              child: ScaleTransition(
-                scale: _fadeAnimation ?? AlwaysStoppedAnimation(1.0),
-                child: CustomButton(
+            child: Material(
+              elevation: 6,
+              borderRadius: BorderRadius.circular(50),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.blueAccent,
+                      Colors.blue.shade700,
+                    ],
+                  ),
+                ),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    shadowColor: Colors.transparent,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                  ),
                   onPressed: () {
                     Feedback.forTap(context);
                     context.read<CartCubit>().addToCart(
@@ -167,7 +175,14 @@ class _ProductDetailViewState extends State<ProductDetailView>
                           ),
                         );
                   },
-                  buttonText: "Add to Cart",
+                  child: const Text(
+                    "Add to Cart",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -178,48 +193,47 @@ class _ProductDetailViewState extends State<ProductDetailView>
   }
 
   Widget _buildImageSlider(ProductsViewsModel product, bool isDarkMode) {
-    return Column(
+    return Stack(
+      alignment: Alignment.bottomCenter,
       children: [
-        Hero(
-          tag: 'product-${product.id}',
-          child: ClipRRect(
+        Container(
+          height: 320,
+          decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
-            child: SizedBox(
-              height: 300,
-              child: PageView.builder(
-                controller: _pageController,
-                itemCount: product.imagePaths?.length ?? 0,
-                itemBuilder: (context, index) {
-                  return AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 300),
-                    child: Image.asset(
-                      product.imagePaths![index],
-                      key: ValueKey(product.imagePaths![index]),
-                      fit: BoxFit.contain,
-                      errorBuilder: (context, error, stackTrace) => Icon(
-                        Icons.image_not_supported,
-                        color: isDarkMode ? Colors.white54 : Colors.grey,
-                        size: 40,
-                      ),
-                    ),
-                  );
-                },
+            color: isDarkMode ? Colors.grey[850] : Colors.grey[100],
+          ),
+          child: PageView.builder(
+            controller: _pageController,
+            itemCount: product.imagePaths?.length ?? 0,
+            itemBuilder: (context, index) => Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.asset(
+                  product.imagePaths![index],
+                  fit: BoxFit.contain,
+                ),
               ),
             ),
           ),
         ),
-        const SizedBox(height: 12),
-        AnimatedSwitcher(
-          duration: const Duration(milliseconds: 300),
-          child: SmoothPageIndicator(
-            key: ValueKey(product.imagePaths?.length ?? 0),
-            controller: _pageController,
-            count: product.imagePaths?.length ?? 0,
-            effect: WormEffect(
-              dotHeight: 8,
-              dotWidth: 8,
-              activeDotColor: isDarkMode ? Colors.blueAccent : Colors.blue,
-              dotColor: isDarkMode ? Colors.grey : Colors.grey[300]!,
+        Positioned(
+          bottom: 20,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: Colors.black.withOpacity(0.6),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: SmoothPageIndicator(
+              controller: _pageController,
+              count: product.imagePaths?.length ?? 0,
+              effect: ExpandingDotsEffect(
+                dotHeight: 6,
+                dotWidth: 6,
+                activeDotColor: Colors.white,
+                dotColor: Colors.white.withOpacity(0.5),
+              ),
             ),
           ),
         ),
@@ -228,75 +242,84 @@ class _ProductDetailViewState extends State<ProductDetailView>
   }
 
   Widget _buildPriceAndRating(ProductsViewsModel product, bool isDarkMode) {
-    return SlideTransition(
-      position: _slideAnimation ?? AlwaysStoppedAnimation(Offset.zero),
-      child: FadeTransition(
-        opacity: _fadeAnimation ?? AlwaysStoppedAnimation(1.0),
-        child: Card(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          elevation: 2,
-          color: isDarkMode ? Colors.grey[800] : Colors.grey.shade200,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // Current price (top-left)
-                    Text(
-                      "EGP ${product.price.toStringAsFixed(2)}",
-                      style: TextStyles.bold19.copyWith(
-                        color: Colors.green.shade700,
-                      ),
-                    ),
-                    // Original price (top-right) if exists
-                    if (product.originalPrice != null &&
-                        product.originalPrice! > product.price)
-                      Text(
-                        "EGP ${product.originalPrice!.toStringAsFixed(2)}",
-                        style: TextStyles.semiBold16.copyWith(
-                          color: Colors.red,
-                          decoration: TextDecoration.lineThrough,
-                        ),
-                      ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                // Second row with 2 items
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // Discount percentage (bottom-left)
-                    if (product.originalPrice != null &&
-                        product.originalPrice! > product.price)
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: Colors.red.shade100,
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Text(
-                          "${((product.originalPrice! - product.price) / product.originalPrice! * 100).toStringAsFixed(0)}% OFF",
-                          style: TextStyles.bold13.copyWith(
-                            color: Colors.red.shade800,
-                          ),
-                        ),
-                      ),
-                    // Rating (bottom-right)
-                    ProductRating(
-                      rating: product.rating ?? 0.0,
-                      reviewCount: product.reviewCount ?? 0,
-                    ),
-                  ],
-                ),
-              ],
-            ),
+    return Container(
+      decoration: BoxDecoration(
+        color: isDarkMode ? Colors.grey[850] : Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
-        ),
+        ],
+      ),
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "EGP ${product.price.toStringAsFixed(2)}",
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.green.shade700,
+                    ),
+                  ),
+                  if (product.originalPrice != null &&
+                      product.originalPrice! > product.price)
+                    Text(
+                      "EGP ${product.originalPrice!.toStringAsFixed(2)}",
+                      style: TextStyle(
+                        fontSize: 16,
+                        decoration: TextDecoration.lineThrough,
+                        color: Colors.red.shade400,
+                      ),
+                    ),
+                ],
+              ),
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: Colors.red.shade100.withOpacity(0.3),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: Colors.red.shade200),
+                ),
+                child: Text(
+                  "${((product.originalPrice! - product.price) / product.originalPrice! * 100).toStringAsFixed(0)}% OFF",
+                  style: TextStyle(
+                    color: Colors.red.shade800,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Divider(color: isDarkMode ? Colors.grey[700] : Colors.grey[300]),
+          const SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              ProductRating(
+                rating: product.rating ?? 0.0,
+                reviewCount: product.reviewCount ?? 0,
+              ),
+              Text(
+                "${product.reviewCount ?? 0} reviews",
+                style: TextStyle(
+                  color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -906,116 +929,314 @@ class _ProductDetailViewState extends State<ProductDetailView>
   }
 
   Widget _buildAboutItem(ProductsViewsModel product, bool isDarkMode) {
-    return FadeTransition(
-      opacity: _fadeAnimation ?? AlwaysStoppedAnimation(1.0),
-      child: SlideTransition(
-        position: _slideAnimation ?? AlwaysStoppedAnimation(Offset.zero),
-        child: Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: isDarkMode ? Colors.grey[800] : Colors.grey.shade100,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: (product.aboutThisItem?.split('\n') ??
-                    ['No description available'])
-                .map((line) => Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                      child: Text(
-                        line,
-                        style: TextStyles.regular13.copyWith(
-                          color: isDarkMode ? Colors.white70 : Colors.black87,
+    final aboutText = product.aboutThisItem ?? 'No description available';
+    final isLongText = aboutText.length > 300;
+    var showFullText = false;
+
+    return StatefulBuilder(
+      builder: (context, setState) {
+        return FadeTransition(
+          opacity: _fadeAnimation ?? AlwaysStoppedAnimation(1.0),
+          child: SlideTransition(
+            position: _slideAnimation ?? AlwaysStoppedAnimation(Offset.zero),
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: isDarkMode ? Colors.grey[850] : Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.info_outline_rounded,
+                        color:
+                            isDarkMode ? Colors.blueAccent : Colors.blue[700],
+                        size: 24,
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        "About this item",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: isDarkMode ? Colors.white : Colors.black,
                         ),
                       ),
-                    ))
-                .toList(),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  ..._buildTextContent(
+                    context: context,
+                    text: aboutText,
+                    isDarkMode: isDarkMode,
+                    isLongText: isLongText,
+                    showFullText: showFullText,
+                  ),
+                  if (isLongText) ...[
+                    const SizedBox(height: 12),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: GestureDetector(
+                        onTap: () =>
+                            setState(() => showFullText = !showFullText),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 6),
+                          decoration: BoxDecoration(
+                            color: isDarkMode
+                                ? Colors.blueAccent.withOpacity(0.2)
+                                : Colors.blue[50],
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                showFullText ? "Show less" : "Read more",
+                                style: TextStyle(
+                                  color: isDarkMode
+                                      ? Colors.blueAccent
+                                      : Colors.blue[700],
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const SizedBox(width: 4),
+                              Icon(
+                                showFullText
+                                    ? Icons.keyboard_arrow_up
+                                    : Icons.keyboard_arrow_down,
+                                size: 18,
+                                color: isDarkMode
+                                    ? Colors.blueAccent
+                                    : Colors.blue[700],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
+  List<Widget> _buildTextContent({
+    required BuildContext context,
+    required String text,
+    required bool isDarkMode,
+    required bool isLongText,
+    required bool showFullText,
+  }) {
+    final textStyle = TextStyle(
+      fontSize: 15,
+      height: 1.5,
+      color: isDarkMode ? Colors.white.withOpacity(0.9) : Colors.grey[800],
+    );
+
+    if (!isLongText) {
+      return [
+        Text(
+          text,
+          style: textStyle,
+        ),
+      ];
+    }
+
+    return [
+      Text(
+        showFullText ? text : '${text.substring(0, 300)}...',
+        style: textStyle,
+      ),
+      if (!showFullText)
+        Container(
+          height: 20,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                isDarkMode
+                    ? Colors.grey[850]!.withOpacity(0)
+                    : Colors.white.withOpacity(0),
+                isDarkMode ? Colors.grey[850]! : Colors.white,
+              ],
+            ),
+          ),
+        ),
+    ];
+  }
+
   Widget _buildDeliveryInfo(ProductsViewsModel product, bool isDarkMode) {
+    final containerColor = isDarkMode ? Colors.grey[850]! : Colors.white;
+    final borderColor = isDarkMode ? Colors.grey[700]! : Colors.grey[200]!;
+    final textColor = isDarkMode ? Colors.grey[300]! : Colors.grey[800]!;
+
     return FadeTransition(
-      opacity: _fadeAnimation ?? AlwaysStoppedAnimation(1.0),
+      opacity: _fadeAnimation ?? const AlwaysStoppedAnimation(1.0),
       child: SlideTransition(
-        position: _slideAnimation ?? AlwaysStoppedAnimation(Offset.zero),
+        position: _slideAnimation ?? const AlwaysStoppedAnimation(Offset.zero),
         child: Container(
           width: double.infinity,
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: isDarkMode ? Colors.grey[800] : Colors.grey.shade100,
+            color: containerColor,
             borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: borderColor, width: 1),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(isDarkMode ? 0.1 : 0.05),
+                blurRadius: 6,
+                offset: const Offset(0, 2),
+              ),
+            ],
           ),
           child: Column(
             children: [
-              _infoRow(
-                Icons.local_shipping_outlined,
-                RichText(
-                  text: TextSpan(
-                    style: TextStyles.regular13.copyWith(
-                      color: isDarkMode ? Colors.white70 : Colors.black87,
-                    ),
-                    children: [
-                      const TextSpan(
-                        text: 'FREE Delivery ',
+              // Delivery Time Row
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.local_shipping_rounded,
+                    size: 20,
+                    color: Colors.blueAccent,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: RichText(
+                      text: TextSpan(
                         style: TextStyle(
-                          color: Colors.red,
-                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                          color: textColor,
                         ),
+                        children: [
+                          const TextSpan(
+                            text: 'FREE Delivery ',
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          TextSpan(
+                            text: '${product.deliveryDate ?? 'soon'} ',
+                          ),
+                          const TextSpan(text: 'order within '),
+                          TextSpan(
+                            text: product.deliveryTimeLeft ?? '',
+                            style: TextStyle(
+                              color: Colors.green.shade600,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
-                      TextSpan(
-                          text:
-                              '${product.deliveryDate ?? 'soon'} order\nwithin '),
-                      TextSpan(
-                        text: product.deliveryTimeLeft ?? '',
-                        style: const TextStyle(color: Colors.green),
-                      ),
-                    ],
-                  ),
-                ),
-                isDarkMode: isDarkMode,
-              ),
-              const SizedBox(height: 12),
-              _infoRow(
-                Icons.location_on_outlined,
-                RichText(
-                  text: TextSpan(
-                    style: TextStyles.regular13.copyWith(
-                      color: isDarkMode ? Colors.white70 : Colors.black87,
                     ),
-                    children: [
-                      const TextSpan(text: 'Deliver to '),
-                      TextSpan(
-                        text: product.deliveryLocation ?? 'your location',
-                        style: const TextStyle(
-                          color: Colors.blue,
-                          fontWeight: FontWeight.bold,
+                  ),
+                ],
+              ),
+
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 8),
+                child: Divider(height: .5, thickness: .5),
+              ),
+
+              // Delivery Location Row
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.location_on_rounded,
+                    size: 20,
+                    color: Colors.orange,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: RichText(
+                      text: TextSpan(
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: textColor,
+                        ),
+                        children: [
+                          const TextSpan(text: 'Deliver to '),
+                          TextSpan(
+                            text: product.deliveryLocation ?? 'your location',
+                            style: TextStyle(
+                              color: Colors.blue.shade600,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 8),
+                child: Divider(height: .5, thickness: .5),
+              ),
+
+              // Stock Status Row
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(
+                    (product.inStock ?? false)
+                        ? Icons.check_circle_rounded
+                        : Icons.cancel_rounded,
+                    size: 20,
+                    color: (product.inStock ?? false)
+                        ? Colors.green.shade600
+                        : Colors.red.shade600,
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    (product.inStock ?? false) ? 'In Stock' : 'Out of Stock',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: (product.inStock ?? false)
+                          ? Colors.green.shade600
+                          : Colors.red.shade600,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  if (product.inStock ?? false) ...[
+                    const SizedBox(width: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 6, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: Colors.green.shade50,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
+                        'Ready to ship',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.green.shade800,
                         ),
                       ),
-                    ],
-                  ),
-                ),
-                isDarkMode: isDarkMode,
-              ),
-              const SizedBox(height: 12),
-              _infoRow(
-                (product.inStock ?? false) ? Icons.check_circle : Icons.cancel,
-                Text(
-                  (product.inStock ?? false) ? 'In stock' : 'Out of stock',
-                  style: TextStyle(
-                    color: (product.inStock ?? false)
-                        ? Colors.green.shade500
-                        : Colors.red.shade500,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                iconColor: (product.inStock ?? false)
-                    ? Colors.green.shade600
-                    : Colors.red.shade600,
-                isDarkMode: isDarkMode,
+                    ),
+                  ],
+                ],
               ),
             ],
           ),
@@ -1026,51 +1247,102 @@ class _ProductDetailViewState extends State<ProductDetailView>
 
   Widget _buildSellerInfo(ProductsViewsModel product, bool isDarkMode) {
     return FadeTransition(
-      opacity: _fadeAnimation ?? AlwaysStoppedAnimation(1.0),
+      opacity: _fadeAnimation ?? const AlwaysStoppedAnimation(1.0),
       child: SlideTransition(
-        position: _slideAnimation ?? AlwaysStoppedAnimation(Offset.zero),
-        child: Row(
-          children: [
-            Expanded(
-              child: _InfoCard(
-                icon: Icons.storefront,
-                label: "Ships From",
-                value: product.shipsFrom,
-                backgroundColor:
-                    isDarkMode ? Colors.grey[800]! : Colors.grey.shade200,
-                isDarkMode: isDarkMode,
+        position: _slideAnimation ?? const AlwaysStoppedAnimation(Offset.zero),
+        child: Container(
+          decoration: BoxDecoration(
+            color: isDarkMode ? Colors.grey[900] : Colors.grey[50],
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(isDarkMode ? 0.1 : 0.05),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
               ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: _InfoCard(
-                icon: Icons.shopping_cart,
-                label: "Sold By",
-                value: product.soldBy,
-                backgroundColor:
-                    isDarkMode ? Colors.grey[800]! : Colors.grey.shade200,
-                isDarkMode: isDarkMode,
+            ],
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: _InfoCard(
+                  icon: Icons.storefront_rounded,
+                  label: "Ships From",
+                  value: product.shipsFrom,
+                  backgroundColor: isDarkMode
+                      ? Colors.grey[800]!.withOpacity(0.7)
+                      : Colors.white,
+                  isDarkMode: isDarkMode,
+                ),
               ),
-            ),
-          ],
+              const SizedBox(width: 16),
+              Container(
+                width: 1,
+                height: 40,
+                color: isDarkMode ? Colors.grey[700] : Colors.grey[300],
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: _InfoCard(
+                  icon: Icons.store_rounded,
+                  label: "Sold By",
+                  value: product.soldBy,
+                  backgroundColor: isDarkMode
+                      ? Colors.grey[800]!.withOpacity(0.7)
+                      : Colors.white,
+                  isDarkMode: isDarkMode,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
   Widget _buildFeatureBox(List<Widget> children, bool isDarkMode) {
-    return FadeTransition(
-      opacity: _fadeAnimation ?? AlwaysStoppedAnimation(1.0),
-      child: SlideTransition(
-        position: _slideAnimation ?? AlwaysStoppedAnimation(Offset.zero),
-        child: Container(
-          decoration: BoxDecoration(
-            color: isDarkMode ? Colors.grey[800] : Colors.grey.shade100,
-            borderRadius: BorderRadius.circular(12),
+    return Container(
+      decoration: BoxDecoration(
+        color: isDarkMode ? Colors.grey[850] : Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
-          padding: const EdgeInsets.all(16),
-          child: Column(children: children),
-        ),
+        ],
+      ),
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          for (int i = 0; i < children.length; i += 2)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: IntrinsicHeight(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Flexible(
+                      flex: 5,
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: children[i],
+                      ),
+                    ),
+                    if (i + 1 < children.length)
+                      Flexible(
+                        flex: 5,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 8),
+                          child: children[i + 1],
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }
@@ -1094,21 +1366,28 @@ class _ProductDetailViewState extends State<ProductDetailView>
   }
 
   Widget _buildSectionTitle(String title, bool isDarkMode) {
-    return SlideTransition(
-      position: _slideAnimation ?? AlwaysStoppedAnimation(Offset.zero),
-      child: FadeTransition(
-        opacity: _fadeAnimation ?? AlwaysStoppedAnimation(1.0),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          child: Text(
-            title,
-            style: TextStyles.bold16.copyWith(
-              color: isDarkMode ? Colors.white : Colors.black,
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
+    return Padding(
+      padding: const EdgeInsets.only(top: 24, bottom: 12),
+      child: Row(
+        children: [
+          Container(
+            height: 24,
+            width: 4,
+            decoration: BoxDecoration(
+              color: Colors.blueAccent,
+              borderRadius: BorderRadius.circular(2),
             ),
           ),
-        ),
+          const SizedBox(width: 12),
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: isDarkMode ? Colors.white : Colors.black,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -1129,23 +1408,47 @@ class _ProductFeatureRow extends StatelessWidget {
   Widget build(BuildContext context) {
     if (value == null || value!.isEmpty) return const SizedBox.shrink();
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
+    return Container(
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            color: isDarkMode ? Colors.grey[800]! : Colors.grey[200]!,
+            width: 1,
+          ),
+        ),
+      ),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            "$label: ",
-            style: TextStyles.bold13.copyWith(
-              color: isDarkMode ? Colors.white70 : Colors.black87,
-            ),
+          Icon(
+            Icons.circle,
+            size: 6,
+            color: isDarkMode ? Colors.blueAccent : Colors.blue,
           ),
+          const SizedBox(width: 8),
           Expanded(
-            child: Text(
-              value!,
-              style: TextStyles.regular13.copyWith(
-                color: isDarkMode ? Colors.white70 : Colors.black87,
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: isDarkMode ? Colors.grey[400] : Colors.grey[700],
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  value!,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: isDarkMode ? Colors.white : Colors.black,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
