@@ -65,7 +65,7 @@ class FooterWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildCategoryColumn(context),
-        const SizedBox(height: 30),
+        const SizedBox(height: 32),
         _buildContactColumn(context),
       ],
     );
