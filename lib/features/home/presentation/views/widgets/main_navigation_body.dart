@@ -37,16 +37,16 @@ class _MainNavigationView extends StatelessWidget {
         final shouldExit = await showDialog<bool>(
           context: context,
           builder: (context) => AlertDialog(
-            title: const Text('هل تريد الخروج؟'),
-            content: const Text('هل أنت متأكد أنك تريد الخروج من التطبيق؟'),
+            title: const Text('Do you want to exit?'),
+            content: const Text('Are you sure you want to exit the app?'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(false),
-                child: const Text('لا'),
+                child: const Text('No'),
               ),
               TextButton(
                 onPressed: () => Navigator.of(context).pop(true),
-                child: const Text('نعم'),
+                child: const Text('Yes'),
               ),
             ],
           ),

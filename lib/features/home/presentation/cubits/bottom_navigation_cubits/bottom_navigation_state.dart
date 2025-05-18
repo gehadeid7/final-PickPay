@@ -1,4 +1,3 @@
-// bottom_navigation_state.dart
 part of 'bottom_navigation_cubit.dart';
 
 sealed class BottomNavigationState extends Equatable {
