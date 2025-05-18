@@ -1,10 +1,11 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:equatable/equatable.dart';
 import 'package:pickpay/features/home/domain/models/cart_item_model.dart';
 
 part 'cart_state.dart';
 
 class CartCubit extends Cubit<CartState> {
-  CartCubit() : super(CartLoaded([])); // Start with empty cart
+  CartCubit() : super(CartLoaded([]));
 
   List<CartItemModel> get _items {
     if (state is CartLoaded) {
@@ -14,9 +15,10 @@ class CartCubit extends Cubit<CartState> {
   }
 
   void addToCart(CartItemModel newItem) {
-    final currentItems = List<CartItemModel>.from(_items); // Create fresh copy
-    final index = currentItems
-        .indexWhere((item) => item.product.id == newItem.product.id);
+    final currentItems = List<CartItemModel>.from(_items);
+    final index = currentItems.indexWhere(
+      (item) => item.product.id == newItem.product.id,
+    );
 
     if (index != -1) {
       // Product exists - update quantity
@@ -24,20 +26,36 @@ class CartCubit extends Cubit<CartState> {
         quantity: currentItems[index].quantity + newItem.quantity,
       );
       currentItems[index] = updatedItem;
+      emit(CartLoaded(
+        List.from(currentItems),
+        action: CartAction.updated,
+        updatedItem: updatedItem,
+      ));
     } else {
       // New product - add to cart
       currentItems.add(newItem);
+      emit(CartLoaded(
+        List.from(currentItems),
+        action: CartAction.added,
+        addedItem: newItem,
+      ));
     }
-
-    // Emit new state with all items
-    emit(CartLoaded(List<CartItemModel>.from(currentItems),
-        action: CartAction.added));
   }
 
   void removeFromCart(String productId) {
+    final currentItems = List<CartItemModel>.from(_items);
+    final removedItem = currentItems.firstWhere(
+      (item) => item.product.id == productId,
+      orElse: () => throw Exception('Item not found'),
+    );
+
     final updatedItems =
-        _items.where((item) => item.product.id != productId).toList();
-    emit(CartLoaded(updatedItems, action: CartAction.removed));
+        currentItems.where((item) => item.product.id != productId).toList();
+    emit(CartLoaded(
+      updatedItems,
+      action: CartAction.removed,
+      removedItem: removedItem,
+    ));
   }
 
   void updateQuantity(String productId, int newQuantity) {
@@ -46,14 +64,22 @@ class CartCubit extends Cubit<CartState> {
       return;
     }
 
-    final currentItems = _items;
-    final index =
-        currentItems.indexWhere((item) => item.product.id == productId);
+    final currentItems = List<CartItemModel>.from(_items);
+    final index = currentItems.indexWhere(
+      (item) => item.product.id == productId,
+    );
 
     if (index != -1) {
+      final updatedItem = currentItems[index].copyWith(
+        quantity: newQuantity,
+      );
       final updatedItems = List<CartItemModel>.from(currentItems)
-        ..[index] = currentItems[index].copyWith(quantity: newQuantity);
-      emit(CartLoaded(updatedItems));
+        ..[index] = updatedItem;
+      emit(CartLoaded(
+        updatedItems,
+        action: CartAction.updated,
+        updatedItem: updatedItem,
+      ));
     }
   }
 

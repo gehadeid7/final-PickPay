@@ -21,17 +21,25 @@ class CartViewBody extends StatelessWidget {
         context: context,
         title: 'Your Cart',
         onBackPressed: () {
-          // Add any custom logic if needed before popping
           Navigator.pushNamed(context, '/main-navigation');
         },
       ),
       body: BlocConsumer<CartCubit, CartState>(
         listener: (context, state) {
-          if (state is CartLoaded) {
-            if (state.action == CartAction.added) {
-              _showMessage(context, "Product added to cart");
-            } else if (state.action == CartAction.removed) {
-              _showMessage(context, "Product removed from cart");
+          if (state is CartLoaded && state.action != null) {
+            switch (state.action!) {
+              case CartAction.added:
+                _showMessage(
+                    context, "Product added to cart", CartAction.added);
+                break;
+              case CartAction.removed:
+                _showMessage(
+                    context, "Product removed from cart", CartAction.removed);
+                break;
+              case CartAction.updated:
+                _showMessage(
+                    context, "Product quantity updated", CartAction.updated);
+                break;
             }
           }
         },
@@ -113,7 +121,6 @@ class CartViewBody extends StatelessWidget {
                           boxShadow: [
                             BoxShadow(
                               color: Color.fromARGB(255, 82, 82, 82)
-                                  // ignore: deprecated_member_use
                                   .withOpacity(isDarkMode ? 0.1 : 0.05),
                               spreadRadius: 6,
                               blurRadius: 6,
@@ -197,74 +204,89 @@ class CartViewBody extends StatelessWidget {
                                     },
                                   ),
                                 ),
-                                Container(
-                                  height: 30,
-                                  width: 30,
-                                  decoration: BoxDecoration(
-                                    color: isDarkMode
-                                        ? Colors.grey[700]
-                                        : const Color.fromARGB(
-                                            255, 183, 183, 183),
-                                    borderRadius: BorderRadius.circular(30),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        // ignore: deprecated_member_use
-                                        color: Colors.black.withOpacity(0.2),
-                                        offset: const Offset(0, 2),
-                                        blurRadius: 4,
+                                Row(
+                                  children: [
+                                    // Decrease quantity button
+                                    Container(
+                                      height: 30,
+                                      width: 30,
+                                      decoration: BoxDecoration(
+                                        color: item.quantity > 1
+                                            ? (isDarkMode
+                                                ? Colors.grey[700]
+                                                : const Color(0xFFB7B7B7))
+                                            : Colors.grey.shade400,
+                                        borderRadius: BorderRadius.circular(30),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color:
+                                                Colors.black.withOpacity(0.2),
+                                            offset: const Offset(0, 2),
+                                            blurRadius: 4,
+                                          ),
+                                        ],
                                       ),
-                                    ],
-                                  ),
-                                  child: IconButton(
-                                    icon: const Icon(Icons.remove),
-                                    iconSize: 16,
-                                    color: Colors.white,
-                                    padding: EdgeInsets.zero,
-                                    constraints: const BoxConstraints(),
-                                    onPressed: () {
-                                      final newQty = item.quantity - 1;
-                                      context.read<CartCubit>().updateQuantity(
-                                          item.product.id, newQty);
-                                    },
-                                  ),
-                                ),
-                                const SizedBox(width: 10),
-                                Text(
-                                  "${item.quantity}",
-                                  style: TextStyles.bold16.copyWith(
-                                    color: isDarkMode
-                                        ? Colors.white
-                                        : Colors.black,
-                                  ),
-                                ),
-                                const SizedBox(width: 10),
-                                Container(
-                                  height: 30,
-                                  width: 30,
-                                  decoration: BoxDecoration(
-                                    color: AppColors.primaryColor,
-                                    borderRadius: BorderRadius.circular(30),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        // ignore: deprecated_member_use
-                                        color: Colors.black.withOpacity(0.2),
-                                        offset: const Offset(0, 2),
-                                        blurRadius: 4,
+                                      child: IconButton(
+                                        icon: const Icon(Icons.remove),
+                                        iconSize: 16,
+                                        color: Colors.white,
+                                        padding: EdgeInsets.zero,
+                                        constraints: const BoxConstraints(),
+                                        onPressed: item.quantity > 1
+                                            ? () {
+                                                final newQty =
+                                                    item.quantity - 1;
+                                                context
+                                                    .read<CartCubit>()
+                                                    .updateQuantity(
+                                                        item.product.id,
+                                                        newQty);
+                                              }
+                                            : null,
                                       ),
-                                    ],
-                                  ),
-                                  child: IconButton(
-                                    icon: const Icon(Icons.add),
-                                    iconSize: 16,
-                                    color: Colors.white,
-                                    padding: EdgeInsets.zero,
-                                    constraints: const BoxConstraints(),
-                                    onPressed: () {
-                                      final newQty = item.quantity + 1;
-                                      context.read<CartCubit>().updateQuantity(
-                                          item.product.id, newQty);
-                                    },
-                                  ),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Text(
+                                      "${item.quantity}",
+                                      style: TextStyles.bold16.copyWith(
+                                        color: isDarkMode
+                                            ? Colors.white
+                                            : Colors.black,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    // Increase quantity button
+                                    Container(
+                                      height: 30,
+                                      width: 30,
+                                      decoration: BoxDecoration(
+                                        color: AppColors.primaryColor,
+                                        borderRadius: BorderRadius.circular(30),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color:
+                                                Colors.black.withOpacity(0.2),
+                                            offset: const Offset(0, 2),
+                                            blurRadius: 4,
+                                          ),
+                                        ],
+                                      ),
+                                      child: IconButton(
+                                        icon: const Icon(Icons.add),
+                                        iconSize: 16,
+                                        color: Colors.white,
+                                        padding: EdgeInsets.zero,
+                                        constraints: const BoxConstraints(),
+                                        onPressed: () {
+                                          final newQty = item.quantity + 1;
+                                          context
+                                              .read<CartCubit>()
+                                              .updateQuantity(
+                                                  item.product.id, newQty);
+                                        },
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
@@ -289,7 +311,6 @@ class CartViewBody extends StatelessWidget {
                       color: isDarkMode ? Colors.grey.shade700 : Colors.white,
                     ),
                     color: isDarkMode
-                        // ignore: deprecated_member_use
                         ? Colors.grey[800]!.withOpacity(0.5)
                         : const Color.fromARGB(83, 217, 217, 217),
                     borderRadius: BorderRadius.circular(8),
@@ -332,15 +353,75 @@ class CartViewBody extends StatelessWidget {
     );
   }
 
-  void _showMessage(BuildContext context, String message) {
+  void _showMessage(BuildContext context, String message, CartAction action) {
     final theme = Theme.of(context);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        duration: const Duration(seconds: 2),
-        backgroundColor:
-            theme.brightness == Brightness.dark ? Colors.grey[800] : null,
+    final isDarkMode = theme.brightness == Brightness.dark;
+
+    Color backgroundColor;
+    Icon icon;
+
+    switch (action) {
+      case CartAction.added:
+        backgroundColor = Colors.green.shade600;
+        icon = const Icon(Icons.check_circle, color: Colors.white, size: 20);
+        break;
+      case CartAction.removed:
+        backgroundColor = Colors.red.shade600;
+        icon = const Icon(Icons.delete, color: Colors.white, size: 20);
+        break;
+      case CartAction.updated:
+        backgroundColor = Colors.blue.shade600;
+        icon = const Icon(Icons.update, color: Colors.white, size: 20);
+        break;
+    }
+
+    // Create an OverlayEntry for the centered message
+    OverlayEntry? overlayEntry;
+
+    overlayEntry = OverlayEntry(
+      builder: (context) => Center(
+        child: Material(
+          color: Colors.transparent,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            decoration: BoxDecoration(
+              color: backgroundColor,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2),
+                  spreadRadius: 2,
+                  blurRadius: 8,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                icon,
+                const SizedBox(width: 12),
+                Text(
+                  message,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
+
+    // Insert the overlay
+    Overlay.of(context).insert(overlayEntry);
+
+    // Remove the overlay after 3 seconds
+    Future.delayed(const Duration(seconds: 1), () {
+      overlayEntry?.remove();
+    });
   }
 }
