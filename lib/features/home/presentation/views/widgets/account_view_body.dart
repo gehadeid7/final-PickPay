@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pickpay/core/services/get_it_service.dart'; // make sure to import getIt here
@@ -166,7 +168,6 @@ class AccountViewBody extends StatelessWidget {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         border: Border.all(
-          // ignore: deprecated_member_use
           color: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.3),
           width: 2,
         ),
@@ -244,7 +245,6 @@ class AccountViewBody extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            // ignore: deprecated_member_use
             color: Colors.black.withOpacity(isDarkMode ? 0.1 : 0.03),
             blurRadius: 6,
             offset: const Offset(0, 3),
@@ -285,7 +285,6 @@ class AccountViewBody extends StatelessWidget {
         width: 40,
         height: 40,
         decoration: BoxDecoration(
-          // ignore: deprecated_member_use
           color: iconColor.withOpacity(0.08),
           shape: BoxShape.circle,
         ),
