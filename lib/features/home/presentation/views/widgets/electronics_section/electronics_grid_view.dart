@@ -3,7 +3,7 @@ import 'package:pickpay/features/categories_pages/products_views/electronics_pro
 import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product14.dart';
 import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product3.dart';
 import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product4.dart';
-import 'package:pickpay/features/home/presentation/views/card_item.dart';
+import 'package:pickpay/features/home/presentation/views/widgets/card_item.dart';
 
 class ElectronicsCarouselView extends StatefulWidget {
   const ElectronicsCarouselView({super.key});

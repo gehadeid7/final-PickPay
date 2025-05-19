@@ -70,11 +70,15 @@ class _BackgroundPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    // ignore: deprecated_member_use
     final paint = Paint()..color = color.withOpacity(0.1);
 
-    canvas.drawCircle(Offset(size.width * 0.3, size.height * 0.3 + offset), 60, paint);
-    canvas.drawCircle(Offset(size.width * 0.7, size.height * 0.5 - offset), 100, paint);
-    canvas.drawCircle(Offset(size.width * 0.5, size.height * 0.8 + offset / 2), 80, paint);
+    canvas.drawCircle(
+        Offset(size.width * 0.3, size.height * 0.3 + offset), 60, paint);
+    canvas.drawCircle(
+        Offset(size.width * 0.7, size.height * 0.5 - offset), 100, paint);
+    canvas.drawCircle(
+        Offset(size.width * 0.5, size.height * 0.8 + offset / 2), 80, paint);
   }
 
   @override

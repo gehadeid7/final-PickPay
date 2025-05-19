@@ -1,10 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pickpay/features/categories_pages/sharing_product/app_constants.dart';
-import 'package:pickpay/features/home/presentation/views/cart_view.dart';
+import 'package:pickpay/features/cart/cart_view.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:pickpay/features/categories_pages/models/product_model.dart';
-import 'package:pickpay/features/home/presentation/views/widgets/wishlist_button.dart';
+import 'package:pickpay/features/wishlist/wishlist_button.dart';
 
 class ProductDetailAppBar extends StatelessWidget
     implements PreferredSizeWidget {
@@ -23,7 +23,9 @@ class ProductDetailAppBar extends StatelessWidget
     final isDarkMode = theme.brightness == Brightness.dark;
     final iconColor = isDarkMode ? Colors.white : Colors.black;
     final circleColor = isDarkMode
+        // ignore: deprecated_member_use
         ? Colors.white.withOpacity(0.2)
+        // ignore: deprecated_member_use
         : Colors.black.withOpacity(0.05);
 
     return AppBar(
@@ -75,12 +77,14 @@ class ProductDetailAppBar extends StatelessWidget
 
       if (!kIsWeb) {
         // For mobile - include more details
+        // ignore: deprecated_member_use
         await Share.share(
           shareText,
           subject: 'Check out ${product.title} on PickPay!',
         );
       } else {
         // For web - shorter version
+        // ignore: deprecated_member_use
         await Share.share(
           'Check out ${product.title} on PickPay! $productLink',
           subject: 'PickPay Product',

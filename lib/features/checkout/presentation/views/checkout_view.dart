@@ -8,9 +8,9 @@ import 'package:pickpay/features/checkout/presentation/cubits/cubit/checkout_cub
 import 'package:pickpay/features/checkout/presentation/views/widgets/order_conformation.dart';
 import 'package:pickpay/features/checkout/presentation/views/widgets/payment_section.dart';
 import 'package:pickpay/features/checkout/presentation/views/widgets/shipping_section.dart';
-import 'package:pickpay/features/home/domain/models/cart_item_model.dart';
-import 'package:pickpay/features/home/presentation/cubits/cart_cubits/cart_cubit.dart';
-import 'package:pickpay/features/home/presentation/views/cart_view.dart';
+import 'package:pickpay/features/cart/cart_item_model.dart';
+import 'package:pickpay/features/cart/cart_cubits/cart_cubit.dart';
+import 'package:pickpay/features/cart/cart_view.dart';
 
 class CheckoutView extends StatefulWidget {
   const CheckoutView({super.key});

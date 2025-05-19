@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -128,7 +127,8 @@ class AuthRepoImplementation extends AuthRepo {
         log('No user found for email: $email, but sent reset if exists.');
         return right(null);
       } else {
-        return left(ServerFailure('فشل في إرسال رابط إعادة تعيين كلمة المرور: ${e.message}'));
+        return left(ServerFailure(
+            'فشل في إرسال رابط إعادة تعيين كلمة المرور: ${e.message}'));
       }
     } catch (e) {
       return left(ServerFailure('حدث خطأ غير متوقع: ${e.toString()}'));
@@ -463,7 +463,7 @@ final updatedUser = UserEntity(
   @override
   Future<Either<Failure, UserEntity>> getCurrentUser() async {
     try {
-    final user = firebaseAuthService.getCurrentUser();
+      final user = firebaseAuthService.getCurrentUser();
       if (user == null) return left(ServerFailure('No user logged in'));
       final syncedUser = await apiService.syncFirebaseUserToBackend(
         name: user.displayName ?? '',
@@ -490,23 +490,24 @@ final updatedUser = UserEntity(
       return left(ServerFailure('Failed to delete user: ${e.toString()}'));
     }
   }
-  
-@override
-Future<Either<Failure, bool>> checkUserExists(String email) async {
-  try {
-    // Check sign-in methods from Firebase Auth
-    final methods = await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
-    print('Firebase methods: $methods'); // Debug print
 
-    if (methods.isNotEmpty) return right(true);
+  @override
+  Future<Either<Failure, bool>> checkUserExists(String email) async {
+    try {
+      // Check sign-in methods from Firebase Auth
+      final methods =
+          await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
+      print('Firebase methods: $methods'); // Debug print
 
-    // Check if user exists in backend
-    final response = await apiService.post(
-      endpoint: BackendEndpoints.checkUserExists,
-      body: {'email': email},
-    );
+      if (methods.isNotEmpty) return right(true);
 
-    print('Backend response: ${response.body}'); // Debug print
+      // Check if user exists in backend
+      final response = await apiService.post(
+        endpoint: BackendEndpoints.checkUserExists,
+        body: {'email': email},
+      );
+
+      print('Backend response: ${response.body}'); // Debug print
 
     final data = jsonDecode(response.body);
     return right(data['exists'] == true);

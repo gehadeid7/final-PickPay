@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:pickpay/features/categories_pages/homeCategory/presentation/views/home_category_view.dart';
 import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product8.dart';
-import 'package:pickpay/features/home/presentation/views/card_item.dart';
+import 'package:pickpay/features/home/presentation/views/widgets/card_item.dart';
 
 class TodaysSaleGridView extends StatefulWidget {
   const TodaysSaleGridView({super.key});
@@ -110,7 +110,9 @@ class _TodaysSaleGridViewState extends State<TodaysSaleGridView>
         boxShadow: [
           BoxShadow(
             color: isDarkMode
+                // ignore: deprecated_member_use
                 ? const Color.fromARGB(255, 38, 38, 38).withOpacity(0.6)
+                // ignore: deprecated_member_use
                 : const Color.fromARGB(255, 92, 92, 92).withOpacity(0.3),
             blurRadius: 12,
             offset: const Offset(0, 4),
@@ -170,6 +172,7 @@ class _TodaysSaleGridViewState extends State<TodaysSaleGridView>
                   shadows: isDarkMode
                       ? [
                           Shadow(
+                            // ignore: deprecated_member_use
                             color: Colors.black.withOpacity(0.7),
                             blurRadius: 6,
                             offset: const Offset(1, 1),

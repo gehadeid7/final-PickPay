@@ -6,17 +6,16 @@ import 'package:pickpay/features/categories_pages/appliances/presentation/views/
 import 'package:pickpay/features/categories_pages/beauty/presentation/views/beauty_view.dart';
 import 'package:pickpay/features/categories_pages/fashion/presentation/views/fashion_view.dart';
 import 'package:pickpay/features/categories_pages/homeCategory/presentation/views/home_category_view.dart';
-import 'package:pickpay/features/categories_pages/todayIsSale/presentation/views/sale_view.dart';
 import 'package:pickpay/features/categories_pages/videogames/presentation/views/videogames_view.dart';
 import 'package:pickpay/features/checkout/presentation/views/checkout_view.dart';
 import 'package:pickpay/features/categories_pages/electronics/presentation/views/electronics_view.dart';
-import 'package:pickpay/features/home/presentation/views/account_view.dart';
-import 'package:pickpay/features/home/presentation/views/cart_view.dart';
+import 'package:pickpay/features/account_view/account_view.dart';
+import 'package:pickpay/features/cart/cart_view.dart';
 import 'package:pickpay/features/home/presentation/views/categories_view.dart';
 import 'package:pickpay/features/home/presentation/views/home_view.dart';
 import 'package:pickpay/features/home/presentation/views/main_navigation_screen.dart';
 import 'package:pickpay/features/profile_change/views/profile_change_view.dart';
-import 'package:pickpay/features/home/presentation/views/wishlist_view.dart';
+import 'package:pickpay/features/wishlist/wishlist_view.dart';
 
 import '../../features/auth/presentation/views/signin_view.dart';
 import '../../features/auth/presentation/views/sign_up_view.dart';
@@ -50,9 +49,6 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
 
     case ElectronicsView.routeName:
       return MaterialPageRoute(builder: (context) => const ElectronicsView());
-
-    case SaleView.routeName:
-      return MaterialPageRoute(builder: (context) => const SaleView());
 
     case AppliancesView.routeName:
       return MaterialPageRoute(builder: (context) => const AppliancesView());

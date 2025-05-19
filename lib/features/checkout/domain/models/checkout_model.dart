@@ -1,5 +1,5 @@
 // models/order_model.dart
-import 'package:pickpay/features/home/domain/models/cart_item_model.dart';
+import 'package:pickpay/features/cart/cart_item_model.dart';
 
 class OrderModel {
   final String id;

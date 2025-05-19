@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pickpay/features/categories_pages/videogames/presentation/views/videogames_view.dart';
-import 'package:pickpay/features/home/presentation/views/card_item.dart';
+import 'package:pickpay/features/home/presentation/views/widgets/card_item.dart';
 
 class VgamesGrid extends StatefulWidget {
   const VgamesGrid({super.key});

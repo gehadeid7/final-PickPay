@@ -4,12 +4,15 @@ class FeaturedItem {
   final String image;
   final String title;
   final String subtitle;
-  final Widget destinationView;
+  final Widget? destinationView;
+  final bool isCategories;
 
-  FeaturedItem({
+  // Make the constructor const
+  const FeaturedItem({
     required this.image,
     required this.title,
     required this.subtitle,
-    required this.destinationView,
+    this.destinationView,
+    required this.isCategories,
   });
 }

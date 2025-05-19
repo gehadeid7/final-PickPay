@@ -30,6 +30,7 @@ class SlidingFeatureItem extends StatelessWidget {
             offset: const Offset(0, 6),
           ),
           BoxShadow(
+            // ignore: deprecated_member_use
             color: Colors.black.withOpacity(0.10),
             blurRadius: 4,
             offset: const Offset(0, 2),
@@ -53,6 +54,7 @@ class SlidingFeatureItem extends StatelessWidget {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
+                    // ignore: deprecated_member_use
                     Colors.black.withOpacity(0.7),
                     Colors.transparent,
                   ],

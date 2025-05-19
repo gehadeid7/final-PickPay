@@ -3,7 +3,7 @@ import 'package:pickpay/features/categories_pages/products_views/beauty_products
 import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product16.dart';
 import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product3.dart';
 import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product6.dart';
-import 'package:pickpay/features/home/presentation/views/card_item.dart';
+import 'package:pickpay/features/home/presentation/views/widgets/card_item.dart';
 
 class BeautyGrid extends StatefulWidget {
   const BeautyGrid({super.key});

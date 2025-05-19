@@ -3,7 +3,7 @@ import 'package:pickpay/features/categories_pages/products_views/appliances_prod
 import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product15.dart';
 import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product6.dart';
 import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product7.dart';
-import 'package:pickpay/features/home/presentation/views/card_item.dart';
+import 'package:pickpay/features/home/presentation/views/widgets/card_item.dart';
 
 class AppliancesGrid extends StatefulWidget {
   const AppliancesGrid({super.key});
