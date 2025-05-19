@@ -28,12 +28,6 @@ class CustomBottomNavigationBar extends StatelessWidget {
             offset: const Offset(0, -5),
           ),
         ],
-        border: Border(
-          top: BorderSide(
-            color: theme.dividerColor,
-            width: 1,
-          ),
-        ),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
