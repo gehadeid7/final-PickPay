@@ -13,7 +13,7 @@ import 'package:pickpay/features/categories_pages/widgets/product_card.dart';
 import 'package:http_parser/http_parser.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://192.168.1.4:3000/api/v1/';
+  static const String baseUrl = 'http://192.168.1.7:3000/api/v1/';
 
   // 🔐 Builds headers with optional Firebase token
   Future<Map<String, String>> _buildHeaders({
@@ -60,12 +60,14 @@ class ApiService {
     bool authorized = false,
   }) async {
     final url = '$baseUrl$endpoint';
-    final requestHeaders = await _buildHeaders(headers: headers, authorized: authorized);
+    final requestHeaders =
+        await _buildHeaders(headers: headers, authorized: authorized);
     log('📡 GET $url');
     log('📤 Headers: $requestHeaders');
     try {
-      final response =
-          await http.get(Uri.parse(url), headers: requestHeaders).timeout(const Duration(seconds: 15));
+      final response = await http
+          .get(Uri.parse(url), headers: requestHeaders)
+          .timeout(const Duration(seconds: 15));
       return response;
     } catch (e) {
       throw Exception('Error performing GET request: ${e.toString()}');
@@ -80,7 +82,8 @@ class ApiService {
     bool authorized = false,
   }) async {
     final url = '$baseUrl$endpoint';
-    final requestHeaders = await _buildHeaders(headers: headers, authorized: authorized);
+    final requestHeaders =
+        await _buildHeaders(headers: headers, authorized: authorized);
     log('📡 POST $url');
     log('📤 Headers: $requestHeaders');
     log('📤 Body: ${jsonEncode(body)}');
@@ -106,7 +109,8 @@ class ApiService {
     bool authorized = false,
   }) async {
     final url = '$baseUrl$endpoint';
-    final requestHeaders = await _buildHeaders(headers: headers, authorized: authorized);
+    final requestHeaders =
+        await _buildHeaders(headers: headers, authorized: authorized);
     log('📡 PUT $url');
     log('📤 Headers: $requestHeaders');
     log('📤 Body: ${jsonEncode(body)}');
@@ -147,7 +151,8 @@ class ApiService {
       );
       log('Found Appliances category with ID: ${appliancesCategory['_id']}');
 
-      final productsUrl = '${baseUrl}products?category=${appliancesCategory['_id']}';
+      final productsUrl =
+          '${baseUrl}products?category=${appliancesCategory['_id']}';
       log('Fetching products from: $productsUrl');
 
       final response = await http
@@ -191,7 +196,8 @@ class ApiService {
 
         return productCards;
       } else {
-        final message = jsonDecode(response.body)['message'] ?? 'Unknown error occurred';
+        final message =
+            jsonDecode(response.body)['message'] ?? 'Unknown error occurred';
         throw Exception('Failed to load products: $message');
       }
     } on TimeoutException {
@@ -344,104 +350,116 @@ class ApiService {
       return right(exists);
     } catch (e) {
       log('Check user exists error: $e');
-      return left(ServerFailure('فشل التحقق من وجود المستخدم: ${e.toString()}'));
+      return left(
+          ServerFailure('فشل التحقق من وجود المستخدم: ${e.toString()}'));
     }
   }
 
   // 📤 Upload image to server (used for profile image)
-Future<http.StreamedResponse> uploadImage({
-  required String endpoint,
-  required File imageFile,
-  Map<String, String>? fields,
-  bool authorized = false,
-}) async {
-  final url = Uri.parse('$baseUrl$endpoint');
-  print('⬆️ uploadImage: Starting upload to $url');
-  print('⬆️ uploadImage: File path: ${imageFile.path}');
-  if (fields != null) {
-    print('⬆️ uploadImage: Additional fields: $fields');
+  Future<http.StreamedResponse> uploadImage({
+    required String endpoint,
+    required File imageFile,
+    Map<String, String>? fields,
+    bool authorized = false,
+  }) async {
+    final url = Uri.parse('$baseUrl$endpoint');
+    print('⬆️ uploadImage: Starting upload to $url');
+    print('⬆️ uploadImage: File path: ${imageFile.path}');
+    if (fields != null) {
+      print('⬆️ uploadImage: Additional fields: $fields');
+    }
+
+    final request = http.MultipartRequest('POST', url);
+
+    final headers = await _buildHeaders(authorized: authorized);
+    print('⬆️ uploadImage: Headers: $headers');
+    request.headers.addAll(headers);
+
+    if (fields != null) {
+      request.fields.addAll(fields);
+    }
+
+    final multipartFile = await http.MultipartFile.fromPath(
+      'profileImg',
+      imageFile.path,
+      contentType: MediaType('image', 'jpeg'),
+    );
+    request.files.add(multipartFile);
+    print('⬆️ uploadImage: Added multipart file with field name "profileImg"');
+
+    try {
+      final streamedResponse =
+          await request.send().timeout(const Duration(seconds: 30));
+      print(
+          '⬆️ uploadImage: Request sent, status code: ${streamedResponse.statusCode}');
+      return streamedResponse;
+    } catch (e) {
+      print('⛔ uploadImage: Exception occurred - ${e.toString()}');
+      throw Exception('Error uploading image: ${e.toString()}');
+    }
   }
-
-  final request = http.MultipartRequest('POST', url);
-
-  final headers = await _buildHeaders(authorized: authorized);
-  print('⬆️ uploadImage: Headers: $headers');
-  request.headers.addAll(headers);
-
-  if (fields != null) {
-    request.fields.addAll(fields);
-  }
-
-  final multipartFile = await http.MultipartFile.fromPath(
-    'profileImg',
-    imageFile.path,
-    contentType: MediaType('image', 'jpeg'),
-  );
-  request.files.add(multipartFile);
-  print('⬆️ uploadImage: Added multipart file with field name "profileImg"');
-
-  try {
-    final streamedResponse =
-        await request.send().timeout(const Duration(seconds: 30));
-    print('⬆️ uploadImage: Request sent, status code: ${streamedResponse.statusCode}');
-    return streamedResponse;
-  } catch (e) {
-    print('⛔ uploadImage: Exception occurred - ${e.toString()}');
-    throw Exception('Error uploading image: ${e.toString()}');
-  }
-}
 
 // 🖼️ Pick image, upload it, then update user profile
-Future<String> uploadProfileImageAndUpdate(File imageFile) async {
-  print('💾 uploadProfileImageAndUpdate: Starting process...');
-  try {
-    final uploadResponse = await uploadImage(
-      endpoint: BackendEndpoints.uploadUserPhoto,
-      imageFile: imageFile,
-      authorized: true,
-    );
-
-    print('💾 uploadProfileImageAndUpdate: Upload response status code: ${uploadResponse.statusCode}');
-
-    if (uploadResponse.statusCode == 200) {
-      final responseString = await uploadResponse.stream.bytesToString();
-      print('💾 uploadProfileImageAndUpdate: Upload response string: $responseString');
-
-      final responseData = jsonDecode(responseString);
-
-      final uploadedFilename = responseData['profileImg'];
-      print('💾 uploadProfileImageAndUpdate: Received profileImg from backend: $uploadedFilename');
-
-      if (uploadedFilename == null) {
-        throw Exception('Image uploaded but no filename returned');
-      }
-       
-      final profileImageUrl = 'http://192.168.1.4:3000/uploads/users/$uploadedFilename';
-      print('💾 uploadProfileImageAndUpdate: Full Image URL: $profileImageUrl');
-
-      final updateResponse = await put(
-        endpoint: BackendEndpoints.updateMe,
-        body: {'profileImg': uploadedFilename},
+  Future<String> uploadProfileImageAndUpdate(File imageFile) async {
+    print('💾 uploadProfileImageAndUpdate: Starting process...');
+    try {
+      final uploadResponse = await uploadImage(
+        endpoint: BackendEndpoints.uploadUserPhoto,
+        imageFile: imageFile,
         authorized: true,
       );
 
-      print('💾 uploadProfileImageAndUpdate: Update profile response status: ${updateResponse.statusCode}');
-      print('💾 uploadProfileImageAndUpdate: Update profile response body: ${updateResponse.body}');
+      print(
+          '💾 uploadProfileImageAndUpdate: Upload response status code: ${uploadResponse.statusCode}');
 
-      if (updateResponse.statusCode != 200) {
-        throw Exception('Failed to update user profile image: ${updateResponse.body}');
+      if (uploadResponse.statusCode == 200) {
+        final responseString = await uploadResponse.stream.bytesToString();
+        print(
+            '💾 uploadProfileImageAndUpdate: Upload response string: $responseString');
+
+        final responseData = jsonDecode(responseString);
+
+        final uploadedFilename = responseData['profileImg'];
+        print(
+            '💾 uploadProfileImageAndUpdate: Received profileImg from backend: $uploadedFilename');
+
+        if (uploadedFilename == null) {
+          throw Exception('Image uploaded but no filename returned');
+        }
+
+        final profileImageUrl =
+            'http://192.168.1.7:3000/uploads/users/$uploadedFilename';
+        print(
+            '💾 uploadProfileImageAndUpdate: Full Image URL: $profileImageUrl');
+
+        final updateResponse = await put(
+          endpoint: BackendEndpoints.updateMe,
+          body: {'profileImg': uploadedFilename},
+          authorized: true,
+        );
+
+        print(
+            '💾 uploadProfileImageAndUpdate: Update profile response status: ${updateResponse.statusCode}');
+        print(
+            '💾 uploadProfileImageAndUpdate: Update profile response body: ${updateResponse.body}');
+
+        if (updateResponse.statusCode != 200) {
+          throw Exception(
+              'Failed to update user profile image: ${updateResponse.body}');
+        }
+
+        print(
+            '💾 uploadProfileImageAndUpdate: Profile image updated successfully.');
+        return profileImageUrl;
+      } else {
+        final error = await uploadResponse.stream.bytesToString();
+        print(
+            '⛔ uploadProfileImageAndUpdate: Image upload failed with response: $error');
+        throw Exception('Image upload failed: $error');
       }
-
-      print('💾 uploadProfileImageAndUpdate: Profile image updated successfully.');
-      return profileImageUrl;
-    } else {
-      final error = await uploadResponse.stream.bytesToString();
-      print('⛔ uploadProfileImageAndUpdate: Image upload failed with response: $error');
-      throw Exception('Image upload failed: $error');
+    } catch (e) {
+      print('⛔ uploadProfileImageAndUpdate: Exception - ${e.toString()}');
+      throw Exception('uploadProfileImageAndUpdate error: ${e.toString()}');
     }
-  } catch (e) {
-    print('⛔ uploadProfileImageAndUpdate: Exception - ${e.toString()}');
-    throw Exception('uploadProfileImageAndUpdate error: ${e.toString()}');
   }
-}
 }
