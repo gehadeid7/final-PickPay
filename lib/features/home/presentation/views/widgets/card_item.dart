@@ -55,9 +55,9 @@ class _CardItemState extends State<CardItem>
 
     final List<Color> gradientColors = isDark
         ? [
-            const Color(0xFF1C1C1E), // Dark grey
-            const Color(0xFF3A3A3C), // Medium grey
-            const Color(0xFF8E8E93), // Light grey
+            const Color.fromARGB(255, 24, 24, 26), // Dark grey
+            const Color.fromARGB(255, 52, 52, 52), // Medium grey
+            const Color.fromARGB(255, 61, 61, 61), // Light grey
           ]
         : [
             const Color(0xFFFFFFFF), // Pure white
