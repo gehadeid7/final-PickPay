@@ -415,7 +415,7 @@ Future<String> uploadProfileImageAndUpdate(File imageFile) async {
       if (uploadedFilename == null) {
         throw Exception('Image uploaded but no filename returned');
       }
-
+       
       final profileImageUrl = 'http://192.168.1.4:3000/uploads/users/$uploadedFilename';
       print('💾 uploadProfileImageAndUpdate: Full Image URL: $profileImageUrl');
 
