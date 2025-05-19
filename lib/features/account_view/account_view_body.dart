@@ -1,10 +1,11 @@
-import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pickpay/core/services/get_it_service.dart'; // make sure to import getIt here
 import 'package:pickpay/core/utils/app_images.dart';
 import 'package:pickpay/core/widgets/build_appbar.dart';
+import 'package:pickpay/features/account_view/about_us_view.dart';
+import 'package:pickpay/features/account_view/help_and_support_view.dart';
+import 'package:pickpay/features/account_view/language_view.dart';
 import 'package:pickpay/features/auth/domain/repos/auth_repo.dart';
 import 'package:pickpay/features/auth/presentation/views/change_password_view.dart';
 import 'package:pickpay/features/auth/presentation/views/signin_view.dart';
@@ -67,10 +68,24 @@ class AccountViewBody extends StatelessWidget {
                     MaterialPageRoute(
                         builder: (_) => const ChangePasswordView()));
               }, context),
-              _accountTile(Icons.language_outlined, "Language", () {}, context),
-              _accountTile(
-                  Icons.help_outline, "Help & Support", () {}, context),
-              _accountTile(Icons.info_outline, "About Us", () {}, context),
+              // _accountTile(Icons.language_outlined, "Language", () {
+              //   Navigator.push(
+              //     context,
+              //     MaterialPageRoute(builder: (_) => const LanguageView()),
+              //   );
+              // }, context),
+              _accountTile(Icons.help_outline, "Help & Support", () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const HelpSupportView()),
+                );
+              }, context),
+              _accountTile(Icons.info_outline, "About Us", () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const AboutUsView()),
+                );
+              }, context),
             ], context),
             const SizedBox(height: 32),
             _buildLogoutButton(context),
