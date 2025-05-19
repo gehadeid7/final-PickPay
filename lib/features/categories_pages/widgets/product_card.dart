@@ -65,9 +65,9 @@ class _ProductCardState extends State<ProductCard>
 
     final List<Color> gradientColors = isDarkMode
         ? [
-            const Color(0xFF1F1F1F),
-            const Color(0xFF2C2C2E),
-            const Color(0xFF3A3A3C),
+            const Color.fromARGB(255, 23, 23, 23),
+            const Color.fromARGB(255, 118, 118, 123),
+            const Color.fromARGB(255, 83, 83, 84),
           ]
         : [
             const Color(0xFFFFFFFF),
