@@ -30,7 +30,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
                   Colors.grey.shade900,
                 ]
               : [
-                  Colors.blue.shade50,
+                  Colors.grey.shade100,
                   Colors.white,
                 ],
         ),
