@@ -6,7 +6,7 @@ import 'package:pickpay/core/utils/app_text_styles.dart';
 import 'package:pickpay/features/home/presentation/cubits/categories_cubits/categories_cubits_cubit.dart';
 import 'package:pickpay/features/home/presentation/cubits/categories_cubits/categories_cubits_state.dart';
 import 'package:pickpay/features/home/presentation/views/widgets/category_navigation_helper.dart';
-import 'package:pickpay/features/home/presentation/views/widgets/custom_appbar.dart';
+import 'package:pickpay/core/widgets/custom_appbar.dart';
 import 'package:provider/provider.dart';
 
 class CategoriesViewBody extends StatelessWidget {

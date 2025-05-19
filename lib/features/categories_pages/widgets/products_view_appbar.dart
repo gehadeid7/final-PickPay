@@ -1,10 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pickpay/features/categories_pages/sharing_product/app_constants.dart';
-import 'package:pickpay/features/home/presentation/views/cart_view.dart';
+import 'package:pickpay/features/cart/cart_view.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:pickpay/features/categories_pages/models/product_model.dart';
-import 'package:pickpay/features/home/presentation/views/widgets/wishlist_button.dart';
+import 'package:pickpay/features/wishlist/wishlist_button.dart';
 
 class ProductDetailAppBar extends StatelessWidget
     implements PreferredSizeWidget {

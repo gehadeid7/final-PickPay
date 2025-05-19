@@ -4,7 +4,7 @@ import 'package:pickpay/features/categories_pages/products_views/home_products/h
 import 'package:pickpay/features/categories_pages/products_views/home_products/home_product2.dart';
 import 'package:pickpay/features/categories_pages/products_views/home_products/home_product6.dart';
 import 'package:pickpay/features/categories_pages/products_views/home_products/home_product8.dart';
-import 'package:pickpay/features/home/presentation/views/card_item.dart';
+import 'package:pickpay/features/home/presentation/views/widgets/card_item.dart';
 
 class HomeSectionGrid extends StatefulWidget {
   const HomeSectionGrid({super.key});

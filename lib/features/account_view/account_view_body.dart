@@ -8,9 +8,9 @@ import 'package:pickpay/core/widgets/build_appbar.dart';
 import 'package:pickpay/features/auth/domain/repos/auth_repo.dart';
 import 'package:pickpay/features/auth/presentation/views/change_password_view.dart';
 import 'package:pickpay/features/auth/presentation/views/signin_view.dart';
-import 'package:pickpay/features/home/presentation/views/cart_view.dart';
+import 'package:pickpay/features/cart/cart_view.dart';
 import 'package:pickpay/features/profile_change/views/profile_change_view.dart';
-import 'package:pickpay/features/home/presentation/views/wishlist_view.dart';
+import 'package:pickpay/features/wishlist/wishlist_view.dart';
 
 class AccountViewBody extends StatelessWidget {
   final String fullName;

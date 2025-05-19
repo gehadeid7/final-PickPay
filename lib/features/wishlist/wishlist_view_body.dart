@@ -4,7 +4,7 @@ import 'package:pickpay/core/utils/app_colors.dart';
 import 'package:pickpay/core/widgets/build_appbar.dart';
 import 'package:pickpay/features/categories_pages/models/product_model.dart';
 import 'package:pickpay/features/categories_pages/products_views/product_detail_view.dart';
-import 'package:pickpay/features/home/presentation/cubits/wishlist_cubits/wishlist_cubit.dart';
+import 'package:pickpay/features/wishlist/wishlist_cubits/wishlist_cubit.dart';
 
 class WishlistViewBody extends StatelessWidget {
   const WishlistViewBody({super.key});

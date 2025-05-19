@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:pickpay/features/categories_pages/homeCategory/presentation/views/home_category_view.dart';
 import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product8.dart';
-import 'package:pickpay/features/home/presentation/views/card_item.dart';
+import 'package:pickpay/features/home/presentation/views/widgets/card_item.dart';
 
 class TodaysSaleGridView extends StatefulWidget {
   const TodaysSaleGridView({super.key});

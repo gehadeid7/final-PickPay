@@ -8,8 +8,8 @@ import 'package:pickpay/features/categories_pages/widgets/product_rating.dart';
 import 'package:pickpay/features/categories_pages/widgets/products_view_appbar.dart';
 import 'package:pickpay/features/categories_pages/widgets/scent_option.dart';
 import 'package:pickpay/features/categories_pages/widgets/size_option.dart';
-import 'package:pickpay/features/home/domain/models/cart_item_model.dart';
-import 'package:pickpay/features/home/presentation/cubits/cart_cubits/cart_cubit.dart';
+import 'package:pickpay/features/cart/cart_item_model.dart';
+import 'package:pickpay/features/cart/cart_cubits/cart_cubit.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 

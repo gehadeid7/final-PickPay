@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:pickpay/features/home/domain/models/cart_item_model.dart';
+import 'package:pickpay/features/cart/cart_item_model.dart';
 
 part 'cart_state.dart';
 

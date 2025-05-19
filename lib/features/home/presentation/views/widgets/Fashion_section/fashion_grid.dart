@@ -3,7 +3,7 @@ import 'package:pickpay/features/categories_pages/products_views/fashion_product
 import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product2.dart';
 import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product5.dart';
 import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product6.dart';
-import 'package:pickpay/features/home/presentation/views/card_item.dart';
+import 'package:pickpay/features/home/presentation/views/widgets/card_item.dart';
 
 class FashionGrid extends StatefulWidget {
   const FashionGrid({super.key});

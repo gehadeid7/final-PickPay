@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pickpay/features/home/presentation/cubits/wishlist_cubits/wishlist_cubit.dart';
-import 'package:pickpay/features/home/presentation/views/widgets/wishlist_view_body.dart';
+import 'package:pickpay/features/wishlist/wishlist_cubits/wishlist_cubit.dart';
+import 'package:pickpay/features/wishlist/wishlist_view_body.dart';
 
 class WishlistView extends StatelessWidget {
   const WishlistView({super.key});

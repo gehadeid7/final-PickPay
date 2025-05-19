@@ -6,7 +6,7 @@ import 'package:pickpay/core/widgets/build_appbar.dart';
 import 'package:pickpay/core/widgets/custom_button.dart';
 import 'package:pickpay/features/categories_pages/products_views/product_detail_view.dart';
 import 'package:pickpay/features/checkout/presentation/views/checkout_view.dart';
-import 'package:pickpay/features/home/presentation/cubits/cart_cubits/cart_cubit.dart';
+import 'package:pickpay/features/cart/cart_cubits/cart_cubit.dart';
 
 class CartViewBody extends StatelessWidget {
   const CartViewBody({super.key});

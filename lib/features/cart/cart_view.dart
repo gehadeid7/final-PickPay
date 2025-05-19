@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pickpay/features/home/presentation/views/widgets/cart_view_body.dart';
+import 'package:pickpay/features/cart/cart_view_body.dart';
 
 class CartView extends StatelessWidget {
   const CartView({super.key});

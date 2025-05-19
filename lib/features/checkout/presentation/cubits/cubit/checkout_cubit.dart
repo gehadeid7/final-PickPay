@@ -1,7 +1,7 @@
 // features/checkout/presentation/cubit/checkout_cubit.dart
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pickpay/features/checkout/domain/models/checkout_model.dart';
-import 'package:pickpay/features/home/domain/models/cart_item_model.dart';
+import 'package:pickpay/features/cart/cart_item_model.dart';
 
 part 'checkout_state.dart';
 
