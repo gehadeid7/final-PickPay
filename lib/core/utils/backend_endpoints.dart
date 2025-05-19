@@ -3,7 +3,10 @@ class BackendEndpoints {
   static const String createUser = 'users';
   static String getUserData(String userId) => 'users/$userId';
   static const String checkUserExists = 'users/exist';
-  static String updateUserProfile(String userId) => 'users/$userId/updateProfile';
+  static const String updateMe = 'users/updateMe';
+  static const String uploadUserPhoto = 'users/uploadPhoto';
+static const String checkImageExists = '/users/check-image-exists';
+
 
   // 🛒 Product endpoints
   static const String getProducts = 'products';

@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'dart:io';
 
-enum ProfileStatus { initial, loading, loadSuccess, saveSuccess, error }
+enum ProfileStatus { initial, loading, loadSuccess, saveSuccess, error ,saving  }
 
 class ProfileState extends Equatable {
   final String name;
@@ -16,6 +16,9 @@ class ProfileState extends Equatable {
   final ProfileStatus status;
   final String errorMessage;
 
+  /// اسم الحقل الجاري تعديله حالياً، أو null إذا لا يوجد تعديل جاري
+  final String? fieldBeingEdited;
+
   const ProfileState({
     this.name = '',
     this.email = '',
@@ -28,6 +31,7 @@ class ProfileState extends Equatable {
     this.profileImageUrl = '',
     this.status = ProfileStatus.initial,
     this.errorMessage = '',
+    this.fieldBeingEdited,
   });
 
   ProfileState copyWith({
@@ -42,6 +46,7 @@ class ProfileState extends Equatable {
     String? profileImageUrl,
     ProfileStatus? status,
     String? errorMessage,
+    String? fieldBeingEdited,
   }) {
     return ProfileState(
       name: name ?? this.name,
@@ -55,6 +60,7 @@ class ProfileState extends Equatable {
       profileImageUrl: profileImageUrl ?? this.profileImageUrl,
       status: status ?? this.status,
       errorMessage: errorMessage ?? this.errorMessage,
+      fieldBeingEdited: fieldBeingEdited ?? this.fieldBeingEdited,
     );
   }
 
@@ -71,5 +77,6 @@ class ProfileState extends Equatable {
         profileImageUrl,
         status,
         errorMessage,
+        fieldBeingEdited,
       ];
 }
