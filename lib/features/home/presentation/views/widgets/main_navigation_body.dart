@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pickpay/core/services/get_it_service.dart';
 import 'package:pickpay/features/auth/domain/repos/auth_repo.dart';
-import 'package:pickpay/features/home/presentation/cubits/bottom_navigation_cubits/bottom_navigation_cubit.dart';
+import 'package:pickpay/features/bottom_navigation/bottom_navigation_cubits/bottom_navigation_cubit.dart';
 import 'package:pickpay/features/home/presentation/views/account_view.dart';
 import 'package:pickpay/features/home/presentation/views/cart_view.dart';
 import 'package:pickpay/features/home/presentation/views/categories_view.dart';
 import 'package:pickpay/features/home/presentation/views/home_view.dart';
-import 'package:pickpay/features/home/presentation/views/widgets/bottom_navigation/custom_bottom_navigation_bar.dart';
+import 'package:pickpay/features/bottom_navigation/custom_bottom_navigation_bar.dart';
 
 class MainNavigationScreen extends StatelessWidget {
   const MainNavigationScreen({super.key});

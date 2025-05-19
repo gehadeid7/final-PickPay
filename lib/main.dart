@@ -8,7 +8,7 @@ import 'package:pickpay/core/helper_functions/on_generate_routes.dart';
 import 'package:pickpay/core/services/get_it_service.dart';
 import 'package:pickpay/core/services/shared_preferences_singletone.dart';
 import 'package:pickpay/features/checkout/presentation/cubits/cubit/checkout_cubit.dart';
-import 'package:pickpay/features/home/presentation/cubits/bottom_navigation_cubits/bottom_navigation_cubit.dart';
+import 'package:pickpay/features/bottom_navigation/bottom_navigation_cubits/bottom_navigation_cubit.dart';
 import 'package:pickpay/features/home/presentation/cubits/cart_cubits/cart_cubit.dart';
 import 'package:pickpay/features/home/presentation/cubits/wishlist_cubits/wishlist_cubit.dart';
 import 'package:pickpay/features/splash/presentation/views/splash_view.dart';
