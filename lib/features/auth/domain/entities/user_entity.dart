@@ -7,7 +7,6 @@ class UserEntity {
   final bool emailVerified;
   final String? photoUrl;
 
-  // ✅ Add optional fields
   final String? phone;
   final String? gender;
   final String? dob;
@@ -64,6 +63,33 @@ class UserEntity {
       dob: map['dob'],
       age: map['age'],
       address: map['address'],
+    );
+  }
+
+  /// ✅ New: copyWith method
+  UserEntity copyWith({
+    String? fullName,
+    String? email,
+    String? uId,
+    bool? emailVerified,
+    String? photoUrl,
+    String? phone,
+    String? gender,
+    String? dob,
+    String? age,
+    String? address,
+  }) {
+    return UserEntity(
+      fullName: fullName ?? this.fullName,
+      email: email ?? this.email,
+      uId: uId ?? this.uId,
+      emailVerified: emailVerified ?? this.emailVerified,
+      photoUrl: photoUrl ?? this.photoUrl,
+      phone: phone ?? this.phone,
+      gender: gender ?? this.gender,
+      dob: dob ?? this.dob,
+      age: age ?? this.age,
+      address: address ?? this.address,
     );
   }
 }

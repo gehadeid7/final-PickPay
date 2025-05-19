@@ -9,7 +9,6 @@ import 'package:pickpay/core/themes/app_themes.dart';
 import 'package:pickpay/core/themes/theme_provider.dart';
 import 'package:pickpay/features/auth/domain/repos/auth_repo.dart';
 import 'package:pickpay/features/profile_change/cubits/cubit/profile_chnage_cubit.dart';
-import 'package:pickpay/services/api_service.dart';
 import 'package:provider/provider.dart';
 import 'package:pickpay/core/helper_functions/on_generate_routes.dart';
 import 'package:pickpay/core/services/get_it_service.dart';
@@ -36,13 +35,6 @@ void main() async {
   await Prefs.init();
   setupGetIt();
 
- try {
-    final apiService = ApiService();
-    await apiService.refreshToken();
-    print('✅ Token refreshed successfully on app start.');
-  } catch (e) {
-    print('⚠️ Failed to refresh token on app start: $e');
-  }
   runApp(
     MultiBlocProvider(
       providers: [

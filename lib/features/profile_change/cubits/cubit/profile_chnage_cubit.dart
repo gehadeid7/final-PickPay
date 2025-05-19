@@ -1,69 +1,110 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'dart:io';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pickpay/features/profile_change/cubits/cubit/profile_chnage_state.dart';
+import 'package:logger/logger.dart';
+import 'package:pickpay/core/services/firebase_auth_service.dart';
+import 'package:pickpay/core/services/shared_preferences_singletone.dart';
+import 'package:pickpay/features/auth/data/models/user_model.dart';
 import 'package:pickpay/features/auth/domain/entities/user_entity.dart';
 import 'package:pickpay/features/auth/domain/repos/auth_repo.dart';
-import 'package:pickpay/core/services/firebase_auth_service.dart';
+import 'package:pickpay/features/profile_change/cubits/cubit/profile_chnage_state.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {
-  final AuthRepo authRepo;
-  final FirebaseAuthService firebaseAuthService;
+  final AuthRepo _authRepo;
+  final FirebaseAuthService _firebaseAuthService;
 
-  UserEntity? loadedUser;
+  UserEntity? _loadedUser;
+  bool _isBusy = false;
+  static final Logger _logger = Logger(printer: PrettyPrinter(methodCount: 0));
 
   ProfileCubit({
-    required this.authRepo,
-    required this.firebaseAuthService,
-  }) : super(const ProfileState());
+    required AuthRepo authRepo,
+    required FirebaseAuthService firebaseAuthService,
+  })  : _authRepo = authRepo,
+        _firebaseAuthService = firebaseAuthService,
+        super(const ProfileState());
 
-  void resetStatus() {
-    emit(state.copyWith(status: ProfileStatus.initial));
+  void _logError(String message, [Object? error, StackTrace? st]) =>
+      _logger.e(message, error: error, stackTrace: st);
+
+  void _logInfo(String message) => _logger.i(message);
+
+  UserEntity _getCurrentUserOrThrow() {
+    final fbUser = _firebaseAuthService.getCurrentUser();
+    if (fbUser == null) throw StateError('لم يتم تسجيل الدخول');
+    return UserEntity.fromFirebaseUser(fbUser);
   }
 
-  void logError(String message, [Object? error]) {
-    print('❌ ERROR: $message');
-    if (error != null) print('DETAILS: $error');
+  void resetStatus() => emit(state.copyWith(status: ProfileStatus.initial));
+
+
+bool _hasChanges(UserEntity updated, UserEntity original) {
+  return updated.fullName != original.fullName ||
+      updated.email != original.email ||
+      updated.phone != original.phone ||
+      updated.gender != original.gender ||
+      updated.dob != original.dob ||
+      updated.age != original.age ||
+      updated.address != original.address ||
+      updated.photoUrl != original.photoUrl;
+}
+
+  /// Load cached user from local storage if any
+  Future<void> loadCachedUserProfile() async {
+    final cachedUser = Prefs.getUser();
+    if (cachedUser != null) {
+      _loadedUser = cachedUser;
+      emit(state.copyWith(
+        status: ProfileStatus.loadSuccess,
+        name: cachedUser.fullName,
+        email: cachedUser.email,
+        phone: cachedUser.phone ?? '',
+        gender: cachedUser.gender ?? '',
+        dob: cachedUser.dob ?? '',
+        age: cachedUser.age ?? '',
+        address: cachedUser.address ?? '',
+        profileImageUrl: cachedUser.photoUrl ?? '',
+      ));
+    }
   }
 
-  void logInfo(String message) {
-    print('ℹ️ INFO: $message');
-  }
-
+  /// Load user profile from backend via AuthRepo
   Future<void> loadUserProfile() async {
+    await loadCachedUserProfile();
+
     emit(state.copyWith(status: ProfileStatus.loading));
-    logInfo('Loading user profile...');
+    _logInfo('Loading user profile…');
 
     try {
-      final firebaseUser = firebaseAuthService.getCurrentUser();
-      if (firebaseUser == null) {
+      final fbUser = _firebaseAuthService.getCurrentUser();
+      if (fbUser == null) {
         emit(state.copyWith(
           status: ProfileStatus.error,
-          errorMessage: "User not logged in",
+          errorMessage: 'لم يتم تسجيل الدخول',
         ));
         return;
       }
 
-      final result = await authRepo.getUserData(userId: firebaseUser.uid);
+      final result = await _authRepo.getUserData(userId: fbUser.uid);
       result.fold(
         (failure) {
-          logError('Failed to get user data', failure.message);
-          loadedUser = UserEntity.fromFirebaseUser(firebaseUser);
+          _logError('Failed to get user data', failure.message);
+          // Fallback: basic info from Firebase user only
+          _loadedUser = UserEntity.fromFirebaseUser(fbUser);
           emit(state.copyWith(
             status: ProfileStatus.loadSuccess,
             errorMessage: 'تعذر تحميل بعض المعلومات. عرض المعلومات الأساسية فقط.',
-            name: firebaseUser.displayName ?? '',
-            email: firebaseUser.email ?? '',
-            profileImageUrl: firebaseUser.photoURL ?? '',
-            phone: '',
-            gender: '',
-            dob: '',
-            age: '',
-            address: '',
+            name: fbUser.displayName ?? '',
+            email: fbUser.email ?? '',
+            profileImageUrl: fbUser.photoURL ?? '',
           ));
         },
-        (user) {
-          loadedUser = user;
+        (user) async {
+          _loadedUser = user;
           emit(state.copyWith(
+            status: ProfileStatus.loadSuccess,
             name: user.fullName,
             email: user.email,
             phone: user.phone ?? '',
@@ -72,14 +113,13 @@ class ProfileCubit extends Cubit<ProfileState> {
             age: user.age ?? '',
             address: user.address ?? '',
             profileImageUrl: user.photoUrl ?? '',
-            status: ProfileStatus.loadSuccess,
-            errorMessage: '',
           ));
+          // Cache user locally
+          await Prefs.saveUser(UserModel.fromEntity(user));
         },
       );
     } catch (e, st) {
-      logError('Exception in loadUserProfile', e);
-      print(st);
+      _logError('Exception in loadUserProfile', e, st);
       emit(state.copyWith(
         status: ProfileStatus.error,
         errorMessage: 'حدث خطأ أثناء تحميل الملف الشخصي.',
@@ -87,162 +127,149 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
-  void updateName(String name) => emit(state.copyWith(name: name, fieldBeingEdited: 'name'));
-  void updateEmail(String email) => emit(state.copyWith(email: email, fieldBeingEdited: 'email'));
-  void updatePhone(String phone) => emit(state.copyWith(phone: phone, fieldBeingEdited: 'phone'));
-  void updateGender(String gender) => emit(state.copyWith(gender: gender, fieldBeingEdited: 'gender'));
-  void updateDob(String dob, String age) => emit(state.copyWith(dob: dob, age: age, fieldBeingEdited: 'dob'));
-  void updateAddress(String address) => emit(state.copyWith(address: address, fieldBeingEdited: 'address'));
-
-  void updateProfileImage(File? image) {
+  // Update UI fields on editing
+  void _emitFieldUpdate({
+    String? name,
+    String? email,
+    String? phone,
+    String? gender,
+    String? dob,
+    String? age,
+    String? address,
+    required String editedField,
+  }) {
     emit(state.copyWith(
-      profileImage: image,
-      profileImageUrl: '',
-      fieldBeingEdited: 'photoUrl',
+      name: name,
+      email: email,
+      phone: phone,
+      gender: gender,
+      dob: dob,
+      age: age,
+      address: address,
+      fieldBeingEdited: editedField,
     ));
   }
 
-  bool _isValidEgyptianPhone(String phone) {
-    final pattern = RegExp(r'^01[0-2,5]{1}[0-9]{8}$');
-    return pattern.hasMatch(phone);
-  }
+  // Field update helpers
+  void updateName(String v) => _emitFieldUpdate(name: v, editedField: 'name');
+  void updateEmail(String v) => _emitFieldUpdate(email: v, editedField: 'email');
+  void updatePhone(String v) => _emitFieldUpdate(phone: v, editedField: 'phone');
+  void updateGender(String v) => _emitFieldUpdate(gender: v, editedField: 'gender');
+  void updateDob(String d, String a) => _emitFieldUpdate(dob: d, age: a, editedField: 'dob');
+  void updateAddress(String v) => _emitFieldUpdate(address: v, editedField: 'address');
 
-  String _formatEgyptianPhone(String phone) {
+  void updateProfileImage(File? img) => emit(state.copyWith(
+        profileImage: img,
+        profileImageUrl: '',
+        fieldBeingEdited: 'photoUrl',
+      ));
+
+  /// Normalize Egyptian phone number for backend
+  /// Returns normalized phone or null if invalid
+  String? _normalizeAndValidatePhone(String phone) {
     final digitsOnly = phone.replaceAll(RegExp(r'\D'), '');
-    if (digitsOnly.startsWith('01') && digitsOnly.length == 11) {
+    if (digitsOnly.length == 11 && digitsOnly.startsWith('01')) {
       return '+20${digitsOnly.substring(1)}';
     }
-    return phone;
+    return null;
   }
 
+  /// Save entire profile including optional photo upload
   Future<void> saveProfile() async {
+    if (_isBusy) return;
+    _isBusy = true;
+
     emit(state.copyWith(status: ProfileStatus.loading));
-    logInfo('Saving profile...');
+    _logInfo('Saving profile…');
 
     try {
-      final firebaseUser = firebaseAuthService.getCurrentUser();
-      if (firebaseUser == null) {
+      final fbUser = _firebaseAuthService.getCurrentUser();
+      if (fbUser == null) {
         emit(state.copyWith(
           status: ProfileStatus.error,
           errorMessage: 'لم يتم تسجيل الدخول.',
         ));
+        _isBusy = false;
         return;
       }
 
+      // Handle image upload if new image selected
       String? photoUrl = state.profileImageUrl.isNotEmpty
           ? state.profileImageUrl
-          : loadedUser?.photoUrl;
+          : _loadedUser?.photoUrl;
 
-      // رفع الصورة إن وجدت صورة جديدة
       if (state.profileImage != null) {
-        final uploadResult = await authRepo.uploadProfileImageAndUpdate(state.profileImage!);
-
+        final uploadRes = await _authRepo.uploadProfileImageAndUpdate(state.profileImage!);
+        UserEntity? userWithPhoto;
         bool uploadFailed = false;
-        UserEntity? updatedUserEntity;
-
-        uploadResult.fold(
+        uploadRes.fold(
           (failure) {
-            logError('Image upload failed', failure.message);
+            uploadFailed = true;
+            _logError('Image upload failed', failure.message);
             emit(state.copyWith(
               status: ProfileStatus.error,
               errorMessage: 'فشل تحميل الصورة: ${failure.message}',
             ));
-            uploadFailed = true;
           },
-          (user) {
-            updatedUserEntity = user;
-            logInfo('Image uploaded successfully');
-          },
+          (u) => userWithPhoto = u,
         );
-
-        if (uploadFailed || updatedUserEntity == null) return;
-
-        // التحقق من وجود الصورة مسبقًا في قاعدة البيانات
-        // final imageExistsResult = await authRepo.checkIfImageExists(updatedUserEntity!.photoUrl ?? '');
-        // bool imageExists = false;
-
-        // bool imageCheckFailed = false;
-
-        // imageExistsResult.fold(
-        //   (failure) {
-        //     logError('Error checking image existence', failure.message);
-        //     emit(state.copyWith(
-        //       status: ProfileStatus.error,
-        //       errorMessage: 'حدث خطأ أثناء التحقق من الصورة.',
-        //     ));
-        //     imageCheckFailed = true;
-        //   },
-        //   (exists) {
-        //     imageExists = exists;
-        //   },
-        // );
-
-        // if (imageCheckFailed || imageExists) {
-        //   if (imageExists) {
-        //     emit(state.copyWith(
-        //       status: ProfileStatus.error,
-        //       errorMessage: 'هذه الصورة مستخدمة مسبقًا.',
-        //     ));
-        //   }
-        //   return;
-        // }
-
-        photoUrl = updatedUserEntity!.photoUrl;
-      }
-
-      // التحقق من رقم الهاتف
-      String? formattedPhone;
-      if (state.phone.isNotEmpty) {
-        if (_isValidEgyptianPhone(state.phone)) {
-          formattedPhone = _formatEgyptianPhone(state.phone);
-        } else {
-          emit(state.copyWith(
-            status: ProfileStatus.error,
-            errorMessage: 'رقم الهاتف غير صالح. يجب أن يكون مصريًا بصيغة 01XXXXXXXXX',
-          ));
+        if (uploadFailed || userWithPhoto == null) {
+          _isBusy = false;
           return;
         }
+        photoUrl = userWithPhoto!.photoUrl;
+      }
+       print('Before normalization - state.phone: "${state.phone}"');
+
+      // Validate and normalize phone
+      final normalizedPhone = _normalizeAndValidatePhone(state.phone.trim());
+      print('After normalization - normalizedPhone: $normalizedPhone');
+
+      if (state.phone.trim().isNotEmpty && normalizedPhone == null) {
+        emit(state.copyWith(
+          status: ProfileStatus.error,
+          errorMessage: 'رقم الهاتف غير صالح. يجب أن يكون مصريًا بصيغة 01XXXXXXXXX',
+        ));
+        _isBusy = false;
+        return;
       }
 
-      final existingUser = loadedUser ??
-          UserEntity(
-            uId: firebaseUser.uid,
-            email: firebaseUser.email ?? '',
-            fullName: firebaseUser.displayName ?? '',
-            emailVerified: firebaseUser.emailVerified,
-            photoUrl: firebaseUser.photoURL,
-          );
+      final existing = _loadedUser ?? _getCurrentUserOrThrow();
+print('Existing user phone: ${existing.phone}');
 
-      // بناء كيان المستخدم المحدث بناء على التعديلات
       final updatedUser = UserEntity(
-        uId: firebaseUser.uid,
-        email: state.email.isNotEmpty ? state.email : existingUser.email,
-        fullName: state.name.isNotEmpty ? state.name : existingUser.fullName,
-        phone: formattedPhone ?? existingUser.phone,
-        gender: state.gender.isNotEmpty ? state.gender : existingUser.gender,
-        dob: state.dob.isNotEmpty ? state.dob : existingUser.dob,
-        age: state.age.isNotEmpty ? state.age : existingUser.age,
-        address: state.address.isNotEmpty ? state.address : existingUser.address,
+        uId: existing.uId,
+        fullName: state.name.isNotEmpty ? state.name : existing.fullName,
+        email: state.email.isNotEmpty ? state.email : existing.email,
+        phone: normalizedPhone ?? existing.phone,
+        gender: state.gender.isNotEmpty ? state.gender : existing.gender,
+        dob: state.dob.isNotEmpty ? state.dob : existing.dob,
+        age: state.age.isNotEmpty ? state.age : existing.age,
+        address: state.address.isNotEmpty ? state.address : existing.address,
         photoUrl: photoUrl,
-        emailVerified: existingUser.emailVerified,
+        emailVerified: existing.emailVerified,
       );
-
-      // تحديث بيانات المستخدم عبر الريبو
-      final updateResult = await authRepo.updateUserData(updatedUser);
-
-      bool updateFailed = false;
-
-      updateResult.fold(
-        (failure) {
-          logError('Failed to update user data', failure.message);
+if (!_hasChanges(updatedUser, existing)) {
+  emit(state.copyWith(
+    status: ProfileStatus.saveSuccess,
+    errorMessage: '',
+  ));
+  _isBusy = false;
+  return; // No changes to save
+}
+      final updateRes = await _authRepo.updateUserData(updatedUser);
+      bool failed = false;
+      updateRes.fold(
+        (f) {
+          failed = true;
+          _logError('Failed to update user data', f.message);
           emit(state.copyWith(
             status: ProfileStatus.error,
-            errorMessage: 'فشل تحديث الملف الشخصي: ${failure.message}',
+            errorMessage: 'فشل تحديث الملف الشخصي: ${f.message}',
           ));
-          updateFailed = true;
         },
-        (_) {
-          loadedUser = updatedUser;
+        (_) async {
+          _loadedUser = updatedUser;
           emit(state.copyWith(
             status: ProfileStatus.saveSuccess,
             name: updatedUser.fullName,
@@ -256,255 +283,146 @@ class ProfileCubit extends Cubit<ProfileState> {
             profileImage: null,
             errorMessage: '',
           ));
+          await Prefs.saveUser(UserModel.fromEntity(updatedUser));
         },
       );
 
-      if (updateFailed) return;
-
-      // إرسال رابط التحقق إذا تم تعديل البريد الإلكتروني
-      if (state.email.isNotEmpty && state.email != existingUser.email) {
-        final sendEmailResult = await authRepo.sendEmailVerification();
-        sendEmailResult.fold(
-          (failure) {
-            logError('Failed to send email verification', failure.message);
-            emit(state.copyWith(
-              status: ProfileStatus.error,
-              errorMessage: 'تعذر إرسال رابط التحقق إلى البريد الإلكتروني.',
-            ));
-          },
-          (_) {
-            logInfo('Email verification sent');
-          },
+      // Send verification email if email changed
+      if (!failed && state.email.isNotEmpty && state.email != existing.email) {
+        final sendRes = await _authRepo.sendEmailVerification();
+        sendRes.fold(
+          (f) => _logError('Failed to send email verification', f.message),
+          (_) => _logInfo('Email verification sent'),
         );
       }
     } catch (e, st) {
-      logError('Exception in saveProfile', e);
-      print(st);
+      _logError('Exception in saveProfile', e, st);
       emit(state.copyWith(
         status: ProfileStatus.error,
         errorMessage: 'حدث خطأ أثناء حفظ الملف الشخصي.',
       ));
+    } finally {
+      _isBusy = false;
     }
   }
-void cancelEditing() {
-  emit(state.copyWith(fieldBeingEdited: null));
-}
 
-void updateField(String fieldKey, String value) {
-  switch (fieldKey) {
-    case 'name':
-      updateName(value);
-      break;
-    case 'email':
-      updateEmail(value);
-      break;
-    case 'phone':
-      updatePhone(value);
-      break;
-    case 'gender':
-      updateGender(value);
-      break;
-    case 'dob':
-      // نفترض أن الحساب الخاص بالعمر خارج الدالة، أو أضيف حساب العمر هنا قبل النداء
-      final age = calculateAge(value);
-      updateDob(value, age);
-      break;
-    case 'address':
-      updateAddress(value);
-      break;
-    default:
-      print('غير معروف الحقل: $fieldKey');
-  }
-}
+  /// Save and update a single field with validation and caching
+  Future<void> saveField(String key) async {
+    if (_isBusy) return;
+    _isBusy = true;
 
-// دالة مساعدة لحساب العمر من تاريخ الميلاد (صيغة التاريخ متوقعة yyyy-MM-dd)
-String calculateAge(String dob) {
-  try {
-    final birthDate = DateTime.parse(dob);
-    final today = DateTime.now();
-    int age = today.year - birthDate.year;
-    if (today.month < birthDate.month || (today.month == birthDate.month && today.day < birthDate.day)) {
-      age--;
-    }
-    return age.toString();
-  } catch (e) {
-    print('خطأ في حساب العمر: $e');
-    return '';
-  }
-}
-Future<void> saveField(String fieldKey) async {
-  emit(state.copyWith(status: ProfileStatus.loading));
-  logInfo('Saving field: $fieldKey');
+    emit(state.copyWith(status: ProfileStatus.loading));
+    _logInfo('Saving field: $key');
 
-  try {
-    final firebaseUser = firebaseAuthService.getCurrentUser();
-    if (firebaseUser == null) {
-      emit(state.copyWith(
-        status: ProfileStatus.error,
-        errorMessage: 'لم يتم تسجيل الدخول.',
-      ));
-      return;
-    }
+    try {
+      final existing = _loadedUser ?? _getCurrentUserOrThrow();
+      late UserEntity updated;
 
-    // استخرج المستخدم الحالي أو قيم افتراضية
-    final existingUser = loadedUser ??
-        UserEntity(
-          uId: firebaseUser.uid,
-          email: firebaseUser.email ?? '',
-          fullName: firebaseUser.displayName ?? '',
-          emailVerified: firebaseUser.emailVerified,
-          photoUrl: firebaseUser.photoURL,
-        );
-
-    // نسخة من الحقول الحالية مع تعديل الحقل الذي تريد حفظه فقط
-    String updatedName = existingUser.fullName;
-    String updatedEmail = existingUser.email;
-    String? updatedPhone = existingUser.phone;
-    String? updatedGender = existingUser.gender;
-    String? updatedDob = existingUser.dob;
-    String? updatedAge = existingUser.age;
-    String? updatedAddress = existingUser.address;
-    String? updatedPhotoUrl = existingUser.photoUrl;
-
-    // حقل الصورة: لو تم تعديل الصورة، سيتم التعامل معها في saveProfile (تحديث الصورة هناك)
-
-    switch (fieldKey) {
-      case 'name':
-        if (state.name.isEmpty) {
-          emit(state.copyWith(
-            status: ProfileStatus.error,
-            errorMessage: 'الاسم لا يمكن أن يكون فارغًا.',
-          ));
-          return;
-        }
-        updatedName = state.name;
-        break;
-
-      case 'email':
-        if (state.email.isEmpty) {
-          emit(state.copyWith(
-            status: ProfileStatus.error,
-            errorMessage: 'البريد الإلكتروني لا يمكن أن يكون فارغًا.',
-          ));
-          return;
-        }
-        updatedEmail = state.email;
-        break;
-
-      case 'phone':
-        if (state.phone.isNotEmpty) {
-          if (!_isValidEgyptianPhone(state.phone)) {
-            emit(state.copyWith(
-              status: ProfileStatus.error,
-              errorMessage: 'رقم الهاتف غير صالح. يجب أن يكون مصريًا بصيغة 01XXXXXXXXX',
-            ));
+      switch (key) {
+        case 'name':
+          if (state.name.isEmpty) {
+            emit(state.copyWith(status: ProfileStatus.error, errorMessage: 'الاسم لا يمكن أن يكون فارغًا.'));
+            _isBusy = false;
             return;
-          } else {
-            updatedPhone = _formatEgyptianPhone(state.phone);
           }
-        } else {
-          updatedPhone = null;
-        }
-        break;
+          updated = existing.copyWith(fullName: state.name);
+          break;
+        case 'email':
+          if (state.email.isEmpty) {
+            emit(state.copyWith(status: ProfileStatus.error, errorMessage: 'البريد الإلكتروني لا يمكن أن يكون فارغًا.'));
+            _isBusy = false;
+            return;
+          }
+          updated = existing.copyWith(email: state.email);
+          break;
+        case 'phone':
+          final normalizedPhone = _normalizeAndValidatePhone(state.phone.trim());
+          if (state.phone.trim().isNotEmpty && normalizedPhone == null) {
+            emit(state.copyWith(status: ProfileStatus.error, errorMessage: 'رقم الهاتف غير صالح'));
+            _isBusy = false;
+            return;
+          }
+          updated = existing.copyWith(phone: normalizedPhone ?? existing.phone);
+          break;
+        case 'gender':
+          updated = existing.copyWith(gender: state.gender);
+          break;
+        case 'dob':
+          updated = existing.copyWith(
+            dob: state.dob.isNotEmpty ? state.dob : null,
+            age: state.age.isNotEmpty ? state.age : null,
+          );
+          break;
+        case 'address':
+          updated = existing.copyWith(address: state.address);
+          break;
+        default:
+          emit(state.copyWith(status: ProfileStatus.error, errorMessage: 'حقل غير معروف: $key'));
+          _isBusy = false;
+          return;
+      }
 
-      case 'gender':
-        updatedGender = state.gender.isNotEmpty ? state.gender : null;
-        break;
-
-      case 'dob':
-        if (state.dob.isNotEmpty) {
-          updatedDob = state.dob;
-          updatedAge = state.age; // العمر يتم حسابه مسبقًا عند التحديث
-        } else {
-          updatedDob = null;
-          updatedAge = null;
-        }
-        break;
-
-      case 'address':
-        updatedAddress = state.address.isNotEmpty ? state.address : null;
-        break;
-
-      default:
-        emit(state.copyWith(
-          status: ProfileStatus.error,
-          errorMessage: 'حقل غير معروف: $fieldKey',
-        ));
-        return;
-    }
-
-    // بناء كيان المستخدم المحدث بالحقل الواحد
-    final updatedUser = UserEntity(
-      uId: firebaseUser.uid,
-      email: updatedEmail,
-      fullName: updatedName,
-      phone: updatedPhone,
-      gender: updatedGender,
-      dob: updatedDob,
-      age: updatedAge,
-      address: updatedAddress,
-      photoUrl: updatedPhotoUrl,
-      emailVerified: existingUser.emailVerified,
-    );
-
-    // استدعاء تحديث بيانات المستخدم من الريبو
-    final updateResult = await authRepo.updateUserData(updatedUser);
-
-    bool updateFailed = false;
-
-    updateResult.fold(
-      (failure) {
-        logError('Failed to update user data', failure.message);
-        emit(state.copyWith(
-          status: ProfileStatus.error,
-          errorMessage: 'فشل تحديث الملف الشخصي: ${failure.message}',
-        ));
-        updateFailed = true;
-      },
-      (_) {
-        loadedUser = updatedUser;
-        emit(state.copyWith(
-          status: ProfileStatus.saveSuccess,
-          name: updatedUser.fullName,
-          email: updatedUser.email,
-          phone: updatedUser.phone ?? '',
-          gender: updatedUser.gender ?? '',
-          dob: updatedUser.dob ?? '',
-          age: updatedUser.age ?? '',
-          address: updatedUser.address ?? '',
-          profileImageUrl: updatedUser.photoUrl ?? '',
-          profileImage: null,
-          errorMessage: '',
-          fieldBeingEdited: null,
-        ));
-      },
-    );
-
-    if (updateFailed) return;
-
-    // إذا كان الحقل المحفوظ هو البريد الإلكتروني، أرسل رابط التحقق
-    if (fieldKey == 'email' && state.email != existingUser.email) {
-      final sendEmailResult = await authRepo.sendEmailVerification();
-      sendEmailResult.fold(
-        (failure) {
-          logError('Failed to send email verification', failure.message);
-          emit(state.copyWith(
-            status: ProfileStatus.error,
-            errorMessage: 'تعذر إرسال رابط التحقق إلى البريد الإلكتروني.',
-          ));
+      final res = await _authRepo.updateUserData(updated);
+      bool failed = false;
+      res.fold(
+        (f) {
+          failed = true;
+          _logError('Failed to update user data', f.message);
+          emit(state.copyWith(status: ProfileStatus.error, errorMessage: 'فشل تحديث الملف الشخصي: ${f.message}'));
         },
-        (_) {
-          logInfo('Email verification sent');
+        (_) async {
+          _loadedUser = updated;
+          emit(state.copyWith(
+            status: ProfileStatus.saveSuccess,
+            name: updated.fullName,
+            email: updated.email,
+            phone: updated.phone ?? '',
+            gender: updated.gender ?? '',
+            dob: updated.dob ?? '',
+            age: updated.age ?? '',
+            address: updated.address ?? '',
+            profileImageUrl: updated.photoUrl ?? '',
+            profileImage: null,
+            errorMessage: '',
+          ));
+          await Prefs.saveUser(UserModel.fromEntity(updated));
         },
       );
+    } catch (e, st) {
+      _logError('Exception in saveField', e, st);
+      emit(state.copyWith(
+        status: ProfileStatus.error,
+        errorMessage: 'حدث خطأ أثناء تحديث الملف الشخصي.',
+      ));
+    } finally {
+      _isBusy = false;
     }
-  } catch (e, st) {
-    logError('Exception in saveField', e);
-    print(st);
-    emit(state.copyWith(
-      status: ProfileStatus.error,
-      errorMessage: 'حدث خطأ أثناء حفظ البيانات.',
-    ));
   }
 }
+
+extension on UserEntity {
+  UserEntity copyWith({
+    String? fullName,
+    String? email,
+    String? phone,
+    String? gender,
+    String? dob,
+    String? age,
+    String? address,
+    String? photoUrl,
+    bool? emailVerified,
+  }) {
+    return UserEntity(
+      uId: uId,
+      fullName: fullName ?? this.fullName,
+      email: email ?? this.email,
+      phone: phone ?? this.phone,
+      gender: gender ?? this.gender,
+      dob: dob ?? this.dob,
+      age: age ?? this.age,
+      address: address ?? this.address,
+      photoUrl: photoUrl ?? this.photoUrl,
+      emailVerified: emailVerified ?? this.emailVerified,
+    );
+  }
 }

@@ -38,42 +38,89 @@ class _ProfileChangeViewContent extends StatefulWidget {
   const _ProfileChangeViewContent();
 
   @override
-  State<_ProfileChangeViewContent> createState() => _ProfileChangeViewContentState();
+  State<_ProfileChangeViewContent> createState() =>
+      _ProfileChangeViewContentState();
 }
 
 class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> {
   final _formKey = GlobalKey<FormState>();
 
   late final TextEditingController _nameController;
+  late final FocusNode _nameFocus;
+
   late final TextEditingController _emailController;
+
   late final TextEditingController _phoneController;
-  late final TextEditingController _ageController;
+  late final FocusNode _phoneFocus;
+
   late final TextEditingController _dobController;
+  late final FocusNode _dobFocus;
+
+  late final TextEditingController _ageController;
+
   late final TextEditingController _addressController;
+  late final FocusNode _addressFocus;
 
   String? _selectedGender;
-
+  String? _phoneError;
   bool _hasLoadedInitialData = false;
 
   @override
   void initState() {
     super.initState();
+
     _nameController = TextEditingController();
+    _nameFocus = FocusNode();
+    _nameFocus.addListener(() {
+      if (!_nameFocus.hasFocus) {
+        context.read<ProfileCubit>().updateName(_nameController.text.trim());
+      }
+    });
+
     _emailController = TextEditingController();
+
     _phoneController = TextEditingController();
-    _ageController = TextEditingController();
+    _phoneFocus = FocusNode();
+    _phoneFocus.addListener(() {
+      if (!_phoneFocus.hasFocus) {
+        context.read<ProfileCubit>().updatePhone(_phoneController.text.trim());
+      }
+    });
+
     _dobController = TextEditingController();
+    _dobFocus = FocusNode();
+
+    _ageController = TextEditingController();
+
     _addressController = TextEditingController();
+    _addressFocus = FocusNode();
+    _addressFocus.addListener(() {
+      if (!_addressFocus.hasFocus) {
+        context
+            .read<ProfileCubit>()
+            .updateAddress(_addressController.text.trim());
+      }
+    });
   }
 
   @override
   void dispose() {
     _nameController.dispose();
+    _nameFocus.dispose();
+
     _emailController.dispose();
+
     _phoneController.dispose();
-    _ageController.dispose();
+    _phoneFocus.dispose();
+
     _dobController.dispose();
+    _dobFocus.dispose();
+
+    _ageController.dispose();
+
     _addressController.dispose();
+    _addressFocus.dispose();
+
     super.dispose();
   }
 
@@ -120,7 +167,6 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> {
       setState(() {
         _dobController.text = dob;
         _ageController.text = age;
-        _hasLoadedInitialData = true;
       });
 
       context.read<ProfileCubit>().updateDob(dob, age);
@@ -133,28 +179,38 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> {
     await context.read<ProfileCubit>().saveProfile();
   }
 
+  void _loadInitialData(ProfileState state) {
+    if (_hasLoadedInitialData) return;
+
+    _nameController.text = state.name;
+    _emailController.text = state.email;
+    _phoneController.text = state.phone;
+    _dobController.text = state.dob;
+    _ageController.text = state.age;
+    _addressController.text = state.address;
+    _selectedGender = state.gender.isNotEmpty ? state.gender : null;
+
+    _hasLoadedInitialData = true;
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
 
-    final fieldColor = isDarkMode ? (Colors.grey[850] ?? Colors.grey) : Colors.white.withOpacity(0.9);
-    final borderColor = isDarkMode ? (Colors.grey[700] ?? Colors.grey) : (Colors.grey[300] ?? Colors.grey);
+    final fieldColor = isDarkMode
+        ? (Colors.grey[850] ?? Colors.grey)
+        : Colors.white.withOpacity(0.9);
+    final borderColor =
+        isDarkMode ? (Colors.grey[700] ?? Colors.grey) : (Colors.grey[300] ?? Colors.grey);
 
     const Color gradientStart = Color(0xFF2193b0);
     const Color gradientEnd = Color(0xFF6dd5ed);
 
     return BlocListener<ProfileCubit, ProfileState>(
       listener: (context, state) {
-        if (state.status == ProfileStatus.loadSuccess && !_hasLoadedInitialData) {
-          _nameController.text = state.name;
-          _emailController.text = state.email;
-          _phoneController.text = state.phone;
-          _dobController.text = state.dob;
-          _ageController.text = state.age;
-          _addressController.text = state.address;
-          _selectedGender = state.gender.isNotEmpty ? state.gender : null;
-          _hasLoadedInitialData = true;
+        if (state.status == ProfileStatus.loadSuccess) {
+          _loadInitialData(state);
         }
 
         if (state.status == ProfileStatus.saveSuccess) {
@@ -190,7 +246,8 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> {
                 return IconButton(
                   icon: const Icon(Icons.save),
                   tooltip: 'Save Profile',
-                  onPressed: state.status == ProfileStatus.loading ? null : _saveProfile,
+                  onPressed:
+                      state.status == ProfileStatus.loading ? null : _saveProfile,
                 );
               },
             ),
@@ -228,8 +285,10 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> {
                                       : (state.profileImageUrl.isNotEmpty
                                           ? NetworkImage(state.profileImageUrl)
                                           : null) as ImageProvider<Object>?,
-                                  child: state.profileImage == null && state.profileImageUrl.isEmpty
-                                      ? const Icon(Icons.person, size: 60, color: Colors.white)
+                                  child: state.profileImage == null &&
+                                          state.profileImageUrl.isEmpty
+                                      ? const Icon(Icons.person,
+                                          size: 60, color: Colors.white)
                                       : null,
                                 ),
                                 Container(
@@ -237,8 +296,16 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> {
                                   decoration: BoxDecoration(
                                     color: theme.primaryColor,
                                     shape: BoxShape.circle,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.3),
+                                        blurRadius: 4,
+                                        offset: const Offset(0, 2),
+                                      ),
+                                    ],
                                   ),
-                                  child: const Icon(Icons.edit, size: 20, color: Colors.white),
+                                  child: const Icon(Icons.edit,
+                                      size: 20, color: Colors.white),
                                 ),
                               ],
                             ),
@@ -246,148 +313,124 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> {
                         ),
                         const SizedBox(height: 24),
 
-                        Text('Personal Information',
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            )),
+                        Text(
+                          'Personal Information',
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
                         const SizedBox(height: 16),
 
-                        TextFormField(
+                        _NameField(
                           controller: _nameController,
-                          onChanged: (val) => context.read<ProfileCubit>().updateName(val.trim()),
-                          decoration: _inputDecoration(
-                            context,
-                            label: 'Full Name',
-                            icon: Icons.person_outline,
-                            fieldColor: fieldColor,
-                            borderColor: borderColor,
-                          ),
-                          validator: (value) => value == null || value.isEmpty ? 'Name cannot be empty' : null,
+                          focusNode: _nameFocus,
+                          fieldColor: fieldColor,
+                          borderColor: borderColor,
                         ),
+
                         const SizedBox(height: 16),
 
-                        TextFormField(
+                        _EmailField(
                           controller: _emailController,
-                          decoration: _inputDecoration(
-                            context,
-                            label: 'Email',
-                            icon: Icons.email_outlined,
-                            fieldColor: fieldColor,
-                            borderColor: borderColor,
-                          ),
-                          enabled: false,
+                          fieldColor: fieldColor,
+                          borderColor: borderColor,
                         ),
+
                         const SizedBox(height: 16),
 
-                        TextFormField(
-                          controller: _phoneController,
-                          keyboardType: TextInputType.phone,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly,
-                            LengthLimitingTextInputFormatter(11),
-                          ],
-                          decoration: _inputDecoration(
-                            context,
-                            label: 'رقم الهاتف',
-                            icon: Icons.phone_outlined,
-                            fieldColor: fieldColor,
-                            borderColor: borderColor,
-                          ).copyWith(prefixText: '+20 '),
-                          validator: (value) {
-                            if (value == null || value.length != 11) return 'أدخل 11 رقمًا صحيحًا';
-                            return null;
-                          },
-                          onChanged: (val) => context.read<ProfileCubit>().updatePhone(val.trim()),
-                        ),
+                        Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _PhoneField(
+                              controller: _phoneController,
+                              focusNode: _phoneFocus,
+                              fieldColor: fieldColor,
+                              borderColor: borderColor,
+                            ),
+                             if (_phoneError != null)
+      Padding(
+        padding: const EdgeInsets.only(top: 4.0, left: 12),
+        child: Text(
+          _phoneError!,
+          style: TextStyle(color: Colors.red, fontSize: 12),
+                              ),
+      ),
+  ],
+),
                         const SizedBox(height: 16),
 
-                        DropdownButtonFormField<String>(
-                          value: _selectedGender,
-                          items: genders.map((g) => DropdownMenuItem(value: g, child: Text(g))).toList(),
-                          onChanged: (value) {
-                            setState(() => _selectedGender = value);
-                            if (value != null) context.read<ProfileCubit>().updateGender(value);
-                          },
-                          decoration: _inputDecoration(
-                            context,
-                            label: 'Gender',
-                            icon: Icons.transgender_outlined,
-                            fieldColor: fieldColor,
-                            borderColor: borderColor,
-                          ),
-                          validator: (value) => value == null ? 'Select gender' : null,
-                        ),
-                        const SizedBox(height: 16),
-
-                        TextFormField(
+                        _DobField(
                           controller: _dobController,
-                          readOnly: true,
-                          decoration: _inputDecoration(
-                            context,
-                            label: 'Date of Birth',
-                            icon: Icons.calendar_today_outlined,
-                            fieldColor: fieldColor,
-                            borderColor: borderColor,
-                          ),
+                          ageController: _ageController,
+                          focusNode: _dobFocus,
+                          fieldColor: fieldColor,
+                          borderColor: borderColor,
                           onTap: () => _selectDate(context),
-                          validator: (value) => value == null || value.isEmpty ? 'Select date' : null,
                         ),
+
                         const SizedBox(height: 16),
 
-                        TextFormField(
+                        _AgeField(
                           controller: _ageController,
-                          readOnly: true,
-                          decoration: _inputDecoration(
-                            context,
-                            label: 'Age',
-                            icon: Icons.cake_outlined,
-                            fieldColor: fieldColor,
-                            borderColor: borderColor,
-                          ),
-                          validator: (value) => value == null || value.isEmpty ? 'Age not calculated' : null,
+                          fieldColor: fieldColor,
+                          borderColor: borderColor,
                         ),
+
                         const SizedBox(height: 16),
 
-                        TextFormField(
+                        _AddressField(
                           controller: _addressController,
-                          minLines: 2,
-                          maxLines: 5,
-                          onChanged: (val) => context.read<ProfileCubit>().updateAddress(val.trim()),
-                          decoration: _inputDecoration(
-                            context,
-                            label: 'Address',
-                            icon: Icons.home_outlined,
-                            fieldColor: fieldColor,
-                            borderColor: borderColor,
-                          ),
-                          validator: (value) => value == null || value.isEmpty ? 'Enter address' : null,
+                          focusNode: _addressFocus,
+                          fieldColor: fieldColor,
+                          borderColor: borderColor,
                         ),
+
+                        const SizedBox(height: 16),
+
+                        _GenderField(
+                          selectedGender: _selectedGender,
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedGender = value;
+                            });
+                            if (value != null) {
+                              context.read<ProfileCubit>().updateGender(value);
+                            }
+                          },
+                        ),
+
                         const SizedBox(height: 32),
 
-                        BlocBuilder<ProfileCubit, ProfileState>(
-                          builder: (context, state) {
-                            return SizedBox(
-                              width: double.infinity,
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(vertical: 14),
-                                  textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
+                        Center(
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 40, vertical: 14),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(24)),
+                              elevation: 5,
+                              backgroundColor: Colors.white.withOpacity(0.9),
+                            ),
+                            onPressed:
+                                state.status == ProfileStatus.loading ? null : _saveProfile,
+                            child: state.status == ProfileStatus.loading
+                                ? const SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      color: Colors.blue,
+                                    ),
+                                  )
+                                : Text(
+                                    'Save Changes',
+                                    style: theme.textTheme.labelLarge?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blue.shade700,
+                                    ),
                                   ),
-                                ),
-                                onPressed: state.status == ProfileStatus.loading ? null : _saveProfile,
-                                child: state.status == ProfileStatus.loading
-                                    ? const SizedBox(
-                                        height: 22,
-                                        width: 22,
-                                        child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
-                                      )
-                                    : const Text('Save Changes'),
-                              ),
-                            );
-                          },
+                          ),
                         ),
                       ],
                     ),
@@ -400,30 +443,271 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> {
       ),
     );
   }
+}
 
-  InputDecoration _inputDecoration(
-    BuildContext context, {
-    required String label,
-    required IconData icon,
-    required Color fieldColor,
-    required Color borderColor,
-  }) {
-    return InputDecoration(
-      labelText: label,
-      prefixIcon: Icon(icon),
-      filled: true,
-      fillColor: fieldColor,
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(color: borderColor),
+// Widgets for form fields to keep build clean
+
+class _NameField extends StatelessWidget {
+  final TextEditingController controller;
+  final FocusNode focusNode;
+  final Color fieldColor;
+  final Color borderColor;
+
+  const _NameField({
+    required this.controller,
+    required this.focusNode,
+    required this.fieldColor,
+    required this.borderColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: controller,
+      focusNode: focusNode,
+      textInputAction: TextInputAction.next,
+      decoration: InputDecoration(
+        labelText: 'Name',
+        filled: true,
+        fillColor: fieldColor,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: borderColor),
+        ),
       ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(color: borderColor),
+      validator: (value) {
+        if (value == null || value.trim().isEmpty) {
+          return 'Name is required';
+        }
+        if (value.trim().length < 3) {
+          return 'Name must be at least 3 characters';
+        }
+        return null;
+      },
+    );
+  }
+}
+
+class _EmailField extends StatelessWidget {
+  final TextEditingController controller;
+  final Color fieldColor;
+  final Color borderColor;
+
+  const _EmailField({
+    required this.controller,
+    required this.fieldColor,
+    required this.borderColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: controller,
+      readOnly: true,
+      decoration: InputDecoration(
+        labelText: 'Email (read-only)',
+        filled: true,
+        fillColor: fieldColor,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: borderColor),
+        ),
       ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(color: Theme.of(context).primaryColor),
+    );
+  }
+}
+
+class _PhoneField extends StatelessWidget {
+  final TextEditingController controller;
+  final FocusNode focusNode;
+  final Color fieldColor;
+  final Color borderColor;
+
+  const _PhoneField({
+    required this.controller,
+    required this.focusNode,
+    required this.fieldColor,
+    required this.borderColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: controller,
+      focusNode: focusNode,
+      keyboardType: TextInputType.phone,
+      textInputAction: TextInputAction.next,
+      decoration: InputDecoration(
+        labelText: 'Phone Number',
+        filled: true,
+        fillColor: fieldColor,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: borderColor),
+        ),
+      ),
+      inputFormatters: [
+        FilteringTextInputFormatter.digitsOnly,
+        LengthLimitingTextInputFormatter(11),
+      ],
+      validator: (value) {
+        if (value == null || value.trim().isEmpty) {
+          return 'Phone number is required';
+        }
+        if (value.trim().length != 11) {
+          return 'رقم الهاتف يجب أن يحتوي على 11 أرقام فقط';
+        }
+        return null;
+      },
+    );
+  }
+}
+
+
+class _DobField extends StatelessWidget {
+  final TextEditingController controller;
+  final TextEditingController ageController;
+  final FocusNode focusNode;
+  final Color fieldColor;
+  final Color borderColor;
+  final VoidCallback onTap;
+
+  const _DobField({
+    required this.controller,
+    required this.ageController,
+    required this.focusNode,
+    required this.fieldColor,
+    required this.borderColor,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: controller,
+      focusNode: focusNode,
+      readOnly: true,
+      onTap: onTap,
+      decoration: InputDecoration(
+        labelText: 'Date of Birth',
+        filled: true,
+        fillColor: fieldColor,
+        suffixIcon: const Icon(Icons.calendar_today),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: borderColor),
+        ),
+      ),
+      validator: (value) {
+        if (value == null || value.trim().isEmpty) {
+          return 'Date of birth is required';
+        }
+        return null;
+      },
+    );
+  }
+}
+
+class _AgeField extends StatelessWidget {
+  final TextEditingController controller;
+  final Color fieldColor;
+  final Color borderColor;
+
+  const _AgeField({
+    required this.controller,
+    required this.fieldColor,
+    required this.borderColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: controller,
+      readOnly: true,
+      decoration: InputDecoration(
+        labelText: 'Age',
+        filled: true,
+        fillColor: fieldColor,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: borderColor),
+        ),
+      ),
+    );
+  }
+}
+
+class _AddressField extends StatelessWidget {
+  final TextEditingController controller;
+  final FocusNode focusNode;
+  final Color fieldColor;
+  final Color borderColor;
+
+  const _AddressField({
+    required this.controller,
+    required this.focusNode,
+    required this.fieldColor,
+    required this.borderColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: controller,
+      focusNode: focusNode,
+      maxLines: 3,
+      keyboardType: TextInputType.streetAddress,
+      textInputAction: TextInputAction.newline,
+      decoration: InputDecoration(
+        labelText: 'Address',
+        filled: true,
+        fillColor: fieldColor,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: borderColor),
+        ),
+      ),
+      validator: (value) {
+        if (value == null || value.trim().isEmpty) {
+          return 'Address is required';
+        }
+        return null;
+      },
+    );
+  }
+}
+
+class _GenderField extends StatelessWidget {
+  final String? selectedGender;
+  final void Function(String?) onChanged;
+
+  const _GenderField({
+    required this.selectedGender,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InputDecorator(
+      decoration: InputDecoration(
+        labelText: 'Gender',
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        filled: true,
+        fillColor: Colors.white.withOpacity(0.9),
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          value: selectedGender,
+          hint: const Text('Select gender'),
+          isExpanded: true,
+          items: genders
+              .map((gender) =>
+                  DropdownMenuItem(value: gender, child: Text(gender)))
+              .toList(),
+          onChanged: onChanged,
+        ),
       ),
     );
   }
