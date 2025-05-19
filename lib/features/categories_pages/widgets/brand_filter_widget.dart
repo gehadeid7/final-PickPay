@@ -28,12 +28,12 @@ class BrandFilterWidget extends StatelessWidget {
       ..sort((a, b) => a!.compareTo(b!));
 
     // Add "All Brands" option at the beginning
-    final allBrands = ['All Brands', ...?brands];
+    final allBrands = ['All Brands', ...brands];
 
     return SizedBox(
       child: Container(
         decoration: BoxDecoration(
-          color: theme.cardColor,
+          color: isDarkMode ? Colors.grey.shade900 : Colors.grey.shade100,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
             color: isDarkMode ? Colors.grey.shade700 : Colors.grey.shade200,
