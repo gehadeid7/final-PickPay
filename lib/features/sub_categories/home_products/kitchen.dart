@@ -116,7 +116,7 @@ class _Kitchenview extends State<Kitchenview> {
     final filteredProducts = _filterProducts(_allProducts);
 
     return Scaffold(
-      appBar: buildAppBar(context: context, title: 'Home'),
+      appBar: buildAppBar(context: context, title: 'Kitchen & Dining'),
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         children: [
