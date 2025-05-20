@@ -5,7 +5,6 @@ class PriceRangeFilterWidget extends StatelessWidget {
   final double maxPrice;
   final ValueChanged<RangeValues> onChanged;
 
-  // ignore: use_super_parameters
   const PriceRangeFilterWidget({
     Key? key,
     required this.values,
@@ -15,6 +14,11 @@ class PriceRangeFilterWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Clamp values to avoid assertion error
+    final double safeStart = values.start.clamp(0.0, maxPrice);
+    final double safeEnd = values.end.clamp(0.0, maxPrice);
+    final RangeValues safeValues = RangeValues(safeStart, safeEnd);
+
     return SizedBox(
       height: 80,
       child: Card(
@@ -38,16 +42,16 @@ class PriceRangeFilterWidget extends StatelessWidget {
               Expanded(
                 child: SliderTheme(
                   data: SliderTheme.of(context).copyWith(
-                    rangeThumbShape: RoundRangeSliderThumbShape(
+                    rangeThumbShape: const RoundRangeSliderThumbShape(
                       enabledThumbRadius: 8,
                       disabledThumbRadius: 8,
                     ),
                     trackHeight: 4,
                   ),
                   child: RangeSlider(
-                    values: values,
+                    values: safeValues,
                     min: 0,
-                    max: maxPrice,
+                    max: maxPrice > 0 ? maxPrice : 1,
                     divisions: maxPrice > 0 ? 10 : 1,
                     activeColor: Colors.green,
                     inactiveColor: Colors.blue[100],
@@ -56,18 +60,17 @@ class PriceRangeFilterWidget extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding:
-                    const EdgeInsets.only(left: 4, right: 4), // Reduced padding
+                padding: const EdgeInsets.symmetric(horizontal: 4),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'EGP ${values.start.round()}',
-                      style: const TextStyle(fontSize: 10), // Reduced font size
+                      'EGP ${safeValues.start.round()}',
+                      style: const TextStyle(fontSize: 10),
                     ),
                     Text(
-                      'EGP ${values.end.round()}',
-                      style: const TextStyle(fontSize: 10), // Reduced font size
+                      'EGP ${safeValues.end.round()}',
+                      style: const TextStyle(fontSize: 10),
                     ),
                   ],
                 ),

@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -42,8 +41,12 @@ void main() async {
         BlocProvider(create: (context) => WishlistCubit()),
         BlocProvider(create: (context) => CheckoutCubit()),
         BlocProvider(create: (context) => BottomNavigationCubit()),
-        BlocProvider(create: (context) => ProfileCubit(firebaseAuthService: firebaseAuthService ,   authRepo: authRepo, ),),
-
+        BlocProvider(
+          create: (context) => ProfileCubit(
+            firebaseAuthService: firebaseAuthService,
+            authRepo: authRepo,
+          ),
+        ),
       ],
       child: ChangeNotifierProvider(
         create: (_) => ThemeProvider(),
@@ -52,6 +55,7 @@ void main() async {
     ),
   );
 }
+
 Future<void> requestStoragePermission() async {
   if (!Platform.isAndroid) return;
 
@@ -79,6 +83,7 @@ Future<void> requestStoragePermission() async {
     print('❌ Permission denied.');
   }
 }
+
 class Pickpay extends StatelessWidget {
   const Pickpay({super.key});
 

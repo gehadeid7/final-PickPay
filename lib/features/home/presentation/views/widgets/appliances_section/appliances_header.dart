@@ -10,22 +10,43 @@ class AppliancesHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: Row(
+      child: Column(
         children: [
-          Text(
-            'Appliances Bestsellers',
-            style: TextStyles.bold16,
+          Row(
+            children: [
+              Text('Appliances Bestsellers',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                  )),
+              Spacer(),
+              GestureDetector(
+                onTap: () =>
+                    Navigator.pushNamed(context, AppliancesView.routeName),
+                child: Text(
+                  'more',
+                  style: TextStyles.regular16.copyWith(
+                    color: AppColors.secondColor,
+                  ),
+                ),
+              )
+            ],
           ),
-          Spacer(),
-          GestureDetector(
-            onTap: () => Navigator.pushNamed(context, AppliancesView.routeName),
-            child: Text(
-              'more',
-              style: TextStyles.regular16.copyWith(
-                color: AppColors.secondColor,
+          const SizedBox(height: 6),
+          Container(
+            height: 1,
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(4),
+              ),
+              gradient: LinearGradient(
+                colors: [
+                  const Color.fromARGB(255, 32, 140, 229),
+                  Colors.lightBlueAccent,
+                ],
               ),
             ),
-          )
+          ),
         ],
       ),
     );

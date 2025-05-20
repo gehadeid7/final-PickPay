@@ -8,10 +8,12 @@ class NavigationBarItem extends StatelessWidget {
     super.key,
     required this.isSelected,
     required this.bottomNavigationBarEntity,
+    this.itemCount,
   });
 
   final bool isSelected;
   final BottomNavigationBarEntity bottomNavigationBarEntity;
+  final int? itemCount;
 
   @override
   Widget build(BuildContext context) {
@@ -29,11 +31,13 @@ class NavigationBarItem extends StatelessWidget {
               key: ValueKey('active-${bottomNavigationBarEntity.name}'),
               image: bottomNavigationBarEntity.activeImage,
               text: bottomNavigationBarEntity.name,
+              itemCount: itemCount,
             )
           : InActiveItem(
               key: ValueKey('inactive-${bottomNavigationBarEntity.name}'),
               image: bottomNavigationBarEntity.inActiveImage,
               text: bottomNavigationBarEntity.name,
+              itemCount: itemCount,
             ),
     );
   }

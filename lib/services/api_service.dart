@@ -13,7 +13,7 @@ import 'package:pickpay/features/categories_pages/widgets/product_card.dart';
 import 'package:http_parser/http_parser.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://192.168.1.4:3000/api/v1/';
+  static const String baseUrl = 'http://192.168.1.7:3000/api/v1/';
 
   // 🔐 Builds headers for JSON requests
   Future<Map<String, String>> _buildHeaders({
@@ -95,7 +95,8 @@ class ApiService {
     int maxRetries = 2,
   }) async {
     final url = '$baseUrl$endpoint';
-    final requestHeaders = await _buildHeaders(headers: headers, authorized: authorized);
+    final requestHeaders =
+        await _buildHeaders(headers: headers, authorized: authorized);
     log('📡 GET $url');
     log('📤 Headers: $requestHeaders');
     
@@ -126,7 +127,8 @@ class ApiService {
     int maxRetries = 2,
   }) async {
     final url = '$baseUrl$endpoint';
-    final requestHeaders = await _buildHeaders(headers: headers, authorized: authorized);
+    final requestHeaders =
+        await _buildHeaders(headers: headers, authorized: authorized);
     log('📡 POST $url');
     log('📤 Headers: $requestHeaders');
     log('📤 Body: ${jsonEncode(body)}');
@@ -163,7 +165,8 @@ class ApiService {
     int maxRetries = 2,
   }) async {
     final url = '$baseUrl$endpoint';
-    final requestHeaders = await _buildHeaders(headers: headers, authorized: authorized);
+    final requestHeaders =
+        await _buildHeaders(headers: headers, authorized: authorized);
     log('📡 PUT $url');
     log('📤 Headers: $requestHeaders');
     log('📤 Body: ${jsonEncode(body)}');
@@ -214,7 +217,8 @@ class ApiService {
       );
       log('Found Appliances category with ID: ${appliancesCategory['_id']}');
 
-      final productsUrl = '${baseUrl}products?category=${appliancesCategory['_id']}';
+      final productsUrl =
+          '${baseUrl}products?category=${appliancesCategory['_id']}';
       log('Fetching products from: $productsUrl');
 
       final response = await http
@@ -258,7 +262,8 @@ class ApiService {
 
         return productCards;
       } else {
-        final message = jsonDecode(response.body)['message'] ?? 'Unknown error occurred';
+        final message =
+            jsonDecode(response.body)['message'] ?? 'Unknown error occurred';
         throw Exception('Failed to load products: $message');
       }
     } on TimeoutException {
@@ -411,7 +416,8 @@ class ApiService {
       return right(exists);
     } catch (e) {
       log('Check user exists error: $e');
-      return left(ServerFailure('فشل التحقق من وجود المستخدم: ${e.toString()}'));
+      return left(
+          ServerFailure('فشل التحقق من وجود المستخدم: ${e.toString()}'));
     }
   }
 
