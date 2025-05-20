@@ -49,6 +49,7 @@ class _HomeViewBodyState extends State<HomeViewBody> {
           children: [
             SizedBox(height: 12),
             CustomHomeAppbar(),
+            SizedBox(height: 12),
             SlidingFeaturedList(),
             SizedBox(height: 12),
             RecommendedForuHeader(),

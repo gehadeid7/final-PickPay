@@ -22,7 +22,7 @@ class SearchTextField extends StatelessWidget {
         ),
         hintText: 'Search...',
         filled: true,
-        fillColor: isDarkMode ? Colors.grey[800] : const Color(0xFFF9FAFA),
+        fillColor: isDarkMode ? Colors.grey[800] : Colors.grey.shade100,
         prefixIcon: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Image.asset(
@@ -47,14 +47,14 @@ class SearchTextField extends StatelessWidget {
   OutlineInputBorder _buildBorder(BuildContext context, bool isDarkMode,
       {bool isFocused = false}) {
     return OutlineInputBorder(
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: BorderRadius.circular(18),
       borderSide: BorderSide(
         width: 1,
         color: isFocused
             ? Theme.of(context).colorScheme.primary
             : isDarkMode
                 ? Colors.grey[700]!
-                : const Color(0xFFE6E9E9),
+                : Colors.grey.shade200,
       ),
     );
   }
