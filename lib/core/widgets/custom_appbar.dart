@@ -42,7 +42,6 @@ class CustomHomeAppbar extends StatelessWidget {
 
                 return Row(
                   children: [
-                    // Wishlist Icon in themed container
                     Container(
                       width: 40,
                       height: 40,
@@ -104,8 +103,6 @@ class CustomHomeAppbar extends StatelessWidget {
                         ],
                       ),
                     ),
-
-                    // Theme switch in same styled container
                     Container(
                       width: 40,
                       height: 40,

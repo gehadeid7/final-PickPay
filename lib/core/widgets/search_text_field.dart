@@ -54,7 +54,7 @@ class SearchTextField extends StatelessWidget {
             ? Theme.of(context).colorScheme.primary
             : isDarkMode
                 ? Colors.grey[700]!
-                : Colors.grey.shade200,
+                : Colors.grey.shade400,
       ),
     );
   }
