@@ -67,7 +67,7 @@ class _ProductCardState extends State<ProductCard>
         ? [
             const Color.fromARGB(255, 23, 23, 23),
             const Color.fromARGB(255, 68, 68, 70),
-            const Color.fromARGB(255, 51, 51, 52),
+            const Color.fromARGB(255, 23, 23, 23),
           ]
         : [
             const Color(0xFFFFFFFF),

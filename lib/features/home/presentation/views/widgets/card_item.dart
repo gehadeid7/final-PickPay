@@ -55,14 +55,14 @@ class _CardItemState extends State<CardItem>
 
     final List<Color> gradientColors = isDark
         ? [
-            const Color.fromARGB(255, 24, 24, 26), // Dark grey
-            const Color.fromARGB(255, 52, 52, 52), // Medium grey
-            const Color.fromARGB(255, 61, 61, 61), // Light grey
+            const Color.fromARGB(255, 24, 24, 26),
+            const Color.fromARGB(255, 52, 52, 52),
+            const Color.fromARGB(255, 61, 61, 61),
           ]
         : [
-            const Color(0xFFFFFFFF), // Pure white
-            const Color(0xFFF2F2F7), // Very light grey (Apple system gray6)
-            const Color(0xFFE5E5EA), // Light grey (Apple system gray5)
+            const Color(0xFFFFFFFF),
+            const Color(0xFFF2F2F7),
+            const Color(0xFFE5E5EA),
           ];
 
     return AnimatedBuilder(
@@ -78,10 +78,9 @@ class _CardItemState extends State<CardItem>
             ),
             boxShadow: [
               BoxShadow(
-                // ignore: deprecated_member_use
-                color: isDark ? Colors.black26 : Colors.grey.withOpacity(0.08),
-                blurRadius: 14,
-                offset: const Offset(0, 6),
+                color: Colors.black45,
+                blurRadius: 10,
+                offset: const Offset(0, 0),
               ),
             ],
             border: Border.all(
@@ -116,13 +115,13 @@ class _CardItemState extends State<CardItem>
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
                 decoration: BoxDecoration(
                   // ignore: deprecated_member_use
-                  color: Colors.green.shade100.withOpacity(0.6),
+                  color: const Color.fromARGB(185, 214, 244, 215),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
                   "\$${widget.price}",
                   style: theme.textTheme.bodyMedium?.copyWith(
-                    color: Colors.green.shade800,
+                    color: Colors.green.shade900,
                     fontWeight: FontWeight.w700,
                   ),
                 ),

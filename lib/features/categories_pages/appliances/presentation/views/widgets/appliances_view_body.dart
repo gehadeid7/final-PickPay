@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:pickpay/core/widgets/build_appbar.dart';
-import 'package:pickpay/core/widgets/footer_widget.dart';
 import 'package:pickpay/features/categories_pages/models/product_model.dart';
 import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product1.dart';
 import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product2.dart';
@@ -329,7 +328,6 @@ class _AppliancesViewBodyState extends State<AppliancesViewBody> {
                   );
                   // ignore: unnecessary_to_list_in_spreads
                 }).toList(),
-                FooterWidget(),
               ],
             ),
           );

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pickpay/core/utils/app_text_styles.dart';
 
 class RecommendedForuHeader extends StatelessWidget {
   const RecommendedForuHeader({super.key});
@@ -8,9 +7,32 @@ class RecommendedForuHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: Text(
-        'Recommended For You',
-        style: TextStyles.bold16,
+      child: Column(
+        children: [
+          Align(
+            alignment: Alignment.centerLeft, // Explicitly left-align the text
+            child: Text('Recommended For You',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                )),
+          ),
+          const SizedBox(height: 6),
+          Container(
+            height: 1,
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(4),
+              ),
+              gradient: LinearGradient(
+                colors: [
+                  const Color.fromARGB(255, 32, 140, 229),
+                  Colors.lightBlueAccent,
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
