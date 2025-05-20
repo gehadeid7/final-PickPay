@@ -32,7 +32,7 @@ class AppliancesViewBody extends StatefulWidget {
 class _AppliancesViewBodyState extends State<AppliancesViewBody> {
   String? _selectedBrand;
   double _minRating = 0;
-  RangeValues _priceRange = const RangeValues(0, 10000);
+  RangeValues? _priceRange;
   late Future<List<ProductsViewsModel>> _productsFuture;
 
   // Map of key phrases to detail pages with their static data
@@ -185,9 +185,9 @@ class _AppliancesViewBodyState extends State<AppliancesViewBody> {
       final ratingMatch =
           product.rating != null && product.rating! >= _minRating;
 
-      final priceMatch = product.price >= _priceRange.start &&
-          product.price <= _priceRange.end;
-
+      final priceMatch = _priceRange == null ||
+          (product.price >= _priceRange!.start &&
+              product.price <= _priceRange!.end);
       return brandMatch && ratingMatch && priceMatch;
     }).toList();
   }
@@ -249,6 +249,7 @@ class _AppliancesViewBodyState extends State<AppliancesViewBody> {
           final maxPrice = snapshot.data!
               .map((product) => product.price)
               .reduce((a, b) => a > b ? a : b);
+          _priceRange ??= RangeValues(0, maxPrice);
 
           return RefreshIndicator(
             onRefresh: () async {
@@ -280,7 +281,7 @@ class _AppliancesViewBodyState extends State<AppliancesViewBody> {
                       child: Card(
                         elevation: 2,
                         child: PriceRangeFilterWidget(
-                          values: _priceRange,
+                          values: _priceRange!,
                           maxPrice: maxPrice,
                           onChanged: (range) =>
                               setState(() => _priceRange = range),
