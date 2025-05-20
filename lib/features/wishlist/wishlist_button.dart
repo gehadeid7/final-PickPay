@@ -35,7 +35,11 @@ class WishlistButton extends StatelessWidget {
             padding: EdgeInsets.zero,
             icon: Icon(
               isInWishlist ? Icons.favorite : Icons.favorite_border,
-              color: isInWishlist ? Colors.red : Colors.black,
+              color: isInWishlist
+                  ? Colors.red
+                  : Theme.of(context).brightness == Brightness.dark
+                      ? Colors.white
+                      : Colors.black,
               size: iconSize ?? 22,
             ),
             onPressed: () => _handleWishlistAction(context, isInWishlist),
