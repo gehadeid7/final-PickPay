@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:pickpay/features/auth/data/models/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:pickpay/constants.dart';
 
 class Prefs {
   static SharedPreferences? _instance;
@@ -38,25 +39,47 @@ class Prefs {
 
   // ======== User caching methods =========
 
-  static const _userKey = 'cached_user';
+  static const _userKey = kUserData;
 
   // Save user model as JSON string
   static Future<void> saveUser(UserModel user) async {
-    final jsonString = jsonEncode(user.toMap());
-    await setString(_userKey, jsonString);
+    try {
+      final jsonString = jsonEncode(user.toMap());
+      await setString(_userKey, jsonString);
+      print('✅ User data saved to local storage: ${user.toMap()}');
+    } catch (e) {
+      print('❌ Error saving user data to local storage: $e');
+      rethrow;
+    }
   }
 
   // Load user model from cached JSON string, returns null if none
   static UserModel? getUser() {
-    final jsonString = getString(_userKey);
-    if (jsonString.isEmpty) return null;
+    try {
+      final jsonString = getString(_userKey);
+      if (jsonString.isEmpty) {
+        print('ℹ️ No user data found in local storage');
+        return null;
+      }
 
-    final Map<String, dynamic> userMap = jsonDecode(jsonString);
-    return UserModel.fromMap(userMap);
+      final Map<String, dynamic> userMap = jsonDecode(jsonString);
+      final user = UserModel.fromMap(userMap);
+      print('✅ User data loaded from local storage: ${user.toMap()}');
+      return user;
+    } catch (e) {
+      print('❌ Error loading user data from local storage: $e');
+      return null;
+    }
   }
 
   // Remove cached user
   static Future<void> clearUser() async {
-    await remove(_userKey);
+    try {
+      await remove(_userKey);
+      print('✅ User data cleared from local storage');
+    } catch (e) {
+      print('❌ Error clearing user data from local storage: $e');
+      rethrow;
+    }
   }
 }

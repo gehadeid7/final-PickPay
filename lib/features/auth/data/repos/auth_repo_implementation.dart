@@ -3,14 +3,13 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 import 'package:pickpay/constants.dart';
 import 'package:pickpay/core/errors/failures.dart';
 import 'package:pickpay/core/services/database_services.dart';
 import 'package:pickpay/core/services/firebase_auth_service.dart';
-import 'package:pickpay/core/services/shared_preferences_singletone.dart';
+import 'package:pickpay/core/services/shared_preferences_singletone.dart' show Prefs;
 import 'package:pickpay/core/utils/backend_endpoints.dart';
 import 'package:pickpay/features/auth/data/models/user_model.dart';
 import 'package:pickpay/features/auth/domain/entities/user_entity.dart';
@@ -18,33 +17,15 @@ import 'package:pickpay/features/auth/domain/repos/auth_repo.dart';
 import 'package:pickpay/services/api_service.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
-class FirebaseStorageService {
-  final FirebaseStorage _storage = FirebaseStorage.instance;
-
-  Future<String> uploadProfileImage(String userId, File imageFile) async {
-    if (!imageFile.existsSync()) {
-      throw Exception('File does not exist at path: ${imageFile.path}');
-    }
-
-    final ref = _storage.ref().child('profile_images/$userId.jpg');
-    final uploadTask = await ref.putFile(imageFile);
-    final downloadUrl = await uploadTask.ref.getDownloadURL();
-    return downloadUrl;
-  }
-}
-
-
 class AuthRepoImplementation extends AuthRepo {
   final FirebaseAuthService firebaseAuthService;
   final DatabaseService databaseService;
   final ApiService apiService;
-  final FirebaseStorageService firebaseStorageService;
 
   AuthRepoImplementation({
     required this.databaseService,
     required this.firebaseAuthService,
     required this.apiService,
-    required this.firebaseStorageService,
   });
 
   // ───────────────────────────────────────────────
@@ -283,10 +264,13 @@ class AuthRepoImplementation extends AuthRepo {
   @override
   Future<Either<Failure, void>> saveUserData({required UserEntity user}) async {
     try {
-      final jsonData = jsonEncode(UserModel.fromEntity(user).toMap());
-      await Prefs.setString(kUserData, jsonData);
+      print('🔄 Saving user data to local storage:');
+      print('📋 User data: ${user.toMap()}');
+      await Prefs.saveUser(UserModel.fromEntity(user));
+      print('✅ User data saved successfully');
       return right(null);
     } catch (e) {
+      print('❌ Failed to save user data: $e');
       return left(ServerFailure('Failed to save user data: ${e.toString()}'));
     }
   }
@@ -295,135 +279,187 @@ class AuthRepoImplementation extends AuthRepo {
   // 👤 GET USER DATA FROM BACKEND
   // ───────────────────────────────────────────────
   @override
-Future<Either<Failure, UserEntity>> getUserData({required String userId}) async {
-  try {
-    final response = await apiService.get(
-      endpoint: BackendEndpoints.getUserData(userId),
-    );
+  Future<Either<Failure, UserEntity>> getUserData({required String userId}) async {
+    try {
+      print('🔄 Getting user data for userId: $userId');
+      final response = await apiService.get(
+        endpoint: BackendEndpoints.getMe,
+        authorized: true,
+      );
 
-    if (response.statusCode != 200) {
-      return left(ServerFailure(
-          'Backend error ${response.statusCode}: ${response.body}'));
+      print('📥 User data response status: ${response.statusCode}');
+      print('📥 User data response body: ${response.body}');
+
+      if (response.statusCode != 200) {
+        print('❌ Failed to get user data:');
+        print('❌ Status: ${response.statusCode}');
+        print('❌ Response: ${response.body}');
+        return left(ServerFailure(
+            'Backend error ${response.statusCode}: ${response.body}'));
+      }
+
+      final responseData = jsonDecode(response.body);
+      print('✅ Got response data: $responseData');
+      
+      if (!responseData.containsKey('data')) {
+        print('❌ No data field in response');
+        return left(ServerFailure('Invalid response format: missing data field'));
+      }
+
+      final userData = responseData['data'];
+      print('✅ Got user data: $userData');
+      
+      final userModel = UserModel.fromJson(userData);
+      print('✅ Created user model: ${userModel.toMap()}');
+      
+      // Always update cache with fresh data
+      print('🔄 Updating local cache with fresh data');
+      await Prefs.saveUser(userModel);
+      print('✅ Cache updated successfully');
+      
+      return right(userModel);
+    } catch (e, stack) {
+      print('❌ Exception in getUserData:');
+      print('❌ Error: ${e.toString()}');
+      print('❌ Stack trace: $stack');
+      return left(ServerFailure('Failed to get user data: ${e.toString()}'));
     }
-
-    final data = jsonDecode(response.body);
-    final userModel = UserModel.fromMap(data);
-    return right(userModel);
-  } catch (e) {
-    return left(ServerFailure('Failed to get user data: ${e.toString()}'));
   }
-}
-
 
   // ───────────────────────────────────────────────
   // 👤 UPDATE USER DATA (Including profile image upload)
   // ───────────────────────────────────────────────
-@override
-Future<Either<Failure, void>> updateUserData(UserEntity user) async {
-  try {
-    print('🔄 updateUserData started for userId: ${user.uId}');
+  @override
+  Future<Either<Failure, void>> updateUserData(
+    UserEntity user, {
+    Map<String, dynamic>? requestBody,
+  }) async {
+    try {
+      print('🔄 updateUserData started for userId: ${user.uId}');
 
-    final currentUser = FirebaseAuth.instance.currentUser;
-    if (currentUser == null) {
-      print('❌ No logged-in user found in updateUserData');
-      return left(ServerFailure('No logged-in user'));
-    }
-    print('✅ Current Firebase user found: ${currentUser.uid}');
-
-    String? photoUrl = user.photoUrl;
-    print('📋 Incoming user data: fullName="${user.fullName}", email="${user.email}", photoUrl="$photoUrl"');
-
-    // Upload profile image if local path (not URL)
-    if (photoUrl != null && photoUrl.isNotEmpty && !photoUrl.startsWith('http')) {
-      print('🖼️ Detected local image path: "$photoUrl" (length: ${photoUrl.length})');
-
-      final file = File(photoUrl);
-      final exists = await file.exists();
-      print('📂 Checking if file exists at path: $photoUrl -> $exists');
-      if (!exists) {
-        print('❌ File does NOT exist at path: $photoUrl');
-        return left(ServerFailure('صورة الملف غير موجودة في المسار المحدد: $photoUrl'));
+      final currentUser = FirebaseAuth.instance.currentUser;
+      if (currentUser == null) {
+        print('❌ No logged-in user found in updateUserData');
+        return left(ServerFailure('No logged-in user'));
       }
-      
-      print('⬆️ Uploading profile image...');
-      final uploadResult = await uploadProfileImage(currentUser.uid, file);
-      
-      final updatedPhotoUrlOrFailure = uploadResult.fold<Either<Failure, String>>(
-        (failure) {
-          print('❌ Image upload failed in updateUserData: ${failure.message}');
-          return left(failure); // Return failure without throwing
-        },
-        (url) {
-          print('✅ Profile image uploaded successfully. New URL: $url');
-          photoUrl = url;
-          return right(url);
+      print('✅ Current Firebase user found: ${currentUser.uid}');
+
+      String? photoUrl = user.photoUrl;
+      print('📋 Incoming user data: fullName="${user.fullName}", email="${user.email}", photoUrl="$photoUrl"');
+
+      // Upload profile image if local path (not URL)
+      if (photoUrl != null && photoUrl.isNotEmpty && !photoUrl.startsWith('http')) {
+        print('🖼️ Detected local image path: "$photoUrl" (length: ${photoUrl.length})');
+
+        final file = File(photoUrl);
+        final exists = await file.exists();
+        print('📂 Checking if file exists at path: $photoUrl -> $exists');
+        if (!exists) {
+          print('❌ File does NOT exist at path: $photoUrl');
+          return left(ServerFailure('صورة الملف غير موجودة في المسار المحدد: $photoUrl'));
+        }
+        
+        print('⬆️ Uploading profile image...');
+        final uploadResult = await uploadProfileImage(currentUser.uid, file);
+        
+        final updatedPhotoUrlOrFailure = uploadResult.fold<Either<Failure, String>>(
+          (failure) {
+            print('❌ Image upload failed in updateUserData: ${failure.message}');
+            return left(failure);
+          },
+          (url) {
+            print('✅ Profile image uploaded successfully. New URL: $url');
+            photoUrl = url;
+            return right(url);
+          },
+        );
+        
+        if (updatedPhotoUrlOrFailure.isLeft()) {
+          print('❌ Returning failure from image upload');
+          return left(updatedPhotoUrlOrFailure.swap().getOrElse(() => ServerFailure('فشل رفع الصورة')));
+        }
+      } else {
+        print('ℹ️ No need to upload profile image. Using existing URL or empty path.');
+      }
+
+      print('🔄 Updating FirebaseAuth profile with displayName: "${user.fullName}", photoUrl: $photoUrl');
+      await currentUser.updateDisplayName(user.fullName);
+      if (photoUrl != null) {
+        await currentUser.updatePhotoURL(photoUrl);
+      }
+      await currentUser.reload();
+      print('✅ FirebaseAuth profile updated and reloaded.');
+
+      print('🌐 Preparing to update backend profile for userId: ${user.uId}');
+      final idToken = await currentUser.getIdToken();
+      print('🔐 Retrieved Firebase ID token for authorization.');
+
+      // Create the request body with all user data
+      final Map<String, dynamic> finalRequestBody = {
+        'fullName': user.fullName,
+        'email': user.email,
+        'phone': user.phone,
+        'gender': user.gender,
+        'dob': user.dob,
+        'age': user.age,
+        'address': user.address,
+        if (photoUrl != null) 'profileImg': photoUrl!.contains('/') ? photoUrl!.split('/').last : photoUrl,
+      };
+
+      // Merge with any additional request body data
+      if (requestBody != null) {
+        finalRequestBody.addAll(requestBody);
+      }
+
+      print('📤 PUT Request to backend at endpoint: ${BackendEndpoints.updateMe}');
+      print('📤 Request body: $finalRequestBody');
+
+      final response = await apiService.put(
+        endpoint: BackendEndpoints.updateMe,
+        body: finalRequestBody,
+        headers: {
+          'Authorization': 'Bearer $idToken',
+          'Content-Type': 'application/json',
         },
       );
-      
-      if (updatedPhotoUrlOrFailure.isLeft()) {
-        print('❌ Returning failure from image upload');
-        return left(updatedPhotoUrlOrFailure.swap().getOrElse(() => ServerFailure('فشل رفع الصورة')));
+
+      print('📥 Received response with status code: ${response.statusCode}');
+      print('📥 Response body: ${response.body}');
+      if (response.statusCode == 200) {
+        print('✅ Backend profile updated successfully.');
+        
+        // Parse the response to see what we got back
+        try {
+          final responseData = jsonDecode(response.body);
+          print('📥 Parsed response data: $responseData');
+          if (responseData.containsKey('data')) {
+            final userData = responseData['data'];
+            print('📥 User data from response: $userData');
+            // Update cache with the response data instead of what we sent
+            final updatedUser = UserModel.fromJson(userData);
+            print('📥 Created user model from response: ${updatedUser.toMap()}');
+            await Prefs.saveUser(updatedUser);
+            print('✅ Local cache updated with response data');
+          } else {
+            print('⚠️ No data field in response, using sent data as fallback');
+            await Prefs.saveUser(UserModel.fromEntity(user));
+          }
+        } catch (e) {
+          print('⚠️ Error parsing response, using sent data as fallback: $e');
+          await Prefs.saveUser(UserModel.fromEntity(user));
+        }
+        
+        return right(null);
+      } else {
+        print('❌ Backend profile update failed with status ${response.statusCode}: ${response.body}');
+        return left(ServerFailure('فشل تحديث البيانات: ${response.body}'));
       }
-    } else {
-      print('ℹ️ No need to upload profile image. Using existing URL or empty path.');
+    } catch (e, stack) {
+      print('⛔ Exception in updateUserData: ${e.toString()}');
+      print('📄 Stacktrace:\n$stack');
+      return left(ServerFailure('فشل تحديث البيانات: ${e.toString()}'));
     }
-
-    print('🔄 Updating FirebaseAuth profile with displayName: "${user.fullName}", photoUrl: $photoUrl');
-    await currentUser.updateDisplayName(user.fullName);
-    if (photoUrl != null) {
-      await currentUser.updatePhotoURL(photoUrl);
-    }
-    await currentUser.reload();
-    print('✅ FirebaseAuth profile updated and reloaded.');
-
-    print('🌐 Preparing to update backend profile for userId: ${user.uId}');
-final updatedUser = UserEntity(
-  uId: user.uId,
-  email: user.email,
-  fullName: user.fullName,
-  emailVerified: user.emailVerified,
-  photoUrl: photoUrl,
-  phone: user.phone,
-  gender: user.gender,
-  dob: user.dob,
-  age: user.age,
-  address: user.address,
-);
-    final idToken = await currentUser.getIdToken();
-    print('🔐 Retrieved Firebase ID token for authorization.');
-
-    final requestBody = UserModel.fromEntity(updatedUser).toMap();
-    print('📤 PUT Request to backend at endpoint: ${BackendEndpoints.updateMe}');
-    print('📤 Request headers: {Authorization: Bearer $idToken, Content-Type: application/json}');
-    print('📤 Request body: $requestBody');
-
-    final response = await apiService.put(
-      endpoint: BackendEndpoints.updateMe,
-      body: requestBody,
-      headers: {
-        'Authorization': 'Bearer $idToken',
-        'Content-Type': 'application/json',
-      },
-    );
-
-    print('📥 Received response with status code: ${response.statusCode}');
-    if (response.statusCode == 200) {
-      print('✅ Backend profile updated successfully.');
-      await saveUserData(user: updatedUser);
-      print('💾 Local user data saved successfully after backend update.');
-      return right(null);
-    } else {
-      print('❌ Backend profile update failed with status ${response.statusCode}: ${response.body}');
-      return left(ServerFailure('فشل تحديث البيانات: ${response.body}'));
-    }
-  } catch (e, stacktrace) {
-    print('⛔ Exception in updateUserData: ${e.toString()}');
-    print('📄 Stacktrace:\n$stacktrace');
-    return left(ServerFailure('فشل تحديث البيانات: ${e.toString()}'));
   }
-}
-
-
 
   @override
   Future<Either<Failure, void>> addUserData({required UserEntity user}) async {
@@ -509,135 +545,225 @@ final updatedUser = UserEntity(
 
       print('Backend response: ${response.body}'); // Debug print
 
-    final data = jsonDecode(response.body);
-    return right(data['exists'] == true);
-  } catch (e) {
-    print('Error in checkUserExists: ${e.toString()}');
-    return left(ServerFailure('فشل التحقق من وجود المستخدم: ${e.toString()}'));
-  }
-}
-@override
-Future<Either<Failure, String>> uploadProfileImage(String userId, File image) async {
-  try {
-    if (!image.existsSync()) {
-      print('❌ File does not exist at path: ${image.path}');
-      return left(ServerFailure('File does not exist at path: ${image.path}'));
+      final data = jsonDecode(response.body);
+      return right(data['exists'] == true);
+    } catch (e) {
+      print('Error in checkUserExists: ${e.toString()}');
+      return left(ServerFailure('فشل التحقق من وجود المستخدم: ${e.toString()}'));
     }
+  }
 
-    print('📤 Uploading image from path: ${image.path}');
+  @override
+  Future<Either<Failure, String>> uploadProfileImage(String userId, File image) async {
+    try {
+      print('\n=== 📤 UPLOAD IMAGE REQUEST START ===');
+      print('⬆️ uploadImage: Starting upload to ${BackendEndpoints.uploadUserPhoto}');
+      print('⬆️ uploadImage: File path: ${image.path}');
+      print('⬆️ uploadImage: File exists: ${image.existsSync()}');
+      print('⬆️ uploadImage: File size: ${await image.length()} bytes');
 
-    final streamedResponse = await apiService.uploadImage(
-      endpoint: BackendEndpoints.uploadUserPhoto,
-      imageFile: image,
-      fields: {'userId': userId},
-      authorized: true,
-    );
-
-    final response = await http.Response.fromStream(streamedResponse);
-
-    print('✅ Upload response status: ${response.statusCode}');
-    print('✅ Upload response body: ${response.body}');
-
-    if (response.statusCode == 200) {
-      final responseData = jsonDecode(response.body);
-      final imageUrl = responseData['profileImgUrl'];
-      print('🌐 Received imageUrl: $imageUrl');
-
-      if (imageUrl == null) {
-        print('❌ Error: Backend did not return image URL');
-        return left(ServerFailure('Backend did not return image URL'));
+      if (!image.existsSync()) {
+        print('❌ File does not exist at path: ${image.path}');
+        return left(ServerFailure('File does not exist at path: ${image.path}'));
       }
 
-      return right(imageUrl);
-    } else {
-      print('❌ Upload failed with status ${response.statusCode}: ${response.body}');
-      return left(ServerFailure('Upload failed with status ${response.statusCode}: ${response.body}'));
-    }
-  } catch (e) {
-    print('❌ Exception during image upload: ${e.toString()}');
-    return left(ServerFailure('Failed to upload profile image: ${e.toString()}'));
-  }
-}
+      final streamedResponse = await apiService.uploadImage(
+        endpoint: BackendEndpoints.uploadUserPhoto,
+        imageFile: image,
+        fields: {'userId': userId},
+        authorized: true,
+      );
 
-Future<Either<Failure, UserModel>> uploadProfileImageAndUpdate(File image) async {
-  try {
-    final user = FirebaseAuth.instance.currentUser;
+      print('📦 Read file bytes: ${await image.length()} bytes');
+      print('📎 Added multipart file with field name "profileImg"');
 
-    if (user == null) {
-      print('❌ No authenticated user found');
-      return left(ServerFailure('No authenticated user found'));
-    }
+      final response = await http.Response.fromStream(streamedResponse);
+      print('\n=== 📥 RESPONSE DETAILS ===');
+      print('📥 Upload response status: ${response.statusCode}');
+      print('📥 Raw response body: ${response.body}');
 
-    print('👤 Authenticated user ID: ${user.uid}');
-    print('📤 Starting image upload...');
-
-    final uploadResult = await uploadProfileImage(user.uid, image);
-
-    return await uploadResult.fold(
-      (failure) {
-        print('❌ Image upload failed: ${failure.message}');
-        return left(failure);
-      },
-      (imageUrlOrFilename) async {
-        print('✅ Image uploaded successfully. URL: $imageUrlOrFilename');
-
-        final Map<String, dynamic> body = {
-          'profileImg': imageUrlOrFilename,
-          // 'email': user.email ?? '',
-          'displayName': user.displayName ?? '',
-        };
-
-        final updateResponse = await apiService.put(
-          endpoint: BackendEndpoints.updateMe,
-          body: body,
-          authorized: true,
-        );
-
-        print('🔄 Profile update response status: ${updateResponse.statusCode}');
-        print('🔄 Profile update response body: ${updateResponse.body}');
-
-        if (updateResponse.statusCode == 200) {
-          final data = jsonDecode(updateResponse.body)['data'];
-          final updatedUser = UserModel.fromJson(data);
-          print('✅ Profile updated successfully');
-          return right(updatedUser);
-        } else {
-          print('❌ Profile update failed: ${updateResponse.body}');
-          return left(ServerFailure('Profile update failed: ${updateResponse.body}'));
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+        print('\n=== 🔍 BACKEND RESPONSE ANALYSIS ===');
+        print('📥 Full response data: $responseData');
+        
+        // Get the filename from the response
+        final profileImg = responseData['profileImg'];
+        if (profileImg == null || profileImg.isEmpty) {
+          print('❌ Error: Backend did not return profileImg');
+          print('❌ Full response data: $responseData');
+          return left(ServerFailure('Backend did not return profileImg'));
         }
-      },
-    );
-  } catch (e) {
-    print('❌ Unexpected error during profile update: ${e.toString()}');
-    return left(ServerFailure('Unexpected error: ${e.toString()}'));
-  }
-}
-@override
-Future<Either<Failure, bool>> checkIfImageExists(String imageUrl) async {
-  try {
-    final fileName = Uri.parse(imageUrl).pathSegments.last;
-    print('🔍 checkIfImageExists ➜ fileName: $fileName');
 
-    final response = await apiService.post(
-      endpoint: BackendEndpoints.checkImageExists,
-      body: {'fileName': fileName},
-      authorized: true,                 // أضف التوكن إذا كان المسار محميًّا
-    );
-
-    print('🔍 Response ${response.statusCode}: ${response.body}');
-
-    if (response.statusCode != 200) {
-      return left(ServerFailure(
-          'فشل التحقق من وجود الصورة: ${response.statusCode} – ${response.body}'));
+        // Use the profileImgUrl from the response if available, otherwise construct it
+        String fullImageUrl = responseData['profileImgUrl'];
+        if (fullImageUrl == null || fullImageUrl.isEmpty) {
+          // Construct the full URL using the base URL from the API service
+          final baseUrl = ApiService.baseUrl.replaceAll('/api/v1/', '').replaceAll(RegExp(r'/$'), '');
+          fullImageUrl = '$baseUrl/uploads/users/$profileImg';
+        }
+        
+        print('✅ Upload successful!');
+        print('✅ Filename: $profileImg');
+        print('✅ Full URL: $fullImageUrl');
+        return right(fullImageUrl);
+      } else {
+        print('❌ Upload failed with status ${response.statusCode}');
+        print('❌ Error response: ${response.body}');
+        return left(ServerFailure('Upload failed with status ${response.statusCode}: ${response.body}'));
+      }
+    } catch (e, stack) {
+      print('❌ Exception during image upload:');
+      print('❌ Error: ${e.toString()}');
+      print('❌ Stack trace: $stack');
+      return left(ServerFailure('Failed to upload profile image: ${e.toString()}'));
     }
-
-    final data = jsonDecode(response.body);
-    final exists = data['exists'] == true;
-    return right(exists);
-  } catch (e) {
-    print('❌ Exception in checkIfImageExists: $e');
-    return left(ServerFailure('فشل التحقق من وجود الصورة: ${e.toString()}'));
   }
-}
 
+  Future<Either<Failure, UserEntity>> uploadProfileImageAndUpdate(File image) async {
+    try {
+      print('\n=== 🔄 UPLOAD AND UPDATE PROFILE START ===');
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        print('❌ No authenticated user found');
+        return left(ServerFailure('No authenticated user found'));
+      }
+
+      print('👤 Authenticated user ID: ${user.uid}');
+      print('📤 Starting image upload...');
+
+      // Ensure image has correct extension
+      final ext = image.path.split('.').last.toLowerCase();
+      if (!['jpg', 'jpeg', 'png'].contains(ext)) {
+        print('❌ Invalid image format: $ext');
+        return left(ServerFailure('Invalid image format. Please use JPG or PNG.'));
+      }
+
+      // Upload the image
+      final uploadResult = await uploadProfileImage(user.uid, image);
+      
+      return await uploadResult.fold(
+        (failure) {
+          print('❌ Image upload failed: ${failure.message}');
+          return left(failure);
+        },
+        (imageUrl) async {
+          print('✅ Image uploaded successfully. URL: $imageUrl');
+
+          // Get current user data
+          print('🔄 Fetching current user data...');
+          final currentUserResponse = await apiService.get(
+            endpoint: BackendEndpoints.getMe,
+            authorized: true,
+          );
+
+          if (currentUserResponse.statusCode != 200) {
+            print('❌ Failed to get current user data:');
+            print('❌ Status: ${currentUserResponse.statusCode}');
+            print('❌ Response: ${currentUserResponse.body}');
+            return left(ServerFailure('Failed to get current user data'));
+          }
+
+          final currentUserData = jsonDecode(currentUserResponse.body);
+          print('✅ Got current user data: $currentUserData');
+          final currentUser = UserModel.fromJson(currentUserData['data']);
+
+          // Extract filename from the upload response URL
+          String profileImg = imageUrl;
+          if (imageUrl.contains('/')) {
+            profileImg = imageUrl.split('/').last;
+          }
+          print('📸 Using filename from upload response: $profileImg');
+
+          // Update backend with just the filename
+          print('🔄 Updating backend profile...');
+          final updateResponse = await apiService.put(
+            endpoint: BackendEndpoints.updateMe,
+            body: {
+              'profileImg': profileImg, // Send only the filename
+            },
+            authorized: true,
+          );
+
+          print('📥 Profile update response status: ${updateResponse.statusCode}');
+          print('📥 Profile update response body: ${updateResponse.body}');
+
+          if (updateResponse.statusCode == 200) {
+            print('✅ Backend profile updated successfully');
+            
+            // Get the full URL from the update response
+            final updateData = jsonDecode(updateResponse.body);
+            final fullImageUrl = updateData['data']['profileImg'];
+            print('🖼️ Full image URL from backend: $fullImageUrl');
+            
+            // Update Firebase Auth profile with the full URL
+            print('🔄 Updating Firebase Auth profile...');
+            await user.updatePhotoURL(fullImageUrl);
+            await user.reload();
+            print('✅ Firebase Auth profile updated');
+
+            // Create updated user with the full URL
+            final updatedUser = UserEntity(
+              uId: currentUser.uId,
+              email: currentUser.email,
+              fullName: currentUser.fullName,
+              emailVerified: currentUser.emailVerified,
+              photoUrl: fullImageUrl,
+              phone: currentUser.phone,
+              gender: currentUser.gender,
+              dob: currentUser.dob,
+              age: currentUser.age,
+              address: currentUser.address,
+            );
+
+            // Save to local storage
+            print('💾 Saving to local storage...');
+            await saveUserData(user: updatedUser);
+            print('✅ Local storage updated');
+            
+            print('✅ Profile update completed successfully');
+            return right(updatedUser);
+          } else {
+            print('❌ Profile update failed:');
+            print('❌ Status: ${updateResponse.statusCode}');
+            print('❌ Response: ${updateResponse.body}');
+            return left(ServerFailure('Profile update failed: ${updateResponse.body}'));
+          }
+        },
+      );
+    } catch (e, stack) {
+      print('❌ Unexpected error during profile update:');
+      print('❌ Error: ${e.toString()}');
+      print('❌ Stack trace: $stack');
+      return left(ServerFailure('Unexpected error: ${e.toString()}'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> checkIfImageExists(String imageUrl) async {
+    try {
+      final fileName = Uri.parse(imageUrl).pathSegments.last;
+      print('🔍 checkIfImageExists ➜ fileName: $fileName');
+
+      final response = await apiService.post(
+        endpoint: BackendEndpoints.checkImageExists,
+        body: {'fileName': fileName},
+        authorized: true,                 // أضف التوكن إذا كان المسار محميًّا
+      );
+
+      print('🔍 Response ${response.statusCode}: ${response.body}');
+
+      if (response.statusCode != 200) {
+        return left(ServerFailure(
+            'فشل التحقق من وجود الصورة: ${response.statusCode} – ${response.body}'));
+      }
+
+      final data = jsonDecode(response.body);
+      final exists = data['exists'] == true;
+      return right(exists);
+    } catch (e) {
+      print('❌ Exception in checkIfImageExists: $e');
+      return left(ServerFailure('فشل التحقق من وجود الصورة: ${e.toString()}'));
+    }
+  }
 }

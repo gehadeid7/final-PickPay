@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pickpay/features/auth/domain/entities/user_entity.dart';
+import 'package:pickpay/services/api_service.dart';
 
 class UserModel extends UserEntity {
   UserModel({
@@ -39,16 +40,59 @@ class UserModel extends UserEntity {
 
   /// Create from a JSON object (API response)
   factory UserModel.fromJson(Map<String, dynamic> json) {
+    print('🔄 Creating UserModel from JSON: $json');
+    
+    // Handle both backend and Firebase user data formats
+    final fullName = json['fullName'] ?? json['name'] ?? 'Unknown';
+    final email = json['email'] ?? 'Unknown';
+    final uId = json['uId'] ?? json['_id'] ?? json['id'] ?? 'Unknown';
+    final emailVerified = json['emailVerified'] ?? false;
+    
+    // Handle photo URL - could be in different fields
+    String? photoUrl = json['photoUrl'];
+    
+    // If we don't have a photoUrl, check other fields
+    if (photoUrl == null || photoUrl.isEmpty) {
+      // First check if we have a full URL in profileImgUrl
+      photoUrl = json['profileImgUrl'];
+      
+      // If still no URL, check profileImg
+      if (photoUrl == null || photoUrl.isEmpty) {
+        photoUrl = json['profileImg'];
+        // Only construct URL if profileImg is not already a full URL
+        if (photoUrl != null && !photoUrl.startsWith('http')) {
+          print('ℹ️ Constructing full URL from filename: $photoUrl');
+          // Get base URL without trailing slash and remove /api/v1
+          final baseUrl = ApiService.baseUrl.replaceAll('/api/v1/', '').replaceAll(RegExp(r'/$'), '');
+          photoUrl = '$baseUrl/uploads/users/$photoUrl';
+          print('✅ Constructed full URL: $photoUrl');
+        } else {
+          print('ℹ️ Using provided URL as is: $photoUrl');
+        }
+      } else {
+        print('ℹ️ Using profileImgUrl from response: $photoUrl');
+      }
+    } else {
+      print('ℹ️ Using photoUrl from response: $photoUrl');
+    }
+    
+    print('✅ Parsed user data:');
+    print('✅ fullName: $fullName');
+    print('✅ email: $email');
+    print('✅ uId: $uId');
+    print('✅ emailVerified: $emailVerified');
+    print('✅ photoUrl: $photoUrl');
+    
     return UserModel(
-      fullName: json['fullName'] ?? json['name'] ?? 'Unknown',
-      email: json['email'] ?? 'Unknown',
-      uId: json['uId'] ?? json['_id'] ?? 'Unknown',
-      emailVerified: json['emailVerified'] ?? false,
-      photoUrl: json['photoUrl'],
+      fullName: fullName,
+      email: email,
+      uId: uId,
+      emailVerified: emailVerified,
+      photoUrl: photoUrl,
       phone: json['phone'],
       gender: json['gender'],
       dob: json['dob'],
-      age: json['age'],
+      age: json['age']?.toString(),
       address: json['address'],
     );
   }

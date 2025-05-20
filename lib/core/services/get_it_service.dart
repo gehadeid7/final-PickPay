@@ -18,14 +18,10 @@ void setupGetIt() {
   // Register ApiService as a singleton
   getIt.registerSingleton<ApiService>(ApiService());
 
-  // Register FirebaseStorageService as a singleton
-  getIt.registerSingleton<FirebaseStorageService>(FirebaseStorageService());
-
   // Register AuthRepoImplementation as a singleton with dependencies
   getIt.registerSingleton<AuthRepo>(AuthRepoImplementation(
     firebaseAuthService: getIt<FirebaseAuthService>(),
     databaseService: getIt<DatabaseService>(),
     apiService: getIt<ApiService>(),
-    firebaseStorageService: getIt<FirebaseStorageService>(),
   ));
 }

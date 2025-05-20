@@ -48,6 +48,9 @@ abstract class AuthRepo {
   Future<Either<Failure, bool>> isUserLoggedIn();
   Future<Either<Failure, UserEntity>> getCurrentUser();
   Future<Either<Failure, bool>> isEmailVerified();
-  Future<Either<Failure, void>> updateUserData(UserEntity user);
+  Future<Either<Failure, void>> updateUserData(
+    UserEntity user, {
+    Map<String, dynamic>? requestBody,
+  });
   Future<Either<Failure, bool>> checkIfImageExists(String imageUrl);
 }

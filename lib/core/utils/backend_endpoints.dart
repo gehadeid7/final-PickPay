@@ -5,8 +5,8 @@ class BackendEndpoints {
   static const String checkUserExists = 'users/exist';
   static const String updateMe = 'users/updateMe';
   static const String uploadUserPhoto = 'users/uploadPhoto';
-static const String checkImageExists = '/users/check-image-exists';
-
+  static const String checkImageExists = 'users/check-image-exists';
+  static const String getMe = 'users/getMe';
 
   // 🛒 Product endpoints
   static const String getProducts = 'products';

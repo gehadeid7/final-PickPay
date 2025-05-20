@@ -1,6 +1,7 @@
 // ignore_for_file: depend_on_referenced_packages
 
 import 'dart:io';
+import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
@@ -10,6 +11,7 @@ import 'package:pickpay/features/auth/data/models/user_model.dart';
 import 'package:pickpay/features/auth/domain/entities/user_entity.dart';
 import 'package:pickpay/features/auth/domain/repos/auth_repo.dart';
 import 'package:pickpay/features/profile_change/cubits/cubit/profile_chnage_state.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {
   final AuthRepo _authRepo;
@@ -24,7 +26,10 @@ class ProfileCubit extends Cubit<ProfileState> {
     required FirebaseAuthService firebaseAuthService,
   })  : _authRepo = authRepo,
         _firebaseAuthService = firebaseAuthService,
-        super(const ProfileState());
+        super(const ProfileState()) {
+    // Load cached data immediately
+    loadCachedUserProfile();
+  }
 
   void _logError(String message, [Object? error, StackTrace? st]) =>
       _logger.e(message, error: error, stackTrace: st);
@@ -37,49 +42,85 @@ class ProfileCubit extends Cubit<ProfileState> {
     return UserEntity.fromFirebaseUser(fbUser);
   }
 
-  void resetStatus() => emit(state.copyWith(status: ProfileStatus.initial));
+  void resetStatus() => emit(state.copyWith(
+    status: ProfileStatus.initial,
+    errorMessage: '',
+    fieldBeingEdited: null,
+  ));
 
+  bool _hasChanges(UserEntity updated, UserEntity original) {
+    return updated.fullName != original.fullName ||
+        updated.email != original.email ||
+        updated.phone != original.phone ||
+        updated.gender != original.gender ||
+        updated.dob != original.dob ||
+        updated.age != original.age ||
+        updated.address != original.address ||
+        updated.photoUrl != original.photoUrl;
+  }
 
-bool _hasChanges(UserEntity updated, UserEntity original) {
-  return updated.fullName != original.fullName ||
-      updated.email != original.email ||
-      updated.phone != original.phone ||
-      updated.gender != original.gender ||
-      updated.dob != original.dob ||
-      updated.age != original.age ||
-      updated.address != original.address ||
-      updated.photoUrl != original.photoUrl;
-}
-
-  /// Load cached user from local storage if any
   Future<void> loadCachedUserProfile() async {
-    final cachedUser = Prefs.getUser();
-    if (cachedUser != null) {
-      _loadedUser = cachedUser;
-      emit(state.copyWith(
-        status: ProfileStatus.loadSuccess,
-        name: cachedUser.fullName,
-        email: cachedUser.email,
-        phone: cachedUser.phone ?? '',
-        gender: cachedUser.gender ?? '',
-        dob: cachedUser.dob ?? '',
-        age: cachedUser.age ?? '',
-        address: cachedUser.address ?? '',
-        profileImageUrl: cachedUser.photoUrl ?? '',
-      ));
+    try {
+      _logInfo('🔄 Loading cached user profile...');
+      final cachedUser = Prefs.getUser();
+      if (cachedUser != null) {
+        _loadedUser = cachedUser;
+        _logInfo('✅ Loaded cached user: ${cachedUser.toMap()}');
+        
+        // Verify the cached user has valid data
+        if (cachedUser.uId.isEmpty || cachedUser.email.isEmpty) {
+          _logInfo('⚠️ Cached user has invalid data, skipping cache');
+          return;
+        }
+        
+        // Log image URL details
+        _logInfo('📸 Cached user image URL: ${cachedUser.photoUrl}');
+        if (cachedUser.photoUrl != null && cachedUser.photoUrl!.isNotEmpty) {
+          _logInfo('✅ Valid image URL found in cache');
+        } else {
+          _logInfo('ℹ️ No image URL in cache');
+        }
+        
+        emit(state.copyWith(
+          status: ProfileStatus.loadSuccess,
+          name: cachedUser.fullName,
+          email: cachedUser.email,
+          phone: cachedUser.phone ?? '',
+          gender: cachedUser.gender ?? '',
+          dob: cachedUser.dob ?? '',
+          age: cachedUser.age ?? '',
+          address: cachedUser.address ?? '',
+          profileImageUrl: cachedUser.photoUrl ?? '',
+          errorMessage: '',
+        ));
+        _logInfo('✅ Updated state with cached user data');
+      } else {
+        _logInfo('ℹ️ No cached user found');
+      }
+    } catch (e, st) {
+      _logError('Error loading cached profile', e, st);
     }
   }
 
-  /// Load user profile from backend via AuthRepo
   Future<void> loadUserProfile() async {
-    await loadCachedUserProfile();
-
-    emit(state.copyWith(status: ProfileStatus.loading));
-    _logInfo('Loading user profile…');
+    if (_isBusy) return;
+    _isBusy = true;
 
     try {
+      // First try to load from cache if not already loaded
+      if (_loadedUser == null) {
+        await loadCachedUserProfile();
+      }
+
+      emit(state.copyWith(
+        status: ProfileStatus.loading,
+        errorMessage: '',
+        fieldBeingEdited: null,
+      ));
+
       final fbUser = _firebaseAuthService.getCurrentUser();
       if (fbUser == null) {
+        _logError('❌ No authenticated user found');
         emit(state.copyWith(
           status: ProfileStatus.error,
           errorMessage: 'لم يتم تسجيل الدخول',
@@ -87,22 +128,50 @@ bool _hasChanges(UserEntity updated, UserEntity original) {
         return;
       }
 
-      final result = await _authRepo.getUserData(userId: fbUser.uid);
+      // Load fresh data from backend with timeout
+      _logInfo('🔄 Loading fresh data from backend');
+      final result = await _authRepo.getUserData(userId: fbUser.uid).timeout(
+        const Duration(seconds: 30),  // Increased timeout for better reliability
+        onTimeout: () {
+          _logError('❌ Backend request timed out');
+          throw TimeoutException('Backend request timed out');
+        },
+      );
+      
       result.fold(
         (failure) {
-          _logError('Failed to get user data', failure.message);
-          // Fallback: basic info from Firebase user only
-          _loadedUser = UserEntity.fromFirebaseUser(fbUser);
-          emit(state.copyWith(
-            status: ProfileStatus.loadSuccess,
-            errorMessage: 'تعذر تحميل بعض المعلومات. عرض المعلومات الأساسية فقط.',
-            name: fbUser.displayName ?? '',
-            email: fbUser.email ?? '',
-            profileImageUrl: fbUser.photoURL ?? '',
-          ));
+          _logError('❌ Failed to get user data from backend', failure.message);
+          // Keep using cached data if available
+          if (_loadedUser != null) {
+            _logInfo('ℹ️ Keeping cached user data after backend failure');
+            emit(state.copyWith(
+              status: ProfileStatus.loadSuccess,
+              errorMessage: 'تعذر تحميل بعض المعلومات. عرض البيانات المخزنة مؤقتاً.',
+            ));
+          } else {
+            emit(state.copyWith(
+              status: ProfileStatus.error,
+              errorMessage: 'فشل تحميل البيانات',
+            ));
+          }
         },
         (user) async {
+          _logInfo('✅ Got fresh user data from backend: ${user.toMap()}');
           _loadedUser = user;
+          
+          // Cache the updated user data
+          await Prefs.saveUser(UserModel.fromEntity(user));
+          _logInfo('✅ Cached updated user data');
+          
+          // Log image URL details
+          _logInfo('📸 Backend user image URL: ${user.photoUrl}');
+          if (user.photoUrl != null && user.photoUrl!.isNotEmpty) {
+            _logInfo('✅ Valid image URL from backend');
+          } else {
+            _logInfo('ℹ️ No image URL from backend');
+          }
+          
+          // Update state with fresh data
           emit(state.copyWith(
             status: ProfileStatus.loadSuccess,
             name: user.fullName,
@@ -113,21 +182,30 @@ bool _hasChanges(UserEntity updated, UserEntity original) {
             age: user.age ?? '',
             address: user.address ?? '',
             profileImageUrl: user.photoUrl ?? '',
+            errorMessage: '',
           ));
-          // Cache user locally
-          await Prefs.saveUser(UserModel.fromEntity(user));
         },
       );
     } catch (e, st) {
       _logError('Exception in loadUserProfile', e, st);
-      emit(state.copyWith(
-        status: ProfileStatus.error,
-        errorMessage: 'حدث خطأ أثناء تحميل الملف الشخصي.',
-      ));
+      // Keep using cached data if available
+      if (_loadedUser != null) {
+        _logInfo('ℹ️ Keeping cached user data after exception');
+        emit(state.copyWith(
+          status: ProfileStatus.loadSuccess,
+          errorMessage: 'تعذر تحميل بعض المعلومات. عرض البيانات المخزنة مؤقتاً.',
+        ));
+      } else {
+        emit(state.copyWith(
+          status: ProfileStatus.error,
+          errorMessage: 'حدث خطأ أثناء تحميل الملف الشخصي.',
+        ));
+      }
+    } finally {
+      _isBusy = false;
     }
   }
 
-  // Update UI fields on editing
   void _emitFieldUpdate({
     String? name,
     String? email,
@@ -138,138 +216,236 @@ bool _hasChanges(UserEntity updated, UserEntity original) {
     String? address,
     required String editedField,
   }) {
-    emit(state.copyWith(
-      name: name,
-      email: email,
-      phone: phone,
-      gender: gender,
-      dob: dob,
-      age: age,
-      address: address,
+    _logInfo('🔄 Updating field: $editedField');
+    _logInfo('Current state before update: ${state.toMap()}');
+    
+    final newState = state.copyWith(
+      name: name ?? state.name,
+      email: email ?? state.email,
+      phone: phone ?? state.phone,
+      gender: gender ?? state.gender,
+      dob: dob ?? state.dob,
+      age: age ?? state.age,
+      address: address ?? state.address,
       fieldBeingEdited: editedField,
-    ));
+      errorMessage: '',
+    );
+    
+    _logInfo('New state after update: ${newState.toMap()}');
+    emit(newState);
   }
 
-  // Field update helpers
-  void updateName(String v) => _emitFieldUpdate(name: v, editedField: 'name');
-  void updateEmail(String v) => _emitFieldUpdate(email: v, editedField: 'email');
-  void updatePhone(String v) => _emitFieldUpdate(phone: v, editedField: 'phone');
-  void updateGender(String v) => _emitFieldUpdate(gender: v, editedField: 'gender');
-  void updateDob(String d, String a) => _emitFieldUpdate(dob: d, age: a, editedField: 'dob');
-  void updateAddress(String v) => _emitFieldUpdate(address: v, editedField: 'address');
-
-  void updateProfileImage(File? img) => emit(state.copyWith(
-        profileImage: img,
-        profileImageUrl: '',
-        fieldBeingEdited: 'photoUrl',
+  // Field update helpers with validation
+  void updateName(String v) {
+    _logInfo('📝 Updating name to: $v');
+    if (v.trim().isEmpty) {
+      _logInfo('❌ Name update failed: empty value');
+      emit(state.copyWith(
+        errorMessage: 'الاسم لا يمكن أن يكون فارغاً',
+        fieldBeingEdited: 'name',
       ));
-
-  /// Normalize Egyptian phone number for backend
-  /// Returns normalized phone or null if invalid
-  String? _normalizeAndValidatePhone(String phone) {
-    final digitsOnly = phone.replaceAll(RegExp(r'\D'), '');
-    if (digitsOnly.length == 11 && digitsOnly.startsWith('01')) {
-      return '+20${digitsOnly.substring(1)}';
+      return;
     }
-    return null;
+    _emitFieldUpdate(name: v.trim(), editedField: 'name');
   }
 
-  /// Save entire profile including optional photo upload
+  void updatePhone(String v) {
+    _logInfo('📝 Updating phone to: $v');
+    final normalizedPhone = _normalizeAndValidatePhone(v.trim());
+    if (v.trim().isNotEmpty && normalizedPhone == null) {
+      _logInfo('❌ Phone update failed: invalid format');
+      emit(state.copyWith(
+        errorMessage: 'رقم الهاتف غير صالح',
+        fieldBeingEdited: 'phone',
+      ));
+      return;
+    }
+    _emitFieldUpdate(phone: v.trim(), editedField: 'phone');
+  }
+
+  void updateGender(String v) {
+    _logInfo('📝 Updating gender to: $v');
+    if (v.isEmpty) {
+      _logInfo('❌ Gender update failed: empty value');
+      emit(state.copyWith(
+        errorMessage: 'الرجاء اختيار النوع',
+        fieldBeingEdited: 'gender',
+      ));
+      return;
+    }
+    _emitFieldUpdate(gender: v, editedField: 'gender');
+  }
+
+  void updateAddress(String v) {
+    _logInfo('📝 Updating address to: $v');
+    if (v.trim().isEmpty) {
+      _logInfo('❌ Address update failed: empty value');
+      emit(state.copyWith(
+        errorMessage: 'العنوان لا يمكن أن يكون فارغاً',
+        fieldBeingEdited: 'address',
+      ));
+      return;
+    }
+    _emitFieldUpdate(address: v.trim(), editedField: 'address');
+  }
+
+  void updateDob(String d, String a) {
+    _logInfo('📝 Updating DOB to: $d and age to: $a');
+    if (d.isEmpty) {
+      _logInfo('❌ DOB update failed: empty value');
+      emit(state.copyWith(
+        errorMessage: 'تاريخ الميلاد مطلوب',
+        fieldBeingEdited: 'dob',
+      ));
+      return;
+    }
+    _emitFieldUpdate(dob: d, age: a, editedField: 'dob');
+  }
+
+  void updateProfileImage(File? img) {
+    _logInfo('📸 Updating profile image');
+    if (img != null) {
+      _logInfo('✅ New image selected: ${img.path}');
+      // Keep the current URL until upload succeeds
+      emit(state.copyWith(
+        profileImage: img,
+        fieldBeingEdited: 'photoUrl',
+        status: ProfileStatus.loading,
+      ));
+    } else {
+      _logInfo('ℹ️ Image selection cleared');
+      emit(state.copyWith(
+        profileImage: null,
+        fieldBeingEdited: 'photoUrl',
+        status: ProfileStatus.loading,
+      ));
+    }
+  }
+
   Future<void> saveProfile() async {
     if (_isBusy) return;
     _isBusy = true;
 
-    emit(state.copyWith(status: ProfileStatus.loading));
-    _logInfo('Saving profile…');
+    String? photoUrl = _loadedUser?.photoUrl;
+    final previousState = state;
+
+    emit(state.copyWith(
+      status: ProfileStatus.loading,
+      fieldBeingEdited: 'save',
+    ));
+    _logInfo('🔄 Starting profile save process...');
+    _logInfo('Current state before save: ${state.toMap()}');
+    _logInfo('Loaded user before save: ${_loadedUser?.toMap()}');
 
     try {
       final fbUser = _firebaseAuthService.getCurrentUser();
       if (fbUser == null) {
+        _logError('❌ No authenticated user found');
         emit(state.copyWith(
           status: ProfileStatus.error,
           errorMessage: 'لم يتم تسجيل الدخول.',
         ));
-        _isBusy = false;
         return;
       }
 
       // Handle image upload if new image selected
-      String? photoUrl = state.profileImageUrl.isNotEmpty
-          ? state.profileImageUrl
-          : _loadedUser?.photoUrl;
-
       if (state.profileImage != null) {
-        final uploadRes = await _authRepo.uploadProfileImageAndUpdate(state.profileImage!);
-        UserEntity? userWithPhoto;
-        bool uploadFailed = false;
-        uploadRes.fold(
-          (failure) {
-            uploadFailed = true;
-            _logError('Image upload failed', failure.message);
-            emit(state.copyWith(
-              status: ProfileStatus.error,
-              errorMessage: 'فشل تحميل الصورة: ${failure.message}',
-            ));
-          },
-          (u) => userWithPhoto = u,
-        );
-        if (uploadFailed || userWithPhoto == null) {
+        _logInfo('📤 Starting image upload for file: ${state.profileImage!.path}');
+        try {
+          final uploadRes = await _authRepo.uploadProfileImageAndUpdate(state.profileImage!).timeout(
+            const Duration(seconds: 30),
+            onTimeout: () {
+              _logError('❌ Image upload timed out');
+              throw TimeoutException('Image upload timed out');
+            },
+          );
+          
+          uploadRes.fold(
+            (failure) {
+              _logError('❌ Image upload failed', failure.message);
+              emit(state.copyWith(
+                status: ProfileStatus.error,
+                errorMessage: 'فشل تحميل الصورة: ${failure.message}',
+                profileImageUrl: previousState.profileImageUrl,
+              ));
+              _isBusy = false;
+              return;
+            },
+            (userWithPhoto) {
+              photoUrl = userWithPhoto.photoUrl;
+              _logInfo('✅ Image uploaded successfully. New URL: $photoUrl');
+              
+              // Cache the updated user with new photo URL
+              if (_loadedUser != null) {
+                final updatedUser = _loadedUser!.copyWith(photoUrl: photoUrl);
+                Prefs.saveUser(UserModel.fromEntity(updatedUser));
+                _logInfo('✅ Cached user data with new photo URL');
+              }
+            },
+          );
+        } catch (e, st) {
+          _logError('Exception during image upload', e, st);
+          emit(state.copyWith(
+            status: ProfileStatus.error,
+            errorMessage: 'حدث خطأ أثناء تحميل الصورة. يرجى المحاولة مرة أخرى.',
+            profileImageUrl: previousState.profileImageUrl,
+          ));
           _isBusy = false;
           return;
         }
-        photoUrl = userWithPhoto!.photoUrl;
-      }
-       print('Before normalization - state.phone: "${state.phone}"');
-
-      // Validate and normalize phone
-      final normalizedPhone = _normalizeAndValidatePhone(state.phone.trim());
-      print('After normalization - normalizedPhone: $normalizedPhone');
-
-      if (state.phone.trim().isNotEmpty && normalizedPhone == null) {
-        emit(state.copyWith(
-          status: ProfileStatus.error,
-          errorMessage: 'رقم الهاتف غير صالح. يجب أن يكون مصريًا بصيغة 01XXXXXXXXX',
-        ));
-        _isBusy = false;
-        return;
       }
 
-      final existing = _loadedUser ?? _getCurrentUserOrThrow();
-print('Existing user phone: ${existing.phone}');
-
+      // Create updated user entity
       final updatedUser = UserEntity(
-        uId: existing.uId,
-        fullName: state.name.isNotEmpty ? state.name : existing.fullName,
-        email: state.email.isNotEmpty ? state.email : existing.email,
-        phone: normalizedPhone ?? existing.phone,
-        gender: state.gender.isNotEmpty ? state.gender : existing.gender,
-        dob: state.dob.isNotEmpty ? state.dob : existing.dob,
-        age: state.age.isNotEmpty ? state.age : existing.age,
-        address: state.address.isNotEmpty ? state.address : existing.address,
+        uId: fbUser.uid,
+        email: state.email,
+        fullName: state.name,
+        emailVerified: fbUser.emailVerified,
         photoUrl: photoUrl,
-        emailVerified: existing.emailVerified,
+        phone: state.phone,
+        gender: state.gender,
+        dob: state.dob,
+        age: state.age,
+        address: state.address,
       );
-if (!_hasChanges(updatedUser, existing)) {
-  emit(state.copyWith(
-    status: ProfileStatus.saveSuccess,
-    errorMessage: '',
-  ));
-  _isBusy = false;
-  return; // No changes to save
-}
-      final updateRes = await _authRepo.updateUserData(updatedUser);
-      bool failed = false;
+
+      // Create the request body with all user data
+      final requestBody = {
+        'name': updatedUser.fullName,
+        'email': updatedUser.email,
+        'phone': updatedUser.phone,
+        'gender': updatedUser.gender,
+        'dob': updatedUser.dob,
+        'age': updatedUser.age,
+        'address': updatedUser.address,
+        if (photoUrl != null) 'profileImg': photoUrl!.split('/').last,
+      };
+      
+      _logInfo('📤 Sending request body to backend: $requestBody');
+      
+      final updateRes = await _authRepo.updateUserData(updatedUser, requestBody: requestBody);
+      
       updateRes.fold(
         (f) {
-          failed = true;
-          _logError('Failed to update user data', f.message);
+          _logError('❌ Failed to update user data', f.message);
           emit(state.copyWith(
             status: ProfileStatus.error,
             errorMessage: 'فشل تحديث الملف الشخصي: ${f.message}',
+            profileImageUrl: previousState.profileImageUrl,
           ));
         },
         (_) async {
+          _logInfo('✅ Successfully updated user data in backend');
+          
+          // Update local user immediately
           _loadedUser = updatedUser;
+          _logInfo('Updated local user data: ${_loadedUser?.toMap()}');
+          
+          // Cache the updated user data
+          await Prefs.saveUser(UserModel.fromEntity(updatedUser));
+          _logInfo('✅ Cached updated user data');
+          
+          // Update state with the new data
           emit(state.copyWith(
             status: ProfileStatus.saveSuccess,
             name: updatedUser.fullName,
@@ -282,121 +458,189 @@ if (!_hasChanges(updatedUser, existing)) {
             profileImageUrl: updatedUser.photoUrl ?? '',
             profileImage: null,
             errorMessage: '',
+            fieldBeingEdited: null,
           ));
-          await Prefs.saveUser(UserModel.fromEntity(updatedUser));
         },
       );
-
-      // Send verification email if email changed
-      if (!failed && state.email.isNotEmpty && state.email != existing.email) {
-        final sendRes = await _authRepo.sendEmailVerification();
-        sendRes.fold(
-          (f) => _logError('Failed to send email verification', f.message),
-          (_) => _logInfo('Email verification sent'),
-        );
-      }
     } catch (e, st) {
-      _logError('Exception in saveProfile', e, st);
+      _logError('Unexpected error during profile save', e, st);
       emit(state.copyWith(
         status: ProfileStatus.error,
-        errorMessage: 'حدث خطأ أثناء حفظ الملف الشخصي.',
+        errorMessage: 'حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.',
+        profileImageUrl: previousState.profileImageUrl,
       ));
     } finally {
       _isBusy = false;
     }
   }
 
-  /// Save and update a single field with validation and caching
-  Future<void> saveField(String key) async {
+  // Add new method for saving only the profile image
+  Future<void> saveProfileImage() async {
     if (_isBusy) return;
     _isBusy = true;
-
-    emit(state.copyWith(status: ProfileStatus.loading));
-    _logInfo('Saving field: $key');
-
+    
     try {
-      final existing = _loadedUser ?? _getCurrentUserOrThrow();
-      late UserEntity updated;
+      emit(state.copyWith(
+        status: ProfileStatus.loading,
+        fieldBeingEdited: 'photoUrl',
+      ));
 
-      switch (key) {
-        case 'name':
-          if (state.name.isEmpty) {
-            emit(state.copyWith(status: ProfileStatus.error, errorMessage: 'الاسم لا يمكن أن يكون فارغًا.'));
-            _isBusy = false;
-            return;
-          }
-          updated = existing.copyWith(fullName: state.name);
-          break;
-        case 'email':
-          if (state.email.isEmpty) {
-            emit(state.copyWith(status: ProfileStatus.error, errorMessage: 'البريد الإلكتروني لا يمكن أن يكون فارغًا.'));
-            _isBusy = false;
-            return;
-          }
-          updated = existing.copyWith(email: state.email);
-          break;
-        case 'phone':
-          final normalizedPhone = _normalizeAndValidatePhone(state.phone.trim());
-          if (state.phone.trim().isNotEmpty && normalizedPhone == null) {
-            emit(state.copyWith(status: ProfileStatus.error, errorMessage: 'رقم الهاتف غير صالح'));
-            _isBusy = false;
-            return;
-          }
-          updated = existing.copyWith(phone: normalizedPhone ?? existing.phone);
-          break;
-        case 'gender':
-          updated = existing.copyWith(gender: state.gender);
-          break;
-        case 'dob':
-          updated = existing.copyWith(
-            dob: state.dob.isNotEmpty ? state.dob : null,
-            age: state.age.isNotEmpty ? state.age : null,
-          );
-          break;
-        case 'address':
-          updated = existing.copyWith(address: state.address);
-          break;
-        default:
-          emit(state.copyWith(status: ProfileStatus.error, errorMessage: 'حقل غير معروف: $key'));
-          _isBusy = false;
-          return;
+      final fbUser = _firebaseAuthService.getCurrentUser();
+      if (fbUser == null) {
+        throw StateError('No authenticated user found');
       }
 
-      final res = await _authRepo.updateUserData(updated);
-      bool failed = false;
-      res.fold(
-        (f) {
-          failed = true;
-          _logError('Failed to update user data', f.message);
-          emit(state.copyWith(status: ProfileStatus.error, errorMessage: 'فشل تحديث الملف الشخصي: ${f.message}'));
+      if (state.profileImage == null) {
+        throw StateError('No image selected');
+      }
+
+      // Upload and update profile image with timeout
+      final result = await _authRepo.uploadProfileImageAndUpdate(state.profileImage!).timeout(
+        const Duration(seconds: 30),
+        onTimeout: () {
+          throw TimeoutException('Image upload timed out');
         },
-        (_) async {
-          _loadedUser = updated;
+      );
+      
+      result.fold(
+        (failure) {
+          _logError('❌ Failed to upload image', failure.message);
+          emit(state.copyWith(
+            status: ProfileStatus.error,
+            errorMessage: failure.message,
+            profileImage: null, // Clear the image on failure
+          ));
+        },
+        (updatedUser) {
+          _logInfo('✅ Image uploaded successfully');
           emit(state.copyWith(
             status: ProfileStatus.saveSuccess,
-            name: updated.fullName,
-            email: updated.email,
-            phone: updated.phone ?? '',
-            gender: updated.gender ?? '',
-            dob: updated.dob ?? '',
-            age: updated.age ?? '',
-            address: updated.address ?? '',
-            profileImageUrl: updated.photoUrl ?? '',
+            profileImageUrl: updatedUser.photoUrl ?? '',
             profileImage: null,
             errorMessage: '',
+            fieldBeingEdited: null,
           ));
-          await Prefs.saveUser(UserModel.fromEntity(updated));
         },
       );
     } catch (e, st) {
-      _logError('Exception in saveField', e, st);
+      _logError('Error saving profile image', e, st);
       emit(state.copyWith(
         status: ProfileStatus.error,
-        errorMessage: 'حدث خطأ أثناء تحديث الملف الشخصي.',
+        errorMessage: e.toString(),
+        profileImage: null, // Clear the image on error
       ));
     } finally {
       _isBusy = false;
     }
+  }
+
+  // Add new method for saving profile without image
+  Future<void> saveProfileWithoutImage() async {
+    if (_isBusy) return;
+    _isBusy = true;
+    
+    try {
+      emit(state.copyWith(
+        status: ProfileStatus.loading,
+        fieldBeingEdited: 'save',
+      ));
+
+      final fbUser = _firebaseAuthService.getCurrentUser();
+      if (fbUser == null) {
+        throw StateError('No authenticated user found');
+      }
+
+      // Create updated user entity without changing the image
+      final updatedUser = UserEntity(
+        uId: fbUser.uid,
+        email: state.email,
+        fullName: state.name,
+        emailVerified: fbUser.emailVerified,
+        photoUrl: state.profileImageUrl, // Keep existing image URL
+        phone: state.phone,
+        gender: state.gender,
+        dob: state.dob,
+        age: state.age,
+        address: state.address,
+      );
+
+      // Create the request body with all user data except image
+      final requestBody = {
+        'name': updatedUser.fullName,
+        'email': updatedUser.email,
+        'phone': updatedUser.phone,
+        'gender': updatedUser.gender,
+        'dob': updatedUser.dob,
+        'age': updatedUser.age,
+        'address': updatedUser.address,
+      };
+      
+      _logInfo('📤 Sending request body to backend: $requestBody');
+      
+      final updateRes = await _authRepo.updateUserData(updatedUser, requestBody: requestBody);
+      
+      updateRes.fold(
+        (f) {
+          _logError('❌ Failed to update user data', f.message);
+          emit(state.copyWith(
+            status: ProfileStatus.error,
+            errorMessage: 'فشل تحديث الملف الشخصي: ${f.message}',
+          ));
+        },
+        (_) async {
+          _logInfo('✅ Successfully updated user data in backend');
+          
+          // Update local user immediately
+          _loadedUser = updatedUser;
+          _logInfo('Updated local user data: ${_loadedUser?.toMap()}');
+          
+          // Cache the updated user data
+          await Prefs.saveUser(UserModel.fromEntity(updatedUser));
+          _logInfo('✅ Cached updated user data');
+          
+          // Update state with the new data
+          emit(state.copyWith(
+            status: ProfileStatus.saveSuccess,
+            name: updatedUser.fullName,
+            email: updatedUser.email,
+            phone: updatedUser.phone ?? '',
+            gender: updatedUser.gender ?? '',
+            dob: updatedUser.dob ?? '',
+            age: updatedUser.age ?? '',
+            address: updatedUser.address ?? '',
+            errorMessage: '',
+            fieldBeingEdited: null,
+          ));
+        },
+      );
+    } catch (e, st) {
+      _logError('Unexpected error during profile save', e, st);
+      emit(state.copyWith(
+        status: ProfileStatus.error,
+        errorMessage: 'حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.',
+      ));
+    } finally {
+      _isBusy = false;
+    }
+  }
+
+  String? _normalizeAndValidatePhone(String phone) {
+    final digits = phone.replaceAll(RegExp(r'\D'), '');
+
+    // رقم بصيغة +20 أو 0020 (12 رقماً بعد 20)
+    if (digits.startsWith('20')) {
+      final national = digits.substring(2);
+      if (national.length == 10 && national.startsWith('1')) {
+        return '+20$national';
+      }
+    }
+
+    // رقم محلي 01XXXXXXXXX (11 رقماً)
+    if (digits.length == 11 && digits.startsWith('01')) {
+      return '+20${digits.substring(1)}';
+    }
+
+    return null;
   }
 }
 
