@@ -4,19 +4,18 @@ backend :
 3- Categories 
 4- Wishlist 
 5- Search
-6- Auth 
+6- Auth ✅ > facebook ❌
 7- Profile View
-.......................................................
+.............✅..........................................
 front :
-1- Search ✅
+1- Search 
 2- Wishlist Icon ✅
 3- Navigation > Checkout ✅
 4- Recommendation
 5- Profile UI
-6- Footer
-7- Fake Accounts > email - facebook
-8- Sub Categories ✅
-9- Shared Preferences> Cart - Wishlist
+6- Footer 
+7- Sub Categories ✅
+8- Shared Preferences> Cart - Wishlist
 .......................................................
 Other :
 1- facebook login
