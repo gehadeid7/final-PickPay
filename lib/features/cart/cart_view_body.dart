@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pickpay/core/utils/app_colors.dart';
@@ -121,6 +123,7 @@ class CartViewBody extends StatelessWidget {
                           boxShadow: [
                             BoxShadow(
                               color: Color.fromARGB(255, 82, 82, 82)
+                                  // ignore: deprecated_member_use
                                   .withOpacity(isDarkMode ? 0.1 : 0.05),
                               spreadRadius: 6,
                               blurRadius: 6,

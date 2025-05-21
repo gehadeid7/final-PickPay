@@ -83,6 +83,7 @@ class _MainNavigationView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ignore: deprecated_member_use
     return WillPopScope(
       onWillPop: () => _onWillPop(context),
       child: Scaffold(

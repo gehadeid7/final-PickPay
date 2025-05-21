@@ -48,6 +48,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
             ),
             boxShadow: [
               BoxShadow(
+                // ignore: deprecated_member_use
                 color: Colors.black.withOpacity(0.08),
                 blurRadius: 12,
                 spreadRadius: 0,

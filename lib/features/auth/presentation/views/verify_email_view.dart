@@ -164,6 +164,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView>
                                     color:
                                         // ignore: deprecated_member_use
                                         theme.colorScheme.primary
+                                            // ignore: deprecated_member_use
                                             .withOpacity(0.5),
                                     blurRadius: 8,
                                   ),
@@ -177,6 +178,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView>
                               style: theme.textTheme.bodyMedium?.copyWith(
                                 // ignore: deprecated_member_use
                                 color: theme.colorScheme.onSurface
+                                    // ignore: deprecated_member_use
                                     .withOpacity(0.8),
                               ),
                               textAlign: TextAlign.center,

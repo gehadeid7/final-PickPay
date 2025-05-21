@@ -100,6 +100,7 @@ class HelpSupportView extends StatelessWidget {
                 width: 48,
                 height: 48,
                 decoration: BoxDecoration(
+                  // ignore: deprecated_member_use
                   color: Theme.of(context).primaryColor.withOpacity(0.2),
                   shape: BoxShape.circle,
                 ),
