@@ -5,7 +5,6 @@ import 'package:pickpay/core/utils/app_images.dart';
 import 'package:pickpay/core/widgets/build_appbar.dart';
 import 'package:pickpay/features/account_view/about_us_view.dart';
 import 'package:pickpay/features/account_view/help_and_support_view.dart';
-import 'package:pickpay/features/account_view/language_view.dart';
 import 'package:pickpay/features/auth/domain/repos/auth_repo.dart';
 import 'package:pickpay/features/auth/presentation/views/change_password_view.dart';
 import 'package:pickpay/features/auth/presentation/views/signin_view.dart';

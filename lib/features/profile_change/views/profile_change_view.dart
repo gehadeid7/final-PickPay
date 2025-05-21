@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,13 +13,11 @@ import 'package:pickpay/features/profile_change/cubits/cubit/profile_chnage_cubi
 import 'package:pickpay/features/profile_change/cubits/cubit/profile_chnage_state.dart';
 import 'dart:developer' as developer;
 import 'package:another_flushbar/flushbar.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 const Map<String, String> genderMap = {
   'Male': 'Male',
   'Female': 'Female',
-  'ذكر': 'Male',    // Map Arabic values to English
+  'ذكر': 'Male', // Map Arabic values to English
   'انثي': 'Female', // Map Arabic values to English
 };
 
@@ -60,7 +57,8 @@ class _ProfileChangeViewContent extends StatefulWidget {
       _ProfileChangeViewContentState();
 }
 
-class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> with WidgetsBindingObserver {
+class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent>
+    with WidgetsBindingObserver {
   final _formKey = GlobalKey<FormState>();
   final _refreshKey = GlobalKey<RefreshIndicatorState>();
   StreamSubscription<ProfileState>? _stateSubscription;
@@ -126,7 +124,7 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> wi
 
   void _initializeState() {
     _logInfo('🔄 Initializing state variables');
-    
+
     // Initialize controllers
     _nameController = TextEditingController();
     _emailController = TextEditingController();
@@ -150,7 +148,7 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> wi
     _logInfo('📝 Field changed: $fieldName = $value');
     _logInfo('Current state value: ${getCurrentValue(fieldName)}');
     _logInfo('Current field changes before update: $_fieldChanges');
-    
+
     // Only track changes if the value is different from current state
     if (value != getCurrentValue(fieldName)) {
       setState(() {
@@ -161,7 +159,7 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> wi
       // Update the cubit state immediately
       final cubit = context.read<ProfileCubit>();
       _logInfo('Current cubit state before update: ${cubit.state.toMap()}');
-      
+
       switch (fieldName) {
         case 'name':
           cubit.updateName(value);
@@ -185,7 +183,7 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> wi
           cubit.updateDob(value, _ageController.text);
           break;
       }
-      
+
       _logInfo('Cubit state after update: ${cubit.state.toMap()}');
     } else {
       setState(() {
@@ -197,21 +195,30 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> wi
 
   FocusNode? _getFocusNode(String fieldName) {
     switch (fieldName) {
-      case 'name': return _nameFocus;
-      case 'email': return _emailFocus;
-      case 'phone': return _phoneFocus;
-      case 'gender': return _genderFocus;
-      case 'dob': return _dobFocus;
-      case 'age': return _ageFocus;
-      case 'address': return _addressFocus;
-      default: return null;
+      case 'name':
+        return _nameFocus;
+      case 'email':
+        return _emailFocus;
+      case 'phone':
+        return _phoneFocus;
+      case 'gender':
+        return _genderFocus;
+      case 'dob':
+        return _dobFocus;
+      case 'age':
+        return _ageFocus;
+      case 'address':
+        return _addressFocus;
+      default:
+        return null;
     }
   }
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime now = DateTime.now();
     final DateTime initialDate = _dobController.text.isNotEmpty
-        ? DateTime.tryParse(_dobController.text) ?? DateTime(now.year - 18, now.month, now.day)
+        ? DateTime.tryParse(_dobController.text) ??
+            DateTime(now.year - 18, now.month, now.day)
         : DateTime(now.year - 18, now.month, now.day);
 
     final DateTime? picked = await showDatePicker(
@@ -226,7 +233,8 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> wi
               primary: Theme.of(context).primaryColor,
               onPrimary: Colors.white,
               surface: Theme.of(context).cardColor,
-              onSurface: Theme.of(context).textTheme.bodyLarge?.color ?? Colors.black,
+              onSurface:
+                  Theme.of(context).textTheme.bodyLarge?.color ?? Colors.black,
             ),
             dialogBackgroundColor: Theme.of(context).cardColor,
           ),
@@ -304,50 +312,50 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> wi
     _logInfo('🔄 Setting up state listener');
     _stateSubscription = context.read<ProfileCubit>().stream.listen((state) {
       _logInfo('📱 Received state update: ${state.status}');
-      
+
       if (!mounted) return;
-      
-      if (state.status == ProfileStatus.loadSuccess || 
+
+      if (state.status == ProfileStatus.loadSuccess ||
           state.status == ProfileStatus.saveSuccess) {
         _logInfo('✅ Updating UI with new data');
-        
+
         // Always update with the latest data from state
         setState(() {
           // Update controllers with fresh data
           _nameController.text = state.name;
           _emailController.text = state.email;
-          
+
           // Handle phone number format
           String phoneNumber = state.phone;
           if (phoneNumber.startsWith('+20')) {
             phoneNumber = '0${phoneNumber.substring(3)}';
           }
           _phoneController.text = phoneNumber;
-          
+
           // Update other fields
           _genderController.text = state.gender;
           _dobController.text = state.dob;
           _ageController.text = state.age;
           _addressController.text = state.address;
           _profileImageUrl = state.profileImageUrl;
-          
+
           // Handle gender mapping
           String gender = state.gender;
           if (genderMap.containsKey(gender)) {
             gender = genderMap[gender]!;
           }
           _selectedGender = gender;
-          
+
           // Clear any pending changes after successful save
           if (state.status == ProfileStatus.saveSuccess) {
             _fieldChanges.clear();
             _isSaving = false;
             _isImageLoading = false;
-            
+
             // Show success message
             _showMessage('Profile updated successfully', isSaveMessage: true);
           }
-          
+
           _isLoading = false;
           _isInitialized = true;
         });
@@ -381,27 +389,27 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> wi
   Future<void> _loadInitialData() async {
     _logInfo('🔄 Loading initial data (hybrid strategy)');
     if (!mounted) return;
-    
+
     setState(() {
       _isLoading = true;
       _isInitialized = false; // Reset initialization state
       _fieldChanges.clear(); // Clear any pending changes
     });
-    
+
     try {
       final cubit = context.read<ProfileCubit>();
-      
+
       // First, try to load from cache immediately
       _logInfo('📱 Attempting to load from cache first');
       await cubit.loadCachedUserProfile();
-      
+
       // Then, in parallel, try to load from backend
       _logInfo('🌐 Loading from backend in parallel');
       final backendFuture = cubit.loadUserProfile();
-      
+
       // Wait for backend load to complete
       await backendFuture;
-      
+
       // Log the current state after loading
       final currentState = cubit.state;
       _logInfo('Current state after hybrid loading:');
@@ -413,34 +421,34 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> wi
       _logInfo('DOB: ${currentState.dob}');
       _logInfo('Age: ${currentState.age}');
       _logInfo('Address: ${currentState.address}');
-      
+
       // Update UI with the latest data
       if (mounted) {
         setState(() {
           _nameController.text = currentState.name;
           _emailController.text = currentState.email;
-          
+
           // Handle phone number format
           String phoneNumber = currentState.phone;
           if (phoneNumber.startsWith('+20')) {
             phoneNumber = '0${phoneNumber.substring(3)}';
           }
           _phoneController.text = phoneNumber;
-          
+
           // Update other fields
           _genderController.text = currentState.gender;
           _dobController.text = currentState.dob;
           _ageController.text = currentState.age;
           _addressController.text = currentState.address;
           _profileImageUrl = currentState.profileImageUrl;
-          
+
           // Handle gender mapping
           String gender = currentState.gender;
           if (genderMap.containsKey(gender)) {
             gender = genderMap[gender]!;
           }
           _selectedGender = gender;
-          
+
           _isInitialized = true;
         });
       }
@@ -461,9 +469,9 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> wi
     _logInfo('🔄 Handling save action');
     _logInfo('Current field changes: $_fieldChanges');
     if (!mounted || _isSaving) return;
-    
+
     setState(() => _isSaving = true);
-    
+
     try {
       // Validate form before saving
       if (!_formKey.currentState!.validate()) {
@@ -475,7 +483,7 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> wi
       // Update all changed fields in the cubit
       final cubit = context.read<ProfileCubit>();
       _logInfo('Current cubit state before save: ${cubit.state.toMap()}');
-      
+
       // Sync all field changes with cubit state before saving
       for (final entry in _fieldChanges.entries) {
         _logInfo('Processing field change: ${entry.key} = ${entry.value}');
@@ -493,7 +501,8 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> wi
             cubit.updateGender(mappedGender);
             break;
           case 'dob':
-            _logInfo('Saving DOB: ${entry.value} with age: ${_ageController.text}');
+            _logInfo(
+                'Saving DOB: ${entry.value} with age: ${_ageController.text}');
             cubit.updateDob(entry.value, _ageController.text);
             break;
           case 'address':
@@ -501,13 +510,14 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> wi
             cubit.updateAddress(entry.value);
             break;
         }
-        _logInfo('Cubit state after updating ${entry.key}: ${cubit.state.toMap()}');
+        _logInfo(
+            'Cubit state after updating ${entry.key}: ${cubit.state.toMap()}');
       }
-      
+
       // Save all changes except image
       _logInfo('Final cubit state before save: ${cubit.state.toMap()}');
       await cubit.saveProfileWithoutImage();
-      
+
       // Log the current state after save
       final currentState = cubit.state;
       _logInfo('Current state after save:');
@@ -519,7 +529,7 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> wi
       _logInfo('DOB: ${currentState.dob}');
       _logInfo('Age: ${currentState.age}');
       _logInfo('Address: ${currentState.address}');
-      
+
       // Clear field changes after successful save
       setState(() {
         _fieldChanges.clear();
@@ -540,7 +550,7 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> wi
   Future<void> _pickImage() async {
     try {
       setState(() => _isImageLoading = true);
-      
+
       final picker = ImagePicker();
       final pickedFile = await picker.pickImage(
         source: ImageSource.gallery,
@@ -559,12 +569,15 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> wi
 
         // Get file size
         final fileSize = await file.length();
-        developer.log('ProfileChangeView: Selected image size: ${fileSize} bytes');
+        developer
+            .log('ProfileChangeView: Selected image size: ${fileSize} bytes');
 
         // If file is too large, show warning
-        if (fileSize > 5 * 1024 * 1024) { // 5MB
+        if (fileSize > 5 * 1024 * 1024) {
+          // 5MB
           if (!mounted) return;
-          _showMessage('Image is too large. Please select a smaller image.', isError: true);
+          _showMessage('Image is too large. Please select a smaller image.',
+              isError: true);
           return;
         }
 
@@ -576,7 +589,7 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> wi
         // Update the cubit with the new image
         final cubit = context.read<ProfileCubit>();
         cubit.updateProfileImage(file);
-        
+
         // Don't save immediately, wait for user to click save button
         setState(() {
           _isImageLoading = false;
@@ -596,12 +609,12 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> wi
   // Update the save image method to prevent multiple calls
   Future<void> _saveImage() async {
     if (!mounted || _isSavingImage) return;
-    
+
     setState(() {
       _isSavingImage = true;
       _isImageLoading = true;
     });
-    
+
     try {
       final cubit = context.read<ProfileCubit>();
       if (cubit.state.profileImage != null) {
@@ -627,8 +640,10 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> wi
   Widget _buildProfileImage(ProfileState state) {
     developer.log('ProfileChangeView: Building profile image widget');
     developer.log('ProfileChangeView: Current state status: ${state.status}');
-    developer.log('ProfileChangeView: Current image URL: ${state.profileImageUrl}');
-    developer.log('ProfileChangeView: Has local image: ${state.profileImage != null}');
+    developer
+        .log('ProfileChangeView: Current image URL: ${state.profileImageUrl}');
+    developer.log(
+        'ProfileChangeView: Has local image: ${state.profileImage != null}');
 
     return _ProfileImageWidget(
       imageUrl: state.profileImageUrl,
@@ -636,22 +651,26 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> wi
       isLoading: _isImageLoading || state.status == ProfileStatus.loading,
       onTap: () {
         if (!_isImageLoading) {
-          developer.log('ProfileChangeView: Image tapped, starting pick process');
+          developer
+              .log('ProfileChangeView: Image tapped, starting pick process');
           _pickImage();
         }
       },
-      onSave: state.profileImage != null ? () {
-        if (!_isImageLoading) {
-          developer.log('ProfileChangeView: Save button tapped');
-          _saveImage(); // Use the dedicated save method
-        }
-      } : null,
+      onSave: state.profileImage != null
+          ? () {
+              if (!_isImageLoading) {
+                developer.log('ProfileChangeView: Save button tapped');
+                _saveImage(); // Use the dedicated save method
+              }
+            }
+          : null,
     );
   }
 
-  void _showMessage(String message, {bool isError = false, bool isSaveMessage = false}) {
+  void _showMessage(String message,
+      {bool isError = false, bool isSaveMessage = false}) {
     if (!mounted) return;
-    
+
     // Use Flushbar instead of SnackBar for better visibility
     Flushbar(
       message: message,
@@ -674,7 +693,8 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> wi
       await _loadInitialData();
     } catch (e) {
       if (mounted) {
-        _showMessage('Failed to update data', isError: true, isSaveMessage: true);
+        _showMessage('Failed to update data',
+            isError: true, isSaveMessage: true);
       }
     }
   }
@@ -686,7 +706,8 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> wi
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Do you want to exit?'),
-        content: const Text('You have unsaved changes. Do you want to exit without saving?'),
+        content: const Text(
+            'You have unsaved changes. Do you want to exit without saving?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
@@ -725,9 +746,9 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> wi
           Text(
             title,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
           ),
         ],
       ),
@@ -920,7 +941,7 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> wi
         if (!mounted) return;
         if (value.trim().isNotEmpty && value != getCurrentValue('phone')) {
           setState(() {
-            _fieldChanges['phone'] = value;  // Store the actual value
+            _fieldChanges['phone'] = value; // Store the actual value
           });
         }
       },
@@ -954,7 +975,8 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> wi
         if (value.trim().length != 11) {
           return 'Phone number must be 11 digits';
         }
-        if (!value.startsWith('01')) {  // Updated to be consistent with _saveAllChanges
+        if (!value.startsWith('01')) {
+          // Updated to be consistent with _saveAllChanges
           return 'Phone number must start with 01';
         }
         return null;
@@ -971,7 +993,7 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> wi
         if (!mounted) return;
         if (value.trim().isNotEmpty && value != getCurrentValue('address')) {
           setState(() {
-            _fieldChanges['address'] = value;  // Store the actual value
+            _fieldChanges['address'] = value; // Store the actual value
           });
         }
       },
@@ -1090,7 +1112,8 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> wi
                         width: 20,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.white),
                         ),
                       )
                     : const Text('Save Changes'),
@@ -1135,28 +1158,28 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> wi
                   setState(() {
                     _nameController.text = state.name;
                     _emailController.text = state.email;
-                    
+
                     // Handle phone number format
                     String phoneNumber = state.phone;
                     if (phoneNumber.startsWith('+20')) {
                       phoneNumber = '0${phoneNumber.substring(3)}';
                     }
                     _phoneController.text = phoneNumber;
-                    
+
                     // Update other fields
                     _genderController.text = state.gender;
                     _dobController.text = state.dob;
                     _ageController.text = state.age;
                     _addressController.text = state.address;
                     _profileImageUrl = state.profileImageUrl;
-                    
+
                     // Handle gender mapping
                     String gender = state.gender;
                     if (genderMap.containsKey(gender)) {
                       gender = genderMap[gender]!;
                     }
                     _selectedGender = gender;
-                    
+
                     if (!_isInitialized) {
                       _isInitialized = true;
                     }
@@ -1180,7 +1203,8 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> wi
                     _isSaving = false;
                     _isImageLoading = false;
                   });
-                  _showMessage('Profile updated successfully', isSaveMessage: true);
+                  _showMessage('Profile updated successfully',
+                      isSaveMessage: true);
                   // Force reload after successful save
                   _loadInitialData();
                 }
@@ -1191,10 +1215,10 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> wi
                   return _buildLoadingSkeleton();
                 }
 
-                final isImageLoading = state.status == ProfileStatus.loading && 
-                                    state.fieldBeingEdited == 'photoUrl';
-                final isSaving = state.status == ProfileStatus.loading && 
-                               state.fieldBeingEdited == 'save';
+                final isImageLoading = state.status == ProfileStatus.loading &&
+                    state.fieldBeingEdited == 'photoUrl';
+                final isSaving = state.status == ProfileStatus.loading &&
+                    state.fieldBeingEdited == 'save';
                 final isLoading = state.status == ProfileStatus.loading;
 
                 print('Name controller: ${_nameController.text}');
@@ -1215,9 +1239,11 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> wi
                           color: Colors.white.withOpacity(0.2),
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(Icons.arrow_back, color: Colors.white),
+                        child:
+                            const Icon(Icons.arrow_back, color: Colors.white),
                       ),
-                      onPressed: isLoading ? null : () => Navigator.pop(context),
+                      onPressed:
+                          isLoading ? null : () => Navigator.pop(context),
                     ),
                     title: Text(
                       'Edit Profile',
@@ -1234,7 +1260,9 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> wi
                     ),
                     centerTitle: true,
                   ),
-                  bottomNavigationBar: _fieldChanges.isNotEmpty ? _buildSaveButton(isSaving) : null,
+                  bottomNavigationBar: _fieldChanges.isNotEmpty
+                      ? _buildSaveButton(isSaving)
+                      : null,
                   body: Stack(
                     children: [
                       RefreshIndicator(
@@ -1244,7 +1272,9 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> wi
                           controller: _scrollController,
                           physics: const AlwaysScrollableScrollPhysics(),
                           padding: EdgeInsets.only(
-                            bottom: _fieldChanges.isNotEmpty ? 80 : 16, // Add padding when save button is visible
+                            bottom: _fieldChanges.isNotEmpty
+                                ? 80
+                                : 16, // Add padding when save button is visible
                           ),
                           child: Form(
                             key: _formKey,
@@ -1252,7 +1282,8 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> wi
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 _buildProfileImage(state),
-                                _buildSectionHeader('Personal Information', Icons.person_outline),
+                                _buildSectionHeader('Personal Information',
+                                    Icons.person_outline),
                                 Card(
                                   elevation: 4,
                                   shadowColor: Colors.black.withOpacity(0.2),
@@ -1271,13 +1302,16 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> wi
                                           prefixIcon: Icons.person_outline,
                                           hintText: 'Enter your full name',
                                           validator: (value) {
-                                            if (value == null || value.trim().isEmpty) {
+                                            if (value == null ||
+                                                value.trim().isEmpty) {
                                               return 'Name is required';
                                             }
                                             if (value.trim().length < 3) {
                                               return 'Name must be at least 3 characters';
                                             }
-                                            if (value.trim().length > ProfileValidationConstants.maxNameLength) {
+                                            if (value.trim().length >
+                                                ProfileValidationConstants
+                                                    .maxNameLength) {
                                               return 'Name must not exceed ${ProfileValidationConstants.maxNameLength} characters';
                                             }
                                             return null;
@@ -1290,7 +1324,8 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> wi
                                           controller: _emailController,
                                           onSave: (_) => _handleSave(),
                                           prefixIcon: Icons.email_outlined,
-                                          keyboardType: TextInputType.emailAddress,
+                                          keyboardType:
+                                              TextInputType.emailAddress,
                                         ),
                                         const SizedBox(height: 16),
                                         _buildFieldWithSaveCancel(
@@ -1306,7 +1341,8 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> wi
                                     ),
                                   ),
                                 ),
-                                _buildSectionHeader('Additional Information', Icons.info_outline),
+                                _buildSectionHeader('Additional Information',
+                                    Icons.info_outline),
                                 Card(
                                   elevation: 4,
                                   shadowColor: Colors.black.withOpacity(0.2),
@@ -1322,7 +1358,8 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> wi
                                           label: 'Date of Birth',
                                           controller: _dobController,
                                           onSave: (_) => _handleSave(),
-                                          prefixIcon: Icons.calendar_today_outlined,
+                                          prefixIcon:
+                                              Icons.calendar_today_outlined,
                                           hintText: 'Select your date of birth',
                                         ),
                                         const SizedBox(height: 16),
@@ -1339,9 +1376,11 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent> wi
                                           label: 'Address',
                                           controller: _addressController,
                                           onSave: (_) => _handleSave(),
-                                          prefixIcon: Icons.location_on_outlined,
+                                          prefixIcon:
+                                              Icons.location_on_outlined,
                                           hintText: 'Enter your address',
-                                          keyboardType: TextInputType.streetAddress,
+                                          keyboardType:
+                                              TextInputType.streetAddress,
                                           maxLines: 2,
                                         ),
                                         const SizedBox(height: 16),
@@ -1539,7 +1578,6 @@ class _PhoneField extends StatelessWidget {
     );
   }
 }
-
 
 class _DobField extends StatelessWidget {
   final TextEditingController controller;
@@ -1756,7 +1794,8 @@ class _ProfileImageWidget extends StatelessWidget {
                           height: 120,
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
-                            developer.log('ProfileChangeView: Error loading network image: $error');
+                            developer.log(
+                                'ProfileChangeView: Error loading network image: $error');
                             return const Icon(Icons.person,
                                 size: 60, color: Colors.white);
                           },
@@ -1771,7 +1810,8 @@ class _ProfileImageWidget extends StatelessWidget {
                               ),
                               child: Center(
                                 child: CircularProgressIndicator(
-                                  value: loadingProgress.expectedTotalBytes != null
+                                  value: loadingProgress.expectedTotalBytes !=
+                                          null
                                       ? loadingProgress.cumulativeBytesLoaded /
                                           loadingProgress.expectedTotalBytes!
                                       : null,
@@ -1847,8 +1887,8 @@ class _ProfileImageWidget extends StatelessWidget {
                         ),
                       ],
                     ),
-                    child: const Icon(Icons.edit,
-                        size: 20, color: Colors.white),
+                    child:
+                        const Icon(Icons.edit, size: 20, color: Colors.white),
                   ),
                 ],
               ),
@@ -1858,4 +1898,3 @@ class _ProfileImageWidget extends StatelessWidget {
     );
   }
 }
-
