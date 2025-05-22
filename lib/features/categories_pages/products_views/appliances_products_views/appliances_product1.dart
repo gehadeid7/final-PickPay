@@ -20,6 +20,8 @@ class AppliancesProduct1 extends StatelessWidget {
         originalPrice: 16800,
         rating: 3.1,
         reviewCount: 9,
+        category: 'Appliances',
+        subcategory: 'Large Appliances',
         color: 'Silver',
         material: 'Plastic, Acrylonitrile Butadiene Styrene (ABS)',
         brand: 'Koldair',

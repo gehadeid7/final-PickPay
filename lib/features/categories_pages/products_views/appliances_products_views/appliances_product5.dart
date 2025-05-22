@@ -22,6 +22,8 @@ class AppliancesProduct5 extends StatelessWidget {
       rating: 4.0,
       reviewCount: 11,
       brand: 'Midea',
+      category: 'Appliances',
+      subcategory: 'Large Appliances',
       color: 'Silver',
       modelNumber: 'WQP13-5201C-S',
       capacity: '13 Place Set',

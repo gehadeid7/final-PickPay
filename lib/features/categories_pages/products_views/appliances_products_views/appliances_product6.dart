@@ -23,6 +23,8 @@ class AppliancesProduct6 extends StatelessWidget {
       brand: 'deime',
       color: 'Black-M',
       material: 'Plastic',
+      category: 'Appliances',
+      subcategory: 'Small Appliances',
       dimensions: '26.9D x 27.4W x 33H centimeters',
       specialfeatures: 'Temperature Control',
       capacity: '6.2 Quarts',

@@ -17,6 +17,8 @@ class AppliancesProduct2 extends StatelessWidget {
       originalPrice: 10968,
       rating: 3.1,
       reviewCount: 9,
+      category: 'Appliances',
+      subcategory: 'Large Appliances',
       drawertype: 'Storage',
       material: 'Stainless Steel',
       finishType: 'Polished',

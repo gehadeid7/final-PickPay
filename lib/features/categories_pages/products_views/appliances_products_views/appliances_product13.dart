@@ -23,6 +23,8 @@ class AppliancesProduct13 extends StatelessWidget {
       rating: 4.9,
       reviewCount: 1439,
       brand: 'Black & Decker',
+      category: 'Appliances',
+      subcategory: 'Small Appliances',
       color: 'White',
       specialfeatures: 'Portable',
       capacity: '1.5 Liters',

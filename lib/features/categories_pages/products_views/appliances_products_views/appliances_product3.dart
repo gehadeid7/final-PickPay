@@ -19,6 +19,8 @@ class AppliancesProduct3 extends StatelessWidget {
       originalPrice: 28000,
       rating: 4.5,
       reviewCount: 12,
+      category: 'Appliances',
+      subcategory: 'Large Appliances',
       brand: 'Midea',
       color: 'Silver',
       capacity: '449L',

@@ -24,6 +24,8 @@ class AppliancesProduct14 extends StatelessWidget {
       rating: 4.5,
       reviewCount: 1162,
       brand: 'Black & Decker',
+      category: 'Appliances',
+      subcategory: 'Small Appliances',
       color: 'Silver',
       specialfeatures: 'Programmable',
       containerType: 'Kettle',

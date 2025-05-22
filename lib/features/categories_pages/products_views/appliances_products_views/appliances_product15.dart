@@ -22,6 +22,8 @@ class AppliancesProduct15 extends StatelessWidget {
       reviewCount: 1735,
       brand: 'Black & Decker',
       color: 'White/Silver',
+      category: 'Appliances',
+      subcategory: 'Small Appliances',
       material: 'Stainless Steel',
       bladeMaterial: 'Stainless Steel',
       stainlessSteelNumberofSpeeds: '6',

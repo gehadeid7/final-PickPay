@@ -1,5 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:pickpay/features/categories_pages/models/product_model.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product1.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product10.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product11.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product12.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product13.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product14.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product15.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product2.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product3.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product4.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product5.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product6.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product7.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product8.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product9.dart';
 import 'package:pickpay/features/categories_pages/products_views/product_detail_view.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product1.dart';
@@ -136,6 +151,52 @@ class RelatedProducts extends StatelessWidget {
       return (widget.build(context) as ProductDetailView).product;
     }
 
+    // Appliances products
+    if (widget is AppliancesProduct1) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is AppliancesProduct2) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is AppliancesProduct3) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is AppliancesProduct4) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is AppliancesProduct5) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is AppliancesProduct6) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is AppliancesProduct7) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is AppliancesProduct8) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is AppliancesProduct9) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is AppliancesProduct10) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is AppliancesProduct11) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is AppliancesProduct12) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is AppliancesProduct13) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is AppliancesProduct14) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is AppliancesProduct15) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
     throw Exception('Unknown widget type: ${widget.runtimeType}');
   }
 
@@ -173,6 +234,22 @@ class RelatedProducts extends StatelessWidget {
       const Product13View(),
       const Product14View(),
       const Product15View(),
+      //Appliances
+      const AppliancesProduct1(),
+      const AppliancesProduct2(),
+      const AppliancesProduct3(),
+      const AppliancesProduct4(),
+      const AppliancesProduct5(),
+      const AppliancesProduct6(),
+      const AppliancesProduct7(),
+      const AppliancesProduct8(),
+      const AppliancesProduct9(),
+      const AppliancesProduct10(),
+      const AppliancesProduct11(),
+      const AppliancesProduct12(),
+      const AppliancesProduct13(),
+      const AppliancesProduct14(),
+      const AppliancesProduct15(),
     ];
 
     final products =
@@ -213,6 +290,20 @@ class RelatedProducts extends StatelessWidget {
     } else if (currentProduct.subcategory == 'Laptop') {
       return products
           .where((p) => p.subcategory == 'Laptop' && p.id != currentProduct.id)
+          .toList()
+        ..shuffle();
+    }
+    //Appliances
+    else if (currentProduct.subcategory == 'Large Appliances') {
+      return products
+          .where((p) =>
+              p.subcategory == 'Large Appliances' && p.id != currentProduct.id)
+          .toList()
+        ..shuffle();
+    } else if (currentProduct.subcategory == 'Small Appliances') {
+      return products
+          .where((p) =>
+              p.subcategory == 'Small Appliances' && p.id != currentProduct.id)
           .toList()
         ..shuffle();
     }

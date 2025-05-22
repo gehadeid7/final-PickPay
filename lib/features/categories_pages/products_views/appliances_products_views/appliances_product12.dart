@@ -20,6 +20,8 @@ class AppliancesProduct12 extends StatelessWidget {
       rating: 4.5,
       reviewCount: 12,
       brand: 'Tornado',
+      category: 'Appliances',
+      subcategory: 'Small Appliances',
       color: 'Silver',
       capacity: '6 Liters',
       powerSource: 'Koldair',

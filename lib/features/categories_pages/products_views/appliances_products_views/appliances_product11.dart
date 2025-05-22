@@ -19,6 +19,8 @@ class AppliancesProduct11 extends StatelessWidget {
       rating: 4.4,
       reviewCount: 674,
       brand: 'Fresh',
+      category: 'Appliances',
+      subcategory: 'Large Appliances',
       electricFanDesign: 'Floor Fan',
       powerSource: 'Battery Powered',
       dimensions: '51D x 51W x 153H',

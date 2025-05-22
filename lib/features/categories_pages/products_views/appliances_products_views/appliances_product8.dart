@@ -20,6 +20,8 @@ class AppliancesProduct8 extends StatelessWidget {
       originalPrice: 2760,
       rating: 4.6,
       reviewCount: 884,
+      category: 'Appliances',
+      subcategory: 'Small Appliances',
       brand: 'Black & Decker',
       color: 'Silver/Black',
       material: 'Stainless Steel',

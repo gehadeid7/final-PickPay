@@ -17,6 +17,8 @@ class AppliancesProduct4 extends StatelessWidget {
       originalPrice: 17950,
       rating: 4.2,
       reviewCount: 14,
+      category: 'Appliances',
+      subcategory: 'Large Appliances',
       brand: 'Zanussi',
       color: 'Silver',
       material: 'Stainless Steel',

@@ -19,6 +19,8 @@ class AppliancesProduct7 extends StatelessWidget {
       originalPrice: 1680,
       rating: 3.1,
       reviewCount: 1288,
+      category: 'Appliances',
+      subcategory: 'Small Appliances',
       brand: 'Black & Decker',
       color: 'Black',
       material: 'Porcelain, Polypropylene',

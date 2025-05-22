@@ -18,6 +18,8 @@ class AppliancesProduct10 extends StatelessWidget {
       rating: 4.6,
       reviewCount: 4576,
       brand: 'Fresh',
+      category: 'Appliances',
+      subcategory: 'Small Appliances',
       filtertype: 'HEPA',
       surface: 'All floors',
       components: 'Vacuum Bag',

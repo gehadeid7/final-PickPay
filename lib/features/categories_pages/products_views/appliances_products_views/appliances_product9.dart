@@ -20,6 +20,8 @@ class AppliancesProduct9 extends StatelessWidget {
       reviewCount: 1193,
       brand: 'Panasonic',
       color: 'Violet',
+      category: 'Appliances',
+      subcategory: 'Small Appliances',
       material: 'Plastic and Metal',
       style: 'Modern Handheld Iron',
       itemWeight: '1.9 Kilograms',
