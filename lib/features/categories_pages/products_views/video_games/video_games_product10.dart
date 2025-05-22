@@ -21,6 +21,8 @@ class VideoGamesProduct10 extends StatelessWidget {
       originalPrice: 600.00,
       rating: 4.3,
       reviewCount: 185,
+      category: 'Video Games',
+      subcategory: 'Accessories',
       color: 'Green',
       compatibleDevices: 'Game Consoles',
       brand: 'Likorlove',

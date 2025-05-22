@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:pickpay/features/categories_pages/models/product_model.dart';
 import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product1.dart';
 import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product10.dart';
@@ -36,7 +37,6 @@ import 'package:pickpay/features/categories_pages/products_views/home_products/h
 import 'package:pickpay/features/categories_pages/products_views/home_products/home_product8.dart';
 import 'package:pickpay/features/categories_pages/products_views/home_products/home_product9.dart';
 import 'package:pickpay/features/categories_pages/products_views/product_detail_view.dart';
-import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product1.dart';
 import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product2.dart';
 import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product3.dart';
@@ -67,6 +67,20 @@ import 'package:pickpay/features/categories_pages/products_views/electronics_pro
 import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product7.dart';
 import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product8.dart';
 import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product9.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product1.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product10.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product11.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product12.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product13.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product14.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product2.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product3.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product4.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product5.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product6.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product7.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product8.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product9.dart';
 
 class RelatedProducts extends StatelessWidget {
   final ProductsViewsModel currentProduct;
@@ -277,6 +291,48 @@ class RelatedProducts extends StatelessWidget {
     if (widget is HomeProduct20) {
       return (widget.build(context) as ProductDetailView).product;
     }
+    if (widget is VideoGamesProduct1) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is VideoGamesProduct2) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is VideoGamesProduct3) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is VideoGamesProduct4) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is VideoGamesProduct5) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is VideoGamesProduct6) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is VideoGamesProduct7) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is VideoGamesProduct8) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is VideoGamesProduct9) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is VideoGamesProduct10) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is VideoGamesProduct11) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is VideoGamesProduct12) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is VideoGamesProduct13) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is VideoGamesProduct14) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
     throw Exception('Unknown widget type: ${widget.runtimeType}');
   }
 
@@ -351,6 +407,21 @@ class RelatedProducts extends StatelessWidget {
       const HomeProduct18(),
       const HomeProduct19(),
       const HomeProduct20(),
+      // Video games
+      const VideoGamesProduct1(),
+      const VideoGamesProduct2(),
+      const VideoGamesProduct3(),
+      const VideoGamesProduct4(),
+      const VideoGamesProduct5(),
+      const VideoGamesProduct6(),
+      const VideoGamesProduct7(),
+      const VideoGamesProduct8(),
+      const VideoGamesProduct9(),
+      const VideoGamesProduct10(),
+      const VideoGamesProduct11(),
+      const VideoGamesProduct12(),
+      const VideoGamesProduct13(),
+      const VideoGamesProduct14(),
     ];
 
     final products =
@@ -432,6 +503,25 @@ class RelatedProducts extends StatelessWidget {
       return products
           .where((p) =>
               p.subcategory == 'Bath & Bedding' && p.id != currentProduct.id)
+          .toList()
+        ..shuffle();
+    }
+    // video games
+    else if (currentProduct.subcategory == 'Console') {
+      return products
+          .where((p) => p.subcategory == 'Console' && p.id != currentProduct.id)
+          .toList()
+        ..shuffle();
+    } else if (currentProduct.subcategory == 'Controllers') {
+      return products
+          .where((p) =>
+              p.subcategory == 'Controllers' && p.id != currentProduct.id)
+          .toList()
+        ..shuffle();
+    } else if (currentProduct.subcategory == 'Accessories') {
+      return products
+          .where((p) =>
+              p.subcategory == 'Accessories' && p.id != currentProduct.id)
           .toList()
         ..shuffle();
     }

@@ -21,6 +21,8 @@ class VideoGamesProduct12 extends StatelessWidget {
       originalPrice: 26999.00,
       rating: 4.3,
       reviewCount: 230,
+      category: 'Video Games',
+      subcategory: 'Accessories',
       color: 'Black',
       compatibleDevices: 'Laptop, Gaming Console, Desktop',
       brand: 'fanxiang',

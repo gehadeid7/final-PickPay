@@ -20,6 +20,8 @@ class VideoGamesProduct3 extends StatelessWidget {
       originalPrice: 20000.00,
       rating: 4.8,
       reviewCount: 36,
+      category: 'Video Games',
+      subcategory: 'Console',
       aboutThisItem: '1243374',
       deliveryTimeLeft: '20hrs 36 mins',
       deliveryLocation: 'Egypt',

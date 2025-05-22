@@ -20,6 +20,8 @@ class VideoGamesProduct14 extends StatelessWidget {
       originalPrice: 2900.00,
       rating: 4.5,
       reviewCount: 1530,
+      category: 'Video Games',
+      subcategory: 'Accessories',
       aboutThisItem:
           '''This video game is the world's leading football game; The Standard Edition contains the FC 25 full game
 

@@ -15,6 +15,8 @@ class VideoGamesProduct5 extends StatelessWidget {
       originalPrice: 5000.00,
       rating: 5.0,
       reviewCount: 3,
+      category: 'Video Games',
+      subcategory: 'Controllers',
       aboutThisItem: '''Accessory Type: Controllers
 Brand: Sony
 Compatible with: other

@@ -21,6 +21,8 @@ class VideoGamesProduct2 extends StatelessWidget {
       originalPrice: 20000.00,
       rating: 4.4,
       reviewCount: 3211,
+      category: 'Video Games',
+      subcategory: 'Console',
       aboutThisItem: 'Dual Shock 4 controller',
       deliveryTimeLeft: '20hrs 36 mins',
       deliveryLocation: 'Egypt',
