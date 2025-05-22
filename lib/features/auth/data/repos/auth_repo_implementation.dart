@@ -509,6 +509,7 @@ class AuthRepoImplementation extends AuthRepo {
     try {
       await firebaseAuthService.signOut();
       await Prefs.remove(kUserData);
+      await Prefs.remove(kCartData); // Clear cart data on sign out
       return right(null);
     } catch (e) {
       return left(ServerFailure('Sign out failed: ${e.toString()}'));
@@ -815,31 +816,32 @@ class AuthRepoImplementation extends AuthRepo {
   }
   // Add this to AuthRepoImplementation or preferably a ProductRepoImplementation
 
-Future<Either<Failure, ProductsViewsModel>> getProductById(String productId) async {
-  try {
-    final response = await apiService.get(
-      endpoint: "${BackendEndpoints.getProductById}/$productId",
-      authorized: true,
-    );
+  Future<Either<Failure, ProductsViewsModel>> getProductById(
+      String productId) async {
+    try {
+      final response = await apiService.get(
+        endpoint: "${BackendEndpoints.getProductById}/$productId",
+        authorized: true,
+      );
 
-    if (response.statusCode != 200) {
-      return left(ServerFailure(
-        'فشل في جلب تفاصيل المنتج: ${response.body}',
-      ));
+      if (response.statusCode != 200) {
+        return left(ServerFailure(
+          'فشل في جلب تفاصيل المنتج: ${response.body}',
+        ));
+      }
+
+      final data = jsonDecode(response.body);
+      if (!data.containsKey('data')) {
+        return left(ServerFailure('استجابة غير صالحة من الخادم'));
+      }
+
+      final productData = data['data'];
+      final product = ProductsViewsModel.fromJson(productData);
+
+      return right(product);
+    } catch (e) {
+      return left(
+          ServerFailure('خطأ أثناء جلب تفاصيل المنتج: ${e.toString()}'));
     }
-
-    final data = jsonDecode(response.body);
-    if (!data.containsKey('data')) {
-      return left(ServerFailure('استجابة غير صالحة من الخادم'));
-    }
-
-    final productData = data['data'];
-    final product = ProductsViewsModel.fromJson(productData);
-
-    return right(product);
-  } catch (e) {
-    return left(ServerFailure('خطأ أثناء جلب تفاصيل المنتج: ${e.toString()}'));
   }
-}
-
 }

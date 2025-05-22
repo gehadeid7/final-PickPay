@@ -5,10 +5,23 @@ import 'review_state.dart';
 
 class ReviewCubit extends Cubit<ReviewState> {
   final FirebaseFirestore _firestore;
+  bool _isClosed = false;
 
   ReviewCubit({FirebaseFirestore? firestore})
       : _firestore = firestore ?? FirebaseFirestore.instance,
         super(ReviewInitial());
+
+  @override
+  Future<void> close() {
+    _isClosed = true;
+    return super.close();
+  }
+
+  void _safeEmit(ReviewState state) {
+    if (!_isClosed && !isClosed) {
+      emit(state);
+    }
+  }
 
   Future<void> submitReview({
     required String userId,
@@ -19,7 +32,7 @@ class ReviewCubit extends Cubit<ReviewState> {
     String? productId,
   }) async {
     try {
-      emit(ReviewLoading());
+      _safeEmit(ReviewLoading());
 
       final reviewRef = _firestore.collection('reviews').doc();
       final review = Review(
@@ -34,16 +47,16 @@ class ReviewCubit extends Cubit<ReviewState> {
       );
 
       await reviewRef.set(review.toJson());
-      emit(ReviewSubmitted());
+      _safeEmit(ReviewSubmitted());
       await fetchReviews(productId: productId);
     } catch (e) {
-      emit(ReviewError(e.toString()));
+      _safeEmit(ReviewError(e.toString()));
     }
   }
 
   Future<void> fetchReviews({String? productId}) async {
     try {
-      emit(ReviewLoading());
+      _safeEmit(ReviewLoading());
 
       Query query = _firestore.collection('reviews');
 
@@ -58,9 +71,9 @@ class ReviewCubit extends Cubit<ReviewState> {
 
       reviews.sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
-      emit(ReviewsLoaded(reviews));
+      _safeEmit(ReviewsLoaded(reviews));
     } catch (e) {
-      emit(ReviewError(e.toString()));
+      _safeEmit(ReviewError(e.toString()));
     }
   }
 
@@ -71,7 +84,7 @@ class ReviewCubit extends Cubit<ReviewState> {
           await _firestore.collection('reviews').doc(reviewId).get();
 
       if (!reviewDoc.exists) {
-        emit(ReviewError('Review not found'));
+        _safeEmit(ReviewError('Review not found'));
         return;
       }
 
@@ -81,14 +94,14 @@ class ReviewCubit extends Cubit<ReviewState> {
       await _firestore.collection('reviews').doc(reviewId).delete();
 
       // Emit deleted state before fetching updated reviews
-      emit(ReviewDeleted());
+      _safeEmit(ReviewDeleted());
 
       // Fetch updated reviews to refresh the list
       if (productId != null) {
         await fetchReviews(productId: productId);
       }
     } catch (e) {
-      emit(ReviewError('Failed to delete review: $e'));
+      _safeEmit(ReviewError('Failed to delete review: $e'));
     }
   }
 }

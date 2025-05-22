@@ -362,28 +362,6 @@ class ProductsViewsModel {
   });
 
   factory ProductsViewsModel.fromJson(Map<String, dynamic> json) {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    return ProductsViewsModel(
-      id: json['_id']?['\$oid'] ?? json['id'] ?? '',
-      title: json['name'] ?? json['title'] ?? '',
-      price: (json['price'] ?? 0).toDouble(),
-      originalPrice:
-          (json['originalPrice'] ?? json['listPrice'] ?? 0).toDouble(),
-      brand: json['brand'],
-      category: json['category'],
-      imagePaths: json['imagePaths'] != null
-          ? List<String>.from(json['imagePaths'])
-          : json['images'] != null
-              ? List<String>.from(json['images'])
-              : null,
-      rating: (json['rating'] as num?)?.toDouble(),
-      reviewCount: json['reviewCount'],
-    );
-  }
-=======
-=======
->>>>>>> Stashed changes
   return ProductsViewsModel(
     id: json['_id']?['\$oid'] ?? json['id'] ?? '',
     title: json['title'] ?? json['name'] ?? '',
@@ -458,10 +436,6 @@ class ProductsViewsModel {
   );
 }
 
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 
   Map<String, dynamic> toJson() {
     return {
@@ -474,6 +448,87 @@ class ProductsViewsModel {
       if (rating != null) 'rating': rating,
       if (reviewCount != null) 'reviewCount': reviewCount,
       if (brand != null) 'brand': brand,
+      if (color != null) 'color': color,
+      if (aboutThisItem != null) 'description': aboutThisItem,
+      if (deliveryDate != null) 'deliveryDate': deliveryDate,
+      if (deliveryTimeLeft != null) 'deliveryTimeLeft': deliveryTimeLeft,
+      if (deliveryLocation != null) 'deliveryLocation': deliveryLocation,
+      if (inStock != null) 'inStock': inStock,
+      if (shipsFrom != null) 'shipsFrom': shipsFrom,
+      if (soldBy != null) 'soldBy': soldBy,
+      if (material != null) 'material': material,
+      if (dimensions != null) 'dimensions': dimensions,
+      if (style != null) 'style': style,
+      if (installationType != null) 'installationType': installationType,
+      if (accessLocation != null) 'accessLocation': accessLocation,
+      if (settingsCount != null) 'settingsCount': settingsCount,
+      if (powerSource != null) 'powerSource': powerSource,
+      if (modelName != null) 'modelName': modelName,
+      if (formFactor != null) 'formFactor': formFactor,
+      if (controlsType != null) 'controlsType': controlsType,
+      if (itemWeight != null) 'itemWeight': itemWeight,
+      if (efficiency != null) 'efficiency': efficiency,
+      if (mountingType != null) 'mountingType': mountingType,
+      if (capacity != null) 'capacity': capacity,
+      if (technology != null) 'technology': technology,
+      if (configration != null) 'configration': configration,
+      if (energyEfficency != null) 'energyEfficency': energyEfficency,
+      if (spinSpeed != null) 'spinSpeed': spinSpeed,
+      if (modelNumber != null) 'modelNumber': modelNumber,
+      if (numberofprograms != null) 'numberofprograms': numberofprograms,
+      if (noiselevel != null) 'noiselevel': noiselevel,
+      if (recommendedUsesForProduct != null)
+        'recommendedUsesForProduct': recommendedUsesForProduct,
+      if (outputWattage != null) 'outputWattage': outputWattage,
+      if (wattage != null) 'wattage': wattage,
+      if (coffeeMakerType != null) 'coffeeMakerType': coffeeMakerType,
+      if (filtertype != null) 'filtertype': filtertype,
+      if (stainlessSteelNumberofSpeeds != null)
+        'stainlessSteelNumberofSpeeds': stainlessSteelNumberofSpeeds,
+      if (bladeMaterial != null) 'bladeMaterial': bladeMaterial,
+      if (voltage != null) 'voltage': voltage,
+      if (components != null) 'components': components,
+      if (powersource != null) 'powersource': powersource,
+      if (pressure != null) 'pressure': pressure,
+      if (maximumpressure != null) 'maximumpressure': maximumpressure,
+      if (controllertype != null) 'controllertype': controllertype,
+      if (electricFanDesign != null) 'electricFanDesign': electricFanDesign,
+      if (roomtype != null) 'roomtype': roomtype,
+      if (surface != null) 'surface': surface,
+      if (isProductCordless != null) 'isProductCordless': isProductCordless,
+      if (frequency != null) 'frequency': frequency,
+      if (slotcount != null) 'slotcount': slotcount,
+      if (drawertype != null) 'drawertype': drawertype,
+      if (defrostSystem != null) 'defrostSystem': defrostSystem,
+      if (size != null) 'size': size,
+      if (specialfeatures != null) 'specialfeatures': specialfeatures,
+      if (finishType != null) 'finishType': finishType,
+      if (containerType != null) 'containerType': containerType,
+      if (manufacturer != null) 'manufacturer': manufacturer,
+      if (productbenefit != null) 'productbenefit': productbenefit,
+      if (itemform != null) 'itemform': itemform,
+      if (specialty != null) 'specialty': specialty,
+      if (unitcount != null) 'unitcount': unitcount,
+      if (numberofitems != null) 'numberofitems': numberofitems,
+      if (skintype != null) 'skintype': skintype,
+      if (coverage != null) 'coverage': coverage,
+      if (ageRangeDescription != null)
+        'ageRangeDescription': ageRangeDescription,
+      if (specialIngredients != null) 'specialIngredients': specialIngredients,
+      if (activeIngredients != null) 'activeIngredients': activeIngredients,
+      if (sunProtectionFactor != null)
+        'sunProtectionFactor': sunProtectionFactor,
+      if (itemvolume != null) 'itemvolume': itemvolume,
+      if (scent != null) 'scent': scent,
+      if (targetUseBodyPart != null) 'targetUseBodyPart': targetUseBodyPart,
+      if (hairtype != null) 'hairtype': hairtype,
+      if (liquidVolume != null) 'liquidVolume': liquidVolume,
+      if (resultingHairType != null) 'resultingHairType': resultingHairType,
+      if (materialfeature != null) 'materialfeature': materialfeature,
+      if (fragranceConcentration != null)
+        'fragranceConcentration': fragranceConcentration,
+      if (colorOptions != null) 'colorOptions': colorOptions,
+      if (scentOption != null) 'scentOption': scentOption,
     };
   }
   

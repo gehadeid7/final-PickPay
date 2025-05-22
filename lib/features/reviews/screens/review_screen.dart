@@ -26,12 +26,29 @@ class ReviewScreen extends StatefulWidget {
 class _ReviewScreenState extends State<ReviewScreen> {
   late final UserModel? currentUser;
   bool _showReviewForm = false;
+  late final ReviewCubit _reviewCubit;
 
   @override
   void initState() {
     super.initState();
     currentUser = Prefs.getUser();
-    context.read<ReviewCubit>().fetchReviews(productId: widget.productId);
+    _reviewCubit = context.read<ReviewCubit>();
+    _loadReviews();
+  }
+
+  @override
+  void dispose() {
+    if (!widget.isEmbedded) {
+      // Only close the cubit if this screen is not embedded
+      _reviewCubit.close();
+    }
+    super.dispose();
+  }
+
+  Future<void> _loadReviews() async {
+    if (mounted) {
+      await _reviewCubit.fetchReviews(productId: widget.productId);
+    }
   }
 
   @override

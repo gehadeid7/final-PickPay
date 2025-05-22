@@ -1,4 +1,4 @@
-export 'review_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Review {
   final String id;
@@ -29,7 +29,7 @@ class Review {
       userName: json['userName'] as String,
       content: json['content'] as String,
       rating: (json['rating'] as num).toDouble(),
-      createdAt: DateTime.parse(json['createdAt'] as String),
+      createdAt: (json['createdAt'] as Timestamp).toDate(),
       productId: json['productId'] as String?,
     );
   }
@@ -42,8 +42,30 @@ class Review {
       'userName': userName,
       'content': content,
       'rating': rating,
-      'createdAt': createdAt.toIso8601String(),
+      'createdAt': Timestamp.fromDate(createdAt),
       'productId': productId,
     };
+  }
+
+  Review copyWith({
+    String? id,
+    String? userId,
+    String? userImage,
+    String? userName,
+    String? content,
+    double? rating,
+    DateTime? createdAt,
+    String? productId,
+  }) {
+    return Review(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      userImage: userImage ?? this.userImage,
+      userName: userName ?? this.userName,
+      content: content ?? this.content,
+      rating: rating ?? this.rating,
+      createdAt: createdAt ?? this.createdAt,
+      productId: productId ?? this.productId,
+    );
   }
 }
