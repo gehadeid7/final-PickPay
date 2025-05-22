@@ -139,17 +139,17 @@ class _ProductDetailViewState extends State<ProductDetailView>
                     const SizedBox(height: 24),
                     _buildSellerInfo(product, isDarkMode),
                     const SizedBox(height: 24),
-                    AnimationConfiguration.staggeredList(
-                      position: 0,
-                      duration: const Duration(milliseconds: 500),
-                      child: SlideAnimation(
-                        verticalOffset: 50.0,
-                        child: FadeInAnimation(
-                          child: RelatedProductsWidget(
-                              currentProduct: widget.product),
-                        ),
-                      ),
-                    ),
+                    // AnimationConfiguration.staggeredList(
+                    //   position: 0,
+                    //   duration: const Duration(milliseconds: 500),
+                    //   child: SlideAnimation(
+                    //     verticalOffset: 50.0,
+                    //     child: FadeInAnimation(
+                    //       child: RelatedProductsWidget(
+                    //           currentProduct: widget.product),
+                    //     ),
+                    //   ),
+                    // ),
                     const SizedBox(height: 80),
                   ],
                 ),
