@@ -1,14 +1,48 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pickpay/features/categories_pages/appliances/presentation/views/appliances_view.dart';
 import 'package:pickpay/features/categories_pages/beauty/presentation/views/beauty_view.dart';
 import 'package:pickpay/features/categories_pages/electronics/presentation/views/electronics_view.dart';
 import 'package:pickpay/features/categories_pages/fashion/presentation/views/fashion_view.dart';
 import 'package:pickpay/features/categories_pages/homeCategory/presentation/views/home_category_view.dart';
 import 'package:pickpay/features/categories_pages/videogames/presentation/views/videogames_view.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class FooterWidget extends StatelessWidget {
   const FooterWidget({super.key});
+
+  Future<void> _launchEmail() async {
+    final Uri emailLaunchUri = Uri(
+      scheme: 'mailto',
+      path: 'pickpay111@gmail.com',
+    );
+
+    if (!await launchUrl(emailLaunchUri)) {
+      throw Exception('Could not launch email');
+    }
+  }
+
+  Future<void> _launchPhone() async {
+    final Uri phoneLaunchUri = Uri(
+      scheme: 'tel',
+      path: '+201066807592',
+    );
+
+    if (!await launchUrl(phoneLaunchUri)) {
+      throw Exception('Could not launch phone');
+    }
+  }
+
+  Future<void> _launchLocation() async {
+    // Using coordinates for Cairo, Egypt
+    const latitude = '30.0444';
+    const longitude = '31.2357';
+    final Uri mapsUri = Uri.parse(
+        'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude');
+
+    if (!await launchUrl(mapsUri, mode: LaunchMode.externalApplication)) {
+      throw Exception('Could not launch maps');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,15 +132,33 @@ class FooterWidget extends StatelessWidget {
       children: [
         _buildSectionTitle('Contact Us', Theme.of(context)),
         const SizedBox(height: 12),
-        _buildContactRow(Icons.email_outlined, 'pickpay@gmail.com', context),
+        InkWell(
+          onTap: _launchEmail,
+          child: MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: _buildContactRow(
+                Icons.email_outlined, 'pickpay111@gmail.com', context),
+          ),
+        ),
         const SizedBox(height: 12),
-        _buildContactRow(Icons.phone_outlined, '+20 1066807592', context),
+        InkWell(
+          onTap: _launchPhone,
+          child: MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: _buildContactRow(
+                Icons.phone_outlined, '+20 1066807592', context),
+          ),
+        ),
         const SizedBox(height: 12),
-        _buildContactRow(Icons.location_on_outlined, 'Cairo, Egypt', context),
+        InkWell(
+          onTap: _launchLocation,
+          child: MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: _buildContactRow(
+                Icons.location_on_outlined, 'Cairo, Egypt', context),
+          ),
+        ),
         const SizedBox(height: 24),
-        _buildSectionTitle('Follow Us', Theme.of(context)),
-        const SizedBox(height: 12),
-        _buildSocialIcons(context),
       ],
     );
   }
@@ -201,41 +253,10 @@ class FooterWidget extends StatelessWidget {
           text,
           style: theme.textTheme.bodySmall?.copyWith(
             color: theme.hintColor,
+            decoration: TextDecoration.underline,
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildSocialIcons(BuildContext context) {
-    return Wrap(
-      spacing: 12,
-      children: [
-        _buildSocialIcon(FontAwesomeIcons.facebookF, context),
-      ],
-    );
-  }
-
-  Widget _buildSocialIcon(IconData icon, BuildContext context) {
-    return Container(
-      width: 36,
-      height: 36,
-      decoration: BoxDecoration(
-        color: Colors.blue,
-        shape: BoxShape.circle,
-        boxShadow: [
-          BoxShadow(
-            color: const Color.fromARGB(103, 128, 118, 118),
-            blurRadius: 2,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: IconButton(
-        icon: FaIcon(icon, size: 16),
-        onPressed: () {},
-        color: Colors.white,
-      ),
     );
   }
 
