@@ -23,6 +23,8 @@ class Product14View extends StatelessWidget {
       reviewCount: 2753,
       style: 'HP OfficeJet Pro 9720',
       brand: 'HP',
+      category: 'Electronics',
+      subcategory: 'Laptop',
       connectivityTechnology: 'Wi-Fi',
       printerTechnology: 'white',
       specialfeatures: 'auto_document_feeder',

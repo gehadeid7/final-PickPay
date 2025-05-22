@@ -18,6 +18,8 @@ class Product2View extends StatelessWidget {
       originalPrice: 10000.00,
       rating: 4.7,
       reviewCount: 2019,
+      category: 'Electronics',
+      subcategory: 'Mobile & Tablets',
       colorOptions: ['Graphite Gray'],
       colorAvailability: {'Graphite Gray': true},
       size: '8GB RAM | 256GB ROM',

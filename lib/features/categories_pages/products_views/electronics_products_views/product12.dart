@@ -21,6 +21,8 @@ class Product12View extends StatelessWidget {
       originalPrice: 39866.00,
       rating: 3.4,
       reviewCount: 14,
+      category: 'Electronics',
+      subcategory: 'Laptop',
       screenSize: '15.6 Inches',
       brand: 'Lenovo',
       graphicsDescription: 'Dedicated',

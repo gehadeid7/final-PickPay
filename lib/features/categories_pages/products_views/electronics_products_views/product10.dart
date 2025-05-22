@@ -22,6 +22,8 @@ class Product10View extends StatelessWidget {
       originalPrice: 19999.00,
       rating: 4.2,
       reviewCount: 43,
+      category: 'Electronics',
+      subcategory: "TVs",
       screenSize: '60 Inches',
       brand: 'LG',
       displayTechnology: 'LCD',

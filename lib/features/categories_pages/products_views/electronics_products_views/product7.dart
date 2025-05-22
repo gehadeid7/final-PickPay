@@ -24,6 +24,8 @@ class Product7View extends StatelessWidget {
       reviewCount: 264,
       screenSize: '43 Inches',
       brand: 'Xiaomi',
+      category: 'Electronics',
+      subcategory: "TVs",
       displayTechnology: 'LED',
       resolution: '1080p',
       modelName: 'L43MA-AUEU',

@@ -23,6 +23,8 @@ class Product13View extends StatelessWidget {
       reviewCount: 13,
       screenSize: '15.6 Inches',
       brand: 'HP',
+      category: 'Electronics',
+      subcategory: 'Laptop',
       graphicsDescription: 'Dedicated',
       operatingSystem: 'Windows 11',
       ramMemoryInstalled: '16 GB',

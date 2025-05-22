@@ -21,6 +21,8 @@ class Product9View extends StatelessWidget {
       rating: 4.7,
       reviewCount: 4,
       screenSize: '55',
+      category: 'Electronics',
+      subcategory: "TVs",
       brand: 'Sharp',
       displayTechnology: 'LED',
       resolution: '4K',

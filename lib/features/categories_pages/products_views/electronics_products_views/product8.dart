@@ -27,6 +27,8 @@ class Product8View extends StatelessWidget {
       displayTechnology: '4K LED',
       resolution: '4K',
       size: '50 Inch',
+      category: 'Electronics',
+      subcategory: "TVs",
       specialfeatures: 'Browser',
       includedComponents:
           'User Manual - Remote Control - Power Cable - Full Motion Slim Mount (Y22)',

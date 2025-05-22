@@ -17,6 +17,21 @@ import 'package:pickpay/features/categories_pages/products_views/fashion_product
 import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product13.dart';
 import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product14.dart';
 import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product15.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product1.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product2.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product10.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product11.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product12.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product13.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product14.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product15.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product3.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product4.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product5.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product6.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product7.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product8.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product9.dart';
 
 class RelatedProducts extends StatelessWidget {
   final ProductsViewsModel currentProduct;
@@ -28,42 +43,105 @@ class RelatedProducts extends StatelessWidget {
 
   ProductsViewsModel _getProductFromWidget(
       BuildContext context, Widget widget) {
+    // Fashion products
     if (widget is FashionProduct1) {
       return (widget.build(context) as ProductDetailView).product;
-    } else if (widget is FashionProduct2) {
-      return (widget.build(context) as ProductDetailView).product;
-    } else if (widget is FashionProduct3) {
-      return (widget.build(context) as ProductDetailView).product;
-    } else if (widget is FashionProduct4) {
-      return (widget.build(context) as ProductDetailView).product;
-    } else if (widget is FashionProduct5) {
-      return (widget.build(context) as ProductDetailView).product;
-    } else if (widget is FashionProduct6) {
-      return (widget.build(context) as ProductDetailView).product;
-    } else if (widget is FashionProduct7) {
-      return (widget.build(context) as ProductDetailView).product;
-    } else if (widget is FashionProduct8) {
-      return (widget.build(context) as ProductDetailView).product;
-    } else if (widget is FashionProduct9) {
-      return (widget.build(context) as ProductDetailView).product;
-    } else if (widget is FashionProduct10) {
-      return (widget.build(context) as ProductDetailView).product;
-    } else if (widget is FashionProduct11) {
-      return (widget.build(context) as ProductDetailView).product;
-    } else if (widget is FashionProduct12) {
-      return (widget.build(context) as ProductDetailView).product;
-    } else if (widget is FashionProduct13) {
-      return (widget.build(context) as ProductDetailView).product;
-    } else if (widget is FashionProduct14) {
-      return (widget.build(context) as ProductDetailView).product;
-    } else if (widget is FashionProduct15) {
+    }
+    if (widget is FashionProduct2) {
       return (widget.build(context) as ProductDetailView).product;
     }
-    throw Exception('Unknown widget type');
+    if (widget is FashionProduct3) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is FashionProduct4) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is FashionProduct5) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is FashionProduct6) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is FashionProduct7) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is FashionProduct8) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is FashionProduct9) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is FashionProduct10) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is FashionProduct11) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is FashionProduct12) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is FashionProduct13) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is FashionProduct14) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is FashionProduct15) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    // Electronics products
+    if (widget is Product1View) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is Product2View) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is Product3View) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is Product4View) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is Product5View) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is Product6View) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is Product7View) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is Product8View) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is Product9View) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is Product10View) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is Product11View) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is Product12View) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is Product13View) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is Product14View) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is Product15View) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+
+    throw Exception('Unknown widget type: ${widget.runtimeType}');
   }
 
   List<ProductsViewsModel> _getRelatedProducts(BuildContext context) {
     final allProducts = [
+      // Fashion products
       const FashionProduct1(),
       const FashionProduct2(),
       const FashionProduct3(),
@@ -79,35 +157,64 @@ class RelatedProducts extends StatelessWidget {
       const FashionProduct13(),
       const FashionProduct14(),
       const FashionProduct15(),
+      // Electronics products
+      const Product1View(),
+      const Product2View(),
+      const Product3View(),
+      const Product4View(),
+      const Product5View(),
+      const Product6View(),
+      const Product7View(),
+      const Product8View(),
+      const Product9View(),
+      const Product10View(),
+      const Product11View(),
+      const Product12View(),
+      const Product13View(),
+      const Product14View(),
+      const Product15View(),
     ];
 
     final products =
         allProducts.map((w) => _getProductFromWidget(context, w)).toList();
 
+    // Fashion categories
     if (currentProduct.subcategory == "Women's Fashion") {
-      final womenProducts =
-          products.where((p) => p.subcategory == "Women's Fashion").toList();
-      final filteredProducts = womenProducts
-          .where((p) => p.id != currentProduct.id)
+      return products
+          .where((p) =>
+              p.subcategory == "Women's Fashion" && p.id != currentProduct.id)
           .toList()
         ..shuffle();
-      return filteredProducts;
     } else if (currentProduct.subcategory == "Men's Fashion") {
-      final menProducts =
-          products.where((p) => p.subcategory == "Men's Fashion").toList();
-      final filteredProducts = menProducts
-          .where((p) => p.id != currentProduct.id)
+      return products
+          .where((p) =>
+              p.subcategory == "Men's Fashion" && p.id != currentProduct.id)
           .toList()
         ..shuffle();
-      return filteredProducts;
     } else if (currentProduct.subcategory == "Kids' Fashion") {
-      final kidsProducts =
-          products.where((p) => p.subcategory == "Kids' Fashion").toList();
-      final filteredProducts = kidsProducts
-          .where((p) => p.id != currentProduct.id)
+      return products
+          .where((p) =>
+              p.subcategory == "Kids' Fashion" && p.id != currentProduct.id)
           .toList()
         ..shuffle();
-      return filteredProducts;
+    }
+    // Electronics categories
+    else if (currentProduct.subcategory == "Mobile & Tablets") {
+      return products
+          .where((p) =>
+              p.subcategory == "Mobile & Tablets" && p.id != currentProduct.id)
+          .toList()
+        ..shuffle();
+    } else if (currentProduct.subcategory == "TVs") {
+      return products
+          .where((p) => p.subcategory == "TVs" && p.id != currentProduct.id)
+          .toList()
+        ..shuffle();
+    } else if (currentProduct.subcategory == 'Laptop') {
+      return products
+          .where((p) => p.subcategory == 'Laptop' && p.id != currentProduct.id)
+          .toList()
+        ..shuffle();
     }
     return [];
   }
@@ -227,13 +334,16 @@ class _RelatedProductCard extends StatelessWidget {
                         const BorderRadius.vertical(top: Radius.circular(12)),
                     child: Hero(
                       tag: 'related_product_${product.id}',
-                      child: Image.asset(
-                        (product.imagePaths?.isNotEmpty ?? false)
-                            ? product.imagePaths![0]
-                            : 'assets/placeholder.png',
-                        height: 160,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
+                        child: Image.asset(
+                          (product.imagePaths?.isNotEmpty ?? false)
+                              ? product.imagePaths![0]
+                              : 'assets/placeholder.png',
+                          height: 140,
+                          width: double.infinity,
+                          fit: BoxFit.contain,
+                        ),
                       ),
                     ),
                   ),

@@ -20,6 +20,8 @@ class Product3View extends StatelessWidget {
       originalPrice: 57555.00,
       rating: 4.7,
       reviewCount: 330,
+      category: 'Electronics',
+      subcategory: 'Mobile & Tablets',
       colorOptions: ['Ultramarine'],
       colorAvailability: {'Ultramarine': true},
       size: '128GB Storage',

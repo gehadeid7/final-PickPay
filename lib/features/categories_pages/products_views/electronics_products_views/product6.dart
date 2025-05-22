@@ -21,6 +21,8 @@ class Product6View extends StatelessWidget {
       originalPrice: 24999.00,
       rating: 4.5,
       reviewCount: 46,
+      category: 'Electronics',
+      subcategory: "TVs",
       screenSize: '55 Inches',
       brand: 'SAMSUNG',
       displayTechnology: 'QLED',

@@ -19,6 +19,8 @@ class Product4View extends StatelessWidget {
       originalPrice: 399.99,
       rating: 4.7,
       reviewCount: 237,
+      category: 'Electronics',
+      subcategory: 'Mobile & Tablets',
       colorOptions: ['Clear'],
       colorAvailability: {'Clear': true},
       size: 'iPhone 16 Pro Max (6.9 Inch,3 Lens)',

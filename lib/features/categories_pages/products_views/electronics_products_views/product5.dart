@@ -22,6 +22,8 @@ class Product5View extends StatelessWidget {
       originalPrice: 220.00,
       rating: 4.7,
       reviewCount: 380,
+      category: 'Electronics',
+      subcategory: 'Mobile & Tablets',
       colorOptions: ['white'],
       colorAvailability: {'White': true},
       connectivityTechnology: 'USB',

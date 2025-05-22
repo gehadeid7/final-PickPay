@@ -22,6 +22,8 @@ class Product11View extends StatelessWidget {
       screenSize: '15.6 Inches',
       color: 'grey',
       brand: 'Lenovo',
+      category: 'Electronics',
+      subcategory: 'Laptop',
       graphicsDescription: 'Integrated',
       operatingSystem: 'Windows 11',
       ramMemoryInstalled: '8 GB',

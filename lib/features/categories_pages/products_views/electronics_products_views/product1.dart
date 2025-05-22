@@ -22,6 +22,8 @@ class Product1View extends StatelessWidget {
       originalPrice: 9655.00,
       rating: 3.1,
       reviewCount: 9,
+      category: 'Electronics',
+      subcategory: 'Mobile & Tablets',
       colorOptions: ['Navy'],
       colorAvailability: {'Navy': true},
       size: '8 GB ram-128 GB Storage',
