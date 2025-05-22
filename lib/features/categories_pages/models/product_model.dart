@@ -363,6 +363,7 @@ class ProductsViewsModel {
 
   factory ProductsViewsModel.fromJson(Map<String, dynamic> json) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     return ProductsViewsModel(
       id: json['_id']?['\$oid'] ?? json['id'] ?? '',
       title: json['name'] ?? json['title'] ?? '',
@@ -381,6 +382,8 @@ class ProductsViewsModel {
     );
   }
 =======
+=======
+>>>>>>> Stashed changes
   return ProductsViewsModel(
     id: json['_id']?['\$oid'] ?? json['id'] ?? '',
     title: json['title'] ?? json['name'] ?? '',
@@ -455,6 +458,9 @@ class ProductsViewsModel {
   );
 }
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
   Map<String, dynamic> toJson() {
