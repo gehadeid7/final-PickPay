@@ -6,7 +6,6 @@ import 'package:pickpay/features/categories_pages/widgets/color_option_selector.
 import 'package:pickpay/features/categories_pages/widgets/info_icons_row.dart';
 import 'package:pickpay/features/categories_pages/widgets/product_rating.dart';
 import 'package:pickpay/features/categories_pages/widgets/products_view_appbar.dart';
-import 'package:pickpay/features/related_products_widget/related_products_widget.dart';
 import 'package:pickpay/features/categories_pages/widgets/scent_option.dart';
 import 'package:pickpay/features/categories_pages/widgets/size_option.dart';
 import 'package:pickpay/features/cart/cart_item_model.dart';
@@ -139,17 +138,6 @@ class _ProductDetailViewState extends State<ProductDetailView>
                     const SizedBox(height: 24),
                     _buildSellerInfo(product, isDarkMode),
                     const SizedBox(height: 24),
-                    // AnimationConfiguration.staggeredList(
-                    //   position: 0,
-                    //   duration: const Duration(milliseconds: 500),
-                    //   child: SlideAnimation(
-                    //     verticalOffset: 50.0,
-                    //     child: FadeInAnimation(
-                    //       child: RelatedProductsWidget(
-                    //           currentProduct: widget.product),
-                    //     ),
-                    //   ),
-                    // ),
                     const SizedBox(height: 80),
                   ],
                 ),
@@ -392,6 +380,10 @@ class _ProductDetailViewState extends State<ProductDetailView>
           label: "Brand", value: product.brand, isDarkMode: isDarkMode),
       _ProductFeatureRow(
           label: "Category", value: product.category, isDarkMode: isDarkMode),
+      _ProductFeatureRow(
+          label: "Subcategory",
+          value: product.subcategory,
+          isDarkMode: isDarkMode),
       _ProductFeatureRow(
           label: "Color", value: product.color, isDarkMode: isDarkMode),
       _ProductFeatureRow(

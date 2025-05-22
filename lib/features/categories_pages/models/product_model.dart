@@ -5,6 +5,7 @@ class ProductsViewsModel {
   final double price;
   final double? originalPrice;
   final String? category;
+  final String? subcategory;
   final List<String>? imagePaths;
   final double? rating;
   final int? reviewCount;
@@ -191,6 +192,7 @@ class ProductsViewsModel {
     required this.price,
     this.originalPrice,
     this.category,
+    this.subcategory,
     this.imagePaths,
     this.rating,
     this.reviewCount,
@@ -362,80 +364,79 @@ class ProductsViewsModel {
   });
 
   factory ProductsViewsModel.fromJson(Map<String, dynamic> json) {
-  return ProductsViewsModel(
-    id: json['_id']?['\$oid'] ?? json['id'] ?? '',
-    title: json['title'] ?? json['name'] ?? '',
-    price: (json['price'] ?? 0).toDouble(),
-    originalPrice: (json['originalPrice'] ?? json['listPrice'])?.toDouble(),
-    category: json['category'],
-    imagePaths: json['imagePaths'] != null
-        ? List<String>.from(json['imagePaths'])
-        : json['images'] != null
-            ? List<String>.from(json['images'])
-            : null,
-    rating: (json['rating'] as num?)?.toDouble(),
-    reviewCount: json['reviewCount'],
-    brand: json['brand'],
-    color: json['color'],
-    aboutThisItem: json['aboutThisItem'] ?? json['description'],
-    deliveryDate: json['deliveryDate'],
-    deliveryTimeLeft: json['deliveryTimeLeft'],
-    deliveryLocation: json['deliveryLocation'],
-    inStock: json['inStock'],
-    shipsFrom: json['shipsFrom'],
-    soldBy: json['soldBy'],
+    return ProductsViewsModel(
+      id: json['_id']?['\$oid'] ?? json['id'] ?? '',
+      title: json['title'] ?? json['name'] ?? '',
+      price: (json['price'] ?? 0).toDouble(),
+      originalPrice: (json['originalPrice'] ?? json['listPrice'])?.toDouble(),
+      category: json['category'],
+      imagePaths: json['imagePaths'] != null
+          ? List<String>.from(json['imagePaths'])
+          : json['images'] != null
+              ? List<String>.from(json['images'])
+              : null,
+      rating: (json['rating'] as num?)?.toDouble(),
+      reviewCount: json['reviewCount'],
+      brand: json['brand'],
+      color: json['color'],
+      aboutThisItem: json['aboutThisItem'] ?? json['description'],
+      deliveryDate: json['deliveryDate'],
+      deliveryTimeLeft: json['deliveryTimeLeft'],
+      deliveryLocation: json['deliveryLocation'],
+      inStock: json['inStock'],
+      shipsFrom: json['shipsFrom'],
+      soldBy: json['soldBy'],
 
-    // Continue adding remaining fields below
-    material: json['material'],
-    dimensions: json['dimensions'],
-    style: json['style'],
-    installationType: json['installationType'],
-    accessLocation: json['accessLocation'],
-    settingsCount: json['settingsCount'],
-    powerSource: json['powerSource'],
-    modelName: json['modelName'],
-    formFactor: json['formFactor'],
-    controlsType: json['controlsType'],
-    itemWeight: json['itemWeight'],
-    efficiency: json['efficiency'],
-    mountingType: json['mountingType'],
-    capacity: json['capacity'],
-    technology: json['technology'],
-    configration: json['configration'],
-    energyEfficency: json['energyEfficency'],
-    spinSpeed: json['spinSpeed'],
-    modelNumber: json['modelNumber'],
-    numberofprograms: json['numberofprograms'],
-    noiselevel: json['noiselevel'],
-    recommendedUsesForProduct: json['recommendedUsesForProduct'],
-    outputWattage: json['outputWattage'],
-    wattage: json['wattage'],
-    coffeeMakerType: json['coffeeMakerType'],
-    filtertype: json['filtertype'],
-    stainlessSteelNumberofSpeeds: json['stainlessSteelNumberofSpeeds'],
-    bladeMaterial: json['bladeMaterial'],
-    voltage: json['voltage'],
-    components: json['components'],
-    powersource: json['powersource'],
-    pressure: json['pressure'],
-    maximumpressure: json['maximumpressure'],
-    controllertype: json['controllertype'],
-    electricFanDesign: json['electricFanDesign'],
-    roomtype: json['roomtype'],
-    surface: json['surface'],
-    isProductCordless: json['isProductCordless'],
-    frequency: json['frequency'],
-    slotcount: json['slotcount'],
-    drawertype: json['drawertype'],
-    defrostSystem: json['defrostSystem'],
-    size: json['size'],
-    specialfeatures: json['specialfeatures'],
-    finishType: json['finishType'],
-    containerType: json['containerType'],
-    manufacturer: json['manufacturer'],
-  );
-}
-
+      // Continue adding remaining fields below
+      material: json['material'],
+      dimensions: json['dimensions'],
+      style: json['style'],
+      installationType: json['installationType'],
+      accessLocation: json['accessLocation'],
+      settingsCount: json['settingsCount'],
+      powerSource: json['powerSource'],
+      modelName: json['modelName'],
+      formFactor: json['formFactor'],
+      controlsType: json['controlsType'],
+      itemWeight: json['itemWeight'],
+      efficiency: json['efficiency'],
+      mountingType: json['mountingType'],
+      capacity: json['capacity'],
+      technology: json['technology'],
+      configration: json['configration'],
+      energyEfficency: json['energyEfficency'],
+      spinSpeed: json['spinSpeed'],
+      modelNumber: json['modelNumber'],
+      numberofprograms: json['numberofprograms'],
+      noiselevel: json['noiselevel'],
+      recommendedUsesForProduct: json['recommendedUsesForProduct'],
+      outputWattage: json['outputWattage'],
+      wattage: json['wattage'],
+      coffeeMakerType: json['coffeeMakerType'],
+      filtertype: json['filtertype'],
+      stainlessSteelNumberofSpeeds: json['stainlessSteelNumberofSpeeds'],
+      bladeMaterial: json['bladeMaterial'],
+      voltage: json['voltage'],
+      components: json['components'],
+      powersource: json['powersource'],
+      pressure: json['pressure'],
+      maximumpressure: json['maximumpressure'],
+      controllertype: json['controllertype'],
+      electricFanDesign: json['electricFanDesign'],
+      roomtype: json['roomtype'],
+      surface: json['surface'],
+      isProductCordless: json['isProductCordless'],
+      frequency: json['frequency'],
+      slotcount: json['slotcount'],
+      drawertype: json['drawertype'],
+      defrostSystem: json['defrostSystem'],
+      size: json['size'],
+      specialfeatures: json['specialfeatures'],
+      finishType: json['finishType'],
+      containerType: json['containerType'],
+      manufacturer: json['manufacturer'],
+    );
+  }
 
   Map<String, dynamic> toJson() {
     return {
@@ -531,5 +532,4 @@ class ProductsViewsModel {
       if (scentOption != null) 'scentOption': scentOption,
     };
   }
-  
 }
