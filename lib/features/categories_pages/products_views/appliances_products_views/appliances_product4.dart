@@ -8,7 +8,7 @@ class AppliancesProduct4 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: "68132a95ff7813b3d47f9da8",
+      id: "68252918a68b49cb06164207",
       title: 'Zanussi Automatic Washing Machine, Silver, 8 KG - ZWF8240SX5r',
       imagePaths: [
         'assets/appliances/product4/1.png',

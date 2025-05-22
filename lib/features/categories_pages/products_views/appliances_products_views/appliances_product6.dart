@@ -8,7 +8,7 @@ class AppliancesProduct6 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: "68132a95ff7813b3d47f9daa",
+      id: "68252918a68b49cb06164209",
       title:
           'deime Air Fryer 6.2 Quart, Large Air Fryer for Families, 5 Cooking Functions',
       imagePaths: [

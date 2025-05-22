@@ -8,7 +8,7 @@ class AppliancesProduct7 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: "68132a95ff7813b3d47f9dab",
+      id: "68252918a68b49cb0616420a",
       title: 'Black & Decker DCM25N-B5 Coffee Maker, Black - 1 Cup',
       imagePaths: [
         'assets/appliances/product7/1.png',

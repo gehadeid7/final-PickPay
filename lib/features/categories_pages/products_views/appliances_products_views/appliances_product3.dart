@@ -8,7 +8,7 @@ class AppliancesProduct3 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: "68132a95ff7813b3d47f9da7",
+      id: "68252918a68b49cb06164206",
       title: 'Midea Refrigerator 449L 2D TMF MDRT645MTE06E Inverter Quattro',
       imagePaths: [
         'assets/appliances/product3/1.png',
