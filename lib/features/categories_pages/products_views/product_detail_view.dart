@@ -6,6 +6,7 @@ import 'package:pickpay/features/categories_pages/widgets/color_option_selector.
 import 'package:pickpay/features/categories_pages/widgets/info_icons_row.dart';
 import 'package:pickpay/features/categories_pages/widgets/product_rating.dart';
 import 'package:pickpay/features/categories_pages/widgets/products_view_appbar.dart';
+import 'package:pickpay/features/related_products_widget/related_products.dart';
 import 'package:pickpay/features/categories_pages/widgets/scent_option.dart';
 import 'package:pickpay/features/categories_pages/widgets/size_option.dart';
 import 'package:pickpay/features/cart/cart_item_model.dart';
@@ -138,6 +139,7 @@ class _ProductDetailViewState extends State<ProductDetailView>
                     const SizedBox(height: 24),
                     _buildSellerInfo(product, isDarkMode),
                     const SizedBox(height: 24),
+                    RelatedProducts(currentProduct: product),
                     const SizedBox(height: 80),
                   ],
                 ),

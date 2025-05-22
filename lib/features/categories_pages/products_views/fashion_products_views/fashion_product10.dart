@@ -20,6 +20,8 @@ class FashionProduct10 extends StatelessWidget {
       originalPrice: 1511,
       rating: 4.6,
       reviewCount: 1118,
+      category: 'Fashion',
+      subcategory: "Men's Fashion",
       materialcomposition: '100% genuine leather',
       careInstruction: 'Dry Cloth Clean',
       closureType: 'Bifold',

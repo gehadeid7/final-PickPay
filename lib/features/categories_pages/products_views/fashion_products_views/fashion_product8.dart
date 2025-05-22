@@ -22,6 +22,8 @@ class FashionProduct8 extends StatelessWidget {
       originalPrice: 375,
       rating: 3.6,
       reviewCount: 22,
+      category: 'Fashion',
+      subcategory: "Men's Fashion",
       availableSizes: ['41 EU', '42 EU', '43 EU', '44 EU' '45 EU'],
       sizeAvailability: {
         '41 EU': true,

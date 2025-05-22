@@ -20,6 +20,8 @@ class FashionProduct11 extends StatelessWidget {
       originalPrice: 349,
       rating: 4.3,
       reviewCount: 11,
+      category: 'Fashion',
+      subcategory: "Kids' Fashion",
       availableSizes: [
         '3-6 Months',
         '6-9 Months',

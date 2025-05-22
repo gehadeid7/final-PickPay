@@ -16,6 +16,8 @@ class FashionProduct1 extends StatelessWidget {
         'assets/Fashion_products/Women_Fashion/women_fashion1/1.png',
       ],
       price: 850,
+      category: 'Fashion',
+      subcategory: "Women's Fashion",
       originalPrice: 900,
       rating: 3.1,
       reviewCount: 81228,

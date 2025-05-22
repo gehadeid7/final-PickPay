@@ -19,6 +19,8 @@ class FashionProduct3 extends StatelessWidget {
       originalPrice: 2850,
       rating: 5.0,
       reviewCount: 88,
+      category: 'Fashion',
+      subcategory: "Women's Fashion",
       availableSizes: [
         'XSmall',
         'Small',

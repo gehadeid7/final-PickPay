@@ -19,6 +19,8 @@ class FashionProduct15 extends StatelessWidget {
       originalPrice: 429.00,
       rating: 5.0,
       reviewCount: 19,
+      category: 'Fashion',
+      subcategory: "Kids' Fashion",
       colorOptions: [
         'White',
         'Beige',

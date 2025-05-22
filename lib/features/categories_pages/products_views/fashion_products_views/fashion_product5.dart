@@ -22,6 +22,8 @@ class FashionProduct5 extends StatelessWidget {
       reviewCount: 88,
       careInstruction: 'Hand Wash Only',
       closureType: 'Zipper',
+      category: 'Fashion',
+      subcategory: "Women's Fashion",
       aboutThisItem:
           '''Bold statement design with contrasting trim and animal print accents
 

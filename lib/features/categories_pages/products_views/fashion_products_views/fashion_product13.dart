@@ -21,6 +21,8 @@ class FashionProduct13 extends StatelessWidget {
       originalPrice: 950,
       rating: 5.0,
       reviewCount: 885,
+      category: 'Fashion',
+      subcategory: "Kids' Fashion",
       colorOptions: ['ice Blue (NM63)'],
       colorAvailability: {
         'ice Blue (NM63)': true,

@@ -19,6 +19,8 @@ class FashionProduct2 extends StatelessWidget {
       originalPrice: 2750,
       rating: 4.4,
       reviewCount: 252,
+      category: 'Fashion',
+      subcategory: "Women's Fashion",
       colorOptions: [
         'Power Pink',
         'Cloud White',
