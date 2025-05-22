@@ -10,6 +10,8 @@ import 'package:pickpay/features/categories_pages/widgets/scent_option.dart';
 import 'package:pickpay/features/categories_pages/widgets/size_option.dart';
 import 'package:pickpay/features/cart/cart_item_model.dart';
 import 'package:pickpay/features/cart/cart_cubits/cart_cubit.dart';
+import 'package:pickpay/features/reviews/cubit/review_cubit.dart';
+import 'package:pickpay/features/reviews/screens/review_screen.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 
@@ -91,52 +93,43 @@ class _ProductDetailViewState extends State<ProductDetailView>
           SingleChildScrollView(
             controller: _scrollController,
             padding: const EdgeInsets.all(16),
-            child: AnimationLimiter(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: AnimationConfiguration.toStaggeredList(
-                  duration: const Duration(milliseconds: 500),
-                  childAnimationBuilder: (widget) => SlideAnimation(
-                    horizontalOffset: 50.0,
-                    child: FadeInAnimation(
-                      child: widget,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildImageSlider(product, isDarkMode),
+                const SizedBox(height: 16),
+                ScaleTransition(
+                  scale: _fadeAnimation ?? AlwaysStoppedAnimation(1.0),
+                  child: Text(
+                    product.title,
+                    style: TextStyles.bold19.copyWith(
+                      color: isDarkMode ? Colors.white : Colors.black,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w800,
                     ),
                   ),
-                  children: [
-                    _buildImageSlider(product, isDarkMode),
-                    const SizedBox(height: 16),
-                    ScaleTransition(
-                      scale: _fadeAnimation ?? AlwaysStoppedAnimation(1.0),
-                      child: Text(
-                        product.title,
-                        style: TextStyles.bold19.copyWith(
-                          color: isDarkMode ? Colors.white : Colors.black,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    _buildPriceAndRating(product, isDarkMode),
-                    const SizedBox(height: 16),
-                    InfoSectionWithIcons(),
-                    const SizedBox(height: 16),
-                    _buildOptionsSection(product, isDarkMode),
-                    const SizedBox(height: 10),
-                    _buildSectionTitle("Product Details", isDarkMode),
-                    _buildFeatureBox(
-                        _buildProductDetails(product, isDarkMode), isDarkMode),
-                    const SizedBox(height: 24),
-                    _buildAboutItem(product, isDarkMode),
-                    const SizedBox(height: 24),
-                    _buildSectionTitle("Delivery", isDarkMode),
-                    _buildDeliveryInfo(product, isDarkMode),
-                    const SizedBox(height: 24),
-                    _buildSellerInfo(product, isDarkMode),
-                    const SizedBox(height: 10),
-                  ],
                 ),
-              ),
+                const SizedBox(height: 16),
+                _buildPriceAndRating(product, isDarkMode),
+                const SizedBox(height: 16),
+                InfoSectionWithIcons(),
+                const SizedBox(height: 16),
+                _buildOptionsSection(product, isDarkMode),
+                const SizedBox(height: 10),
+                _buildSectionTitle("Product Details", isDarkMode),
+                _buildFeatureBox(
+                    _buildProductDetails(product, isDarkMode), isDarkMode),
+                const SizedBox(height: 24),
+                _buildAboutItem(product, isDarkMode),
+                const SizedBox(height: 24),
+                _buildReviewSection(product, isDarkMode),
+                const SizedBox(height: 24),
+                _buildSectionTitle("Delivery", isDarkMode),
+                _buildDeliveryInfo(product, isDarkMode),
+                const SizedBox(height: 24),
+                _buildSellerInfo(product, isDarkMode),
+                const SizedBox(height: 80),
+              ],
             ),
           ),
           AnimatedPositioned(
@@ -1399,6 +1392,60 @@ class _ProductDetailViewState extends State<ProductDetailView>
               fontSize: 18,
               fontWeight: FontWeight.bold,
               color: isDarkMode ? Colors.white : Colors.black,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildReviewSection(ProductsViewsModel product, bool isDarkMode) {
+    return Container(
+      decoration: BoxDecoration(
+        color: isDarkMode ? Colors.grey[850] : Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.star_rounded,
+                  color: Colors.amber,
+                  size: 24,
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  "Customer Reviews",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: isDarkMode ? Colors.white : Colors.black,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          BlocProvider(
+            create: (context) {
+              final cubit = ReviewCubit();
+              // Fetch reviews immediately when created
+              cubit.fetchReviews(productId: product.id);
+              return cubit;
+            },
+            child: ReviewScreen(
+              productId: product.id,
+              isEmbedded: true,
             ),
           ),
         ],
