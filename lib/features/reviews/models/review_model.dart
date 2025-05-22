@@ -22,6 +22,17 @@ class Review {
   });
 
   factory Review.fromJson(Map<String, dynamic> json) {
+    final createdAtData = json['createdAt'];
+    DateTime createdAt;
+
+    if (createdAtData is Timestamp) {
+      createdAt = createdAtData.toDate();
+    } else if (createdAtData is String) {
+      createdAt = DateTime.parse(createdAtData);
+    } else {
+      createdAt = DateTime.now(); // Fallback
+    }
+
     return Review(
       id: json['id'] as String,
       userId: json['userId'] as String,
@@ -29,7 +40,7 @@ class Review {
       userName: json['userName'] as String,
       content: json['content'] as String,
       rating: (json['rating'] as num).toDouble(),
-      createdAt: (json['createdAt'] as Timestamp).toDate(),
+      createdAt: createdAt,
       productId: json['productId'] as String?,
     );
   }

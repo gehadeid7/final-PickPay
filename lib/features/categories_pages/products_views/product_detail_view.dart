@@ -6,6 +6,7 @@ import 'package:pickpay/features/categories_pages/widgets/color_option_selector.
 import 'package:pickpay/features/categories_pages/widgets/info_icons_row.dart';
 import 'package:pickpay/features/categories_pages/widgets/product_rating.dart';
 import 'package:pickpay/features/categories_pages/widgets/products_view_appbar.dart';
+import 'package:pickpay/features/related_products_widget/related_products_widget.dart';
 import 'package:pickpay/features/categories_pages/widgets/scent_option.dart';
 import 'package:pickpay/features/categories_pages/widgets/size_option.dart';
 import 'package:pickpay/features/cart/cart_item_model.dart';
@@ -93,43 +94,66 @@ class _ProductDetailViewState extends State<ProductDetailView>
           SingleChildScrollView(
             controller: _scrollController,
             padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildImageSlider(product, isDarkMode),
-                const SizedBox(height: 16),
-                ScaleTransition(
-                  scale: _fadeAnimation ?? AlwaysStoppedAnimation(1.0),
-                  child: Text(
-                    product.title,
-                    style: TextStyles.bold19.copyWith(
-                      color: isDarkMode ? Colors.white : Colors.black,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w800,
+            child: AnimationLimiter(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: AnimationConfiguration.toStaggeredList(
+                  duration: const Duration(milliseconds: 500),
+                  childAnimationBuilder: (widget) => SlideAnimation(
+                    horizontalOffset: 50.0,
+                    child: FadeInAnimation(
+                      child: widget,
                     ),
                   ),
+                  children: [
+                    _buildImageSlider(product, isDarkMode),
+                    const SizedBox(height: 16),
+                    ScaleTransition(
+                      scale: _fadeAnimation ?? AlwaysStoppedAnimation(1.0),
+                      child: Text(
+                        product.title,
+                        style: TextStyles.bold19.copyWith(
+                          color: isDarkMode ? Colors.white : Colors.black,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    _buildPriceAndRating(product, isDarkMode),
+                    const SizedBox(height: 16),
+                    InfoSectionWithIcons(),
+                    const SizedBox(height: 16),
+                    _buildOptionsSection(product, isDarkMode),
+                    const SizedBox(height: 10),
+                    _buildSectionTitle("Product Details", isDarkMode),
+                    _buildFeatureBox(
+                        _buildProductDetails(product, isDarkMode), isDarkMode),
+                    const SizedBox(height: 24),
+                    _buildAboutItem(product, isDarkMode),
+                    const SizedBox(height: 24),
+                    _buildReviewSection(product, isDarkMode),
+                    const SizedBox(height: 24),
+                    _buildSectionTitle("Delivery", isDarkMode),
+                    _buildDeliveryInfo(product, isDarkMode),
+                    const SizedBox(height: 24),
+                    _buildSellerInfo(product, isDarkMode),
+                    const SizedBox(height: 24),
+                    AnimationConfiguration.staggeredList(
+                      position: 0,
+                      duration: const Duration(milliseconds: 500),
+                      child: SlideAnimation(
+                        verticalOffset: 50.0,
+                        child: FadeInAnimation(
+                          child: RelatedProductsWidget(
+                              currentProduct: widget.product),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 80),
+                  ],
                 ),
-                const SizedBox(height: 16),
-                _buildPriceAndRating(product, isDarkMode),
-                const SizedBox(height: 16),
-                InfoSectionWithIcons(),
-                const SizedBox(height: 16),
-                _buildOptionsSection(product, isDarkMode),
-                const SizedBox(height: 10),
-                _buildSectionTitle("Product Details", isDarkMode),
-                _buildFeatureBox(
-                    _buildProductDetails(product, isDarkMode), isDarkMode),
-                const SizedBox(height: 24),
-                _buildAboutItem(product, isDarkMode),
-                const SizedBox(height: 24),
-                _buildReviewSection(product, isDarkMode),
-                const SizedBox(height: 24),
-                _buildSectionTitle("Delivery", isDarkMode),
-                _buildDeliveryInfo(product, isDarkMode),
-                const SizedBox(height: 24),
-                _buildSellerInfo(product, isDarkMode),
-                const SizedBox(height: 80),
-              ],
+              ),
             ),
           ),
           AnimatedPositioned(
