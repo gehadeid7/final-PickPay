@@ -8,7 +8,7 @@ class Product9View extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: 'elec9',
+      id: '6819e22b123a4faad16613c7',
       title:
           'SHARP 4K Smart Frameless TV 55 Inch Built-In Receiver 4T-C55FL6EX',
       imagePaths: [

@@ -8,7 +8,7 @@ class Product15View extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: 'elec15',
+      id: '6819e22b123a4faad16613c2',
       title: 'USB Cooling Pad Stand Fan Cooler for Laptop Notebook',
       imagePaths: [
         'assets/electronics_products/Laptop/Laptop5/1.png',

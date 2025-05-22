@@ -9,7 +9,7 @@ class Product7View extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: 'elec7',
+      id: '6819e22b123a4faad16613c5',
       title:
           'Xiaomi TV A 43 2025, 43", FHD, HDR, Cinematic Smart TV, 43-Inch Screen Size Google Assistant platform built-in receiver and Chromecast, metal finish Dolby Atoms 2 years local warranty',
       imagePaths: [

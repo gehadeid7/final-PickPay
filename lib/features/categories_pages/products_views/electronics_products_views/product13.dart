@@ -8,7 +8,7 @@ class Product13View extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: 'elec13',
+      id: '6819e22b123a4faad16613cb',
       title:
           'HP Victus Gaming Laptop 15-fb1004ne, CPU: Ryzen 5-7535HS, 16GB RAM,512GB SSD, Graphics Card: NVIDIA GeForce RTX 2050, VRAM: 4GB, Display: 15.6 FHD Antiglare IPS 250 nits 144Hz, Windows 11',
       imagePaths: [

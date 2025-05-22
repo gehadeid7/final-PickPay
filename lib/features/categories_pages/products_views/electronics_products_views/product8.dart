@@ -8,7 +8,7 @@ class Product8View extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: 'elec8',
+      id: '6819e22b123a4faad16613c6',
       title:
           'Samsung 50 Inch TV Crystal Processor 4K LED - Titan Gray - UA50DU8000UXEG [2024 Model]',
       imagePaths: [

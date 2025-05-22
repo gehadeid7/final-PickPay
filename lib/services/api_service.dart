@@ -14,7 +14,7 @@ import 'package:pickpay/features/categories_pages/widgets/product_card.dart';
 import 'package:http_parser/http_parser.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://192.168.1.7:3000/api/v1/';
+  static const String baseUrl = 'http://192.168.1.3:3000/api/v1/';
 
   // 🔐 Builds headers for JSON requests
   Future<Map<String, String>> _buildHeaders({
