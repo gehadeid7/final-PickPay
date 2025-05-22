@@ -15,6 +15,26 @@ import 'package:pickpay/features/categories_pages/products_views/appliances_prod
 import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product7.dart';
 import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product8.dart';
 import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product9.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product1.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product10.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product11.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product12.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product13.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product14.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product15.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product16.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product17.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product18.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product19.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product2.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product20.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product3.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product4.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product5.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product6.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product7.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product8.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product9.dart';
 import 'package:pickpay/features/categories_pages/products_views/product_detail_view.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product1.dart';
@@ -150,7 +170,6 @@ class RelatedProducts extends StatelessWidget {
     if (widget is Product15View) {
       return (widget.build(context) as ProductDetailView).product;
     }
-
     // Appliances products
     if (widget is AppliancesProduct1) {
       return (widget.build(context) as ProductDetailView).product;
@@ -195,6 +214,67 @@ class RelatedProducts extends StatelessWidget {
       return (widget.build(context) as ProductDetailView).product;
     }
     if (widget is AppliancesProduct15) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    // home
+    if (widget is HomeProduct1) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is HomeProduct2) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is HomeProduct3) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is HomeProduct4) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is HomeProduct5) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is HomeProduct6) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is HomeProduct7) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is HomeProduct8) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is HomeProduct9) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is HomeProduct10) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is HomeProduct11) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is HomeProduct12) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is HomeProduct13) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is HomeProduct14) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is HomeProduct15) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is HomeProduct16) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is HomeProduct17) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is HomeProduct18) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is HomeProduct19) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is HomeProduct20) {
       return (widget.build(context) as ProductDetailView).product;
     }
     throw Exception('Unknown widget type: ${widget.runtimeType}');
@@ -250,6 +330,27 @@ class RelatedProducts extends StatelessWidget {
       const AppliancesProduct13(),
       const AppliancesProduct14(),
       const AppliancesProduct15(),
+      // home
+      const HomeProduct1(),
+      const HomeProduct2(),
+      const HomeProduct3(),
+      const HomeProduct4(),
+      const HomeProduct5(),
+      const HomeProduct6(),
+      const HomeProduct7(),
+      const HomeProduct8(),
+      const HomeProduct9(),
+      const HomeProduct10(),
+      const HomeProduct11(),
+      const HomeProduct12(),
+      const HomeProduct13(),
+      const HomeProduct14(),
+      const HomeProduct15(),
+      const HomeProduct16(),
+      const HomeProduct17(),
+      const HomeProduct18(),
+      const HomeProduct19(),
+      const HomeProduct20(),
     ];
 
     final products =
@@ -307,6 +408,34 @@ class RelatedProducts extends StatelessWidget {
           .toList()
         ..shuffle();
     }
+    //home
+
+    else if (currentProduct.subcategory == 'Furniture') {
+      return products
+          .where(
+              (p) => p.subcategory == 'Furniture' && p.id != currentProduct.id)
+          .toList()
+        ..shuffle();
+    } else if (currentProduct.subcategory == 'Home Decor') {
+      return products
+          .where(
+              (p) => p.subcategory == 'Home Decor' && p.id != currentProduct.id)
+          .toList()
+        ..shuffle();
+    } else if (currentProduct.subcategory == 'Kitchen & Dining') {
+      return products
+          .where((p) =>
+              p.subcategory == 'Kitchen & Dining' && p.id != currentProduct.id)
+          .toList()
+        ..shuffle();
+    } else if (currentProduct.subcategory == 'Bath & Bedding') {
+      return products
+          .where((p) =>
+              p.subcategory == 'Bath & Bedding' && p.id != currentProduct.id)
+          .toList()
+        ..shuffle();
+    }
+
     return [];
   }
 
@@ -424,7 +553,7 @@ class _RelatedProductCard extends StatelessWidget {
                     borderRadius:
                         const BorderRadius.vertical(top: Radius.circular(12)),
                     child: Hero(
-                      tag: 'related_product_${product.id}',
+                      tag: 'related_product_${product.id}_$index',
                       child: Container(
                         padding: const EdgeInsets.all(8),
                         child: Image.asset(

@@ -18,6 +18,8 @@ class HomeProduct8 extends StatelessWidget {
       originalPrice: 300.00,
       rating: 2.8,
       reviewCount: 9,
+      category: 'Home',
+      subcategory: 'Home Decor',
       colorOptions: ['colorless'],
       colorAvailability: {'colorless': true},
       brand: 'Generic',

@@ -18,6 +18,8 @@ class HomeProduct17 extends StatelessWidget {
       originalPrice: 200.00,
       rating: 3.5,
       reviewCount: 257,
+      category: 'Home',
+      subcategory: 'Bath & Bedding',
       brand: 'Generic',
       color: 'White',
       fillMaterial: 'Cotton',

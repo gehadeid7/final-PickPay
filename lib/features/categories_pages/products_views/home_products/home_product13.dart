@@ -21,6 +21,8 @@ class HomeProduct13 extends StatelessWidget {
       originalPrice: 300.00,
       rating: 4.5,
       reviewCount: 275,
+      category: 'home',
+      subcategory: 'Kitchen & Dining',
       colorOptions: ['Black'],
       colorAvailability: {'Black': true},
       brand: 'P&P CHEF',

@@ -21,6 +21,8 @@ class HomeProduct14 extends StatelessWidget {
       originalPrice: 1200.00,
       rating: 4.7,
       reviewCount: 16707,
+      category: 'home',
+      subcategory: 'Kitchen & Dining',
       colorOptions: ['Silver'],
       colorAvailability: {'Silver': true},
       brand: 'LIANYU',

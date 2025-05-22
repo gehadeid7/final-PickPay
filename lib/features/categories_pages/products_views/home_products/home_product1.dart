@@ -23,6 +23,8 @@ class HomeProduct1 extends StatelessWidget {
       colorAvailability: {
         'Beige': true,
       },
+      category: 'home',
+      subcategory: 'Furniture',
       requiredAssembly: 'No',
       brand: 'Generic',
       dimensions: '70D x 190W x 90H centimeters',

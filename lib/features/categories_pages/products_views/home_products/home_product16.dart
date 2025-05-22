@@ -18,6 +18,8 @@ class HomeProduct16 extends StatelessWidget {
       originalPrice: 220.00,
       rating: 4.4,
       reviewCount: 9,
+      category: 'Home',
+      subcategory: 'Bath & Bedding',
       color: 'Sugary',
       brand: 'Banotex',
       towelFormType: 'Bath Towel',

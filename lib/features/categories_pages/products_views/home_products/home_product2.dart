@@ -18,6 +18,8 @@ class HomeProduct2 extends StatelessWidget {
       originalPrice: 1800.00,
       rating: 5.0,
       reviewCount: 1,
+      category: 'home',
+      subcategory: 'Furniture',
       colorOptions: ['Purple'],
       colorAvailability: {'Purple': true},
       pattern: 'Solid',

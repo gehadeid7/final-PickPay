@@ -21,6 +21,8 @@ class HomeProduct10 extends StatelessWidget {
       originalPrice: 450.00,
       rating: 4.3,
       reviewCount: 43,
+      category: 'Home',
+      subcategory: 'Home Decor',
       colorOptions: ['2 Pcs Black'],
       colorAvailability: {'2 Pcs Black': true},
       brand: 'oliruim',

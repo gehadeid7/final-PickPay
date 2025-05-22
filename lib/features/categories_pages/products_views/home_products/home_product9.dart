@@ -23,6 +23,8 @@ class HomeProduct9 extends StatelessWidget {
       originalPrice: 600.00,
       rating: 4.2,
       reviewCount: 919,
+      category: 'Home',
+      subcategory: 'Home Decor',
       colorOptions: ['12" Silver'],
       colorAvailability: {'12" Silver': true},
       brand: 'Amotpo',

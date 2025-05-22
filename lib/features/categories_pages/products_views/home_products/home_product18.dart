@@ -20,6 +20,8 @@ class HomeProduct18 extends StatelessWidget {
       originalPrice: 635.00,
       rating: 4.4,
       reviewCount: 20938,
+      category: 'Home',
+      subcategory: 'Bath & Bedding',
       brand: 'Bedsure',
       color: '03 - Mint',
       material: 'Cotton',
