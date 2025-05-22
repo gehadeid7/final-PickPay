@@ -9,11 +9,12 @@ import 'package:pickpay/core/errors/failures.dart';
 import 'package:pickpay/core/services/shared_preferences_singletone.dart';
 import 'package:pickpay/core/utils/backend_endpoints.dart';
 import 'package:pickpay/features/auth/data/models/user_model.dart';
+import 'package:pickpay/features/categories_pages/models/product_model.dart';
 import 'package:pickpay/features/categories_pages/widgets/product_card.dart';
 import 'package:http_parser/http_parser.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://192.168.1.7:3000/api/v1/';
+  static const String baseUrl = 'http://192.168.1.3:3000/api/v1/';
 
   // 🔐 Builds headers for JSON requests
   Future<Map<String, String>> _buildHeaders({
@@ -99,20 +100,23 @@ class ApiService {
         await _buildHeaders(headers: headers, authorized: authorized);
     log('📡 GET $url');
     log('📤 Headers: $requestHeaders');
-    
+
     int retryCount = 0;
     while (retryCount <= maxRetries) {
       try {
-        final response = await http.get(Uri.parse(url), headers: requestHeaders)
+        final response = await http
+            .get(Uri.parse(url), headers: requestHeaders)
             .timeout(const Duration(seconds: 30)); // Increased timeout
         return response;
       } catch (e) {
         retryCount++;
         if (retryCount > maxRetries) {
-          throw Exception('Error performing GET request after $maxRetries retries: ${e.toString()}');
+          throw Exception(
+              'Error performing GET request after $maxRetries retries: ${e.toString()}');
         }
         log('⚠️ Request failed, retrying (${retryCount}/$maxRetries)...');
-        await Future.delayed(Duration(seconds: 2 * retryCount)); // Exponential backoff
+        await Future.delayed(
+            Duration(seconds: 2 * retryCount)); // Exponential backoff
       }
     }
     throw Exception('Unexpected error in GET request');
@@ -132,7 +136,7 @@ class ApiService {
     log('📡 POST $url');
     log('📤 Headers: $requestHeaders');
     log('📤 Body: ${jsonEncode(body)}');
-    
+
     int retryCount = 0;
     while (retryCount <= maxRetries) {
       try {
@@ -147,10 +151,12 @@ class ApiService {
       } catch (e) {
         retryCount++;
         if (retryCount > maxRetries) {
-          throw Exception('Network request failed after $maxRetries retries: ${e.toString()}');
+          throw Exception(
+              'Network request failed after $maxRetries retries: ${e.toString()}');
         }
         log('⚠️ Request failed, retrying (${retryCount}/$maxRetries)...');
-        await Future.delayed(Duration(seconds: 2 * retryCount)); // Exponential backoff
+        await Future.delayed(
+            Duration(seconds: 2 * retryCount)); // Exponential backoff
       }
     }
     throw Exception('Unexpected error in POST request');
@@ -170,7 +176,7 @@ class ApiService {
     log('📡 PUT $url');
     log('📤 Headers: $requestHeaders');
     log('📤 Body: ${jsonEncode(body)}');
-    
+
     int retryCount = 0;
     while (retryCount <= maxRetries) {
       try {
@@ -187,10 +193,12 @@ class ApiService {
         retryCount++;
         if (retryCount > maxRetries) {
           log('❌ Network error after $maxRetries retries: ${e.toString()}');
-          throw Exception('Network PUT request failed after $maxRetries retries: ${e.toString()}');
+          throw Exception(
+              'Network PUT request failed after $maxRetries retries: ${e.toString()}');
         }
         log('⚠️ Request failed, retrying (${retryCount}/$maxRetries)...');
-        await Future.delayed(Duration(seconds: 2 * retryCount)); // Exponential backoff
+        await Future.delayed(
+            Duration(seconds: 2 * retryCount)); // Exponential backoff
       }
     }
     throw Exception('Unexpected error in PUT request');
@@ -199,66 +207,57 @@ class ApiService {
   // 🛒 Load products from "Appliances" category
   Future<List<ProductCard>> loadProducts() async {
     try {
-      final categoriesResponse = await http
-          .get(Uri.parse('${baseUrl}categories'))
-          .timeout(const Duration(seconds: 15));
-
-      if (categoriesResponse.statusCode != 200) {
-        throw Exception('Failed to load categories');
-      }
-
-      final categoriesData = jsonDecode(categoriesResponse.body);
-      final categories = categoriesData['data'] as List;
-      log('Categories loaded: ${categories.length}');
-
-      final appliancesCategory = categories.firstWhere(
-        (category) => category['name'] == 'Appliances',
-        orElse: () => throw Exception('Appliances category not found'),
-      );
-      log('Found Appliances category with ID: ${appliancesCategory['_id']}');
-
-      final productsUrl =
-          '${baseUrl}products?category=${appliancesCategory['_id']}';
-      log('Fetching products from: $productsUrl');
-
+      // Fetch all products, no category filtering on backend
       final response = await http
-          .get(Uri.parse(productsUrl))
+          .get(Uri.parse('${baseUrl}products'))
           .timeout(const Duration(seconds: 15));
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         final products = data['data'] as List;
 
-        final productCards = products.map((productData) {
-          List<String> imagePaths = [];
-          if (productData['images'] != null) {
-            imagePaths = (productData['images'] as List).map((img) {
-              if (img.toString().startsWith('http')) {
-                return img.toString();
+        final productCards = products
+            .map((productData) {
+              // Filter appliances locally
+              if (productData['category'] != null &&
+                  productData['category']['name'].toString().toLowerCase() !=
+                      'appliances') {
+                return null; // Skip non-appliance product
               }
-              return '${baseUrl}products/$img';
-            }).toList();
-          }
 
-          if (imagePaths.isEmpty && productData['imageCover'] != null) {
-            String coverImage = productData['imageCover'];
-            if (!coverImage.startsWith('http')) {
-              coverImage = '${baseUrl}products/$coverImage';
-            }
-            imagePaths = [coverImage];
-          }
+              List<String> imagePaths = [];
+              if (productData['images'] != null) {
+                imagePaths = (productData['images'] as List).map((img) {
+                  if (img.toString().startsWith('http')) {
+                    return img.toString();
+                  }
+                  return '${baseUrl}products/$img';
+                }).toList();
+              }
 
-          return ProductCard(
-            id: productData['_id'],
-            name: productData['title'],
-            imagePaths: imagePaths,
-            price: (productData['price'] as num).toDouble(),
-            originalPrice: (productData['originalPrice'] as num?)?.toDouble() ??
-                (productData['price'] as num).toDouble(),
-            rating: (productData['ratingsAverage'] as num?)?.toDouble() ?? 0.0,
-            reviewCount: productData['ratingsQuantity'] ?? 0,
-          );
-        }).toList();
+              if (imagePaths.isEmpty && productData['imageCover'] != null) {
+                String coverImage = productData['imageCover'];
+                if (!coverImage.startsWith('http')) {
+                  coverImage = '${baseUrl}products/$coverImage';
+                }
+                imagePaths = [coverImage];
+              }
+
+              return ProductCard(
+                id: productData['_id'],
+                name: productData['title'],
+                imagePaths: imagePaths,
+                price: (productData['price'] as num).toDouble(),
+                originalPrice:
+                    (productData['originalPrice'] as num?)?.toDouble() ??
+                        (productData['price'] as num).toDouble(),
+                rating:
+                    (productData['ratingsAverage'] as num?)?.toDouble() ?? 0.0,
+                reviewCount: productData['ratingsQuantity'] ?? 0,
+              );
+            })
+            .whereType<ProductCard>() // Remove nulls from filtering
+            .toList();
 
         return productCards;
       } else {
@@ -434,7 +433,7 @@ class ApiService {
     print('⬆️ uploadImage: File path: ${imageFile.path}');
     print('⬆️ uploadImage: File exists: ${await imageFile.exists()}');
     print('⬆️ uploadImage: File size: ${await imageFile.length()} bytes');
-    
+
     // Get file extension and mime type
     final ext = imageFile.path.split('.').last.toLowerCase();
     final mimeType = _getMimeType(ext);
@@ -442,7 +441,7 @@ class ApiService {
 
     try {
       final request = http.MultipartRequest('POST', url);
-      
+
       // Get authorization token
       String? token;
       if (authorized) {
@@ -451,7 +450,8 @@ class ApiService {
           token = await user.getIdToken(true);
           if (token != null && token.isNotEmpty) {
             request.headers['Authorization'] = 'Bearer $token';
-            print('🔐 Added authorization token: Bearer ${token.substring(0, 10)}...');
+            print(
+                '🔐 Added authorization token: Bearer ${token.substring(0, 10)}...');
           } else {
             print('⚠️ No valid token available');
           }
@@ -483,7 +483,8 @@ class ApiService {
       print('📤 Request URL: ${request.url}');
       print('📤 Request headers: ${request.headers}');
       print('📤 Request fields: ${request.fields}');
-      print('📤 Request files: ${request.files.map((f) => '${f.filename} (${f.contentType})').toList()}');
+      print(
+          '📤 Request files: ${request.files.map((f) => '${f.filename} (${f.contentType})').toList()}');
 
       // Send request with timeout
       print('\n=== 📤 SENDING REQUEST ===');
@@ -497,7 +498,7 @@ class ApiService {
 
       // Get response body
       final responseBody = await streamedResponse.stream.bytesToString();
-      
+
       print('\n=== 📥 RESPONSE DETAILS ===');
       print('📥 Response status code: ${streamedResponse.statusCode}');
       print('📥 Response headers: ${streamedResponse.headers}');
@@ -554,12 +555,12 @@ class ApiService {
       if (!await imageFile.exists()) {
         throw Exception('Image file does not exist: ${imageFile.path}');
       }
-      
+
       final fileSize = await imageFile.length();
       if (fileSize == 0) {
         throw Exception('Image file is empty: ${imageFile.path}');
       }
-      
+
       print('💾 Image file size: $fileSize bytes');
 
       final uploadResponse = await uploadImage(
@@ -585,7 +586,8 @@ class ApiService {
       if (uploadedFilename == null) {
         print('\n=== ❌ NO FILENAME IN RESPONSE ===');
         print('❌ Full response data: $responseData');
-        throw Exception('Image uploaded but no filename returned. Response: $responseData');
+        throw Exception(
+            'Image uploaded but no filename returned. Response: $responseData');
       }
 
       // Use the profileImgUrl directly from the response
@@ -599,7 +601,9 @@ class ApiService {
       // Update profile with the filename only, not the full URL
       final updateResponse = await put(
         endpoint: BackendEndpoints.updateMe,
-        body: {'profileImg': uploadedFilename}, // Using 'profileImg' to match backend
+        body: {
+          'profileImg': uploadedFilename
+        }, // Using 'profileImg' to match backend
         authorized: true,
       );
 
@@ -610,7 +614,8 @@ class ApiService {
         print('\n=== ❌ PROFILE UPDATE FAILED ===');
         print('❌ Status: ${updateResponse.statusCode}');
         print('❌ Error response: ${updateResponse.body}');
-        throw Exception('Failed to update user profile image: ${updateResponse.body}');
+        throw Exception(
+            'Failed to update user profile image: ${updateResponse.body}');
       }
 
       print('\n=== ✅ PROFILE UPDATE SUCCESSFUL ===');
@@ -622,6 +627,50 @@ class ApiService {
       throw Exception('uploadProfileImageAndUpdate error: ${e.toString()}');
     } finally {
       print('\n=== 💾 PROFILE IMAGE UPDATE END ===\n');
+    }
+  }
+
+  Future<List<ProductsViewsModel>> fetchProducts(String category) async {
+    final url = Uri.parse('$baseUrl/products?category=$category');
+    print('Fetching products from $url');
+
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final List<dynamic> jsonList = json.decode(response.body);
+        print('Fetched ${jsonList.length} products');
+
+        // Convert JSON list to List<Product>
+        return jsonList
+            .map((jsonItem) => ProductsViewsModel.fromJson(jsonItem))
+            .toList();
+      } else {
+        print('Failed to fetch products. Status code: ${response.statusCode}');
+        return [];
+      }
+    } catch (e) {
+      print('Error fetching products: $e');
+      return [];
+    }
+  }
+
+  Future<List<ProductsViewsModel>> getProductsByCategory(
+      String category) async {
+    final url = Uri.parse('$baseUrl/api/v1/products?category=$category');
+
+    final response = await http.get(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonList = jsonDecode(response.body)['data'];
+      return jsonList.map((json) => ProductsViewsModel.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load products: ${response.body}');
     }
   }
 }

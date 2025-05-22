@@ -14,6 +14,7 @@ import 'package:pickpay/core/utils/backend_endpoints.dart';
 import 'package:pickpay/features/auth/data/models/user_model.dart';
 import 'package:pickpay/features/auth/domain/entities/user_entity.dart';
 import 'package:pickpay/features/auth/domain/repos/auth_repo.dart';
+import 'package:pickpay/features/categories_pages/models/product_model.dart';
 import 'package:pickpay/services/api_service.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
@@ -812,4 +813,33 @@ class AuthRepoImplementation extends AuthRepo {
       return left(ServerFailure('فشل التحقق من وجود الصورة: ${e.toString()}'));
     }
   }
+  // Add this to AuthRepoImplementation or preferably a ProductRepoImplementation
+
+Future<Either<Failure, ProductsViewsModel>> getProductById(String productId) async {
+  try {
+    final response = await apiService.get(
+      endpoint: "${BackendEndpoints.getProductById}/$productId",
+      authorized: true,
+    );
+
+    if (response.statusCode != 200) {
+      return left(ServerFailure(
+        'فشل في جلب تفاصيل المنتج: ${response.body}',
+      ));
+    }
+
+    final data = jsonDecode(response.body);
+    if (!data.containsKey('data')) {
+      return left(ServerFailure('استجابة غير صالحة من الخادم'));
+    }
+
+    final productData = data['data'];
+    final product = ProductsViewsModel.fromJson(productData);
+
+    return right(product);
+  } catch (e) {
+    return left(ServerFailure('خطأ أثناء جلب تفاصيل المنتج: ${e.toString()}'));
+  }
+}
+
 }
