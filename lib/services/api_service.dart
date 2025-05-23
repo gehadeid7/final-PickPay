@@ -664,7 +664,6 @@ Future<List<dynamic>> searchProductsAI(String query) async {
     throw Exception('Error during AI product search: ${e.toString()}');
   }
 }
-}
 
   Future<List<ProductsViewsModel>> fetchProducts(String category) async {
     final url = Uri.parse('$baseUrl/products?category=$category');
