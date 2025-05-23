@@ -20,7 +20,6 @@ import 'package:pickpay/features/splash/presentation/views/splash_view.dart';
 import 'package:pickpay/firebase_options.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-// Add RouteObserver at the top level
 final RouteObserver<ModalRoute> routeObserver = RouteObserver<ModalRoute>();
 final firebaseAuthService = getIt<FirebaseAuthService>();
 final authRepo = getIt<AuthRepo>();
