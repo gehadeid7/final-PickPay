@@ -21,6 +21,8 @@ class BeautyProduct7 extends StatelessWidget {
       originalPrice: 1168.70,
       rating: 4.0,
       reviewCount: 19,
+      category: 'Beauty',
+      subcategory: 'Skincare',
       brand: 'La Roche-Posay',
       itemvolume: '50 Milliliters',
       unitcount: '50.0 millilitre',

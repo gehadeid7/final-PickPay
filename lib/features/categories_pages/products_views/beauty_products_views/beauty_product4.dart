@@ -18,6 +18,8 @@ class BeautyProduct4 extends StatelessWidget {
       originalPrice: 63.00,
       rating: 5.0,
       reviewCount: 92,
+      category: 'Beauty',
+      subcategory: 'Makeup',
       itemform: 'Wipes',
       skintype: 'Normal',
       brand: 'Eva',

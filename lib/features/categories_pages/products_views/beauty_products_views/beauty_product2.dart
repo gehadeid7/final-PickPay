@@ -21,6 +21,8 @@ class BeautyProduct2 extends StatelessWidget {
       originalPrice: 575.00,
       rating: 5.0,
       reviewCount: 88,
+      category: 'Beauty',
+      subcategory: 'Makeup',
       colorOptions: [
         '200 Sable',
         '130 Beige',

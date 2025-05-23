@@ -24,6 +24,8 @@ class BeautyProduct20 extends StatelessWidget {
       modelName: 'One Man Show',
       itemform: 'Liquid',
       scent: 'Wood',
+      category: 'Beauty',
+      subcategory: 'Fragrance',
       itemvolume: '100 Milliliters',
       material: 'fragrance',
       materialfeature: 'Natural',

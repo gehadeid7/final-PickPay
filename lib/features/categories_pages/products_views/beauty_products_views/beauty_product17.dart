@@ -21,6 +21,8 @@ class BeautyProduct17 extends StatelessWidget {
       reviewCount: 19,
       modelName: 'Memwa Coco Memwa',
       itemform: 'Liquid',
+      category: 'Beauty',
+      subcategory: 'Fragrance',
       scent: 'Amber',
       brand: 'Gulf Orchid',
       itemvolume: '110 Milliliters',

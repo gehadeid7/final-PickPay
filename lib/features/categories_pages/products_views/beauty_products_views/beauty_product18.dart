@@ -23,6 +23,8 @@ class BeautyProduct18 extends StatelessWidget {
       modelName:
           'Bath Body Gingham Gorgeous Fine Fragrance Mist, Size/Volume: 8 fl oz / 236 mL',
       itemform: 'Liquid',
+      category: 'Beauty',
+      subcategory: 'Fragrance',
       brand: '9Street Corner',
       scent: 'juicy pear, sparkling clementine and fresh daisies',
       itemWeight: '150 Milligrams',

@@ -21,6 +21,8 @@ class BeautyProduct13 extends StatelessWidget {
       rating: 4.0,
       reviewCount: 19,
       brand: 'Garnier',
+      category: 'Beauty',
+      subcategory: 'Haircare',
       color: 'Light Ash Blonde',
       itemform: 'Cream',
       containerType: 'Bottle',

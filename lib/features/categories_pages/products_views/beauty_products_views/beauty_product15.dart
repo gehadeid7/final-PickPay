@@ -23,6 +23,8 @@ class BeautyProduct15 extends StatelessWidget {
       reviewCount: 19,
       brand: 'CORATED',
       color: 'Pink',
+      category: 'Beauty',
+      subcategory: 'Haircare',
       material: 'Silk',
       itemform: 'Flexi Rod+clip',
       manufacturer: 'Flumine-US',

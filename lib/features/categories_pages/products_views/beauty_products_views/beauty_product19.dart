@@ -23,6 +23,8 @@ class BeautyProduct19 extends StatelessWidget {
       rating: 4.0,
       reviewCount: 19,
       brand: 'NIVEA',
+      category: 'Beauty',
+      subcategory: 'Fragrance',
       scent: 'Pearl & Beauty',
       itemform: 'Aerosol Spray',
       targetUseBodyPart: 'Body',

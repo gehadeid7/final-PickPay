@@ -20,6 +20,8 @@ class BeautyProduct11 extends StatelessWidget {
       originalPrice: 0.00,
       rating: 4.4,
       reviewCount: 93,
+      category: 'Beauty',
+      subcategory: 'Haircare',
       brand: 'L’Oréal Paris',
       hairtype: 'Oily',
       itemform: 'Liquid',

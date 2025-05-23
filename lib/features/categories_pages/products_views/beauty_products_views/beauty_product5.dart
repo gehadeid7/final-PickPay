@@ -21,6 +21,8 @@ class BeautyProduct5 extends StatelessWidget {
       originalPrice: 510,
       rating: 4.5,
       reviewCount: 17782,
+      category: 'Beauty',
+      subcategory: 'Makeup',
       colorOptions: [
         'Pink',
         '004 Silk',

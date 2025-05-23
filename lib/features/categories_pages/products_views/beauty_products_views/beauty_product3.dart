@@ -17,6 +17,8 @@ class BeautyProduct3 extends StatelessWidget {
       originalPrice: 240,
       rating: 5.0,
       reviewCount: 88,
+      category: 'Beauty',
+      subcategory: 'Makeup',
       colorOptions: [
         'Terre',
         'Rose Tendresse',

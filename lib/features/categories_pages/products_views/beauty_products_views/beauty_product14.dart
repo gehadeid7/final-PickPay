@@ -20,6 +20,8 @@ class BeautyProduct14 extends StatelessWidget {
       originalPrice: 1214.00,
       rating: 4.6,
       reviewCount: 11987,
+      category: 'Beauty',
+      subcategory: 'Haircare',
       brand: "L'Oreal Professionnel",
       itemvolume: '90 Milliliters',
       itemform: 'Cream',

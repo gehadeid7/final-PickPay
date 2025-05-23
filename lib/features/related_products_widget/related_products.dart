@@ -16,6 +16,26 @@ import 'package:pickpay/features/categories_pages/products_views/appliances_prod
 import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product7.dart';
 import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product8.dart';
 import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product9.dart';
+import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product1.dart';
+import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product10.dart';
+import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product11.dart';
+import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product12.dart';
+import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product13.dart';
+import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product14.dart';
+import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product15.dart';
+import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product16.dart';
+import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product17.dart';
+import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product18.dart';
+import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product19.dart';
+import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product2.dart';
+import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product20.dart';
+import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product3.dart';
+import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product4.dart';
+import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product5.dart';
+import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product6.dart';
+import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product7.dart';
+import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product8.dart';
+import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product9.dart';
 import 'package:pickpay/features/categories_pages/products_views/home_products/home_product1.dart';
 import 'package:pickpay/features/categories_pages/products_views/home_products/home_product10.dart';
 import 'package:pickpay/features/categories_pages/products_views/home_products/home_product11.dart';
@@ -333,6 +353,67 @@ class RelatedProducts extends StatelessWidget {
     if (widget is VideoGamesProduct14) {
       return (widget.build(context) as ProductDetailView).product;
     }
+    if (widget is BeautyProduct1) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is BeautyProduct2) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is BeautyProduct3) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is BeautyProduct4) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is BeautyProduct5) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is BeautyProduct6) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is BeautyProduct7) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is BeautyProduct8) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is BeautyProduct9) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+
+    if (widget is BeautyProduct10) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is BeautyProduct11) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is BeautyProduct12) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is BeautyProduct13) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is BeautyProduct14) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is BeautyProduct15) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is BeautyProduct16) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is BeautyProduct17) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is BeautyProduct18) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is BeautyProduct19) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
+    if (widget is BeautyProduct20) {
+      return (widget.build(context) as ProductDetailView).product;
+    }
     throw Exception('Unknown widget type: ${widget.runtimeType}');
   }
 
@@ -422,6 +503,27 @@ class RelatedProducts extends StatelessWidget {
       const VideoGamesProduct12(),
       const VideoGamesProduct13(),
       const VideoGamesProduct14(),
+      // beauty
+      const BeautyProduct1(),
+      const BeautyProduct2(),
+      const BeautyProduct3(),
+      const BeautyProduct4(),
+      const BeautyProduct5(),
+      const BeautyProduct6(),
+      const BeautyProduct7(),
+      const BeautyProduct8(),
+      const BeautyProduct9(),
+      const BeautyProduct10(),
+      const BeautyProduct11(),
+      const BeautyProduct12(),
+      const BeautyProduct13(),
+      const BeautyProduct14(),
+      const BeautyProduct15(),
+      const BeautyProduct16(),
+      const BeautyProduct17(),
+      const BeautyProduct18(),
+      const BeautyProduct19(),
+      const BeautyProduct20(),
     ];
 
     final products =
@@ -525,7 +627,31 @@ class RelatedProducts extends StatelessWidget {
           .toList()
         ..shuffle();
     }
-
+    // beauty
+    else if (currentProduct.subcategory == 'Makeup') {
+      return products
+          .where((p) => p.subcategory == 'Makeup' && p.id != currentProduct.id)
+          .toList()
+        ..shuffle();
+    } else if (currentProduct.subcategory == 'Skincare') {
+      return products
+          .where(
+              (p) => p.subcategory == 'Skincare' && p.id != currentProduct.id)
+          .toList()
+        ..shuffle();
+    } else if (currentProduct.subcategory == 'Haircare') {
+      return products
+          .where(
+              (p) => p.subcategory == 'Haircare' && p.id != currentProduct.id)
+          .toList()
+        ..shuffle();
+    } else if (currentProduct.subcategory == 'Fragrance') {
+      return products
+          .where(
+              (p) => p.subcategory == 'Fragrance' && p.id != currentProduct.id)
+          .toList()
+        ..shuffle();
+    }
     return [];
   }
 
@@ -609,7 +735,9 @@ class _RelatedProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    final discountPercentage = product.originalPrice != null
+    final discountPercentage = product.originalPrice != null &&
+            product.originalPrice! > 0 &&
+            product.originalPrice! > product.price
         ? ((product.originalPrice! - product.price) /
                 product.originalPrice! *
                 100)
