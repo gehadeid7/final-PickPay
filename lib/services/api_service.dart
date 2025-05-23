@@ -13,7 +13,7 @@ import 'package:pickpay/features/categories_pages/widgets/product_card.dart';
 import 'package:http_parser/http_parser.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://192.168.1.7:3000/api/v1/';
+  static const String baseUrl = 'http://192.168.1.4:3000/api/v1/';
 
   // 🔐 Builds headers for JSON requests
   Future<Map<String, String>> _buildHeaders({
@@ -25,7 +25,7 @@ class ApiService {
       ...?headers,
     };
 
-    if (authorized) {
+    if (authorized) { 
       final user = FirebaseAuth.instance.currentUser;
       String token = '';
 
@@ -276,45 +276,56 @@ class ApiService {
   }
 
   // 🔄 Sync Firebase user to backend
-  Future<UserModel> syncFirebaseUserToBackend({
-    required String name,
-    required String email,
-    required String firebaseUid,
-    String? photoUrl,
-  }) async {
-    try {
-      String token = Prefs.getString('jwt_token');
-      if (token.isEmpty) {
-        token = await FirebaseAuth.instance.currentUser?.getIdToken() ?? '';
-        if (token.isNotEmpty) {
-          await Prefs.setString('jwt_token', token);
-        }
-      }
+Future<UserModel> syncFirebaseUserToBackend({
+  required String name,
+  required String email,
+  required String firebaseUid,
+  String? photoUrl,
+  String? gender,
+  String? dob,
+  int? age,
+  String? address,
+  String? phone,
+}) async {
+  try {
+    final headers = await _buildHeaders(authorized: true);
 
-      final response = await http.post(
-        Uri.parse('${baseUrl}auth/firebase/sync'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-        body: jsonEncode({
-          'name': name,
-          'email': email,
-          'uid': firebaseUid,
-          'photoUrl': photoUrl,
-        }),
-      );
+    final body = {
+      'name': name,
+      'email': email,
+      'uid': firebaseUid,
+      'profileImg': photoUrl,
+      'gender': gender,
+      'dob': dob,
+      'age': age,
+      'address': address,
+      'phone': phone,
+    };
 
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body)['data'];
-        return UserModel.fromJson(data);
-      } else {
-        throw Exception('Failed to sync Firebase user: ${response.body}');
-      }
-    } catch (e) {
-      throw Exception('Error syncing Firebase user: ${e.toString()}');
+    // ازالة القيم null حتى لا ترسل في البودي
+    body.removeWhere((key, value) => value == null);
+
+    final response = await http.post(
+      Uri.parse('${baseUrl}auth/firebase/sync'),
+      headers: headers,
+      body: jsonEncode(body),
+    );
+
+    log('🔄 syncFirebaseUserToBackend response status: ${response.statusCode}');
+    log('🔄 syncFirebaseUserToBackend response body: ${response.body}');
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body)['data'];
+      return UserModel.fromJson(data);
+    } else {
+      throw Exception('Failed to sync Firebase user: ${response.body}');
     }
+  } catch (e) {
+    log('❌ Error syncing Firebase user: $e');
+    throw Exception('Error syncing Firebase user: ${e.toString()}');
   }
+}
+
 
   // 🔐 Forgot password
   Future<http.Response> forgotPassword(String email) async {
@@ -624,4 +635,28 @@ class ApiService {
       print('\n=== 💾 PROFILE IMAGE UPDATE END ===\n');
     }
   }
+  // 🔍 AI Product Search
+Future<List<dynamic>> searchProductsAI(String query) async {
+  try {
+    final response = await post(
+      endpoint: BackendEndpoints.aiProductSearch,
+      body: {'query': query},
+      authorized: false,
+    );
+
+    if (response.statusCode == 200) {
+      final result = jsonDecode(response.body);
+
+      if (result is Map<String, dynamic> && result.containsKey('products')) {
+        return result['products']; // ✅ Return the actual list
+      } else {
+        throw Exception('Unexpected AI response format');
+      }
+    } else {
+      throw Exception('AI Search failed: ${response.body}');
+    }
+  } catch (e) {
+    throw Exception('Error during AI product search: ${e.toString()}');
+  }
+}
 }

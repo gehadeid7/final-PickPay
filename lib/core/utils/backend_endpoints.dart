@@ -10,6 +10,8 @@ class BackendEndpoints {
 
   // 🛒 Product endpoints
   static const String getProducts = 'products';
+  static const String aiProductSearch = 'products/search';
+
 
   // 🔒 Password Reset
   static const String resetPassword = 'auth/resetPassword';
