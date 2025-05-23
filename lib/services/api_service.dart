@@ -13,6 +13,7 @@ import 'package:pickpay/features/categories_pages/models/product_model.dart';
 import 'package:pickpay/features/categories_pages/widgets/product_card.dart';
 import 'package:http_parser/http_parser.dart';
 
+
 class ApiService {
   static const String baseUrl = 'http://192.168.1.4:3000/api/v1/';
 
@@ -708,4 +709,38 @@ Future<List<dynamic>> searchProductsAI(String query) async {
       throw Exception('Failed to load products: ${response.body}');
     }
   }
+  // إضافة منتج إلى قائمة الرغبات
+  Future<http.Response> addProductToWishlist(String productId) async {
+    final uri = Uri.parse('$baseUrl${BackendEndpoints.wishlist}');
+    final headers = await _buildHeaders(authorized: true);
+    final body = jsonEncode({'productId': productId});
+
+    final response = await http.post(uri, headers: headers, body: body);
+    return response;
+  }
+
+  // حذف منتج من قائمة الرغبات
+  Future<http.Response> removeProductFromWishlist(String productId) async {
+    final uri = Uri.parse('$baseUrl${BackendEndpoints.removeFromWishlist(productId)}');
+    final headers = await _buildHeaders(authorized: true);
+
+    final response = await http.delete(uri, headers: headers);
+    return response;
+  }
+
+  // جلب قائمة الرغبات للمستخدم الحالي
+  Future<List<dynamic>> getLoggedUserWishlist() async {
+    final uri = Uri.parse('$baseUrl${BackendEndpoints.wishlist}');
+    final headers = await _buildHeaders(authorized: true);
+
+    final response = await http.get(uri, headers: headers);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> wishlist = jsonDecode(response.body);
+      return wishlist;
+    } else {
+      throw Exception('Failed to fetch wishlist: ${response.statusCode}');
+    }
+  }
 }
+

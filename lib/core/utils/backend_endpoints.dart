@@ -39,4 +39,8 @@ class BackendEndpoints {
 
   // 🔄 Sync Firebase user with backend
   static const String syncFirebaseUser = 'auth/syncFirebaseUser';
+
+   // ❤️ Wishlist endpoints
+  static const String wishlist = 'wishlist';
+  static String removeFromWishlist(String productId) => 'wishlist/$productId';
 }

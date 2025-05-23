@@ -82,4 +82,46 @@ class Prefs {
       rethrow;
     }
   }
+ // مفتاح التخزين لقائمة الرغبات
+  static const _wishlistKey = 'wishlist';
+
+  // حفظ قائمة الرغبات (تخزينها كـ JSON String)
+  static Future<void> saveWishlist(List<dynamic> wishlist) async {
+    try {
+      final jsonString = jsonEncode(wishlist);
+      await setString(_wishlistKey, jsonString);
+      print('✅ Wishlist saved to local storage');
+    } catch (e) {
+      print('❌ Error saving wishlist to local storage: $e');
+      rethrow;
+    }
+  }
+
+  // استرجاع قائمة الرغبات (ترجع null إذا لم توجد)
+  static List<dynamic>? getWishlist() {
+    try {
+      final jsonString = getString(_wishlistKey);
+      if (jsonString.isEmpty) {
+        print('ℹ️ No wishlist found in local storage');
+        return null;
+      }
+      final List<dynamic> wishlist = jsonDecode(jsonString);
+      print('✅ Wishlist loaded from local storage');
+      return wishlist;
+    } catch (e) {
+      print('❌ Error loading wishlist from local storage: $e');
+      return null;
+    }
+  }
+
+  // حذف قائمة الرغبات من التخزين المحلي
+  static Future<void> clearWishlist() async {
+    try {
+      await remove(_wishlistKey);
+      print('✅ Wishlist cleared from local storage');
+    } catch (e) {
+      print('❌ Error clearing wishlist from local storage: $e');
+      rethrow;
+    }
+  }
 }
