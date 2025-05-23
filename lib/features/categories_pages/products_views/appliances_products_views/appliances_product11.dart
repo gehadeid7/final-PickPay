@@ -8,7 +8,7 @@ class AppliancesProduct11 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: "68132a95ff7813b3d47f9daf",
+      id: "68252918a68b49cb0616420e",
       title:
           'Fresh fan 50 watts 18 inches with charger with 3 blades, black and white',
       imagePaths: [
@@ -19,6 +19,8 @@ class AppliancesProduct11 extends StatelessWidget {
       rating: 4.4,
       reviewCount: 674,
       brand: 'Fresh',
+      category: 'Appliances',
+      subcategory: 'Large Appliances',
       electricFanDesign: 'Floor Fan',
       powerSource: 'Battery Powered',
       dimensions: '51D x 51W x 153H',

@@ -8,7 +8,7 @@ class Product12View extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: 'elec12',
+      id: '6819e22b123a4faad16613ca',
       title:
           'Lenovo Legion 5 15ACH6 Gaming Laptop - Ryzen 5-5600H, 16 GB RAM, 512 GB SSD, NVIDIA GeForce RTX 3050 Ti 4GB GDDR6 Graphics, 15.6" FHD (1920x1080) IPS 120Hz, Backlit Keyboard, WIN 11',
       imagePaths: [
@@ -21,6 +21,8 @@ class Product12View extends StatelessWidget {
       originalPrice: 39866.00,
       rating: 3.4,
       reviewCount: 14,
+      category: 'Electronics',
+      subcategory: 'Laptop',
       screenSize: '15.6 Inches',
       brand: 'Lenovo',
       graphicsDescription: 'Dedicated',

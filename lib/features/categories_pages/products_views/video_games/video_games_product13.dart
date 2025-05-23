@@ -21,6 +21,8 @@ class VideoGamesProduct13 extends StatelessWidget {
       originalPrice: 2100.00,
       rating: 3.9,
       reviewCount: 38,
+      category: 'Video Games',
+      subcategory: 'Accessories',
       amperage: '3 Amps',
       brand: 'Mcbazel',
       connectivityTechnology: 'USB',

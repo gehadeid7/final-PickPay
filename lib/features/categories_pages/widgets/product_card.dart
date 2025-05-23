@@ -125,6 +125,7 @@ class _ProductCardState extends State<ProductCard>
                               errorBuilder: (context, error, stackTrace) =>
                                   Icon(
                                 Icons.image_not_supported,
+                                // ignore: deprecated_member_use
                                 color: colorScheme.onSurface.withOpacity(0.3),
                                 size: 40,
                               ),

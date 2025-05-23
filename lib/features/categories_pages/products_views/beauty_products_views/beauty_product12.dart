@@ -19,6 +19,8 @@ class BeautyProduct12 extends StatelessWidget {
       originalPrice: 700,
       rating: 5.0,
       reviewCount: 1999,
+      category: 'Beauty',
+      subcategory: 'Haircare',
       brand: 'Raw African',
       itemWeight: '1 Kilograms',
       itemform: 'Oil',

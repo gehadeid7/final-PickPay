@@ -17,6 +17,8 @@ class HomeProduct6 extends StatelessWidget {
       originalPrice: 560.88,
       rating: 3.9,
       reviewCount: 58,
+      category: 'Home',
+      subcategory: 'Home Decor',
       colorOptions: ['golden'],
       colorAvailability: {'golden': true},
       brand: 'Golden Lighting',

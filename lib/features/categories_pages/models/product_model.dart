@@ -5,6 +5,7 @@ class ProductsViewsModel {
   final double price;
   final double? originalPrice;
   final String? category;
+  final String? subcategory;
   final List<String>? imagePaths;
   final double? rating;
   final int? reviewCount;
@@ -191,6 +192,7 @@ class ProductsViewsModel {
     required this.price,
     this.originalPrice,
     this.category,
+    this.subcategory,
     this.imagePaths,
     this.rating,
     this.reviewCount,
@@ -364,11 +366,9 @@ class ProductsViewsModel {
   factory ProductsViewsModel.fromJson(Map<String, dynamic> json) {
     return ProductsViewsModel(
       id: json['_id']?['\$oid'] ?? json['id'] ?? '',
-      title: json['name'] ?? json['title'] ?? '',
+      title: json['title'] ?? json['name'] ?? '',
       price: (json['price'] ?? 0).toDouble(),
-      originalPrice:
-          (json['originalPrice'] ?? json['listPrice'] ?? 0).toDouble(),
-      brand: json['brand'],
+      originalPrice: (json['originalPrice'] ?? json['listPrice'])?.toDouble(),
       category: json['category'],
       imagePaths: json['imagePaths'] != null
           ? List<String>.from(json['imagePaths'])
@@ -377,7 +377,17 @@ class ProductsViewsModel {
               : null,
       rating: (json['rating'] as num?)?.toDouble(),
       reviewCount: json['reviewCount'],
+      brand: json['brand'],
       color: json['color'],
+      aboutThisItem: json['aboutThisItem'] ?? json['description'],
+      deliveryDate: json['deliveryDate'],
+      deliveryTimeLeft: json['deliveryTimeLeft'],
+      deliveryLocation: json['deliveryLocation'],
+      inStock: json['inStock'],
+      shipsFrom: json['shipsFrom'],
+      soldBy: json['soldBy'],
+
+      // Continue adding remaining fields below
       material: json['material'],
       dimensions: json['dimensions'],
       style: json['style'],
@@ -385,14 +395,6 @@ class ProductsViewsModel {
       accessLocation: json['accessLocation'],
       settingsCount: json['settingsCount'],
       powerSource: json['powerSource'],
-      manufacturer: json['manufacturer'],
-      aboutThisItem: json['description'] ?? json['aboutThisItem'],
-      deliveryDate: json['deliveryDate'],
-      deliveryTimeLeft: json['deliveryTimeLeft'],
-      deliveryLocation: json['deliveryLocation'],
-      inStock: json['inStock'],
-      shipsFrom: json['shipsFrom'],
-      soldBy: json['soldBy'],
       modelName: json['modelName'],
       formFactor: json['formFactor'],
       controlsType: json['controlsType'],
@@ -430,33 +432,9 @@ class ProductsViewsModel {
       defrostSystem: json['defrostSystem'],
       size: json['size'],
       specialfeatures: json['specialfeatures'],
-      finishType: json['finishType'] ?? json['finishtype'],
+      finishType: json['finishType'],
       containerType: json['containerType'],
-      productbenefit: json['productbenefit'],
-      itemform: json['itemform'],
-      specialty: json['specialty'],
-      unitcount: json['unitcount'],
-      numberofitems: json['numberofitems'],
-      skintype: json['skintype'],
-      coverage: json['coverage'],
-      ageRangeDescription: json['ageRangeDescription'],
-      specialIngredients: json['specialIngredients'],
-      activeIngredients: json['activeIngredients'],
-      sunProtectionFactor: json['sunProtectionFactor'],
-      itemvolume: json['itemvolume'],
-      scent: json['scent'],
-      targetUseBodyPart: json['targetUseBodyPart'],
-      hairtype: json['hairtype'],
-      liquidVolume: json['liquidVolume'],
-      resultingHairType: json['resultingHairType'],
-      materialfeature: json['materialfeature'],
-      fragranceConcentration: json['fragranceConcentration'],
-      colorOptions: json['colorOptions'] != null
-          ? List<String>.from(json['colorOptions'])
-          : null,
-      scentOption: json['scentOption'] != null
-          ? List<String>.from(json['scentOption'])
-          : null,
+      manufacturer: json['manufacturer'],
     );
   }
 

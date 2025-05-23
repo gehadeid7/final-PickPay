@@ -46,7 +46,6 @@ class AboutUsView extends StatelessWidget {
                   'To empower businesses and consumers with innovative payment solutions that are secure, fast, and easy to use, while maintaining the highest standards of customer service.',
               context: context,
             ),
-            _buildSocialMediaRow(context),
             const SizedBox(height: 24),
             Text(
               '© 2023 PickPay. All rights reserved.',
@@ -86,31 +85,6 @@ class AboutUsView extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildSocialMediaRow(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        _buildSocialIcon(Icons.facebook, context),
-      ],
-    );
-  }
-
-  Widget _buildSocialIcon(IconData icon, BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 8),
-      width: 48,
-      height: 48,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: Theme.of(context).primaryColor.withOpacity(0.1),
-      ),
-      child: Icon(
-        icon,
-        color: Theme.of(context).primaryColor,
       ),
     );
   }

@@ -21,6 +21,8 @@ class VideoGamesProduct11 extends StatelessWidget {
       originalPrice: 1300.00,
       rating: 4.6,
       reviewCount: 15736,
+      category: 'Video Games',
+      subcategory: 'Accessories',
       aboutThisItem:
           '''🎮This PlayStation 5 charging station has a smart chip which increases Voltage whilst maintaining all-round protection for your PS5 remotes
 

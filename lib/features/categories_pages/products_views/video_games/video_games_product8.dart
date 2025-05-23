@@ -19,6 +19,8 @@ class VideoGamesProduct8 extends StatelessWidget {
       originalPrice: 17000.00,
       rating: 4.3,
       reviewCount: 330,
+      category: 'Video Games',
+      subcategory: 'Controllers',
       aboutThisItem:
           '''DualSense wireless controller features built in: Experience all the immersive features of the DualSense wireless controller, including haptic feedback, adaptive triggers, a built-in microphone, motion controls and more in supported titles. 
 

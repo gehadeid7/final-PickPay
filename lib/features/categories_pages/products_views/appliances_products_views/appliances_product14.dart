@@ -8,7 +8,7 @@ class AppliancesProduct14 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: "68132a95ff7813b3d47f9db2",
+      id: "68252918a68b49cb06164211",
       title:
           'Black & Decker 1.7L Concealed Coil Stainless Steel Kettle, Jc450-B5, Silver',
       imagePaths: [
@@ -24,6 +24,8 @@ class AppliancesProduct14 extends StatelessWidget {
       rating: 4.5,
       reviewCount: 1162,
       brand: 'Black & Decker',
+      category: 'Appliances',
+      subcategory: 'Small Appliances',
       color: 'Silver',
       specialfeatures: 'Programmable',
       containerType: 'Kettle',

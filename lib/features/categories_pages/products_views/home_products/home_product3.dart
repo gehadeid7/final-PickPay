@@ -19,6 +19,8 @@ class HomeProduct3 extends StatelessWidget {
       originalPrice: 3800.00,
       rating: 5.0,
       reviewCount: 1,
+      category: 'home',
+      subcategory: 'Furniture',
       colorOptions: ['Black', 'White'],
       colorAvailability: {'Black': true, 'White': true},
       itemWeight: '15 Kilograms',

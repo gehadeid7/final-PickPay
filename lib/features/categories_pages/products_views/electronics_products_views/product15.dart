@@ -8,7 +8,7 @@ class Product15View extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: 'elec15',
+      id: '6819e22b123a4faad16613c2',
       title: 'USB Cooling Pad Stand Fan Cooler for Laptop Notebook',
       imagePaths: [
         'assets/electronics_products/Laptop/Laptop5/1.png',
@@ -20,6 +20,8 @@ class Product15View extends StatelessWidget {
       rating: 3.5,
       reviewCount: 83,
       color: 'Generic',
+      category: 'Electronics',
+      subcategory: 'Laptop',
       brand: 'Generic',
       material: 'Plastic',
       itemWeight: '0.7 Kilograms',

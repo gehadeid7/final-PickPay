@@ -21,6 +21,8 @@ class BeautyProduct10 extends StatelessWidget {
       originalPrice: 400,
       rating: 4.2,
       reviewCount: 899,
+      category: 'Beauty',
+      subcategory: 'Skincare',
       brand: 'L’Oréal Paris',
       itemWeight: '100 Grams',
       itemform: 'Drop',

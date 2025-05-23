@@ -20,6 +20,8 @@ class VideoGamesProduct1 extends StatelessWidget {
       originalPrice: 28899.00,
       rating: 4.6,
       reviewCount: 893,
+      category: 'Video Games',
+      subcategory: 'Console',
       aboutThisItem:
           '''With PS5 Digital Edition, players get powerful gaming technology packed inside a sleek and compact console design
 

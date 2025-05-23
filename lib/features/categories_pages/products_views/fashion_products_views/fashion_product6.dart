@@ -48,6 +48,8 @@ Short Sleeve
       originalPrice: 640,
       rating: 5.0,
       reviewCount: 438,
+      category: 'Fashion',
+      subcategory: "Men's Fashion",
       deliveryDate: 'Sunday, 9 March',
       deliveryTimeLeft: '20hrs 36 mins',
       deliveryLocation: 'Egypt',

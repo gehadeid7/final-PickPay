@@ -9,7 +9,7 @@ class Product6View extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: 'elec6',
+      id: '6819e22b123a4faad16613c4',
       title:
           "Samsung 55 Inch QLED Smart TV Neural HDR Quantum Processor Lite 4K - QA55QE1DAUXEG [2024 Model]",
       imagePaths: [
@@ -21,6 +21,8 @@ class Product6View extends StatelessWidget {
       originalPrice: 24999.00,
       rating: 4.5,
       reviewCount: 46,
+      category: 'Electronics',
+      subcategory: "TVs",
       screenSize: '55 Inches',
       brand: 'SAMSUNG',
       displayTechnology: 'QLED',

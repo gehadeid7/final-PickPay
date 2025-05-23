@@ -20,6 +20,8 @@ class HomeProduct20 extends StatelessWidget {
       originalPrice: 989.00,
       rating: 3.8,
       reviewCount: 84,
+      category: 'Home',
+      subcategory: 'Bath & Bedding',
       color: 'Zebra',
       brand: 'Home of Linen',
       material: 'Linen',

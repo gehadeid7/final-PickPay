@@ -20,6 +20,8 @@ class VideoGamesProduct4 extends StatelessWidget {
       originalPrice: 18000.00,
       rating: 4.7,
       reviewCount: 913,
+      category: 'Video Games',
+      subcategory: 'Console',
       aboutThisItem:
           '''Boasts a stunning design with a vibrant red color scheme 
 

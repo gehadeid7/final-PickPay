@@ -8,7 +8,7 @@ class AppliancesProduct13 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: "68132a95ff7813b3d47f9db1",
+      id: "68252918a68b49cb06164210",
       title:
           'Black & Decker 500W 1.5L Blender with Grinder Mill, White - BX520-B5',
       imagePaths: [
@@ -23,6 +23,8 @@ class AppliancesProduct13 extends StatelessWidget {
       rating: 4.9,
       reviewCount: 1439,
       brand: 'Black & Decker',
+      category: 'Appliances',
+      subcategory: 'Small Appliances',
       color: 'White',
       specialfeatures: 'Portable',
       capacity: '1.5 Liters',

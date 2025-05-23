@@ -8,7 +8,7 @@ class AppliancesProduct6 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: "68132a95ff7813b3d47f9daa",
+      id: "68252918a68b49cb06164209",
       title:
           'deime Air Fryer 6.2 Quart, Large Air Fryer for Families, 5 Cooking Functions',
       imagePaths: [
@@ -23,6 +23,8 @@ class AppliancesProduct6 extends StatelessWidget {
       brand: 'deime',
       color: 'Black-M',
       material: 'Plastic',
+      category: 'Appliances',
+      subcategory: 'Small Appliances',
       dimensions: '26.9D x 27.4W x 33H centimeters',
       specialfeatures: 'Temperature Control',
       capacity: '6.2 Quarts',

@@ -20,6 +20,8 @@ class VideoGamesProduct9 extends StatelessWidget {
       originalPrice: 4988.00,
       rating: 4.3,
       reviewCount: 1872,
+      category: 'Video Games',
+      subcategory: 'Controllers',
       color: 'multicoloured',
       compatibleDevices: 'Nintendo Switch',
       brand: 'Nintendo',

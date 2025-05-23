@@ -8,7 +8,7 @@ class Product3View extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: 'elec3',
+      id: '6819e22b123a4faad16613c0',
       title: "Apple iPhone 16 (128 GB)",
       imagePaths: [
         'assets/electronics_products/mobile_and_tablet/mobile_and_tablet3/1.png',
@@ -20,6 +20,8 @@ class Product3View extends StatelessWidget {
       originalPrice: 57555.00,
       rating: 4.7,
       reviewCount: 330,
+      category: 'Electronics',
+      subcategory: 'Mobile & Tablets',
       colorOptions: ['Ultramarine'],
       colorAvailability: {'Ultramarine': true},
       size: '128GB Storage',

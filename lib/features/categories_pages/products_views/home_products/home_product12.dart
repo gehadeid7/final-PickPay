@@ -19,6 +19,8 @@ class HomeProduct12 extends StatelessWidget {
       originalPrice: 550.00,
       rating: 4.5,
       reviewCount: 12,
+      category: 'home',
+      subcategory: 'Kitchen & Dining',
       colorOptions: ['White'],
       colorAvailability: {'White': true},
       brand: 'Pasabahce',

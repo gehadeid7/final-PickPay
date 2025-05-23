@@ -15,6 +15,8 @@ class VideoGamesProduct7 extends StatelessWidget {
       originalPrice: 4999.00,
       rating: 4.4,
       reviewCount: 3,
+      category: 'Video Games',
+      subcategory: 'Controllers',
       aboutThisItem: '''Sleek design
 Packed with features
 Cutting-edge technology

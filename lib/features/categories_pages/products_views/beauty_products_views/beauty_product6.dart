@@ -18,6 +18,8 @@ class BeautyProduct6 extends StatelessWidget {
       originalPrice: 44.00,
       rating: 4.3,
       reviewCount: 769,
+      category: 'Beauty',
+      subcategory: 'Skincare',
       scentOption: [
         'Glycerin Mixed Berries',
         'Strawberry',

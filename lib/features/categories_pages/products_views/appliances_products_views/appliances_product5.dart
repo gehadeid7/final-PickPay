@@ -8,7 +8,7 @@ class AppliancesProduct5 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: "68132a95ff7813b3d47f9da9",
+      id: "68252918a68b49cb06164208",
       title:
           'Midea Dishwasher - WQP13-5201C-S - 6 programs - Free standing - 13 Place set - Silver',
       imagePaths: [
@@ -22,6 +22,8 @@ class AppliancesProduct5 extends StatelessWidget {
       rating: 4.0,
       reviewCount: 11,
       brand: 'Midea',
+      category: 'Appliances',
+      subcategory: 'Large Appliances',
       color: 'Silver',
       modelNumber: 'WQP13-5201C-S',
       capacity: '13 Place Set',

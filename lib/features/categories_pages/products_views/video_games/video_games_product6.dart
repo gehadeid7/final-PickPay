@@ -20,6 +20,8 @@ class VideoGamesProduct6 extends StatelessWidget {
       originalPrice: 5000.00,
       rating: 4.4,
       reviewCount: 2313,
+      category: 'Video Games',
+      subcategory: 'Controllers',
       color: 'Black',
       compatibleDevices: 'Playstation 5',
       brand: 'PlayStation',

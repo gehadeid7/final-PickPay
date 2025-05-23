@@ -19,6 +19,8 @@ class FashionProduct7 extends StatelessWidget {
       originalPrice: 830,
       rating: 4.3,
       reviewCount: 16,
+      category: 'Fashion',
+      subcategory: "Men's Fashion",
       colorOptions: ['greenish blue', 'Dark Blue', 'Light Blue'],
       closureType: 'Zipper',
       colorAvailability: {

@@ -8,7 +8,7 @@ class Product11View extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: 'elec11',
+      id: '6819e22b123a4faad16613c9',
       title: 'LENOVO ideapad slim3 15IRH8 -I5-13420H 8G-512SSD 83EM007LPS GREY',
       imagePaths: [
         'assets/electronics_products/Laptop/Laptop1/1.png',
@@ -22,6 +22,8 @@ class Product11View extends StatelessWidget {
       screenSize: '15.6 Inches',
       color: 'grey',
       brand: 'Lenovo',
+      category: 'Electronics',
+      subcategory: 'Laptop',
       graphicsDescription: 'Integrated',
       operatingSystem: 'Windows 11',
       ramMemoryInstalled: '8 GB',

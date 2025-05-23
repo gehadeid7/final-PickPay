@@ -18,6 +18,7 @@ class FashionProduct9 extends StatelessWidget {
         "assets/Fashion_products/Men_Fashion/men_fashion4/5.png",
       ],
       category: 'Fashion',
+      subcategory: "Men's Fashion",
       price: 10499,
       originalPrice: 11000,
       rating: 4.3,

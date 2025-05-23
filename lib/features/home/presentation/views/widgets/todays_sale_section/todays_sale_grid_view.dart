@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:pickpay/features/categories_pages/homeCategory/presentation/views/home_category_view.dart';
 import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product8.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product10.dart';
 import 'package:pickpay/features/home/presentation/views/widgets/card_item.dart';
 
 class TodaysSaleGridView extends StatefulWidget {
@@ -79,13 +79,13 @@ class _TodaysSaleGridViewState extends State<TodaysSaleGridView>
         'detailPage': const AppliancesProduct8(),
       },
       {
-        'imagePath': 'assets/Home_products/furniture/furniture4/1.png',
+        'imagePath': 'assets/Home_products/home-decor/home_decor5/1.png',
         'productName':
-            'Gaming Chair, Furgle Gocker Ergonomic Adjustable 3D Swivel Chair',
-        'price': '9696.55',
-        'rating': 4.6,
-        'reviewCount': 150,
-        'detailPage': const HomeCategoryView(),
+            'oliruim Black Home Decor Accent Art Woman face Statue Collectible Statue for Modern Home Living Room Bookshelf Black Desk Decor 2 Pieces Set',
+        'price': '400.00',
+        'rating': 4.3,
+        'reviewCount': 43,
+        'detailPage': const HomeProduct10(),
       },
     ];
 

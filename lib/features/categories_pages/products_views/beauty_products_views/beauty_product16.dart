@@ -20,6 +20,8 @@ class BeautyProduct16 extends StatelessWidget {
       reviewCount: 6632,
       brand: 'Avon',
       style: 'Floral',
+      category: 'Beauty',
+      subcategory: 'Fragrance',
       itemform: 'Liquid',
       liquidVolume: '5E+1 Milliliters',
       size: '50 Ml',

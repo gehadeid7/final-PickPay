@@ -20,6 +20,8 @@ class BeautyProduct9 extends StatelessWidget {
       originalPrice: 775.00,
       rating: 4.3,
       reviewCount: 121,
+      category: 'Beauty',
+      subcategory: 'Skincare',
       brand: 'Eucerin',
       itemvolume: '40 Milliliters',
       itemform: 'serum',

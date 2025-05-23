@@ -20,6 +20,8 @@ class BeautyProduct8 extends StatelessWidget {
       rating: 4.4,
       reviewCount: 317,
       brand: 'Eva',
+      category: 'Beauty',
+      subcategory: 'Skincare',
       itemvolume: '200 Milliliters',
       itemform: 'Aerosol',
       itemWeight: '2 Grams',

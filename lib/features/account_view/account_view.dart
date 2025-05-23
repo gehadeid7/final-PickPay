@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:pickpay/features/account_view/account_view_body.dart';
 
 class AccountView extends StatelessWidget {
+  const AccountView({super.key});
   static const routeName = 'Account_View';
-
-  const AccountView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

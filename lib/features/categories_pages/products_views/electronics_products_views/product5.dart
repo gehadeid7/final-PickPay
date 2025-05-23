@@ -8,7 +8,7 @@ class Product5View extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: 'elec5',
+      id: '6819e22b123a4faad16613c3',
       title:
           "Oraimo 18W USB Type-C Dual Output Super Fast Charger Wall Adapter QC3.0& PD3.0 & PE2.0 Compatible for iPhone 15/15 Plus/15 Pro/15 Pro Max, 14/13/12 Series, Galaxy, Pixel 4/3, iPad and More",
       imagePaths: [
@@ -22,6 +22,8 @@ class Product5View extends StatelessWidget {
       originalPrice: 220.00,
       rating: 4.7,
       reviewCount: 380,
+      category: 'Electronics',
+      subcategory: 'Mobile & Tablets',
       colorOptions: ['white'],
       colorAvailability: {'White': true},
       connectivityTechnology: 'USB',

@@ -21,6 +21,8 @@ class BeautyProduct1 extends StatelessWidget {
       originalPrice: 730.00,
       rating: 4.2,
       reviewCount: 4470,
+      category: 'Beauty',
+      subcategory: 'Makeup',
       productbenefit:
           'Provides intense volume and long-lasting, clump-free definition while being suitable for sensitive eyes',
       brand: 'L’Oréal Paris',

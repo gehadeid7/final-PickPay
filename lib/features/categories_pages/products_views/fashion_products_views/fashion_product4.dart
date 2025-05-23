@@ -19,6 +19,8 @@ class FashionProduct4 extends StatelessWidget {
       originalPrice: 1400,
       rating: 5.0,
       reviewCount: 88,
+      category: 'Fashion',
+      subcategory: "Women's Fashion",
       colorOptions: ['Silver', 'Black'],
       colorAvailability: {'Silver': true, 'Black': true},
       availableSizes: ['38 EU', '39 EU', '40 EU', '41 EU'],

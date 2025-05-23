@@ -6,10 +6,13 @@ import 'package:pickpay/features/categories_pages/widgets/color_option_selector.
 import 'package:pickpay/features/categories_pages/widgets/info_icons_row.dart';
 import 'package:pickpay/features/categories_pages/widgets/product_rating.dart';
 import 'package:pickpay/features/categories_pages/widgets/products_view_appbar.dart';
+import 'package:pickpay/features/related_products_widget/related_products.dart';
 import 'package:pickpay/features/categories_pages/widgets/scent_option.dart';
 import 'package:pickpay/features/categories_pages/widgets/size_option.dart';
 import 'package:pickpay/features/cart/cart_item_model.dart';
 import 'package:pickpay/features/cart/cart_cubits/cart_cubit.dart';
+import 'package:pickpay/features/reviews/cubit/review_cubit.dart';
+import 'package:pickpay/features/reviews/screens/review_screen.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 
@@ -129,11 +132,15 @@ class _ProductDetailViewState extends State<ProductDetailView>
                     const SizedBox(height: 24),
                     _buildAboutItem(product, isDarkMode),
                     const SizedBox(height: 24),
+                    _buildReviewSection(product, isDarkMode),
+                    const SizedBox(height: 24),
                     _buildSectionTitle("Delivery", isDarkMode),
                     _buildDeliveryInfo(product, isDarkMode),
                     const SizedBox(height: 24),
                     _buildSellerInfo(product, isDarkMode),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 24),
+                    RelatedProducts(currentProduct: product),
+                    const SizedBox(height: 80),
                   ],
                 ),
               ),
@@ -375,6 +382,10 @@ class _ProductDetailViewState extends State<ProductDetailView>
           label: "Brand", value: product.brand, isDarkMode: isDarkMode),
       _ProductFeatureRow(
           label: "Category", value: product.category, isDarkMode: isDarkMode),
+      _ProductFeatureRow(
+          label: "Subcategory",
+          value: product.subcategory,
+          isDarkMode: isDarkMode),
       _ProductFeatureRow(
           label: "Color", value: product.color, isDarkMode: isDarkMode),
       _ProductFeatureRow(
@@ -1399,6 +1410,60 @@ class _ProductDetailViewState extends State<ProductDetailView>
               fontSize: 18,
               fontWeight: FontWeight.bold,
               color: isDarkMode ? Colors.white : Colors.black,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildReviewSection(ProductsViewsModel product, bool isDarkMode) {
+    return Container(
+      decoration: BoxDecoration(
+        color: isDarkMode ? Colors.grey[850] : Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.star_rounded,
+                  color: Colors.amber,
+                  size: 24,
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  "Customer Reviews",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: isDarkMode ? Colors.white : Colors.black,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          BlocProvider(
+            create: (context) {
+              final cubit = ReviewCubit();
+              // Fetch reviews immediately when created
+              cubit.fetchReviews(productId: product.id);
+              return cubit;
+            },
+            child: ReviewScreen(
+              productId: product.id,
+              isEmbedded: true,
             ),
           ),
         ],

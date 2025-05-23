@@ -18,6 +18,8 @@ class HomeProduct11 extends StatelessWidget {
       originalPrice: 17000.00,
       rating: 4.3,
       reviewCount: 43,
+      category: 'home',
+      subcategory: 'Kitchen & Dining',
       colorOptions: ['Pink Marble'],
       colorAvailability: {'Pink Marble': true},
       size: 'Assorted Pack',

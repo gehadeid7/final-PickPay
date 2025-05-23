@@ -23,6 +23,8 @@ class HomeProduct15 extends StatelessWidget {
       rating: 3.8,
       reviewCount: 476,
       brand: 'S2C',
+      category: 'home',
+      subcategory: 'Kitchen & Dining',
       colorOptions: ['Multicolor'],
       colorAvailability: {'Multicolor': true},
       upc: '734077916932 703557955839',

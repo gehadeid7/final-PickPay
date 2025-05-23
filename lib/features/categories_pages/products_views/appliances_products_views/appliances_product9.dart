@@ -8,7 +8,7 @@ class AppliancesProduct9 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: "68132a95ff7813b3d47f9dad",
+      id: "68252918a68b49cb0616420c",
       title:
           'Panasonic Powerful Steam/Dry Iron, 1800W, NI-M300TVTD- 1 Year Warranty',
       imagePaths: [
@@ -20,6 +20,8 @@ class AppliancesProduct9 extends StatelessWidget {
       reviewCount: 1193,
       brand: 'Panasonic',
       color: 'Violet',
+      category: 'Appliances',
+      subcategory: 'Small Appliances',
       material: 'Plastic and Metal',
       style: 'Modern Handheld Iron',
       itemWeight: '1.9 Kilograms',

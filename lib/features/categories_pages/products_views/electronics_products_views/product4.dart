@@ -8,7 +8,7 @@ class Product4View extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: 'elec4',
+      id: '6819e22b123a4faad16613c1',
       title:
           "CANSHN Magnetic for iPhone 16 Pro Max Case Clear, Upgraded [Full Camera Protection] [Compatible with Magsafe] Non-Yellowing Protective Shockproof Bumper - Clear",
       imagePaths: [
@@ -19,6 +19,8 @@ class Product4View extends StatelessWidget {
       originalPrice: 399.99,
       rating: 4.7,
       reviewCount: 237,
+      category: 'Electronics',
+      subcategory: 'Mobile & Tablets',
       colorOptions: ['Clear'],
       colorAvailability: {'Clear': true},
       size: 'iPhone 16 Pro Max (6.9 Inch,3 Lens)',

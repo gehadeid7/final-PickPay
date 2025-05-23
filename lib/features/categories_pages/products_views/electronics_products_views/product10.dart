@@ -8,7 +8,7 @@ class Product10View extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: 'elec10',
+      id: '6819e22b123a4faad16613c8',
       title:
           'LG UHD 4K TV 60 Inch UQ7900 Series, Cinema Screen Design 4K Active HDR WebOS Smart AI ThinQ - 60UQ79006LD (New)',
       imagePaths: [
@@ -22,6 +22,8 @@ class Product10View extends StatelessWidget {
       originalPrice: 19999.00,
       rating: 4.2,
       reviewCount: 43,
+      category: 'Electronics',
+      subcategory: "TVs",
       screenSize: '60 Inches',
       brand: 'LG',
       displayTechnology: 'LCD',

@@ -8,7 +8,7 @@ class Product1View extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: 'elec1',
+      id: '6819e22b123a4faad16613be',
       title:
           'Samsung Galaxy Tab A9 4G LTE, 8.7 Inch Android Tablet, 8GB RAM, 128GB Storage, 8MP Rear Camera, Navy-1 Year Warranty/Local Version',
       imagePaths: [
@@ -22,6 +22,8 @@ class Product1View extends StatelessWidget {
       originalPrice: 9655.00,
       rating: 3.1,
       reviewCount: 9,
+      category: 'Electronics',
+      subcategory: 'Mobile & Tablets',
       colorOptions: ['Navy'],
       colorAvailability: {'Navy': true},
       size: '8 GB ram-128 GB Storage',

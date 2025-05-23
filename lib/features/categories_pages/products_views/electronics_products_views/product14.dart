@@ -8,7 +8,7 @@ class Product14View extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: 'elec14',
+      id: '6819e22b123a4faad16613cc',
       title:
           'HP OfficeJet Pro 9720 Wide Format All-in-One Printer - Print, Scan, Copy,Wireless, Auto Document Feeder, Auto Duplex, Touchscreen, Quiet Mode; Input Capacity of up to 250 sheets - [53N94C]',
       imagePaths: [
@@ -23,6 +23,8 @@ class Product14View extends StatelessWidget {
       reviewCount: 2753,
       style: 'HP OfficeJet Pro 9720',
       brand: 'HP',
+      category: 'Electronics',
+      subcategory: 'Laptop',
       connectivityTechnology: 'Wi-Fi',
       printerTechnology: 'white',
       specialfeatures: 'auto_document_feeder',

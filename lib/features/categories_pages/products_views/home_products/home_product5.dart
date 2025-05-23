@@ -17,6 +17,8 @@ class HomeProduct5 extends StatelessWidget {
       originalPrice: 5300.00,
       rating: 3.9,
       reviewCount: 58,
+      category: 'home',
+      subcategory: 'Furniture',
       fillMaterial: 'Cotton',
       itemWeight: '20 Kilograms',
       brand: 'Janssen',

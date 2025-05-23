@@ -18,6 +18,8 @@ class HomeProduct19 extends StatelessWidget {
       originalPrice: 410.00,
       rating: 3.8,
       reviewCount: 84,
+      category: 'Home',
+      subcategory: 'Bath & Bedding',
       brand: 'Home of Linen',
       color: 'off white',
       material: 'Cotton',

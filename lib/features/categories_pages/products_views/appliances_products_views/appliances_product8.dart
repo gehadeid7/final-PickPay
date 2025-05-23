@@ -8,7 +8,7 @@ class AppliancesProduct8 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: "68132a95ff7813b3d47f9dac",
+      id: "68252918a68b49cb0616420b",
       title:
           'Black & Decker 1050W 2-Slice Stainless Steel Toaster, Silver/Black',
       imagePaths: [
@@ -20,6 +20,8 @@ class AppliancesProduct8 extends StatelessWidget {
       originalPrice: 2760,
       rating: 4.6,
       reviewCount: 884,
+      category: 'Appliances',
+      subcategory: 'Small Appliances',
       brand: 'Black & Decker',
       color: 'Silver/Black',
       material: 'Stainless Steel',

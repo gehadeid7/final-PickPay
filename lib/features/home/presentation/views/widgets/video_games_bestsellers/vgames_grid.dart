@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:pickpay/features/categories_pages/videogames/presentation/views/videogames_view.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product1.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product14.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product7.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product8.dart';
 import 'package:pickpay/features/home/presentation/views/widgets/card_item.dart';
 
 class VgamesGrid extends StatefulWidget {
@@ -21,7 +24,7 @@ class _VgamesGrid extends State<VgamesGrid> {
       'price': '16.500',
       'rating': 5.0,
       'reviewCount': 954,
-      'detailPage': const VideogamesView(),
+      'detailPage': const VideoGamesProduct8(),
     },
     {
       'imagePath': 'assets/videogames_products/Accessories/accessories5/1.png',
@@ -30,7 +33,7 @@ class _VgamesGrid extends State<VgamesGrid> {
       'price': '1128.00',
       'rating': 4.0,
       'reviewCount': 1288,
-      'detailPage': const VideogamesView(),
+      'detailPage': const VideoGamesProduct14(),
     },
     {
       'imagePath': 'assets/videogames_products/Consoles/console1/2.png',
@@ -39,7 +42,7 @@ class _VgamesGrid extends State<VgamesGrid> {
       'price': '27.750',
       'rating': 4.6,
       'reviewCount': 1735,
-      'detailPage': const VideogamesView(),
+      'detailPage': const VideoGamesProduct1(),
     },
     {
       'imagePath': 'assets/videogames_products/Controllers/controller3/1.png',
@@ -47,7 +50,7 @@ class _VgamesGrid extends State<VgamesGrid> {
       'price': ' 4.498',
       'rating': 4.9,
       'reviewCount': 1893,
-      'detailPage': const VideogamesView(),
+      'detailPage': const VideoGamesProduct7(),
     },
   ];
 
