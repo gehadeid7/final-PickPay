@@ -43,4 +43,10 @@ class BackendEndpoints {
    // ❤️ Wishlist endpoints
   static const String wishlist = 'wishlist';
   static String removeFromWishlist(String productId) => 'wishlist/$productId';
+
+  // 🛒 Cart endpoints
+  static const String cart = 'cart';
+  static const String applyCoupon = 'cart/applyCoupon';
+  static String updateCartItem(String itemId) => 'cart/$itemId';
+  static String removeCartItem(String itemId) => 'cart/$itemId';
 }

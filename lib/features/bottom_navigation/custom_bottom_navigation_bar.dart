@@ -23,7 +23,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
         // Calculate total items in cart
         int totalItems = 0;
         if (state is CartLoaded) {
-          totalItems = state.items.fold<int>(
+          totalItems = state.cartItems.fold<int>(
             0,
             (sum, item) => sum + item.quantity,
           );

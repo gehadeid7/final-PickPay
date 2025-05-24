@@ -3,17 +3,18 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pickpay/services/api_service.dart';
 import 'package:pickpay/core/utils/backend_endpoints.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AISearchService {
   static AISearchService? _instance;
   final FirebaseFirestore _firestore;
   final ApiService _apiService;
   Timer? _debounceTimer;
-  final Duration _debounceTime = const Duration(milliseconds: 500);
+  final Duration _debounceTime = const Duration(milliseconds: 300);
   bool _isInitialized = false;
   final Map<String, List<Map<String, dynamic>>> _memoryCache = {};
-  final int _maxMemoryCacheSize = 50;
-  final Duration _memoryCacheDuration = const Duration(minutes: 5);
+  final int _maxMemoryCacheSize = 100;
+  final Duration _memoryCacheDuration = const Duration(minutes: 30);
   final Map<String, DateTime> _memoryCacheTimestamps = {};
   final Set<String> _searchSuggestions = {};
   String? _lastQuery;
@@ -43,24 +44,34 @@ class AISearchService {
     if (_isInitialized) return;
     
     try {
-      await _preloadPopularSearches();
-      await _loadSearchSuggestions();
+      await Future.wait([
+        _preloadPopularSearches(),
+        _loadSearchSuggestions(),
+      ]);
       _isInitialized = true;
     } catch (e) {
-      print('Error initializing AISearchService: $e');
+      print('Error initializing AI search service: $e');
     }
   }
 
   Future<void> _preloadPopularSearches() async {
     try {
-      // Preload only essential data
-      final popularSearches = ['phone', 'laptop', 'headphones'];
-      for (final query in popularSearches) {
-        _getCachedResults(query).then((results) {
-          if (results.isNotEmpty) {
-            _addToMemoryCache(query, results);
+      // Get popular searches from backend AI
+      final response = await _apiService.get(
+        endpoint: BackendEndpoints.aiProductSearch,
+        queryParameters: {'type': 'popular'},
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        if (data is List) {
+          _searchSuggestions.addAll(data.map((item) => item.toString().toLowerCase()));
+        } else if (data is Map) {
+          final popularSearches = data['popular'] ?? data['suggestions'] ?? [];
+          if (popularSearches is List) {
+            _searchSuggestions.addAll(popularSearches.map((item) => item.toString().toLowerCase()));
           }
-        });
+        }
       }
     } catch (e) {
       print('Error preloading searches: $e');
@@ -69,9 +80,10 @@ class AISearchService {
 
   Future<void> _loadSearchSuggestions() async {
     try {
-      // Load common product names and categories for suggestions
+      // Get AI-generated suggestions based on product catalog
       final response = await _apiService.get(
         endpoint: BackendEndpoints.aiProductSearch,
+        queryParameters: {'type': 'suggestions'},
       );
 
       if (response.statusCode == 200) {
@@ -99,72 +111,90 @@ class AISearchService {
         .take(5)
         .toList();
   }
+
   Future<List<String>> fetchLiveSuggestions(String query) async {
-  if (query.isEmpty) return [];
+    if (query.isEmpty) return [];
 
-  try {
-    final response = await _apiService.post(
-      endpoint: BackendEndpoints.aiProductSearch,
-      body: {
-        'query': query,
-        'searchType': 'prefix',
-        'suggestOnly': true, // Optional: backend support
-      },
-    );
+    try {
+      print('🔍 Fetching suggestions for: $query');
+      
+      final response = await _apiService.post(
+        endpoint: BackendEndpoints.aiProductSearch,
+        body: {
+          'query': query,
+          'type': 'suggestions',
+          'context': {
+            'userHistory': (await _getUserSearchHistory()).take(5).toList(), // Limit history to 5 items
+            'popularSearches': _searchSuggestions.take(5).toList(), // Limit suggestions to 5 items
+          },
+        },
+      );
 
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
+      print('📥 Received suggestions response: ${response.statusCode}');
+      
+      if (response.statusCode == 200) {
+        try {
+          final data = jsonDecode(response.body);
+          print('📦 Parsed suggestions data type: ${data.runtimeType}');
+          
+          List<String> suggestions = [];
 
-      if (data is List) {
-        return List<String>.from(data.map((e) => e.toString()));
-      } else if (data is Map) {
-        final suggestions = data['suggestions'] ?? data['products'] ?? [];
-        if (suggestions is List) {
-          return List<String>.from(suggestions.map((e) => e.toString()));
+          if (data is Map) {
+            print('📦 Suggestions response keys: ${data.keys.toList()}');
+            
+            if (data.containsKey('products') && data['products'] is List) {
+              final products = data['products'] as List;
+              print('📦 Found ${products.length} products for suggestions');
+              
+              suggestions = products.where((product) {
+                if (product is! Map) {
+                  print('❌ Invalid product format in suggestions: $product');
+                  return false;
+                }
+                
+                final title = product['title']?.toString();
+                if (title == null || title.isEmpty) {
+                  print('❌ Product missing title in suggestions: $product');
+                  return false;
+                }
+                
+                return true;
+              }).map((product) => product['title'].toString()).take(5).toList(); // Limit to 5 suggestions
+              
+              print('✅ Filtered to ${suggestions.length} valid suggestions');
+            } else if (data.containsKey('suggestions') && data['suggestions'] is List) {
+              suggestions = List<String>.from(data['suggestions']).take(5).toList(); // Limit to 5 suggestions
+            }
+          } else if (data is List) {
+            suggestions = List<String>.from(data.map((e) => e.toString())).take(5).toList(); // Limit to 5 suggestions
+          }
+
+          return suggestions;
+        } catch (e, stackTrace) {
+          print('❌ Error parsing suggestions response: $e');
+          print('❌ Stack trace: $stackTrace');
+          print('❌ Raw suggestions response body: ${response.body}');
         }
+      } else {
+        print('❌ Suggestions failed with status: ${response.statusCode}');
+        print('❌ Error response: ${response.body}');
       }
+      
+      return [];
+    } catch (e, stackTrace) {
+      print('❌ Error fetching suggestions: $e');
+      print('❌ Stack trace: $stackTrace');
+      return [];
     }
-    return [];
-  } catch (e) {
-    print('Suggestion error: $e');
-    return [];
-  }
-}
-
-
-  void _addToMemoryCache(String query, List<Map<String, dynamic>> results) {
-    // Clean up old cache entries
-    _cleanupMemoryCache();
-
-    // Add new results to cache
-    _memoryCache[query] = results;
-    _memoryCacheTimestamps[query] = DateTime.now();
   }
 
-  void _cleanupMemoryCache() {
-    final now = DateTime.now();
-    final expiredKeys = _memoryCacheTimestamps.entries
-        .where((entry) => now.difference(entry.value) > _memoryCacheDuration)
-        .map((entry) => entry.key)
-        .toList();
-
-    // Remove expired entries
-    for (final key in expiredKeys) {
-      _memoryCache.remove(key);
-      _memoryCacheTimestamps.remove(key);
-    }
-
-    // If still too many entries, remove oldest
-    if (_memoryCache.length > _maxMemoryCacheSize) {
-      final entries = _memoryCacheTimestamps.entries.toList();
-      entries.sort((a, b) => a.value.compareTo(b.value));
-      final sortedKeys = entries.map((e) => e.key).toList();
-
-      final keysToRemove = sortedKeys.take(_memoryCache.length - _maxMemoryCacheSize);
-      for (final key in keysToRemove) {
-        _memoryCache.remove(key);
-        _memoryCacheTimestamps.remove(key);
-      }
+  Future<List<String>> _getUserSearchHistory() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      return prefs.getStringList('search_history') ?? [];
+    } catch (e) {
+      print('Error getting search history: $e');
+      return [];
     }
   }
 
@@ -173,17 +203,16 @@ class AISearchService {
       await initialize();
     }
 
-    // Return empty list for empty queries
     if (query.trim().isEmpty) {
       _lastQuery = null;
       return [];
     }
 
-    // Normalize query
     final normalizedQuery = query.toLowerCase().trim();
     if (normalizedQuery == _lastQuery && _isSearching) {
       return [];
     }
+
     _debounceTimer?.cancel();
     return Future.delayed(_debounceTime, () async {
       if (normalizedQuery != query.toLowerCase().trim()) {
@@ -191,125 +220,116 @@ class AISearchService {
       }
       _lastQuery = normalizedQuery;
       _isSearching = true;
+
       try {
+        print('🔍 Searching for: $query');
+        
+        // Check memory cache first
         final cacheKey = normalizedQuery.replaceAll(RegExp(r'[^a-z0-9]'), '_');
         if (_memoryCache.containsKey(cacheKey)) {
           final cachedResults = _memoryCache[cacheKey]!;
           final timestamp = _memoryCacheTimestamps[cacheKey]!;
           if (DateTime.now().difference(timestamp) <= _memoryCacheDuration) {
+            print('📦 Using cached results for: $query');
             _isSearching = false;
             return _scoreAndSortResults(cachedResults, query);
           }
         }
-        if (!_searchSuggestions.contains(normalizedQuery)) {
-          _searchSuggestions.add(normalizedQuery);
-        }
+
+        // Get AI-powered search results
+        print('🌐 Making API request for: $query');
         final response = await _apiService.post(
           endpoint: BackendEndpoints.aiProductSearch,
           body: {
-            'query': normalizedQuery,
-            'limit': 20,
-            'includeMetadata': true,
-            'searchType': 'prefix',
+            'query': query,
+            'type': 'search',
+            'context': {
+              'userHistory': (await _getUserSearchHistory()).take(5).toList(), // Limit history to 5 items
+              'popularSearches': _searchSuggestions.take(5).toList(), // Limit suggestions to 5 items
+            },
           },
         );
+
+        print('📥 Received response: ${response.statusCode}');
+        
         if (response.statusCode == 200) {
-          final data = jsonDecode(response.body);
-          List<dynamic> products = [];
-          // Bulletproof parsing:
-          if (data is List) {
-            products = data;
-          } else if (data is Map<String, dynamic>) {
-            if (data.containsKey('products') && data['products'] is List) {
-              products = data['products'];
-            } else if (data.containsKey('data') && data['data'] is List) {
-              products = data['data'];
-            } else if (data.containsKey('items') && data['items'] is List) {
-              products = data['items'];
-            } else if (data.containsKey('result')) {
-              final result = data['result'];
-              if (result is List) {
-                products = result;
-              } else if (result is Map) {
-                products = [result];
+          try {
+            final data = jsonDecode(response.body);
+            print('📦 Parsed response data type: ${data.runtimeType}');
+            
+            List<Map<String, dynamic>> results = [];
+
+            if (data is Map) {
+              print('📦 Response keys: ${data.keys.toList()}');
+              
+              if (data.containsKey('products') && data['products'] is List) {
+                final products = data['products'] as List;
+                print('📦 Found ${products.length} products in response');
+                
+                results = products.where((product) {
+                  if (product is! Map) {
+                    print('❌ Invalid product format: $product');
+                    return false;
+                  }
+                  
+                  final title = product['title']?.toString();
+                  if (title == null || title.isEmpty) {
+                    print('❌ Product missing title: $product');
+                    return false;
+                  }
+                  
+                  return true;
+                }).map((product) {
+                  // Only keep essential fields to reduce data size
+                  return {
+                    'id': product['_id'],
+                    'title': product['title'],
+                    'price': product['price'],
+                    'images': product['images'] ?? [],
+                    'rating': product['rating'] ?? 0,
+                    'reviewCount': product['ratingsQuantity'] ?? 0,
+                  };
+                }).toList();
+                
+                print('✅ Filtered to ${results.length} valid products');
+              } else if (data.containsKey('results') && data['results'] is List) {
+                results = List<Map<String, dynamic>>.from(data['results']);
               }
-            } else if (data.containsKey('searchResults')) {
-              final results = data['searchResults'];
-              if (results is List) {
-                products = results;
-              } else if (results is Map) {
-                products = [results];
-              }
-            } else if (data.isNotEmpty) {
-              // If it's a single product map, wrap it in a list
-              products = [data];
+            } else if (data is List) {
+              results = List<Map<String, dynamic>>.from(data);
             }
-          }
-          if (products.isEmpty) {
+
+            // Cache results
+            _addToMemoryCache(cacheKey, results);
+            await _cacheResults(cacheKey, results);
+
             _isSearching = false;
-            return [];
+            return _scoreAndSortResults(results, query);
+          } catch (e, stackTrace) {
+            print('❌ Error parsing response: $e');
+            print('❌ Stack trace: $stackTrace');
+            print('❌ Raw response body: ${response.body}');
           }
-          final results = products.map((product) {
-            if (product is! Map<String, dynamic>) {
-              return {
-                'id': '',
-                'title': 'Invalid Product',
-                'description': 'Invalid product data',
-                'price': 0.0,
-                'image': '',
-                'rating': 0.0,
-                'brand': '',
-                'category': '',
-                'inStock': false,
-                'discount': 0.0,
-                'originalPrice': 0.0,
-              };
-            }
-            final title = product['name']?.toString() ?? 
-                         product['title']?.toString() ?? 
-                         'No Title';
-            if (!_searchSuggestions.contains(title.toLowerCase())) {
-              _searchSuggestions.add(title.toLowerCase());
-            }
-            return {
-              'id': product['id']?.toString() ?? '',
-              'title': title,
-              'description': product['description']?.toString() ?? 'No Description',
-              'price': _parseDouble(product['price']),
-              'image': product['imageUrl']?.toString() ?? 
-                      product['image']?.toString() ?? 
-                      '',
-              'rating': _parseDouble(product['rating']),
-              'brand': product['brand']?.toString() ?? '',
-              'category': product['category']?.toString() ?? '',
-              'inStock': product['inStock'] as bool? ?? true,
-              'discount': _parseDouble(product['discount']),
-              'originalPrice': _parseDouble(product['originalPrice']),
-            };
-          }).toList();
-          _addToMemoryCache(cacheKey, results);
-          await _cacheResults(cacheKey, results);
-          _isSearching = false;
-          return _scoreAndSortResults(results, query);
         } else {
-          print('API Error: ${response.statusCode} - ${response.body}');
-          final cachedResults = await _getCachedResults(cacheKey);
-          if (cachedResults.isNotEmpty) {
-            _addToMemoryCache(cacheKey, cachedResults);
-            _isSearching = false;
-            return _scoreAndSortResults(cachedResults, query);
-          }
-          _isSearching = false;
-          throw Exception('Failed to search products: ${response.body}');
+          print('❌ Search failed with status: ${response.statusCode}');
+          print('❌ Error response: ${response.body}');
         }
-      } catch (e) {
-        print('Error searching products: $e');
+
+        _isSearching = false;
+        return [];
+      } catch (e, stackTrace) {
+        print('❌ Error searching products: $e');
+        print('❌ Stack trace: $stackTrace');
+        
+        // Try to get cached results
         final cachedResults = await _getCachedResults(normalizedQuery.replaceAll(RegExp(r'[^a-z0-9]'), '_'));
         if (cachedResults.isNotEmpty) {
+          print('📦 Using cached results after error');
           _addToMemoryCache(normalizedQuery.replaceAll(RegExp(r'[^a-z0-9]'), '_'), cachedResults);
           _isSearching = false;
           return _scoreAndSortResults(cachedResults, query);
         }
+        
         _isSearching = false;
         return [];
       }
@@ -330,35 +350,36 @@ class AISearchService {
   }
 
   List<Map<String, dynamic>> _scoreAndSortResults(List<Map<String, dynamic>> results, String query) {
-    final queryTerms = query.toLowerCase().split(' ');
+    final normalizedQuery = query.toLowerCase();
     
     return results.map((result) {
-      double score = 0.0;
-      final title = (result['title'] ?? '').toString().toLowerCase();
-      final description = (result['description'] ?? '').toString().toLowerCase();
-      final brand = (result['brand'] ?? '').toString().toLowerCase();
-      final category = (result['category'] ?? '').toString().toLowerCase();
+      final title = result['title']?.toString().toLowerCase() ?? '';
+      final description = result['description']?.toString().toLowerCase() ?? '';
+      final brand = result['brand']?.toString().toLowerCase() ?? '';
+      final category = result['category']?.toString().toLowerCase() ?? '';
       
-      for (final term in queryTerms) {
-        if (title.contains(term)) score += 3.0;
-        if (description.contains(term)) score += 1.0;
-        if (brand.contains(term)) score += 2.0;
-        if (category.contains(term)) score += 1.5;
+      // Calculate relevance score
+      double score = 0;
+      
+      // Exact matches get highest score
+      if (title.contains(normalizedQuery)) score += 10;
+      if (description.contains(normalizedQuery)) score += 5;
+      if (brand.contains(normalizedQuery)) score += 8;
+      if (category.contains(normalizedQuery)) score += 6;
+      
+      // Partial matches get lower scores
+      final queryWords = normalizedQuery.split(' ');
+      for (final word in queryWords) {
+        if (title.contains(word)) score += 3;
+        if (description.contains(word)) score += 1;
+        if (brand.contains(word)) score += 2;
+        if (category.contains(word)) score += 2;
       }
       
-      if (title.contains(query.toLowerCase())) score += 4.0;
-      
-      if (result['rating'] != null) {
-        score += (result['rating'] as num) * 0.5;
-      }
-
-      if (result['inStock'] == true) {
-        score += 1.0;
-      }
-
-      if (result['discount'] != null && result['discount'] > 0) {
-        score += (result['discount'] as num) * 0.2;
-      }
+      // Add popularity factor
+      final rating = (result['rating'] as num?)?.toDouble() ?? 0;
+      final reviewCount = (result['reviewCount'] as num?)?.toInt() ?? 0;
+      score += (rating * 0.5) + (reviewCount * 0.01);
       
       return {
         ...result,
@@ -368,20 +389,66 @@ class AISearchService {
       ..sort((a, b) => (b['_score'] as double).compareTo(a['_score'] as double));
   }
 
-  Future<List<Map<String, dynamic>>> _getCachedResults(String cacheKey) async {
+  void _addToMemoryCache(String query, List<Map<String, dynamic>> results) {
+    _cleanupMemoryCache();
+    _memoryCache[query] = results;
+    _memoryCacheTimestamps[query] = DateTime.now();
+  }
+
+  void _cleanupMemoryCache() {
+    final now = DateTime.now();
+    final expiredKeys = _memoryCacheTimestamps.entries
+        .where((entry) => now.difference(entry.value) > _memoryCacheDuration)
+        .map((entry) => entry.key)
+        .toList();
+
+    for (final key in expiredKeys) {
+      _memoryCache.remove(key);
+      _memoryCacheTimestamps.remove(key);
+    }
+
+    if (_memoryCache.length > _maxMemoryCacheSize) {
+      final entries = _memoryCacheTimestamps.entries.toList();
+      entries.sort((a, b) => a.value.compareTo(b.value));
+      final sortedKeys = entries.map((e) => e.key).toList();
+
+      final keysToRemove = sortedKeys.take(_memoryCache.length - _maxMemoryCacheSize);
+      for (final key in keysToRemove) {
+        _memoryCache.remove(key);
+        _memoryCacheTimestamps.remove(key);
+      }
+    }
+  }
+
+  Future<void> _cacheResults(String query, List<Map<String, dynamic>> results) async {
     try {
-      final docRef = _firestore.collection('search_cache').doc(cacheKey);
-      final doc = await docRef.get();
+      final prefs = await SharedPreferences.getInstance();
+      final cache = prefs.getString('search_cache') ?? '{}';
+      final Map<String, dynamic> cacheMap = jsonDecode(cache);
       
-      if (doc.exists) {
-        final data = doc.data()!;
-        final timestamp = (data['timestamp'] as Timestamp).toDate();
+      cacheMap[query] = {
+        'results': results,
+        'timestamp': DateTime.now().toIso8601String(),
+      };
+      
+      await prefs.setString('search_cache', jsonEncode(cacheMap));
+    } catch (e) {
+      print('Error caching results: $e');
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> _getCachedResults(String query) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final cache = prefs.getString('search_cache') ?? '{}';
+      final Map<String, dynamic> cacheMap = jsonDecode(cache);
+      
+      if (cacheMap.containsKey(query)) {
+        final data = cacheMap[query];
+        final timestamp = DateTime.parse(data['timestamp']);
         
-        if (DateTime.now().difference(timestamp).inHours < 24) {
-          final List<dynamic> products = data['results'] ?? [];
-          return products.map((product) => Map<String, dynamic>.from(product)).toList();
-        } else {
-          await docRef.delete();
+        if (DateTime.now().difference(timestamp) <= _memoryCacheDuration) {
+          return List<Map<String, dynamic>>.from(data['results']);
         }
       }
       return [];
@@ -391,42 +458,9 @@ class AISearchService {
     }
   }
 
-  Future<void> _cacheResults(String cacheKey, List<dynamic> results) async {
-    try {
-      final docRef = _firestore.collection('search_cache').doc(cacheKey);
-      await docRef.set({
-        'query': cacheKey,
-        'results': results,
-        'timestamp': FieldValue.serverTimestamp(),
-        'metadata': {
-          'resultCount': results.length,
-          'cachedAt': DateTime.now().toIso8601String(),
-        },
-      });
-    } catch (e) {
-      print('Error caching results: $e');
-    }
-  }
-
-  Future<void> clearCache() async {
-    try {
-      _memoryCache.clear();
-      _memoryCacheTimestamps.clear();
-      
-      final snapshot = await _firestore.collection('search_cache').get();
-      final batch = _firestore.batch();
-      for (var doc in snapshot.docs) {
-        batch.delete(doc.reference);
-      }
-      await batch.commit();
-    } catch (e) {
-      print('Error clearing cache: $e');
-    }
-  }
-
   void dispose() {
     _debounceTimer?.cancel();
     _memoryCache.clear();
     _memoryCacheTimestamps.clear();
   }
-} 
+}

@@ -50,7 +50,7 @@ class _CheckoutViewState extends State<CheckoutView> {
     final cartCubit = context.read<CartCubit>();
     final cartState = cartCubit.state;
 
-    if (cartState is! CartLoaded || cartState.items.isEmpty) {
+    if (cartState is! CartLoaded || cartState.cartItems.isEmpty) {
       return Scaffold(
         appBar: buildAppBar(
           context: context,
@@ -75,7 +75,7 @@ class _CheckoutViewState extends State<CheckoutView> {
       );
     }
 
-    final items = cartState.items;
+    final items = cartState.cartItems;
     final total = items.fold<double>(
       0,
       (sum, item) => sum + (item.product.price ?? 0) * item.quantity,

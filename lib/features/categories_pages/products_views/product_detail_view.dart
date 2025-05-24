@@ -176,10 +176,8 @@ class _ProductDetailViewState extends State<ProductDetailView>
                   onPressed: () {
                     Feedback.forTap(context);
                     context.read<CartCubit>().addToCart(
-                          CartItemModel(
-                            product: product,
-                            quantity: 1,
-                          ),
+                          product.id,
+                          product.color ?? 'default',
                         );
                   },
                   child: const Text(

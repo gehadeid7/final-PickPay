@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:pickpay/core/utils/app_images.dart';
 import 'package:pickpay/core/utils/app_text_styles.dart';
 import 'package:pickpay/core/services/ai_search_service.dart';
+import 'package:pickpay/features/categories_pages/models/product_model.dart';
 import 'package:pickpay/services/api_service.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:math';
 import 'package:flutter/gestures.dart';
+import 'dart:async';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
+import 'package:permission_handler/permission_handler.dart';
 
 class SearchTextField extends StatefulWidget {
   final TextEditingController controller;
@@ -50,11 +54,18 @@ class _SearchTextFieldState extends State<SearchTextField> with SingleTickerProv
   String? _selectedPopular;
   List<String> _filters = [];
   bool _showDropdown = false;
+  Timer? _debounce;
+  final Map<String, List<Map<String, dynamic>>> _searchCache = {};
+  bool _isProductLoading = false;
+  stt.SpeechToText? _speech;
+  bool _isListening = false;
+  String _voiceInput = '';
 
   @override
   void initState() {
     super.initState();
     _aiService = AISearchService(apiService: ApiService());
+    _speech = stt.SpeechToText();
     
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 300),
@@ -132,46 +143,135 @@ class _SearchTextFieldState extends State<SearchTextField> with SingleTickerProv
     });
   }
 
-  void _handleProductSelection(Map<String, dynamic> product) {
-    // Call the onProductSelected callback if provided
-    if (widget.onProductSelected != null) {
-      widget.onProductSelected!(product);
-    } else {
-      // Default navigation behavior
-      final productId = product['id']?.toString();
-      if (productId != null && productId.isNotEmpty) {
-        Navigator.pushNamed(
-          context,
-          '/product',
-          arguments: product,
+  void _handleProductSelection(Map<String, dynamic> product) async {
+    final productId = product['id']?.toString() ?? product['_id']?.toString();
+    print('🛒 Selected product ID: $productId');
+    if (productId != null && productId.isNotEmpty) {
+      setState(() => _isProductLoading = true);
+      final api = ApiService();
+      final fullProductJson = await api.getProductById(productId);
+      print('🛒 Fetched product details: $fullProductJson');
+      setState(() => _isProductLoading = false);
+      if (fullProductJson != null) {
+        try {
+          final fullProduct = ProductsViewsModel.fromJson(fullProductJson);
+          Navigator.pushNamed(
+            context,
+            '/product',
+            arguments: fullProduct,
+          );
+        } catch (e, st) {
+          print('❌ Error parsing product: $e\n$st');
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Failed to load product details.')),
+          );
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Product details not found.')),
         );
       }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Product data is incomplete.')),
+      );
     }
   }
 
-  Future<void> _searchProducts(String query) async {
+  Future<void> _searchProducts(String query, {bool fromSuggestion = false}) async {
     if (query.isEmpty) {
       setState(() {
         _searchResults = [];
         _suggestions = [];
+        _showDropdown = false;
       });
       return;
     }
-    await _addRecentSearch(query);
-    setState(() => _isLoading = true);
-    try {
-      // Get suggestions first
-      final suggestions = _aiService.getSuggestions(query);
-      setState(() => _suggestions = suggestions);
 
-      // Then get search results
-      final results = await _aiService.searchProducts(query);
-      setState(() => _searchResults = results);
-    } catch (e) {
-      print('Error searching products: $e');
-    } finally {
-      setState(() => _isLoading = false);
-    }
+    _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 300), () async {
+      await _addRecentSearch(query);
+      setState(() {
+        _isLoading = true;
+        _showDropdown = true;
+      });
+
+      if (_searchCache.containsKey(query)) {
+        final cachedResults = _searchCache[query]!;
+        // Filter and sort cached results
+        final filtered = _filterAndSortResults(cachedResults, query);
+        setState(() {
+          _searchResults = filtered;
+          _isLoading = false;
+          _showDropdown = true;
+        });
+        print('⚡️ Used cached results for "$query"');
+        return;
+      }
+
+      try {
+        print('🔍 Starting search for: $query');
+        final suggestions = await _aiService.fetchLiveSuggestions(query);
+        print('📝 Received ${suggestions.length} suggestions');
+        final results = await _aiService.searchProducts(query);
+        print('📦 Received ${results.length} search results');
+        if (mounted) {
+          print('🔄 Processing search results...');
+          final processedResults = results.map((result) {
+            final processed = {
+              'id': result['id'] ?? result['_id'] ?? '',
+              'title': result['title'] ?? result['name'] ?? '',
+              'price': result['price'] ?? 0.0,
+              'images': result['images'] ?? result['imagePaths'] ?? [],
+              'brand': result['brand'] ?? '',
+              'category': result['category'] ?? '',
+              'description': result['description'] ?? result['aboutThisItem'] ?? '',
+              'rating': result['rating'] ?? result['ratingsAverage'] ?? 0.0,
+              'reviewCount': result['reviewCount'] ?? result['ratingsQuantity'] ?? 0,
+            };
+            return processed;
+          }).toList();
+          _searchCache[query] = processedResults;
+          // Filter and sort results
+          final filtered = _filterAndSortResults(processedResults, query);
+          setState(() {
+            _suggestions = suggestions;
+            _searchResults = filtered;
+            _isLoading = false;
+            _showDropdown = true;
+          });
+          print('✅ State updated successfully');
+        }
+      } catch (e, stackTrace) {
+        print('❌ Error searching products: $e');
+        print('❌ Stack trace: $stackTrace');
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+            _showDropdown = true;
+          });
+        }
+      }
+    });
+  }
+
+  List<Map<String, dynamic>> _filterAndSortResults(List<Map<String, dynamic>> results, String query) {
+    final lowerQuery = query.toLowerCase();
+    final filtered = results.where((item) {
+      final title = (item['title'] ?? '').toString().toLowerCase();
+      return title.contains(lowerQuery);
+    }).toList();
+    filtered.sort((a, b) {
+      final aTitle = (a['title'] ?? '').toString().toLowerCase();
+      final bTitle = (b['title'] ?? '').toString().toLowerCase();
+      final aIdx = aTitle.indexOf(lowerQuery);
+      final bIdx = bTitle.indexOf(lowerQuery);
+      if (aIdx == bIdx) {
+        return aTitle.compareTo(bTitle);
+      }
+      return aIdx.compareTo(bIdx);
+    });
+    return filtered;
   }
 
   void _handleKey(RawKeyEvent event) {
@@ -247,25 +347,68 @@ class _SearchTextFieldState extends State<SearchTextField> with SingleTickerProv
     );
   }
 
-  Widget _buildVoiceIcon() {
-    return IconButton(
-      icon: const Icon(Icons.mic, color: Colors.blueAccent),
-      onPressed: () {
-        // Placeholder for voice search logic
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Voice search coming soon!')));
-      },
-      tooltip: 'Voice Search',
-    );
+  Future<void> _listenVoice() async {
+    // Check and request permission only if not already granted
+    var micStatus = await Permission.microphone.status;
+    if (!micStatus.isGranted) {
+      micStatus = await Permission.microphone.request();
+      if (!micStatus.isGranted) {
+        if (context.mounted) {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text('Microphone Permission Required'),
+              content: const Text('To use voice search, please allow microphone access.'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('OK'),
+                ),
+              ],
+            ),
+          );
+        }
+        return;
+      }
+    }
+
+    // Initialize SpeechToText only if not already available
+    if (!_isListening) {
+      bool available = await _speech!.initialize(
+        onStatus: (val) => print('🗣️ Voice status: $val'),
+        onError: (val) => print('❌ Voice error: $val'),
+      );
+      if (!available || _speech!.hasPermission != true) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Microphone permission not granted or speech recognition unavailable.')),
+          );
+        }
+        return;
+      }
+      setState(() => _isListening = true);
+      _speech!.listen(
+        onResult: (val) {
+          setState(() {
+            _voiceInput = val.recognizedWords;
+            widget.controller.text = _voiceInput;
+          });
+          if (val.hasConfidenceRating && val.confidence > 0) {
+            _searchProducts(_voiceInput);
+          }
+        },
+      );
+    } else {
+      setState(() => _isListening = false);
+      _speech!.stop();
+    }
   }
 
-  Widget _buildBarcodeIcon() {
+  Widget _buildVoiceIcon() {
     return IconButton(
-      icon: const Icon(Icons.qr_code_scanner, color: Colors.green),
-      onPressed: () {
-        // Placeholder for barcode scan logic
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Barcode scan coming soon!')));
-      },
-      tooltip: 'Scan Barcode',
+      icon: Icon(_isListening ? Icons.mic : Icons.mic_none, color: Colors.blueAccent),
+      onPressed: _listenVoice,
+      tooltip: 'Voice Search',
     );
   }
 
@@ -319,6 +462,14 @@ class _SearchTextFieldState extends State<SearchTextField> with SingleTickerProv
     final query = widget.controller.text;
     final showRecent = _isFocused && widget.controller.text.isEmpty && _recentSearches.isNotEmpty;
 
+    print('🎨 Building UI with:');
+    print('  - Query: $query');
+    print('  - Show dropdown: $_showDropdown');
+    print('  - Search results: ${_searchResults.length}');
+    print('  - Suggestions: ${_suggestions.length}');
+    print('  - Is focused: $_isFocused');
+    print('  - Is loading: $_isLoading');
+
     return RawKeyboardListener(
       focusNode: _keyboardFocusNode,
       onKey: _handleKey,
@@ -346,22 +497,30 @@ class _SearchTextFieldState extends State<SearchTextField> with SingleTickerProv
                     focusNode: _focusNode,
                     controller: widget.controller,
                     onChanged: (value) {
-                      Future.delayed(const Duration(milliseconds: 200), () {
-                        if (value == widget.controller.text) {
-                          _searchProducts(value);
-                          setState(() => _highlightedIndex = -1);
-                          setState(() => _showDropdown = true);
-                        }
+                      print('📝 Text changed: $value');
+                      _debounce?.cancel();
+                      _searchProducts(value);
+                      setState(() {
+                        _highlightedIndex = -1;
+                        _showDropdown = true;
                       });
                     },
                     onSubmitted: (value) {
+                      print('🔍 Search submitted: $value');
                       widget.onSearch(value);
                       _searchProducts(value);
+                    },
+                    onTap: () {
+                      print('👆 Text field tapped');
+                      setState(() {
+                        _isFocused = true;
+                        _showDropdown = true;
+                      });
                     },
                     textInputAction: TextInputAction.search,
                     keyboardType: TextInputType.text,
                     style: TextStyles.regular16.copyWith(
-                      color: Theme.of(context).textTheme.bodyLarge?.color,
+                      color: isDarkMode ? Colors.white : Colors.black,
                     ),
                     decoration: InputDecoration(
                       isCollapsed: true,
@@ -393,7 +552,6 @@ class _SearchTextFieldState extends State<SearchTextField> with SingleTickerProv
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           _buildVoiceIcon(),
-                          _buildBarcodeIcon(),
                           if (widget.controller.text.isNotEmpty)
                             IconButton(
                               key: const ValueKey('clear'),
@@ -402,6 +560,7 @@ class _SearchTextFieldState extends State<SearchTextField> with SingleTickerProv
                                 color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
                               ),
                               onPressed: () {
+                                print('🗑️ Clear button pressed');
                                 widget.controller.clear();
                                 setState(() {
                                   _searchResults = [];
@@ -456,30 +615,37 @@ class _SearchTextFieldState extends State<SearchTextField> with SingleTickerProv
               padding: const EdgeInsets.all(16.0),
               child: Text('No results found', style: TextStyles.regular16),
             ),
-          if (_showDropdown && (_suggestions.isNotEmpty || _searchResults.isNotEmpty || _recentSearches.isNotEmpty || _categories.isNotEmpty || _popularSearches.isNotEmpty))
-            SlideTransition(
-              position: _slideAnimation,
-              child: FadeTransition(
-                opacity: _opacityAnimation,
-                child: Container(
-                  margin: const EdgeInsets.only(top: 8),
-                  decoration: BoxDecoration(
-                    color: isDarkMode ? Colors.grey[800] : Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 8,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        if (_recentSearches.isNotEmpty)
-                          _buildSectionHeader('Recent Searches', icon: Icons.history),
+          if (_showDropdown && (_suggestions.isNotEmpty || _searchResults.isNotEmpty || showRecent))
+            SizedBox(
+              height: 400, // Limit dropdown height
+              child: Container(
+                margin: const EdgeInsets.only(top: 8),
+                decoration: BoxDecoration(
+                  color: isDarkMode ? Colors.grey[800] : Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 8,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (showRecent) ...[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            _buildSectionHeader('Recent Searches', icon: Icons.history),
+                            TextButton(
+                              onPressed: _clearRecentSearches,
+                              child: const Text('Clear All'),
+                            ),
+                          ],
+                        ),
                         ..._recentSearches.map((recent) => Dismissible(
                               key: ValueKey(recent),
                               direction: DismissDirection.endToStart,
@@ -497,93 +663,127 @@ class _SearchTextFieldState extends State<SearchTextField> with SingleTickerProv
                               child: ListTile(
                                 leading: const Icon(Icons.history),
                                 title: Text(recent, style: TextStyles.regular16),
+                                trailing: IconButton(
+                                  icon: const Icon(Icons.close, size: 18),
+                                  onPressed: () async {
+                                    setState(() => _recentSearches.remove(recent));
+                                    final prefs = await SharedPreferences.getInstance();
+                                    prefs.setStringList(_recentSearchesKey, _recentSearches);
+                                  },
+                                ),
                                 onTap: () {
                                   widget.controller.text = recent;
                                   _searchProducts(recent);
                                 },
                               ),
                             )),
-                        if (_popularSearches.isNotEmpty)
-                          _buildSectionHeader('Popular Searches', icon: Icons.trending_up),
-                        ..._popularSearches.map((pop) => ListTile(
-                              leading: const Icon(Icons.trending_up),
-                              title: _highlightText(pop, widget.controller.text),
-                              onTap: () {
-                                widget.controller.text = pop;
-                                _searchProducts(pop);
-                              },
-                            )),
-                        if (_categories.isNotEmpty)
-                          _buildSectionHeader('Categories', icon: Icons.category),
-                        ..._categories.map((cat) => ListTile(
-                              leading: const Icon(Icons.category),
-                              title: _highlightText(cat, widget.controller.text),
-                              onTap: () {
-                                setState(() => _selectedCategory = cat);
-                                widget.controller.text = cat;
-                                _searchProducts(cat);
-                              },
-                            )),
-                        if (_suggestions.isNotEmpty)
-                          _buildSectionHeader('Suggestions', icon: Icons.search),
-                        ..._suggestions.asMap().entries.map((entry) {
+                      ],
+                      if (_suggestions.isNotEmpty) ...[
+                        _buildSectionHeader('Suggestions', icon: Icons.search),
+                        ..._suggestions.take(3).toList().asMap().entries.map((entry) {
                           final idx = entry.key;
                           final suggestion = entry.value;
+                          if (suggestion.trim().isEmpty) return SizedBox.shrink();
                           return Material(
                             color: _highlightedIndex == idx ? primaryColor.withOpacity(0.1) : Colors.transparent,
                             child: ListTile(
                               leading: const Icon(Icons.search),
-                              title: _highlightText(suggestion, widget.controller.text),
+                              title: Text(suggestion, style: TextStyles.regular16),
+                              trailing: IconButton(
+                                icon: const Icon(Icons.close, size: 18),
+                                onPressed: () {
+                                  setState(() {
+                                    _suggestions.removeAt(idx);
+                                  });
+                                },
+                              ),
                               onTap: () {
-                                widget.controller.text = suggestion;
-                                widget.onSearch(suggestion);
-                                _searchProducts(suggestion);
+                                _debounce?.cancel();
+                                _searchProducts(suggestion, fromSuggestion: true);
                               },
                               selected: _highlightedIndex == idx,
                             ),
                           );
                         }),
-                        if (_searchResults.isNotEmpty)
-                          _buildSectionHeader('Results', icon: Icons.shopping_bag),
+                      ],
+                      if (_searchResults.isNotEmpty) ...[
+                        _buildSectionHeader('Results', icon: Icons.shopping_bag),
                         ..._searchResults.asMap().entries.map((entry) {
                           final idx = entry.key + _suggestions.length;
                           final result = entry.value;
+                          print('🎯 Building result item: ${result['title']}');
                           return Material(
                             color: _highlightedIndex == idx ? primaryColor.withOpacity(0.1) : Colors.transparent,
                             child: ListTile(
-                              leading: result['image'] != null && result['image'].toString().isNotEmpty
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                              leading: result['images'] != null && result['images'].isNotEmpty
                                   ? ClipRRect(
                                       borderRadius: BorderRadius.circular(8),
                                       child: Image.network(
-                                        result['image'],
-                                        width: 40,
-                                        height: 40,
+                                        result['images'][0],
+                                        width: 48,
+                                        height: 48,
                                         fit: BoxFit.cover,
                                         errorBuilder: (context, error, stackTrace) =>
-                                            const Icon(Icons.image_not_supported),
+                                            Container(
+                                              width: 48,
+                                              height: 48,
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey[200],
+                                                borderRadius: BorderRadius.circular(8),
+                                              ),
+                                              child: const Icon(Icons.image_not_supported, color: Colors.grey),
+                                            ),
                                       ),
                                     )
-                                  : const Icon(Icons.image_not_supported),
+                                  : Container(
+                                      width: 48,
+                                      height: 48,
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey[200],
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: const Icon(Icons.image_not_supported, color: Colors.grey),
+                                    ),
                               title: _highlightText(result['title'] ?? 'No title', widget.controller.text),
                               subtitle: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  if ((result['brand'] ?? '').toString().isNotEmpty)
-                                    Text(result['brand'], style: TextStyles.regular16.copyWith(color: Colors.grey)),
-                                  if ((result['category'] ?? '').toString().isNotEmpty)
-                                    Text(result['category'], style: TextStyles.regular16.copyWith(color: Colors.blueGrey)),
+                                  const SizedBox(height: 4),
                                   if ((result['price'] ?? 0) > 0)
                                     Text(
-                                      '\$${result['price'].toStringAsFixed(2)}',
-                                      style: TextStyles.bold16.copyWith(color: primaryColor),
+                                      '₹${result['price'].toStringAsFixed(2)}',
+                                      style: TextStyles.bold16.copyWith(
+                                        color: primaryColor,
+                                      ),
                                     ),
-                                  if ((result['description'] ?? '').toString().isNotEmpty)
+                                  if ((result['brand'] ?? '').toString().isNotEmpty) ...[
+                                    const SizedBox(height: 2),
                                     Text(
-                                      result['description'],
-                                      style: TextStyles.regular16,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
+                                      'Brand: ${result['brand']}',
+                                      style: TextStyles.regular16.copyWith(color: Colors.grey[600]),
                                     ),
+                                  ],
+                                  if ((result['category'] ?? '').toString().isNotEmpty) ...[
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      'Category: ${result['category']}',
+                                      style: TextStyles.regular16.copyWith(color: Colors.grey[600]),
+                                    ),
+                                  ],
+                                  if ((result['rating'] ?? 0) > 0) ...[
+                                    const SizedBox(height: 2),
+                                    Row(
+                                      children: [
+                                        Icon(Icons.star, size: 16, color: Colors.amber),
+                                        const SizedBox(width: 4),
+                                        Text(
+                                          '${result['rating']} (${result['reviewCount']} reviews)',
+                                          style: TextStyles.regular16.copyWith(color: Colors.grey[600]),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ],
                               ),
                               onTap: () => _handleProductSelection(result),
@@ -592,11 +792,13 @@ class _SearchTextFieldState extends State<SearchTextField> with SingleTickerProv
                           );
                         }),
                       ],
-                    ),
+                    ],
                   ),
                 ),
               ),
             ),
+          if (_isProductLoading)
+            const Center(child: CircularProgressIndicator()),
         ],
       ),
     );

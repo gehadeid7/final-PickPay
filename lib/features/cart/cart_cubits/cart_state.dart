@@ -11,29 +11,40 @@ class CartInitial extends CartState {
   const CartInitial();
 }
 
-class CartLoaded extends CartState {
-  final List<CartItemModel> items;
+class CartLoading extends CartState {
+  const CartLoading();
+}
+
+class CartError extends CartState {
+  final String message;
   final CartAction? action;
-  final CartItemModel? addedItem;
-  final CartItemModel? removedItem;
+
+  const CartError(this.message, {this.action});
+
+  @override
+  List<Object?> get props => [message, action];
+}
+
+class CartLoaded extends CartState {
+  final List<CartItemModel> cartItems;
+  final CartAction? action;
   final CartItemModel? updatedItem;
+  final String? message;
 
   const CartLoaded(
-    this.items, {
+    this.cartItems, {
     this.action,
-    this.addedItem,
-    this.removedItem,
     this.updatedItem,
+    this.message,
   });
 
   @override
   List<Object?> get props => [
-        items,
+        cartItems,
         action,
-        addedItem,
-        removedItem,
         updatedItem,
+        message,
       ];
 }
 
-enum CartAction { added, removed, updated }
+enum CartAction { added, removed, updated, error }
