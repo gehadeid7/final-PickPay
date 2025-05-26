@@ -27,28 +27,13 @@ class ApiService {
       ...?headers,
     };
 
-    if (authorized) { 
-      final user = FirebaseAuth.instance.currentUser;
-      String token = '';
-
-      if (user != null) {
-        token = await user.getIdToken(true) ?? '';
-        if (token.isNotEmpty) {
-          await Prefs.setString('jwt_token', token);
-          log('🔐 Token refreshed and saved automatically');
-        }
-      }
-
-      if (token.isEmpty) {
-        token = Prefs.getString('jwt_token');
-        log('🔐 Using cached token from prefs');
-      }
-
+    if (authorized) {
+      String token = await _getFirebaseToken();
       if (token.isNotEmpty) {
         requestHeaders['Authorization'] = 'Bearer $token';
         log('🔐 Sending token in header: Bearer $token');
       } else {
-        log('⚠️ No token found to send!');
+        log('⚠️ No Firebase token found to send!');
       }
     }
 
@@ -62,31 +47,41 @@ class ApiService {
     final Map<String, String> requestHeaders = {};
 
     if (authorized) {
-      final user = FirebaseAuth.instance.currentUser;
-      String token = '';
+      String token = await _getFirebaseToken();
+      if (token.isNotEmpty) {
+        requestHeaders['Authorization'] = 'Bearer $token';
+        log('🔐 Sending token in header: Bearer $token');
+      } else {
+        log('⚠️ No Firebase token found to send!');
+      }
+    }
 
-      if (user != null) {
+    return requestHeaders;
+  }
+
+  // 🔄 Helper to fetch fresh Firebase token or fallback to cache
+  Future<String> _getFirebaseToken() async {
+    String token = '';
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      try {
         token = await user.getIdToken(true) ?? '';
         if (token.isNotEmpty) {
           await Prefs.setString('jwt_token', token);
           log('🔐 Token refreshed and saved automatically');
         }
-      }
-
-      if (token.isEmpty) {
-        token = Prefs.getString('jwt_token');
-        log('🔐 Using cached token from prefs');
-      }
-
-      if (token.isNotEmpty) {
-        requestHeaders['Authorization'] = 'Bearer $token';
-        log('🔐 Sending token in header: Bearer $token');
-      } else {
-        log('⚠️ No token found to send!');
+      } catch (e) {
+        log('❌ Failed to refresh Firebase token: $e');
       }
     }
 
-    return requestHeaders;
+    if (token.isEmpty) {
+      token = Prefs.getString('jwt_token');
+      log('🔐 Using cached token from prefs');
+    }
+
+    return token;
   }
 
   // 🌐 GET request
