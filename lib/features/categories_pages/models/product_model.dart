@@ -20,6 +20,9 @@ class ProductsViewsModel {
   final bool? inStock;
   final String? shipsFrom;
   final String? soldBy;
+  final bool? isPickPayFulfilled;
+  final bool? hasFreeShipping;
+  final bool? hasFreeDelivery;
 
   // appliances specifications
   final String? material;
@@ -208,6 +211,9 @@ class ProductsViewsModel {
     this.inStock,
     this.shipsFrom,
     this.soldBy,
+    this.isPickPayFulfilled,
+    this.hasFreeShipping,
+    this.hasFreeDelivery,
     this.material,
     this.dimensions,
     this.style,

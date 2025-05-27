@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class PriceRangeFilterWidget extends StatelessWidget {
+class PriceRangeFilterWidget extends StatefulWidget {
   final RangeValues values;
   final double maxPrice;
   final ValueChanged<RangeValues> onChanged;
@@ -13,12 +13,33 @@ class PriceRangeFilterWidget extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<PriceRangeFilterWidget> createState() => _PriceRangeFilterWidgetState();
+}
+
+class _PriceRangeFilterWidgetState extends State<PriceRangeFilterWidget> {
+  late RangeValues _currentValues;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentValues = widget.values;
+  }
+
+  @override
+  void didUpdateWidget(PriceRangeFilterWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.values != widget.values) {
+      _currentValues = widget.values;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
-    final double safeStart = values.start.clamp(0.0, maxPrice);
-    final double safeEnd = values.end.clamp(0.0, maxPrice);
-    final RangeValues safeValues = RangeValues(safeStart, safeEnd);
+    final double safeStart = _currentValues.start.clamp(0.0, widget.maxPrice);
+    final double safeEnd = _currentValues.end.clamp(safeStart, widget.maxPrice);
+    final int divisions = (widget.maxPrice / 100).round().clamp(1, 100);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,32 +78,44 @@ class PriceRangeFilterWidget extends StatelessWidget {
             children: [
               SliderTheme(
                 data: SliderTheme.of(context).copyWith(
-                  rangeThumbShape: RoundRangeSliderThumbShape(
-                    enabledThumbRadius: 6,
-                    elevation: 2,
-                    pressedElevation: 4,
+                  rangeThumbShape: const RoundRangeSliderThumbShape(
+                    enabledThumbRadius: 8,
+                    elevation: 4,
+                    pressedElevation: 6,
                   ),
-                  overlayShape: RoundSliderOverlayShape(overlayRadius: 16),
+                  overlayShape:
+                      const RoundSliderOverlayShape(overlayRadius: 20),
                   trackHeight: 4,
                   activeTrackColor: theme.colorScheme.primary,
                   inactiveTrackColor:
                       theme.colorScheme.primary.withOpacity(0.12),
-                  thumbColor: Colors.white,
+                  thumbColor: theme.colorScheme.primary,
                   overlayColor: theme.colorScheme.primary.withOpacity(0.12),
+                  activeTickMarkColor: Colors.transparent,
+                  inactiveTickMarkColor: Colors.transparent,
                 ),
                 child: RangeSlider(
-                  values: safeValues,
+                  values: RangeValues(safeStart, safeEnd),
                   min: 0,
-                  max: maxPrice > 0 ? maxPrice : 1,
-                  divisions: maxPrice > 0 ? 100 : 1,
-                  onChanged: onChanged,
+                  max: widget.maxPrice,
+                  divisions: divisions,
+                  labels: RangeLabels(
+                    'EGP ${safeStart.round()}',
+                    'EGP ${safeEnd.round()}',
+                  ),
+                  onChanged: (RangeValues values) {
+                    setState(() {
+                      _currentValues = values;
+                    });
+                    widget.onChanged(values);
+                  },
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _buildPriceBox(context, safeValues.start),
+                  _buildPriceBox(context, safeStart),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: Text(
@@ -94,7 +127,7 @@ class PriceRangeFilterWidget extends StatelessWidget {
                       ),
                     ),
                   ),
-                  _buildPriceBox(context, safeValues.end),
+                  _buildPriceBox(context, safeEnd),
                 ],
               ),
             ],

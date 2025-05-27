@@ -4,6 +4,8 @@ enum SortOption {
   none,
   priceAsc,
   priceDesc,
+  ratingDesc,
+  ratingAsc,
 }
 
 class SortFilterWidget extends StatelessWidget {
@@ -75,6 +77,20 @@ class SortFilterWidget extends StatelessWidget {
                 'Price: High-Low',
                 SortOption.priceDesc,
                 Icons.arrow_downward_rounded,
+              ),
+              _buildDivider(isDarkMode),
+              _buildSortOption(
+                context,
+                'Rating: High-Low',
+                SortOption.ratingDesc,
+                Icons.star_rounded,
+              ),
+              _buildDivider(isDarkMode),
+              _buildSortOption(
+                context,
+                'Rating: Low-High',
+                SortOption.ratingAsc,
+                Icons.star_outline_rounded,
               ),
             ],
           ),

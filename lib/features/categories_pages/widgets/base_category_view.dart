@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:pickpay/features/categories_pages/models/product_model.dart';
 import 'package:pickpay/features/categories_pages/widgets/brand_filter_widget.dart';
+import 'package:pickpay/features/categories_pages/widgets/deals_filter_widget.dart';
+import 'package:pickpay/features/categories_pages/widgets/free_delivery_filter_widget.dart';
+import 'package:pickpay/features/categories_pages/widgets/fulfillment_filter_widget.dart';
 import 'package:pickpay/features/categories_pages/widgets/price_range_filter.dart';
 import 'package:pickpay/features/categories_pages/widgets/product_card.dart';
 import 'package:pickpay/features/categories_pages/widgets/rating_filter.dart';
+import 'package:pickpay/features/categories_pages/widgets/seller_filter_widget.dart';
 import 'package:pickpay/features/categories_pages/widgets/sort_filter_widget.dart';
 
 class BaseCategoryView extends StatefulWidget {
@@ -25,6 +29,10 @@ class BaseCategoryView extends StatefulWidget {
 class _BaseCategoryViewState extends State<BaseCategoryView>
     with SingleTickerProviderStateMixin {
   String? _selectedBrand;
+  String? _selectedSeller;
+  String? _selectedFulfillment;
+  String? _selectedDealType;
+  String? _selectedDeliveryType;
   double _minRating = 0;
   late RangeValues _priceRange;
   bool _isFilterExpanded = false;
@@ -73,11 +81,36 @@ class _BaseCategoryViewState extends State<BaseCategoryView>
           _selectedBrand!.isEmpty ||
           _selectedBrand == 'All Brands' ||
           product.brand == _selectedBrand;
+      final sellerMatch = _selectedSeller == null ||
+          _selectedSeller!.isEmpty ||
+          _selectedSeller == 'All Sellers' ||
+          product.soldBy == _selectedSeller;
+      final fulfillmentMatch = _selectedFulfillment == null ||
+          _selectedFulfillment == 'All' ||
+          (_selectedFulfillment == 'PickPay Fulfilled' &&
+              product.isPickPayFulfilled == true) ||
+          (_selectedFulfillment == 'Seller Fulfilled' &&
+              product.isPickPayFulfilled == false);
+      final dealMatch = _selectedDealType == null ||
+          _selectedDealType == 'All' ||
+          (_selectedDealType == 'Fresh Sale' &&
+              product.originalPrice != null &&
+              product.originalPrice! > product.price);
+      final deliveryMatch = _selectedDeliveryType == null ||
+          _selectedDeliveryType == 'All' ||
+          (_selectedDeliveryType == 'Free Delivery' &&
+              product.hasFreeDelivery == true);
       final ratingMatch =
           product.rating != null && product.rating! >= _minRating;
       final priceMatch = product.price >= _priceRange.start &&
           product.price <= _priceRange.end;
-      return brandMatch && ratingMatch && priceMatch;
+      return brandMatch &&
+          sellerMatch &&
+          fulfillmentMatch &&
+          dealMatch &&
+          deliveryMatch &&
+          ratingMatch &&
+          priceMatch;
     }).toList();
 
     switch (_sortOption) {
@@ -86,6 +119,30 @@ class _BaseCategoryViewState extends State<BaseCategoryView>
         break;
       case SortOption.priceDesc:
         filtered.sort((a, b) => b.price.compareTo(a.price));
+        break;
+      case SortOption.ratingDesc:
+        filtered.sort((a, b) {
+          final aRating = a.rating ?? 0.0;
+          final bRating = b.rating ?? 0.0;
+          final ratingCompare = bRating.compareTo(aRating);
+          if (ratingCompare != 0) return ratingCompare;
+          // If ratings are equal, sort by number of reviews as secondary criteria
+          final aReviews = a.reviewCount ?? 0;
+          final bReviews = b.reviewCount ?? 0;
+          return bReviews.compareTo(aReviews);
+        });
+        break;
+      case SortOption.ratingAsc:
+        filtered.sort((a, b) {
+          final aRating = a.rating ?? 0.0;
+          final bRating = b.rating ?? 0.0;
+          final ratingCompare = aRating.compareTo(bRating);
+          if (ratingCompare != 0) return ratingCompare;
+          // If ratings are equal, sort by number of reviews as secondary criteria
+          final aReviews = a.reviewCount ?? 0;
+          final bReviews = b.reviewCount ?? 0;
+          return aReviews.compareTo(bReviews);
+        });
         break;
       case SortOption.none:
         break;
@@ -117,6 +174,10 @@ class _BaseCategoryViewState extends State<BaseCategoryView>
         .reduce((a, b) => a > b ? a : b);
 
     return _selectedBrand != null ||
+        _selectedSeller != null ||
+        _selectedFulfillment != null ||
+        _selectedDealType != null ||
+        _selectedDeliveryType != null ||
         _minRating > 0 ||
         _priceRange.start > 0 ||
         _priceRange.end < maxPrice ||
@@ -126,6 +187,10 @@ class _BaseCategoryViewState extends State<BaseCategoryView>
   void _resetAllFilters() {
     setState(() {
       _selectedBrand = null;
+      _selectedSeller = null;
+      _selectedFulfillment = null;
+      _selectedDealType = null;
+      _selectedDeliveryType = null;
       _minRating = 0;
       _initPriceRange();
       _sortOption = SortOption.none;
@@ -395,11 +460,40 @@ class _BaseCategoryViewState extends State<BaseCategoryView>
                                     'Brand: $_selectedBrand',
                                     () => setState(() => _selectedBrand = null),
                                   ),
+                                if (_selectedSeller != null)
+                                  _buildActiveFilter(
+                                    'Seller: $_selectedSeller',
+                                    () =>
+                                        setState(() => _selectedSeller = null),
+                                  ),
+                                if (_selectedFulfillment != null)
+                                  _buildActiveFilter(
+                                    'Fulfillment: $_selectedFulfillment',
+                                    () => setState(
+                                        () => _selectedFulfillment = null),
+                                  ),
+                                if (_selectedDealType != null)
+                                  _buildActiveFilter(
+                                    'Deals: $_selectedDealType',
+                                    () => setState(
+                                        () => _selectedDealType = null),
+                                  ),
+                                if (_selectedDeliveryType != null)
+                                  _buildActiveFilter(
+                                    'Delivery: $_selectedDeliveryType',
+                                    () => setState(
+                                        () => _selectedDeliveryType = null),
+                                  ),
                                 if (_sortOption != SortOption.none)
                                   _buildActiveFilter(
                                     _sortOption == SortOption.priceAsc
                                         ? 'Price: Low-High'
-                                        : 'Price: High-Low',
+                                        : _sortOption == SortOption.priceDesc
+                                            ? 'Price: High-Low'
+                                            : _sortOption ==
+                                                    SortOption.ratingDesc
+                                                ? 'Rating: High-Low'
+                                                : 'Rating: Low-High',
                                     () => setState(
                                         () => _sortOption = SortOption.none),
                                   ),
@@ -465,32 +559,21 @@ class _BaseCategoryViewState extends State<BaseCategoryView>
                                   ),
                                 ),
                                 _buildFilterButton(
-                                  'Sort',
-                                  Icons.sort_rounded,
-                                  isActive: _sortOption != SortOption.none,
-                                  onTap: () => _showFilterBottomSheet(
-                                    context,
-                                    'Sort By',
-                                    SortFilterWidget(
-                                      selectedOption: _sortOption,
-                                      onChanged: (option) {
-                                        setState(() => _sortOption = option);
-                                        Navigator.pop(context);
-                                      },
-                                    ),
-                                  ),
-                                ),
-                                _buildFilterButton(
                                   'Price',
                                   Icons.payments_rounded,
                                   isActive: _priceRange.start > 0 ||
-                                      _priceRange.end < maxPrice,
+                                      _priceRange.end <
+                                          widget.products
+                                              .map((product) => product.price)
+                                              .reduce((a, b) => a > b ? a : b),
                                   onTap: () => _showFilterBottomSheet(
                                     context,
                                     'Price Range',
                                     PriceRangeFilterWidget(
                                       values: _priceRange,
-                                      maxPrice: maxPrice,
+                                      maxPrice: widget.products
+                                          .map((product) => product.price)
+                                          .reduce((a, b) => a > b ? a : b),
                                       onChanged: (range) {
                                         setState(() => _priceRange = range);
                                       },
@@ -508,6 +591,92 @@ class _BaseCategoryViewState extends State<BaseCategoryView>
                                       value: _minRating,
                                       onChanged: (rating) =>
                                           setState(() => _minRating = rating),
+                                    ),
+                                  ),
+                                ),
+                                _buildFilterButton(
+                                  'Sort',
+                                  Icons.sort_rounded,
+                                  isActive: _sortOption != SortOption.none,
+                                  onTap: () => _showFilterBottomSheet(
+                                    context,
+                                    'Sort By',
+                                    SortFilterWidget(
+                                      selectedOption: _sortOption,
+                                      onChanged: (option) {
+                                        setState(() => _sortOption = option);
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                  ),
+                                ),
+                                _buildFilterButton(
+                                  'Seller',
+                                  Icons.store_rounded,
+                                  isActive: _selectedSeller != null,
+                                  onTap: () => _showFilterBottomSheet(
+                                    context,
+                                    'Select Seller',
+                                    SellerFilterWidget(
+                                      products: widget.products,
+                                      selectedSeller: _selectedSeller,
+                                      onSellerChanged: (seller) {
+                                        setState(
+                                            () => _selectedSeller = seller);
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                  ),
+                                ),
+                                _buildFilterButton(
+                                  'Deals',
+                                  Icons.local_offer_rounded,
+                                  isActive: _selectedDealType != null,
+                                  onTap: () => _showFilterBottomSheet(
+                                    context,
+                                    'Select Deal Type',
+                                    DealsFilterWidget(
+                                      selectedDealType: _selectedDealType,
+                                      onDealTypeChanged: (dealType) {
+                                        setState(
+                                            () => _selectedDealType = dealType);
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                  ),
+                                ),
+                                _buildFilterButton(
+                                  'Fulfillment',
+                                  Icons.inventory_2_rounded,
+                                  isActive: _selectedFulfillment != null,
+                                  onTap: () => _showFilterBottomSheet(
+                                    context,
+                                    'Select Fulfillment',
+                                    FulfillmentFilterWidget(
+                                      selectedFulfillment: _selectedFulfillment,
+                                      onFulfillmentChanged: (fulfillment) {
+                                        setState(() =>
+                                            _selectedFulfillment = fulfillment);
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                  ),
+                                ),
+                                _buildFilterButton(
+                                  'Delivery',
+                                  Icons.local_shipping_rounded,
+                                  isActive: _selectedDeliveryType != null,
+                                  onTap: () => _showFilterBottomSheet(
+                                    context,
+                                    'Select Delivery Type',
+                                    FreeDeliveryFilterWidget(
+                                      selectedDeliveryType:
+                                          _selectedDeliveryType,
+                                      onDeliveryTypeChanged: (deliveryType) {
+                                        setState(() => _selectedDeliveryType =
+                                            deliveryType);
+                                        Navigator.pop(context);
+                                      },
                                     ),
                                   ),
                                 ),
@@ -652,59 +821,74 @@ class _BaseCategoryViewState extends State<BaseCategoryView>
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
-      builder: (context) => Container(
-        margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-        decoration: BoxDecoration(
-          color: isDarkMode ? Color(0xFF1E1E1E) : Colors.white,
-          borderRadius: BorderRadius.circular(24),
-          border: Border.all(
-            color: isDarkMode
-                ? Colors.white.withOpacity(0.05)
-                : Colors.grey.shade100,
-            width: 1,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(isDarkMode ? 0.5 : 0.1),
-              blurRadius: 24,
-              offset: const Offset(0, 8),
-            ),
-          ],
+      useSafeArea: true,
+      builder: (context) => Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              margin: const EdgeInsets.only(top: 12),
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: isDarkMode
-                    ? Colors.white.withOpacity(0.2)
-                    : Colors.grey.shade300,
-                borderRadius: BorderRadius.circular(2),
-              ),
+        child: Container(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * 0.85,
+          ),
+          margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+          decoration: BoxDecoration(
+            color: isDarkMode ? Color(0xFF1E1E1E) : Colors.white,
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(
+              color: isDarkMode
+                  ? Colors.white.withOpacity(0.05)
+                  : Colors.grey.shade100,
+              width: 1,
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(24, 24, 24, 20),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    title,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      color:
-                          isDarkMode ? Colors.white : const Color(0xFF2C3E50),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(isDarkMode ? 0.5 : 0.1),
+                blurRadius: 24,
+                offset: const Offset(0, 8),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                margin: const EdgeInsets.only(top: 12),
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: isDarkMode
+                      ? Colors.white.withOpacity(0.2)
+                      : Colors.grey.shade300,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              Flexible(
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(24, 24, 24, 20),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          title,
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                            color: isDarkMode
+                                ? Colors.white
+                                : const Color(0xFF2C3E50),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        content,
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 20),
-                  content,
-                ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
