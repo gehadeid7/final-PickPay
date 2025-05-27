@@ -13,7 +13,6 @@ import 'package:pickpay/features/categories_pages/models/product_model.dart';
 import 'package:pickpay/features/categories_pages/widgets/product_card.dart';
 import 'package:http_parser/http_parser.dart';
 
-
 class ApiService {
   static const String baseUrl = 'http://192.168.1.4:3000/api/v1/';
 
@@ -88,7 +87,7 @@ class ApiService {
   Future<http.Response> get({
     required String endpoint,
     Map<String, String>? headers,
-    Map<String, String>? queryParameters, 
+    Map<String, String>? queryParameters,
     bool authorized = false,
     int maxRetries = 2,
   }) async {
@@ -271,75 +270,56 @@ class ApiService {
     }
   }
 
-<<<<<<< HEAD
-  //  Sync Firebase user to backend
+  // 🔄 Sync Firebase user to backend
   Future<UserModel> syncFirebaseUserToBackend({
     required String name,
     required String email,
     required String firebaseUid,
     String? photoUrl,
+    String? gender,
+    String? dob,
+    int? age,
+    String? address,
+    String? phone,
   }) async {
     try {
-      String token = Prefs.getString('jwt_token');
-      if (token.isEmpty) {
-        token = await FirebaseAuth.instance.currentUser?.getIdToken() ?? '';
-        if (token.isNotEmpty) {
-          await Prefs.setString('jwt_token', token);
-        }
+      final headers = await _buildHeaders(authorized: true);
+
+      final body = {
+        'name': name,
+        'email': email,
+        'uid': firebaseUid,
+        'profileImg': photoUrl,
+        'gender': gender,
+        'dob': dob,
+        'age': age,
+        'address': address,
+        'phone': phone,
+      };
+
+      // ازالة القيم null حتى لا ترسل في البودي
+      body.removeWhere((key, value) => value == null);
+
+      final response = await http.post(
+        Uri.parse('${baseUrl}auth/firebase/sync'),
+        headers: headers,
+        body: jsonEncode(body),
+      );
+
+      log('🔄 syncFirebaseUserToBackend response status: ${response.statusCode}');
+      log('🔄 syncFirebaseUserToBackend response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body)['data'];
+        return UserModel.fromJson(data);
+      } else {
+        throw Exception('Failed to sync Firebase user: ${response.body}');
       }
-=======
-  // 🔄 Sync Firebase user to backend
-Future<UserModel> syncFirebaseUserToBackend({
-  required String name,
-  required String email,
-  required String firebaseUid,
-  String? photoUrl,
-  String? gender,
-  String? dob,
-  int? age,
-  String? address,
-  String? phone,
-}) async {
-  try {
-    final headers = await _buildHeaders(authorized: true);
->>>>>>> 2d2b266b7ac4124caf47d5cdf4724928631616ac
-
-    final body = {
-      'name': name,
-      'email': email,
-      'uid': firebaseUid,
-      'profileImg': photoUrl,
-      'gender': gender,
-      'dob': dob,
-      'age': age,
-      'address': address,
-      'phone': phone,
-    };
-
-    // ازالة القيم null حتى لا ترسل في البودي
-    body.removeWhere((key, value) => value == null);
-
-    final response = await http.post(
-      Uri.parse('${baseUrl}auth/firebase/sync'),
-      headers: headers,
-      body: jsonEncode(body),
-    );
-
-    log('🔄 syncFirebaseUserToBackend response status: ${response.statusCode}');
-    log('🔄 syncFirebaseUserToBackend response body: ${response.body}');
-
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body)['data'];
-      return UserModel.fromJson(data);
-    } else {
-      throw Exception('Failed to sync Firebase user: ${response.body}');
+    } catch (e) {
+      log('❌ Error syncing Firebase user: $e');
+      throw Exception('Error syncing Firebase user: ${e.toString()}');
     }
-  } catch (e) {
-    log('❌ Error syncing Firebase user: $e');
-    throw Exception('Error syncing Firebase user: ${e.toString()}');
   }
-}
-
 
   // Forgot password
   Future<http.Response> forgotPassword(String email) async {
@@ -655,58 +635,60 @@ Future<UserModel> syncFirebaseUserToBackend({
       print('\n=== 💾 PROFILE IMAGE UPDATE END ===\n');
     }
   }
+
   // 🔍 AI Product Search
-Future<List<dynamic>> searchProductsAI(String query) async {
-  try {
-    final response = await post(
-      endpoint: BackendEndpoints.aiProductSearch,
-      body: {'query': query},
-      authorized: false,
-    );
+  Future<List<dynamic>> searchProductsAI(String query) async {
+    try {
+      final response = await post(
+        endpoint: BackendEndpoints.aiProductSearch,
+        body: {'query': query},
+        authorized: false,
+      );
 
-    if (response.statusCode == 200) {
-      final result = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        final result = jsonDecode(response.body);
 
-      if (result is Map<String, dynamic> && result.containsKey('products')) {
-        return result['products']; // ✅ Return the actual list
-      } else {
-        throw Exception('Unexpected AI response format');
-      }
-    } else {
-      throw Exception('AI Search failed: ${response.body}');
-    }
-  } catch (e) {
-    throw Exception('Error during AI product search: ${e.toString()}');
-  }
-}
-  Future<List<Map<String, dynamic>>> searchProducts(String query) async {
-  try {
-    final response = await get(
-      endpoint: BackendEndpoints.aiProductSearch, // 'products/search'
-      queryParameters: {'query': query}, // <-- changed 'q' to 'query'
-      authorized: false,
-    );
-
-    if (response.statusCode == 200) {
-      final result = jsonDecode(response.body);
-
-      // Adjust this depending on your backend's response structure
-      if (result is Map<String, dynamic> && result.containsKey('data')) {
-        final data = result['data'];
-        if (data is List) {
-          return List<Map<String, dynamic>>.from(data);
+        if (result is Map<String, dynamic> && result.containsKey('products')) {
+          return result['products']; // ✅ Return the actual list
+        } else {
+          throw Exception('Unexpected AI response format');
         }
-      } else if (result is List) {
-        return List<Map<String, dynamic>>.from(result);
+      } else {
+        throw Exception('AI Search failed: ${response.body}');
       }
-      throw Exception('Unexpected search response format');
-    } else {
-      throw Exception('Search failed: [${response.body}]');
+    } catch (e) {
+      throw Exception('Error during AI product search: ${e.toString()}');
     }
-  } catch (e) {
-    throw Exception('Error during product search: ${e.toString()}');
   }
-}
+
+  Future<List<Map<String, dynamic>>> searchProducts(String query) async {
+    try {
+      final response = await get(
+        endpoint: BackendEndpoints.aiProductSearch, // 'products/search'
+        queryParameters: {'query': query}, // <-- changed 'q' to 'query'
+        authorized: false,
+      );
+
+      if (response.statusCode == 200) {
+        final result = jsonDecode(response.body);
+
+        // Adjust this depending on your backend's response structure
+        if (result is Map<String, dynamic> && result.containsKey('data')) {
+          final data = result['data'];
+          if (data is List) {
+            return List<Map<String, dynamic>>.from(data);
+          }
+        } else if (result is List) {
+          return List<Map<String, dynamic>>.from(result);
+        }
+        throw Exception('Unexpected search response format');
+      } else {
+        throw Exception('Search failed: [${response.body}]');
+      }
+    } catch (e) {
+      throw Exception('Error during product search: ${e.toString()}');
+    }
+  }
 
 // Fetch products by category
   Future<List<ProductsViewsModel>> fetchProducts(String category) async {
@@ -753,6 +735,7 @@ Future<List<dynamic>> searchProductsAI(String query) async {
       throw Exception('Failed to load products: ${response.body}');
     }
   }
+
   // إضافة منتج إلى قائمة الرغبات
   Future<http.Response> addProductToWishlist(String productId) async {
     final uri = Uri.parse('$baseUrl${BackendEndpoints.wishlist}');
@@ -765,7 +748,8 @@ Future<List<dynamic>> searchProductsAI(String query) async {
 
   // حذف منتج من قائمة الرغبات
   Future<http.Response> removeProductFromWishlist(String productId) async {
-    final uri = Uri.parse('$baseUrl${BackendEndpoints.removeFromWishlist(productId)}');
+    final uri =
+        Uri.parse('$baseUrl${BackendEndpoints.removeFromWishlist(productId)}');
     final headers = await _buildHeaders(authorized: true);
 
     final response = await http.delete(uri, headers: headers);
@@ -782,7 +766,7 @@ Future<List<dynamic>> searchProductsAI(String query) async {
 
       if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body);
-        
+
         // Handle different response formats
         if (responseData is Map<String, dynamic>) {
           if (responseData.containsKey('data')) {
@@ -804,7 +788,7 @@ Future<List<dynamic>> searchProductsAI(String query) async {
         } else if (responseData is List) {
           return responseData;
         }
-        
+
         return [];
       } else if (response.statusCode == 404) {
         // Return empty list for no wishlist
@@ -827,12 +811,14 @@ Future<List<dynamic>> searchProductsAI(String query) async {
         authorized: true,
       );
 
-      log('🛒 Cart response status: ${response.statusCode}', name: 'ApiService');
+      log('🛒 Cart response status: ${response.statusCode}',
+          name: 'ApiService');
       log('🛒 Cart response body: ${response.body}', name: 'ApiService');
 
       // Handle 404 as a valid empty cart state
       if (response.statusCode == 404) {
-        log('ℹ️ No cart exists for user, returning empty cart', name: 'ApiService');
+        log('ℹ️ No cart exists for user, returning empty cart',
+            name: 'ApiService');
         return {
           'cartItems': [],
           'totalCartPrice': 0,
@@ -843,7 +829,8 @@ Future<List<dynamic>> searchProductsAI(String query) async {
       if (response.statusCode == 200) {
         // Handle empty response
         if (response.body.isEmpty || response.body == '-') {
-          log('ℹ️ Empty cart response, returning empty cart', name: 'ApiService');
+          log('ℹ️ Empty cart response, returning empty cart',
+              name: 'ApiService');
           return {
             'cartItems': [],
             'totalCartPrice': 0,
@@ -872,22 +859,27 @@ Future<List<dynamic>> searchProductsAI(String query) async {
           if (responseData.containsKey('data')) {
             final cartData = responseData['data'];
             if (cartData == null) {
-              log('❌ Invalid response format: null cart data', name: 'ApiService');
+              log('❌ Invalid response format: null cart data',
+                  name: 'ApiService');
               throw Exception('Invalid response format: null cart data');
             }
 
             if (!cartData.containsKey('cartItems')) {
-              log('❌ Invalid response format: missing cartItems field', name: 'ApiService');
-              throw Exception('Invalid response format: missing cartItems field');
+              log('❌ Invalid response format: missing cartItems field',
+                  name: 'ApiService');
+              throw Exception(
+                  'Invalid response format: missing cartItems field');
             }
 
             final cartItems = cartData['cartItems'];
-            log('🛒 Found ${cartItems.length} items in cart', name: 'ApiService');
+            log('🛒 Found ${cartItems.length} items in cart',
+                name: 'ApiService');
             log('🛒 Cart items: $cartItems', name: 'ApiService');
 
             return cartData;
           } else if (responseData.containsKey('cartItems')) {
-            log('ℹ️ Response contains direct cartItems field', name: 'ApiService');
+            log('ℹ️ Response contains direct cartItems field',
+                name: 'ApiService');
             return responseData;
           }
         }
@@ -899,7 +891,8 @@ Future<List<dynamic>> searchProductsAI(String query) async {
         throw Exception('Failed to get cart: ${response.body}');
       }
     } catch (e, stackTrace) {
-      log('❌ Error getting cart: $e\n$stackTrace', name: 'ApiService', error: e);
+      log('❌ Error getting cart: $e\n$stackTrace',
+          name: 'ApiService', error: e);
       // If it's a 404 error, return empty cart
       if (e.toString().contains('404')) {
         return {
@@ -914,45 +907,48 @@ Future<List<dynamic>> searchProductsAI(String query) async {
 
   Future<void> addToCart(String productId, String color) async {
     try {
-      log('🛒 Adding product to cart: productId=$productId, color=$color', name: 'ApiService');
-      
+      log('🛒 Adding product to cart: productId=$productId, color=$color',
+          name: 'ApiService');
+
       final body = {
         'productId': productId,
         'color': color,
       };
-      
+
       log('🛒 Add to cart request body: $body', name: 'ApiService');
-      
+
       final response = await post(
         endpoint: BackendEndpoints.cart,
         body: body,
         authorized: true,
       );
 
-      log('🛒 Add to cart response status: ${response.statusCode}', name: 'ApiService');
+      log('🛒 Add to cart response status: ${response.statusCode}',
+          name: 'ApiService');
       log('🛒 Add to cart response body: ${response.body}', name: 'ApiService');
 
       if (response.statusCode != 200) {
-        log('❌ Failed to add item to cart: ${response.body}', name: 'ApiService');
+        log('❌ Failed to add item to cart: ${response.body}',
+            name: 'ApiService');
         throw Exception('Failed to add item to cart: ${response.body}');
       }
-      
+
       // Verify the item was added by getting the cart
       final cartData = await getCart();
       final cartItems = cartData['cartItems'] as List;
-      final itemAdded = cartItems.any((item) => 
-        item['product']?['_id'] == productId || 
-        item['productId'] == productId
-      );
-      
+      final itemAdded = cartItems.any((item) =>
+          item['product']?['_id'] == productId ||
+          item['productId'] == productId);
+
       if (!itemAdded) {
         log('⚠️ Item was not found in cart after adding', name: 'ApiService');
         throw Exception('Item was not added to cart successfully');
       }
-      
+
       log('✅ Successfully added product to cart', name: 'ApiService');
     } catch (e, stackTrace) {
-      log('❌ Error adding to cart: $e\n$stackTrace', name: 'ApiService', error: e);
+      log('❌ Error adding to cart: $e\n$stackTrace',
+          name: 'ApiService', error: e);
       throw Exception('Error adding to cart: ${e.toString()}');
     }
   }
@@ -960,15 +956,15 @@ Future<List<dynamic>> searchProductsAI(String query) async {
   Future<void> removeFromCart(String itemId) async {
     try {
       log('🛒 Removing item from cart: $itemId', name: 'ApiService');
-      
+
       // First check if item exists in cart
       final cartData = await getCart();
       final cartItems = cartData['cartItems'] as List;
-      
+
       // Find the actual cart item ID
       String? actualItemId;
       for (var item in cartItems) {
-        if (item['_id'] == itemId || 
+        if (item['_id'] == itemId ||
             item['id'] == itemId ||
             item['product']?['_id'] == itemId ||
             item['productId'] == itemId) {
@@ -978,7 +974,8 @@ Future<List<dynamic>> searchProductsAI(String query) async {
       }
 
       if (actualItemId == null) {
-        log('ℹ️ Item not found in cart, treating as success', name: 'ApiService');
+        log('ℹ️ Item not found in cart, treating as success',
+            name: 'ApiService');
         return;
       }
 
@@ -987,28 +984,30 @@ Future<List<dynamic>> searchProductsAI(String query) async {
         headers: await _buildHeaders(authorized: true),
       );
 
-      log('🛒 Remove from cart response status: ${response.statusCode}', name: 'ApiService');
-      log('🛒 Remove from cart response body: ${response.body}', name: 'ApiService');
+      log('🛒 Remove from cart response status: ${response.statusCode}',
+          name: 'ApiService');
+      log('🛒 Remove from cart response body: ${response.body}',
+          name: 'ApiService');
 
       // Handle both 200 and 204 as success
       if (response.statusCode == 200 || response.statusCode == 204) {
         // Verify the item was actually removed
         final updatedCartData = await getCart();
         final updatedCartItems = updatedCartData['cartItems'] as List;
-        
+
         // Check if the item still exists using all possible ID formats
-        final itemStillExists = updatedCartItems.any((item) => 
-          item['_id'] == actualItemId || 
-          item['id'] == actualItemId ||
-          item['product']?['_id'] == itemId ||
-          item['productId'] == itemId
-        );
-        
+        final itemStillExists = updatedCartItems.any((item) =>
+            item['_id'] == actualItemId ||
+            item['id'] == actualItemId ||
+            item['product']?['_id'] == itemId ||
+            item['productId'] == itemId);
+
         if (itemStillExists) {
-          log('⚠️ Item still exists in cart after removal attempt', name: 'ApiService');
+          log('⚠️ Item still exists in cart after removal attempt',
+              name: 'ApiService');
           throw Exception('Item was not removed from cart successfully');
         }
-        
+
         log('✅ Successfully removed item from cart', name: 'ApiService');
         return;
       }
@@ -1020,7 +1019,8 @@ Future<List<dynamic>> searchProductsAI(String query) async {
       }
 
       // Handle other error cases
-      final errorMessage = jsonDecode(response.body)['message'] ?? 'Failed to remove item from cart';
+      final errorMessage = jsonDecode(response.body)['message'] ??
+          'Failed to remove item from cart';
       throw Exception(errorMessage);
     } catch (e) {
       log('❌ Error removing from cart: $e', name: 'ApiService', error: e);
@@ -1030,16 +1030,17 @@ Future<List<dynamic>> searchProductsAI(String query) async {
 
   Future<void> updateCartItemQuantity(String productId, int quantity) async {
     try {
-      log('🛒 Updating cart item quantity: productId=$productId, quantity=$quantity', name: 'ApiService');
-      
+      log('🛒 Updating cart item quantity: productId=$productId, quantity=$quantity',
+          name: 'ApiService');
+
       // First get the cart to find the actual cart item ID
       final cartData = await getCart();
       final cartItems = cartData['cartItems'] as List;
-      
+
       // Find the actual cart item ID
       String? cartItemId;
       for (var item in cartItems) {
-        if (item['product']?['_id'] == productId || 
+        if (item['product']?['_id'] == productId ||
             item['productId'] == productId) {
           cartItemId = item['_id'];
           break;
@@ -1047,7 +1048,8 @@ Future<List<dynamic>> searchProductsAI(String query) async {
       }
 
       if (cartItemId == null) {
-        log('⚠️ Cart item not found for product: $productId', name: 'ApiService');
+        log('⚠️ Cart item not found for product: $productId',
+            name: 'ApiService');
         throw Exception('Cart item not found');
       }
 
@@ -1057,11 +1059,14 @@ Future<List<dynamic>> searchProductsAI(String query) async {
         authorized: true,
       );
 
-      log('🛒 Update quantity response status: ${response.statusCode}', name: 'ApiService');
-      log('🛒 Update quantity response body: ${response.body}', name: 'ApiService');
+      log('🛒 Update quantity response status: ${response.statusCode}',
+          name: 'ApiService');
+      log('🛒 Update quantity response body: ${response.body}',
+          name: 'ApiService');
 
       if (response.statusCode != 200) {
-        final errorMessage = jsonDecode(response.body)['message'] ?? 'Failed to update cart item quantity';
+        final errorMessage = jsonDecode(response.body)['message'] ??
+            'Failed to update cart item quantity';
         throw Exception(errorMessage);
       }
 
@@ -1079,7 +1084,8 @@ Future<List<dynamic>> searchProductsAI(String query) async {
 
       log('✅ Successfully updated cart item quantity', name: 'ApiService');
     } catch (e) {
-      log('❌ Error updating cart item quantity: $e', name: 'ApiService', error: e);
+      log('❌ Error updating cart item quantity: $e',
+          name: 'ApiService', error: e);
       throw Exception('Error updating cart item quantity: ${e.toString()}');
     }
   }
@@ -1114,13 +1120,14 @@ Future<List<dynamic>> searchProductsAI(String query) async {
       throw Exception('Error applying coupon: ${e.toString()}');
     }
   }
+
   Future<Map<String, dynamic>?> getProductById(String id) async {
     try {
       final response = await get(
         endpoint: BackendEndpoints.getProductById(id),
         authorized: true,
       );
-      
+
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         if (data is Map && data.containsKey('data')) {
@@ -1131,7 +1138,8 @@ Future<List<dynamic>> searchProductsAI(String query) async {
         log('Product not found: $id', name: 'ApiService');
         return null;
       } else {
-        log('Error getting product: ${response.statusCode} - ${response.body}', name: 'ApiService');
+        log('Error getting product: ${response.statusCode} - ${response.body}',
+            name: 'ApiService');
         throw Exception('Failed to get product: ${response.body}');
       }
     } catch (e) {
@@ -1140,4 +1148,3 @@ Future<List<dynamic>> searchProductsAI(String query) async {
     }
   }
 }
-
