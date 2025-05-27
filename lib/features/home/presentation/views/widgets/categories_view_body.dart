@@ -8,36 +8,166 @@ import 'package:pickpay/features/home/presentation/cubits/categories_cubits/cate
 import 'package:pickpay/features/home/presentation/views/widgets/category_navigation_helper.dart';
 import 'package:pickpay/core/widgets/custom_appbar.dart';
 import 'package:provider/provider.dart';
+import 'package:pickpay/features/sub_categories/widgets/animated_subcategory_card.dart';
 
 class CategoriesViewBody extends StatelessWidget {
   const CategoriesViewBody({super.key});
+
+  List<Map<String, dynamic>> _getAllSubcategories(List<dynamic> categories) {
+    List<Map<String, dynamic>> allSubcategories = [];
+
+    // Electronics
+    allSubcategories.addAll([
+      {
+        'name': 'Mobile & Tablets',
+        'image':
+            'assets/electronics_products/mobile_and_tablet/mobile_and_tablet1/1.png',
+        'index': 0,
+      },
+      {
+        'name': 'TVs',
+        'image': 'assets/electronics_products/tvscreens/tv2/2.png',
+        'index': 1,
+      },
+      {
+        'name': 'Laptop',
+        'image': 'assets/electronics_products/Laptop/Laptop2/1.png',
+        'index': 2,
+      },
+    ]);
+
+    // Appliances
+    allSubcategories.addAll([
+      {
+        'name': 'Large Appliances',
+        'image': 'assets/appliances/product3/2.png',
+        'index': 3,
+      },
+      {
+        'name': 'Small Appliances',
+        'image': 'assets/appliances/product8/3.png',
+        'index': 4,
+      },
+    ]);
+
+    // Home
+    allSubcategories.addAll([
+      {
+        'name': 'Furniture',
+        'image': 'assets/Home_products/furniture/furniture4/1.png',
+        'index': 5,
+      },
+      {
+        'name': 'Home Decor',
+        'image': 'assets/Home_products/home-decor/home_decor4/1.png',
+        'index': 6,
+      },
+      {
+        'name': 'Bath & Bedding',
+        'image': 'assets/Home_products/bath_and_bedding/bath5/3.png',
+        'index': 7,
+      },
+      {
+        'name': 'Kitchen & Dining',
+        'image': 'assets/Home_products/kitchen/kitchen3/1.png',
+        'index': 8,
+      },
+    ]);
+
+    // Fashion
+    allSubcategories.addAll([
+      {
+        'name': "Women's Fashion",
+        'image': 'assets/Fashion_products/Women_Fashion/women_fashion4/1.png',
+        'index': 9,
+      },
+      {
+        'name': "Men's Fashion",
+        'image': 'assets/Fashion_products/Men_Fashion/men_fashion4/1.png',
+        'index': 10,
+      },
+      {
+        'name': "Kids' Fashion",
+        'image': 'assets/Fashion_products/Kids_Fashion/kids_fashion4/2.png',
+        'index': 11,
+      },
+    ]);
+
+    // Beauty
+    allSubcategories.addAll([
+      {
+        'name': 'Makeup',
+        'image': 'assets/beauty_products/makeup_5/1.png',
+        'index': 12,
+      },
+      {
+        'name': 'Skincare',
+        'image': 'assets/beauty_products/skincare_3/1.png',
+        'index': 13,
+      },
+      {
+        'name': 'Haircare',
+        'image': 'assets/beauty_products/haircare_4/1.png',
+        'index': 14,
+      },
+      {
+        'name': 'Fragrance',
+        'image': 'assets/beauty_products/fragrance_2/1.png',
+        'index': 15,
+      },
+    ]);
+
+    // Video Games
+    allSubcategories.addAll([
+      {
+        'name': 'Console',
+        'image': 'assets/subcategories/video_games/1.png',
+        'index': 16,
+      },
+      {
+        'name': 'Controllers',
+        'image': 'assets/subcategories/video_games/2.png',
+        'index': 17,
+      },
+      {
+        'name': 'Accessories',
+        'image': 'assets/subcategories/video_games/3.png',
+        'index': 18,
+      },
+    ]);
+
+    return allSubcategories;
+  }
 
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
     final isDarkMode = themeProvider.isDarkMode;
-    final colorScheme = Theme.of(context).colorScheme;
 
-    return Column(
-      children: [
-        SizedBox(height: kTopPadding),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
-          child: CustomHomeAppbar(),
-        ),
-        const SizedBox(height: 22),
-        Expanded(
-          child: BlocBuilder<CategoriesCubit, CategoriesState>(
+    return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
+      child: Column(
+        children: [
+          SizedBox(height: kTopPadding),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: CustomHomeAppbar(),
+          ),
+          const SizedBox(height: 22),
+          BlocBuilder<CategoriesCubit, CategoriesState>(
             builder: (context, state) {
               if (state is CategoriesLoading) {
                 return const Center(
                   child: CircularProgressIndicator.adaptive(),
                 );
               } else if (state is CategoriesLoaded) {
+                final allSubcategories = _getAllSubcategories(state.categories);
+
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: GridView.builder(
-                    physics: const BouncingScrollPhysics(),
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
@@ -45,229 +175,28 @@ class CategoriesViewBody extends StatelessWidget {
                       crossAxisSpacing: 16,
                       mainAxisSpacing: 16,
                     ),
-                    itemCount: state.categories.length,
+                    itemCount: allSubcategories.length,
                     itemBuilder: (context, index) {
-                      final category = state.categories[index];
-                      return _CatchyCategoryCard(
-                        categoryName: category.name,
-                        imagePath: category.image,
-                        isDarkMode: isDarkMode,
-                        index: index,
-                        onTap: () => navigateToCategory(context, category.name),
+                      final subcategory = allSubcategories[index];
+                      return AnimatedSubcategoryCard(
+                        name: subcategory['name'],
+                        imagePath: subcategory['image'],
+                        index: subcategory['index'],
+                        onTap: () =>
+                            navigateToCategory(context, subcategory['name']),
                       );
                     },
                   ),
                 );
               } else if (state is CategoriesError) {
                 return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.error_outline,
-                        size: 48,
-                        color: colorScheme.error,
-                      ),
-                      const SizedBox(height: 16),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24),
-                        child: Text(
-                          state.message,
-                          textAlign: TextAlign.center,
-                          style: TextStyles.regular16.copyWith(
-                            color: colorScheme.onBackground.withOpacity(0.7),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 24, vertical: 12),
-                        ),
-                        onPressed: () =>
-                            context.read<CategoriesCubit>().loadCategories(),
-                        child: Text(
-                          'Try Again',
-                          style: TextStyles.regular16,
-                        ),
-                      ),
-                    ],
-                  ),
+                  child: Text(state.message),
                 );
               }
               return const SizedBox.shrink();
             },
           ),
-        ),
-      ],
-    );
-  }
-}
-
-class _CatchyCategoryCard extends StatefulWidget {
-  final String categoryName;
-  final String imagePath;
-  final bool isDarkMode;
-  final int index;
-  final VoidCallback onTap;
-
-  const _CatchyCategoryCard({
-    required this.categoryName,
-    required this.imagePath,
-    required this.isDarkMode,
-    required this.index,
-    required this.onTap,
-  });
-
-  @override
-  State<_CatchyCategoryCard> createState() => _CatchyCategoryCardState();
-}
-
-class _CatchyCategoryCardState extends State<_CatchyCategoryCard>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<Alignment> _alignmentAnimation;
-
-  static const List<List<Color>> _gradientColorsLight = [
-    [Color(0xFFA8DADC), Color(0xFF457B9D)], // Soft cyan to muted blue
-    [Color(0xFFF1FAEE), Color(0xFFA8DADC)], // Very light mint to soft cyan
-    [Color(0xFFEAEAEA), Color(0xFFB0BEC5)], // Light grey to cool steel blue
-    [Color(0xFFD4ECDD), Color(0xFF8FB9A8)], // Pale green to sage green
-    [Color(0xFFF9F7F7), Color(0xFFD3C0CD)], // Soft off-white to muted mauve
-    [Color(0xFFF4E1D2), Color(0xFFBC9CA3)], // Light peach to dusty rose
-  ];
-
-  static const List<List<Color>> _gradientColorsDark = [
-    [Color(0xFF1D3557), Color(0xFF457B9D)], // Deep navy to muted blue
-    [Color(0xFF2A3A40), Color(0xFF5C6B73)], // Dark slate to dusty grey-blue
-    [Color(0xFF36454F), Color(0xFF576F72)], // Charcoal to teal-grey
-    [Color(0xFF3B3A40), Color(0xFF6D7B8D)], // Dark charcoal to muted blue-grey
-    [Color(0xFF5C4D7D), Color(0xFF7E6A9E)], // Dusty purple to lavender-grey
-    [Color(0xFF4B474A), Color(0xFF7E7A82)], // Dark grey to soft lavender-grey
-  ];
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 6),
-    )..repeat(reverse: true);
-
-    _alignmentAnimation = Tween<Alignment>(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-    ).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  List<Color> _getGradientColors(bool isDarkMode, int index) {
-    final colors = isDarkMode ? _gradientColorsDark : _gradientColorsLight;
-    return colors[index % colors.length];
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDark = widget.isDarkMode;
-
-    final gradientColors = _getGradientColors(isDark, widget.index);
-
-    return GestureDetector(
-      onTap: widget.onTap,
-      child: AnimatedBuilder(
-        animation: _controller,
-        builder: (context, _) {
-          return Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              gradient: LinearGradient(
-                colors: gradientColors,
-                begin: _alignmentAnimation.value,
-                end: Alignment.center,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: isDark
-                      ? Colors.black.withOpacity(0.6)
-                      : Colors.grey.withOpacity(0.2),
-                  blurRadius: 14,
-                  offset: const Offset(0, 6),
-                ),
-              ],
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  Image.asset(
-                    widget.imagePath,
-                    fit: BoxFit.cover,
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.bottomCenter,
-                        end: Alignment.center,
-                        colors: [
-                          Colors.black.withOpacity(0.35),
-                          Colors.transparent,
-                        ],
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 12, horizontal: 12),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.bottomCenter,
-                          end: Alignment.topCenter,
-                          colors: [
-                            gradientColors[1].withOpacity(0.85),
-                            gradientColors[0].withOpacity(0.7),
-                          ],
-                        ),
-                      ),
-                      child: Text(
-                        widget.categoryName.toUpperCase(),
-                        textAlign: TextAlign.center,
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 1.0,
-                          shadows: [
-                            Shadow(
-                              blurRadius: 4,
-                              color: Colors.black.withOpacity(0.5),
-                              offset: const Offset(1, 1),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
+        ],
       ),
     );
   }

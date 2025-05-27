@@ -8,6 +8,7 @@ import 'package:pickpay/features/cart/cart_view.dart';
 import 'package:pickpay/features/home/presentation/views/categories_view.dart';
 import 'package:pickpay/features/home/presentation/views/home_view.dart';
 import 'package:pickpay/features/bottom_navigation/custom_bottom_navigation_bar.dart';
+import 'package:pickpay/features/home/presentation/cubits/categories_cubits/categories_cubits_cubit.dart';
 
 class MainNavigationScreen extends StatelessWidget {
   const MainNavigationScreen({super.key});
@@ -17,11 +18,7 @@ class MainNavigationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authRepo = getIt<AuthRepo>();
-
-    return BlocProvider(
-      create: (_) => BottomNavigationCubit(),
-      child: _MainNavigationView(authRepo: authRepo),
-    );
+    return _MainNavigationView(authRepo: authRepo);
   }
 }
 
@@ -88,7 +85,7 @@ class MainNavigationScreenBody extends StatelessWidget {
             const HomeView(),
             const CategoriesView(),
             const CartView(),
-            AccountView(), // Pass authRepo if AccountView needs it
+            AccountView(),
           ],
         );
       },

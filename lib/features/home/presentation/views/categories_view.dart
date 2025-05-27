@@ -11,9 +11,11 @@ class CategoriesView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => CategoriesCubit()..loadCategories(),
+      create: (context) => CategoriesCubit()..loadCategories(),
       child: const Scaffold(
-        body: CategoriesViewBody(),
+        body: SafeArea(
+          child: CategoriesViewBody(),
+        ),
       ),
     );
   }
