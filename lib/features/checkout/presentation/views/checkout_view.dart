@@ -11,6 +11,9 @@ import 'package:pickpay/features/checkout/presentation/views/widgets/shipping_se
 import 'package:pickpay/features/cart/cart_item_model.dart';
 import 'package:pickpay/features/cart/cart_cubits/cart_cubit.dart';
 import 'package:pickpay/features/cart/cart_view.dart';
+import 'package:pickpay/features/tracking_orders/cubit/order_cubit.dart';
+import 'package:pickpay/features/tracking_orders/models/order_model.dart'
+    as tracking;
 
 class CheckoutView extends StatefulWidget {
   const CheckoutView({super.key});
@@ -67,7 +70,6 @@ class _CheckoutViewState extends State<CheckoutView> {
           child: Text(
             'Your cart is empty',
             style: TextStyles.regular13.copyWith(
-              // ignore: deprecated_member_use
               color: theme.colorScheme.onBackground,
             ),
           ),
@@ -91,7 +93,6 @@ class _CheckoutViewState extends State<CheckoutView> {
           });
         },
       ),
-      // ignore: deprecated_member_use
       backgroundColor: theme.colorScheme.background,
       body: BlocListener<CheckoutCubit, CheckoutState>(
         listener: (context, state) {
@@ -244,8 +245,10 @@ class _CheckoutViewState extends State<CheckoutView> {
     double total,
   ) {
     if (!_formKey.currentState!.validate()) return;
-
     _formKey.currentState!.save();
+
+    final checkoutCubit = context.read<CheckoutCubit>();
+    final orderCubit = context.read<OrderCubit>();
 
     final paymentInfo = PaymentInfo(
       method: _paymentMethod,
@@ -255,11 +258,25 @@ class _CheckoutViewState extends State<CheckoutView> {
       transactionId: 'TXN-${DateTime.now().millisecondsSinceEpoch}',
     );
 
-    context.read<CheckoutCubit>().placeOrder(
-          items: items,
-          total: total,
-          shippingInfo: _shippingInfo,
-          paymentInfo: paymentInfo,
-        );
+    checkoutCubit
+        .placeOrder(
+      items: items,
+      total: total,
+      shippingInfo: _shippingInfo,
+      paymentInfo: paymentInfo,
+    )
+        .then((value) {
+      // Create a tracking order
+      final trackingOrder = tracking.OrderModel(
+        id: 'ORD-${DateTime.now().millisecondsSinceEpoch}',
+        userId: 'current_user_id', // Replace with actual user ID
+        productId: items.map((e) => e.product.id).join(','),
+        amount: total,
+        status: tracking.OrderStatus.pending,
+        createdAt: DateTime.now(),
+      );
+
+      orderCubit.addOrder(trackingOrder);
+    });
   }
 }

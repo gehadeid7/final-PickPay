@@ -8,9 +8,11 @@ import 'package:pickpay/features/account_view/help_and_support_view.dart';
 import 'package:pickpay/features/auth/domain/repos/auth_repo.dart';
 import 'package:pickpay/features/auth/presentation/views/change_password_view.dart';
 import 'package:pickpay/features/auth/presentation/views/signin_view.dart';
-import 'package:pickpay/features/cart/cart_view.dart';
 import 'package:pickpay/features/profile_change/views/profile_change_view.dart';
+import 'package:pickpay/features/tracking_orders/views/order_view.dart';
 import 'package:pickpay/features/wishlist/wishlist_view.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pickpay/features/tracking_orders/cubit/order_cubit.dart';
 
 class AccountViewBody extends StatelessWidget {
   final String fullName;
@@ -49,9 +51,16 @@ class AccountViewBody extends StatelessWidget {
             const SizedBox(height: 32),
             _buildSectionTitle('Quick Access', context),
             _buildSectionContainer([
-              _accountTile(Icons.shopping_bag_outlined, "My Orders", () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (_) => const CartView()));
+              _accountTile(Icons.local_shipping_outlined, "Track Orders", () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BlocProvider.value(
+                      value: context.read<OrderCubit>(),
+                      child: const OrderView(),
+                    ),
+                  ),
+                );
               }, context),
               _accountTile(Icons.favorite_border, "Wishlist", () {
                 Navigator.push(context,

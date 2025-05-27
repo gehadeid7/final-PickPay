@@ -49,11 +49,14 @@ class CartViewBody extends StatelessWidget {
               _showMessage(context, state.message, CartAction.error);
               dev.log('Cart Error: ${state.message}', name: 'CartView');
             } else if (state is CartLoaded && state.message != null) {
-              _showMessage(context, state.message!, state.action ?? CartAction.updated);
-              dev.log('Cart Action: ${state.action} - ${state.message}', name: 'CartView');
+              _showMessage(
+                  context, state.message!, state.action ?? CartAction.updated);
+              dev.log('Cart Action: ${state.action} - ${state.message}',
+                  name: 'CartView');
             }
           } catch (e, stackTrace) {
-            dev.log('Error in cart listener: $e\n$stackTrace', name: 'CartView', error: e);
+            dev.log('Error in cart listener: $e\n$stackTrace',
+                name: 'CartView', error: e);
           }
         },
         builder: (context, state) {
@@ -101,7 +104,8 @@ class CartViewBody extends StatelessWidget {
               );
             }
 
-            if (state is CartInitial || (state is CartLoaded && state.cartItems.isEmpty)) {
+            if (state is CartInitial ||
+                (state is CartLoaded && state.cartItems.isEmpty)) {
               return Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -130,7 +134,8 @@ class CartViewBody extends StatelessWidget {
                     ),
                     const SizedBox(height: 24),
                     ElevatedButton.icon(
-                      onPressed: () => Navigator.pushNamed(context, '/main-navigation'),
+                      onPressed: () =>
+                          Navigator.pushNamed(context, '/main-navigation'),
                       icon: const Icon(Icons.shopping_bag),
                       label: const Text('Start Shopping'),
                     ),
@@ -162,16 +167,19 @@ class CartViewBody extends StatelessWidget {
                             ? "You have 1 item in your cart"
                             : "You have $totalItems items in your cart",
                         style: TextStyles.semiBold16.copyWith(
-                          color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                          color:
+                              isDarkMode ? Colors.grey[400] : Colors.grey[600],
                         ),
                       ),
                       if (cartItems.isNotEmpty)
                         TextButton.icon(
-                          onPressed: () => context.read<CartCubit>().clearCart(),
+                          onPressed: () =>
+                              context.read<CartCubit>().clearCart(),
                           icon: const Icon(Icons.delete_sweep),
                           label: const Text('Clear Cart'),
                           style: TextButton.styleFrom(
-                            foregroundColor: isDarkMode ? Colors.red[300] : Colors.red,
+                            foregroundColor:
+                                isDarkMode ? Colors.red[300] : Colors.red,
                           ),
                         ),
                     ],
@@ -205,15 +213,25 @@ class CartViewBody extends StatelessWidget {
                   child: BlocBuilder<CartCubit, CartState>(
                     builder: (context, state) {
                       return CustomButton(
-                        onPressed: state is CartLoading 
-                            ? null 
+                        onPressed: state is CartLoading
+                            ? null
                             : () {
                                 try {
-                                  Navigator.of(context).pushReplacementNamed(CheckoutView.routeName);
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const CheckoutView(),
+                                    ),
+                                  );
                                 } catch (e, stackTrace) {
-                                  dev.log('Error navigating to checkout: $e\n$stackTrace', 
-                                    name: 'CartView', error: e);
-                                  _showMessage(context, 'Failed to navigate to checkout', CartAction.error);
+                                  dev.log(
+                                      'Error navigating to checkout: $e\n$stackTrace',
+                                      name: 'CartView',
+                                      error: e);
+                                  _showMessage(
+                                      context,
+                                      'Failed to navigate to checkout',
+                                      CartAction.error);
                                 }
                               },
                         buttonText: 'Proceed to Checkout',
@@ -226,7 +244,8 @@ class CartViewBody extends StatelessWidget {
               ],
             );
           } catch (e, stackTrace) {
-            dev.log('Error building cart view: $e\n$stackTrace', name: 'CartView', error: e);
+            dev.log('Error building cart view: $e\n$stackTrace',
+                name: 'CartView', error: e);
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -260,7 +279,8 @@ class CartViewBody extends StatelessWidget {
     );
   }
 
-  Widget _buildCartItem(BuildContext context, CartItemModel item, bool isDarkMode) {
+  Widget _buildCartItem(
+      BuildContext context, CartItemModel item, bool isDarkMode) {
     try {
       return Card(
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -276,7 +296,8 @@ class CartViewBody extends StatelessWidget {
                 ),
               );
             } else {
-              _showMessage(context, 'Product details not available', CartAction.error);
+              _showMessage(
+                  context, 'Product details not available', CartAction.error);
             }
           },
           child: Padding(
@@ -298,7 +319,8 @@ class CartViewBody extends StatelessWidget {
                               if (loadingProgress == null) return child;
                               return Center(
                                 child: CircularProgressIndicator(
-                                  value: loadingProgress.expectedTotalBytes != null
+                                  value: loadingProgress.expectedTotalBytes !=
+                                          null
                                       ? loadingProgress.cumulativeBytesLoaded /
                                           loadingProgress.expectedTotalBytes!
                                       : null,
@@ -307,19 +329,27 @@ class CartViewBody extends StatelessWidget {
                             },
                             errorBuilder: (context, error, stackTrace) {
                               return Container(
-                                color: isDarkMode ? Colors.grey[800] : Colors.grey[200],
+                                color: isDarkMode
+                                    ? Colors.grey[800]
+                                    : Colors.grey[200],
                                 child: Icon(
                                   Icons.image_not_supported,
-                                  color: isDarkMode ? Colors.grey[600] : Colors.grey[400],
+                                  color: isDarkMode
+                                      ? Colors.grey[600]
+                                      : Colors.grey[400],
                                 ),
                               );
                             },
                           )
                         : Container(
-                            color: isDarkMode ? Colors.grey[800] : Colors.grey[200],
+                            color: isDarkMode
+                                ? Colors.grey[800]
+                                : Colors.grey[200],
                             child: Icon(
                               Icons.image_not_supported,
-                              color: isDarkMode ? Colors.grey[600] : Colors.grey[400],
+                              color: isDarkMode
+                                  ? Colors.grey[600]
+                                  : Colors.grey[400],
                             ),
                           ),
                   ),
@@ -354,16 +384,22 @@ class CartViewBody extends StatelessWidget {
                                 onPressed: () {
                                   if (item.product.id != null) {
                                     if (item.quantity > 1) {
-                                      context.read<CartCubit>().updateCartItemQuantity(
-                                        item.product.id!,
-                                        item.quantity - 1,
-                                      );
+                                      context
+                                          .read<CartCubit>()
+                                          .updateCartItemQuantity(
+                                            item.product.id!,
+                                            item.quantity - 1,
+                                          );
                                     } else {
-                                      context.read<CartCubit>().removeFromCart(item.product.id!);
+                                      context
+                                          .read<CartCubit>()
+                                          .removeFromCart(item.product.id!);
                                     }
                                   }
                                 },
-                                color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                                color: isDarkMode
+                                    ? Colors.grey[400]
+                                    : Colors.grey[600],
                               ),
                               Text(
                                 '${item.quantity}',
@@ -373,13 +409,17 @@ class CartViewBody extends StatelessWidget {
                                 icon: const Icon(Icons.add_circle_outline),
                                 onPressed: () {
                                   if (item.product.id != null) {
-                                    context.read<CartCubit>().updateCartItemQuantity(
-                                      item.product.id!,
-                                      item.quantity + 1,
-                                    );
+                                    context
+                                        .read<CartCubit>()
+                                        .updateCartItemQuantity(
+                                          item.product.id!,
+                                          item.quantity + 1,
+                                        );
                                   }
                                 },
-                                color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                                color: isDarkMode
+                                    ? Colors.grey[400]
+                                    : Colors.grey[600],
                               ),
                             ],
                           ),
@@ -388,7 +428,9 @@ class CartViewBody extends StatelessWidget {
                             icon: const Icon(Icons.delete_outline),
                             onPressed: () {
                               if (item.product.id != null) {
-                                context.read<CartCubit>().removeFromCart(item.product.id!);
+                                context
+                                    .read<CartCubit>()
+                                    .removeFromCart(item.product.id!);
                               }
                             },
                             color: isDarkMode ? Colors.red[300] : Colors.red,
@@ -404,12 +446,14 @@ class CartViewBody extends StatelessWidget {
         ),
       );
     } catch (e, stackTrace) {
-      dev.log('Error building cart item: $e\n$stackTrace', name: 'CartView', error: e);
+      dev.log('Error building cart item: $e\n$stackTrace',
+          name: 'CartView', error: e);
       return const SizedBox.shrink();
     }
   }
 
-  Widget _buildTotalSection(BuildContext context, double totalPrice, bool isDarkMode) {
+  Widget _buildTotalSection(
+      BuildContext context, double totalPrice, bool isDarkMode) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(

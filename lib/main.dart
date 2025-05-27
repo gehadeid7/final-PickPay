@@ -19,6 +19,7 @@ import 'package:pickpay/features/wishlist/wishlist_cubits/wishlist_cubit.dart';
 import 'package:pickpay/features/splash/presentation/views/splash_view.dart';
 import 'package:pickpay/firebase_options.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:pickpay/features/tracking_orders/cubit/order_cubit.dart';
 
 final RouteObserver<ModalRoute> routeObserver = RouteObserver<ModalRoute>();
 final firebaseAuthService = getIt<FirebaseAuthService>();
@@ -40,6 +41,7 @@ void main() async {
         BlocProvider(create: (context) => WishlistCubit()),
         BlocProvider(create: (context) => CheckoutCubit()),
         BlocProvider(create: (context) => BottomNavigationCubit()),
+        BlocProvider(create: (context) => OrderCubit()),
         BlocProvider(
           create: (context) => ProfileCubit(
             firebaseAuthService: firebaseAuthService,
