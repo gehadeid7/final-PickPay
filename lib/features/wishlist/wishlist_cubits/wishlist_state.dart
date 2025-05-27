@@ -9,6 +9,8 @@ abstract class WishlistState extends Equatable {
 
 class WishlistInitial extends WishlistState {}
 
+class WishlistLoading extends WishlistState {}
+
 class WishlistLoaded extends WishlistState {
   final List<ProductsViewsModel> items;
   final WishlistAction? action;
@@ -17,6 +19,15 @@ class WishlistLoaded extends WishlistState {
 
   @override
   List<Object> get props => [items, action ?? ''];
+}
+
+class WishlistError extends WishlistState {
+  final String message;
+
+  const WishlistError(this.message);
+
+  @override
+  List<Object> get props => [message];
 }
 
 enum WishlistAction { added, removed }

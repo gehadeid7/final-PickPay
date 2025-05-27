@@ -86,6 +86,8 @@
   <string>fbapi</string>
   <string>fb-messenger-share-api</string>
 </array>
+<key>NSMicrophoneUsageDescription</key>
+<string>This app needs access to the microphone for voice search.</string>
 
 
 

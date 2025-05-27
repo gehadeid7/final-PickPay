@@ -10,6 +10,8 @@ class BackendEndpoints {
 
   // 🛒 Product endpoints
   static const String getProducts = 'products';
+  static const String aiProductSearch = 'products/search';
+
 
   // For individual product CRUD
   static String getProductById(String id) => 'products/$id';
@@ -37,4 +39,14 @@ class BackendEndpoints {
 
   // 🔄 Sync Firebase user with backend
   static const String syncFirebaseUser = 'auth/syncFirebaseUser';
+
+   // ❤️ Wishlist endpoints
+  static const String wishlist = 'wishlist';
+  static String removeFromWishlist(String productId) => 'wishlist/$productId';
+
+  // 🛒 Cart endpoints
+  static const String cart = 'cart';
+  static const String applyCoupon = 'cart/applyCoupon';
+  static String updateCartItem(String itemId) => 'cart/$itemId';
+  static String removeCartItem(String itemId) => 'cart/$itemId';
 }

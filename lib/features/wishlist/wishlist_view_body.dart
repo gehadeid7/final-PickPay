@@ -25,10 +25,23 @@ class WishlistViewBody extends StatelessWidget {
             } else if (state.action == WishlistAction.removed) {
               _showMessage(context, "Removed from wishlist");
             }
+          } else if (state is WishlistError) {
+            _showMessage(context, state.message);
           }
         },
         builder: (context, state) {
-          if (state is WishlistInitial ||
+          if (state is WishlistLoading) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state is WishlistError) {
+            return Center(
+              child: Text(
+                state.message,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: colorScheme.error,
+                ),
+              ),
+            );
+          } else if (state is WishlistInitial ||
               (state is WishlistLoaded && state.items.isEmpty)) {
             return _buildEmptyWishlist(theme, colorScheme);
           }
@@ -62,14 +75,12 @@ class WishlistViewBody extends StatelessWidget {
           Icon(
             Icons.favorite_border,
             size: 64,
-            // ignore: deprecated_member_use
             color: colorScheme.onSurface.withOpacity(0.5),
           ),
           const SizedBox(height: 16),
           Text(
             "Your wishlist is empty",
             style: theme.textTheme.titleMedium?.copyWith(
-              // ignore: deprecated_member_use
               color: colorScheme.onSurface.withOpacity(0.7),
             ),
           ),
@@ -77,7 +88,6 @@ class WishlistViewBody extends StatelessWidget {
           Text(
             "Tap the heart icon to save items you love",
             style: theme.textTheme.bodyMedium?.copyWith(
-              // ignore: deprecated_member_use
               color: colorScheme.onSurface.withOpacity(0.5),
             ),
           ),
@@ -98,7 +108,6 @@ class WishlistViewBody extends StatelessWidget {
                 ? "1 item in wishlist"
                 : "$itemCount items in wishlist",
             style: theme.textTheme.titleMedium?.copyWith(
-              // ignore: deprecated_member_use
               color: colorScheme.onSurface.withOpacity(0.7),
             ),
           ),
@@ -140,7 +149,6 @@ class WishlistViewBody extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: Color.fromARGB(255, 82, 82, 82)
-                // ignore: deprecated_member_use
                 .withOpacity(isDarkMode ? 0.1 : 0.05),
             spreadRadius: 6,
             blurRadius: 6,
@@ -168,9 +176,7 @@ class WishlistViewBody extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Product Image
-                if (product.imagePaths != null &&
-                    product.imagePaths!.isNotEmpty)
+                if (product.imagePaths != null && product.imagePaths!.isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.only(right: 16),
                     child: ClipRRect(
@@ -184,7 +190,6 @@ class WishlistViewBody extends StatelessWidget {
                           width: 80,
                           height: 80,
                           color: isDarkMode
-                              // ignore: deprecated_member_use
                               ? colorScheme.surfaceVariant
                               : Colors.grey.shade200,
                           child: Icon(
@@ -195,7 +200,6 @@ class WishlistViewBody extends StatelessWidget {
                       ),
                     ),
                   ),
-                // Product Info
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -230,16 +234,13 @@ class WishlistViewBody extends StatelessWidget {
                     ],
                   ),
                 ),
-                // Remove button
                 IconButton(
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.favorite,
-                    color: Colors.redAccent, // Bright red color
+                    color: Colors.redAccent,
                   ),
                   onPressed: () {
-                    context
-                        .read<WishlistCubit>()
-                        .removeFromWishlist(product.id);
+                    context.read<WishlistCubit>().removeFromWishlist(product.id);
                   },
                 ),
               ],
@@ -262,7 +263,6 @@ class WishlistViewBody extends StatelessWidget {
         ),
         duration: const Duration(seconds: 1),
         behavior: SnackBarBehavior.floating,
-        // ignore: deprecated_member_use
         backgroundColor: theme.colorScheme.surfaceVariant,
       ),
     );

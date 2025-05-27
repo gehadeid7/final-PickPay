@@ -13,8 +13,9 @@ import 'package:pickpay/features/categories_pages/models/product_model.dart';
 import 'package:pickpay/features/categories_pages/widgets/product_card.dart';
 import 'package:http_parser/http_parser.dart';
 
+
 class ApiService {
-  static const String baseUrl = 'http://192.168.1.7:3000/api/v1/';
+  static const String baseUrl = 'http://192.168.1.4:3000/api/v1/';
 
   Future<Map<String, String>> _buildHeaders({
     Map<String, String>? headers,
@@ -26,27 +27,12 @@ class ApiService {
     };
 
     if (authorized) {
-      final user = FirebaseAuth.instance.currentUser;
-      String token = '';
-
-      if (user != null) {
-        token = await user.getIdToken(true) ?? '';
-        if (token.isNotEmpty) {
-          await Prefs.setString('jwt_token', token);
-          log('🔐 Token refreshed and saved automatically');
-        }
-      }
-
-      if (token.isEmpty) {
-        token = Prefs.getString('jwt_token');
-        log('🔐 Using cached token from prefs');
-      }
-
+      String token = await _getFirebaseToken();
       if (token.isNotEmpty) {
         requestHeaders['Authorization'] = 'Bearer $token';
         log('🔐 Sending token in header: Bearer $token');
       } else {
-        log('⚠️ No token found to send!');
+        log('⚠️ No Firebase token found to send!');
       }
     }
 
@@ -61,37 +47,48 @@ class ApiService {
     final Map<String, String> requestHeaders = {};
 
     if (authorized) {
-      final user = FirebaseAuth.instance.currentUser;
-      String token = '';
-
-      if (user != null) {
-        token = await user.getIdToken(true) ?? '';
-        if (token.isNotEmpty) {
-          await Prefs.setString('jwt_token', token);
-          log('🔐 Token refreshed and saved automatically');
-        }
-      }
-
-      if (token.isEmpty) {
-        token = Prefs.getString('jwt_token');
-        log('🔐 Using cached token from prefs');
-      }
-
+      String token = await _getFirebaseToken();
       if (token.isNotEmpty) {
         requestHeaders['Authorization'] = 'Bearer $token';
         log('🔐 Sending token in header: Bearer $token');
       } else {
-        log('⚠️ No token found to send!');
+        log('⚠️ No Firebase token found to send!');
       }
     }
 
     return requestHeaders;
   }
 
+  // 🔄 Helper to fetch fresh Firebase token or fallback to cache
+  Future<String> _getFirebaseToken() async {
+    String token = '';
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      try {
+        token = await user.getIdToken(true) ?? '';
+        if (token.isNotEmpty) {
+          await Prefs.setString('jwt_token', token);
+          log('🔐 Token refreshed and saved automatically');
+        }
+      } catch (e) {
+        log('❌ Failed to refresh Firebase token: $e');
+      }
+    }
+
+    if (token.isEmpty) {
+      token = Prefs.getString('jwt_token');
+      log('🔐 Using cached token from prefs');
+    }
+
+    return token;
+  }
+
   // 🌐 GET request
   Future<http.Response> get({
     required String endpoint,
     Map<String, String>? headers,
+    Map<String, String>? queryParameters, 
     bool authorized = false,
     int maxRetries = 2,
   }) async {
@@ -274,6 +271,7 @@ class ApiService {
     }
   }
 
+<<<<<<< HEAD
   //  Sync Firebase user to backend
   Future<UserModel> syncFirebaseUserToBackend({
     required String name,
@@ -289,31 +287,59 @@ class ApiService {
           await Prefs.setString('jwt_token', token);
         }
       }
+=======
+  // 🔄 Sync Firebase user to backend
+Future<UserModel> syncFirebaseUserToBackend({
+  required String name,
+  required String email,
+  required String firebaseUid,
+  String? photoUrl,
+  String? gender,
+  String? dob,
+  int? age,
+  String? address,
+  String? phone,
+}) async {
+  try {
+    final headers = await _buildHeaders(authorized: true);
+>>>>>>> 2d2b266b7ac4124caf47d5cdf4724928631616ac
 
-      final response = await http.post(
-        Uri.parse('${baseUrl}auth/firebase/sync'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-        body: jsonEncode({
-          'name': name,
-          'email': email,
-          'uid': firebaseUid,
-          'photoUrl': photoUrl,
-        }),
-      );
+    final body = {
+      'name': name,
+      'email': email,
+      'uid': firebaseUid,
+      'profileImg': photoUrl,
+      'gender': gender,
+      'dob': dob,
+      'age': age,
+      'address': address,
+      'phone': phone,
+    };
 
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body)['data'];
-        return UserModel.fromJson(data);
-      } else {
-        throw Exception('Failed to sync Firebase user: ${response.body}');
-      }
-    } catch (e) {
-      throw Exception('Error syncing Firebase user: ${e.toString()}');
+    // ازالة القيم null حتى لا ترسل في البودي
+    body.removeWhere((key, value) => value == null);
+
+    final response = await http.post(
+      Uri.parse('${baseUrl}auth/firebase/sync'),
+      headers: headers,
+      body: jsonEncode(body),
+    );
+
+    log('🔄 syncFirebaseUserToBackend response status: ${response.statusCode}');
+    log('🔄 syncFirebaseUserToBackend response body: ${response.body}');
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body)['data'];
+      return UserModel.fromJson(data);
+    } else {
+      throw Exception('Failed to sync Firebase user: ${response.body}');
     }
+  } catch (e) {
+    log('❌ Error syncing Firebase user: $e');
+    throw Exception('Error syncing Firebase user: ${e.toString()}');
   }
+}
+
 
   // Forgot password
   Future<http.Response> forgotPassword(String email) async {
@@ -629,6 +655,58 @@ class ApiService {
       print('\n=== 💾 PROFILE IMAGE UPDATE END ===\n');
     }
   }
+  // 🔍 AI Product Search
+Future<List<dynamic>> searchProductsAI(String query) async {
+  try {
+    final response = await post(
+      endpoint: BackendEndpoints.aiProductSearch,
+      body: {'query': query},
+      authorized: false,
+    );
+
+    if (response.statusCode == 200) {
+      final result = jsonDecode(response.body);
+
+      if (result is Map<String, dynamic> && result.containsKey('products')) {
+        return result['products']; // ✅ Return the actual list
+      } else {
+        throw Exception('Unexpected AI response format');
+      }
+    } else {
+      throw Exception('AI Search failed: ${response.body}');
+    }
+  } catch (e) {
+    throw Exception('Error during AI product search: ${e.toString()}');
+  }
+}
+  Future<List<Map<String, dynamic>>> searchProducts(String query) async {
+  try {
+    final response = await get(
+      endpoint: BackendEndpoints.aiProductSearch, // 'products/search'
+      queryParameters: {'query': query}, // <-- changed 'q' to 'query'
+      authorized: false,
+    );
+
+    if (response.statusCode == 200) {
+      final result = jsonDecode(response.body);
+
+      // Adjust this depending on your backend's response structure
+      if (result is Map<String, dynamic> && result.containsKey('data')) {
+        final data = result['data'];
+        if (data is List) {
+          return List<Map<String, dynamic>>.from(data);
+        }
+      } else if (result is List) {
+        return List<Map<String, dynamic>>.from(result);
+      }
+      throw Exception('Unexpected search response format');
+    } else {
+      throw Exception('Search failed: [${response.body}]');
+    }
+  } catch (e) {
+    throw Exception('Error during product search: ${e.toString()}');
+  }
+}
 
 // Fetch products by category
   Future<List<ProductsViewsModel>> fetchProducts(String category) async {
@@ -675,4 +753,391 @@ class ApiService {
       throw Exception('Failed to load products: ${response.body}');
     }
   }
+  // إضافة منتج إلى قائمة الرغبات
+  Future<http.Response> addProductToWishlist(String productId) async {
+    final uri = Uri.parse('$baseUrl${BackendEndpoints.wishlist}');
+    final headers = await _buildHeaders(authorized: true);
+    final body = jsonEncode({'productId': productId});
+
+    final response = await http.post(uri, headers: headers, body: body);
+    return response;
+  }
+
+  // حذف منتج من قائمة الرغبات
+  Future<http.Response> removeProductFromWishlist(String productId) async {
+    final uri = Uri.parse('$baseUrl${BackendEndpoints.removeFromWishlist(productId)}');
+    final headers = await _buildHeaders(authorized: true);
+
+    final response = await http.delete(uri, headers: headers);
+    return response;
+  }
+
+  // جلب قائمة الرغبات للمستخدم الحالي
+  Future<List<dynamic>> getLoggedUserWishlist() async {
+    try {
+      final uri = Uri.parse('$baseUrl${BackendEndpoints.wishlist}');
+      final headers = await _buildHeaders(authorized: true);
+
+      final response = await http.get(uri, headers: headers);
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+        
+        // Handle different response formats
+        if (responseData is Map<String, dynamic>) {
+          if (responseData.containsKey('data')) {
+            final data = responseData['data'];
+            if (data is List) {
+              return data;
+            } else if (data is Map) {
+              return [data];
+            }
+          } else if (responseData.containsKey('wishlist')) {
+            final wishlist = responseData['wishlist'];
+            if (wishlist is List) {
+              return wishlist;
+            } else if (wishlist is Map) {
+              return [wishlist];
+            }
+          }
+          return [];
+        } else if (responseData is List) {
+          return responseData;
+        }
+        
+        return [];
+      } else if (response.statusCode == 404) {
+        // Return empty list for no wishlist
+        return [];
+      } else {
+        throw Exception('Failed to fetch wishlist: ${response.statusCode}');
+      }
+    } catch (e) {
+      log('Error loading wishlist data: $e', name: 'ApiService', error: e);
+      throw Exception('Error loading wishlist data: $e');
+    }
+  }
+
+  // 🛒 Cart API Functions
+  Future<Map<String, dynamic>> getCart() async {
+    try {
+      log('🛒 Getting cart data...', name: 'ApiService');
+      final response = await get(
+        endpoint: BackendEndpoints.cart,
+        authorized: true,
+      );
+
+      log('🛒 Cart response status: ${response.statusCode}', name: 'ApiService');
+      log('🛒 Cart response body: ${response.body}', name: 'ApiService');
+
+      // Handle 404 as a valid empty cart state
+      if (response.statusCode == 404) {
+        log('ℹ️ No cart exists for user, returning empty cart', name: 'ApiService');
+        return {
+          'cartItems': [],
+          'totalCartPrice': 0,
+          'totalPriceAfterDiscount': 0,
+        };
+      }
+
+      if (response.statusCode == 200) {
+        // Handle empty response
+        if (response.body.isEmpty || response.body == '-') {
+          log('ℹ️ Empty cart response, returning empty cart', name: 'ApiService');
+          return {
+            'cartItems': [],
+            'totalCartPrice': 0,
+            'totalPriceAfterDiscount': 0,
+          };
+        }
+
+        final responseData = jsonDecode(response.body);
+        if (responseData == null) {
+          log('❌ Invalid response format: null response', name: 'ApiService');
+          throw Exception('Invalid response format: null response');
+        }
+
+        // Handle direct cart items array
+        if (responseData is List) {
+          log('ℹ️ Response is a list of cart items', name: 'ApiService');
+          return {
+            'cartItems': responseData,
+            'totalCartPrice': 0,
+            'totalPriceAfterDiscount': 0,
+          };
+        }
+
+        // Handle data wrapper
+        if (responseData is Map<String, dynamic>) {
+          if (responseData.containsKey('data')) {
+            final cartData = responseData['data'];
+            if (cartData == null) {
+              log('❌ Invalid response format: null cart data', name: 'ApiService');
+              throw Exception('Invalid response format: null cart data');
+            }
+
+            if (!cartData.containsKey('cartItems')) {
+              log('❌ Invalid response format: missing cartItems field', name: 'ApiService');
+              throw Exception('Invalid response format: missing cartItems field');
+            }
+
+            final cartItems = cartData['cartItems'];
+            log('🛒 Found ${cartItems.length} items in cart', name: 'ApiService');
+            log('🛒 Cart items: $cartItems', name: 'ApiService');
+
+            return cartData;
+          } else if (responseData.containsKey('cartItems')) {
+            log('ℹ️ Response contains direct cartItems field', name: 'ApiService');
+            return responseData;
+          }
+        }
+
+        log('❌ Unexpected response format: $responseData', name: 'ApiService');
+        throw Exception('Unexpected response format');
+      } else {
+        log('❌ Failed to get cart: ${response.body}', name: 'ApiService');
+        throw Exception('Failed to get cart: ${response.body}');
+      }
+    } catch (e, stackTrace) {
+      log('❌ Error getting cart: $e\n$stackTrace', name: 'ApiService', error: e);
+      // If it's a 404 error, return empty cart
+      if (e.toString().contains('404')) {
+        return {
+          'cartItems': [],
+          'totalCartPrice': 0,
+          'totalPriceAfterDiscount': 0,
+        };
+      }
+      throw Exception('Error getting cart: ${e.toString()}');
+    }
+  }
+
+  Future<void> addToCart(String productId, String color) async {
+    try {
+      log('🛒 Adding product to cart: productId=$productId, color=$color', name: 'ApiService');
+      
+      final body = {
+        'productId': productId,
+        'color': color,
+      };
+      
+      log('🛒 Add to cart request body: $body', name: 'ApiService');
+      
+      final response = await post(
+        endpoint: BackendEndpoints.cart,
+        body: body,
+        authorized: true,
+      );
+
+      log('🛒 Add to cart response status: ${response.statusCode}', name: 'ApiService');
+      log('🛒 Add to cart response body: ${response.body}', name: 'ApiService');
+
+      if (response.statusCode != 200) {
+        log('❌ Failed to add item to cart: ${response.body}', name: 'ApiService');
+        throw Exception('Failed to add item to cart: ${response.body}');
+      }
+      
+      // Verify the item was added by getting the cart
+      final cartData = await getCart();
+      final cartItems = cartData['cartItems'] as List;
+      final itemAdded = cartItems.any((item) => 
+        item['product']?['_id'] == productId || 
+        item['productId'] == productId
+      );
+      
+      if (!itemAdded) {
+        log('⚠️ Item was not found in cart after adding', name: 'ApiService');
+        throw Exception('Item was not added to cart successfully');
+      }
+      
+      log('✅ Successfully added product to cart', name: 'ApiService');
+    } catch (e, stackTrace) {
+      log('❌ Error adding to cart: $e\n$stackTrace', name: 'ApiService', error: e);
+      throw Exception('Error adding to cart: ${e.toString()}');
+    }
+  }
+
+  Future<void> removeFromCart(String itemId) async {
+    try {
+      log('🛒 Removing item from cart: $itemId', name: 'ApiService');
+      
+      // First check if item exists in cart
+      final cartData = await getCart();
+      final cartItems = cartData['cartItems'] as List;
+      
+      // Find the actual cart item ID
+      String? actualItemId;
+      for (var item in cartItems) {
+        if (item['_id'] == itemId || 
+            item['id'] == itemId ||
+            item['product']?['_id'] == itemId ||
+            item['productId'] == itemId) {
+          actualItemId = item['_id'];
+          break;
+        }
+      }
+
+      if (actualItemId == null) {
+        log('ℹ️ Item not found in cart, treating as success', name: 'ApiService');
+        return;
+      }
+
+      final response = await http.delete(
+        Uri.parse('$baseUrl${BackendEndpoints.removeCartItem(actualItemId)}'),
+        headers: await _buildHeaders(authorized: true),
+      );
+
+      log('🛒 Remove from cart response status: ${response.statusCode}', name: 'ApiService');
+      log('🛒 Remove from cart response body: ${response.body}', name: 'ApiService');
+
+      // Handle both 200 and 204 as success
+      if (response.statusCode == 200 || response.statusCode == 204) {
+        // Verify the item was actually removed
+        final updatedCartData = await getCart();
+        final updatedCartItems = updatedCartData['cartItems'] as List;
+        
+        // Check if the item still exists using all possible ID formats
+        final itemStillExists = updatedCartItems.any((item) => 
+          item['_id'] == actualItemId || 
+          item['id'] == actualItemId ||
+          item['product']?['_id'] == itemId ||
+          item['productId'] == itemId
+        );
+        
+        if (itemStillExists) {
+          log('⚠️ Item still exists in cart after removal attempt', name: 'ApiService');
+          throw Exception('Item was not removed from cart successfully');
+        }
+        
+        log('✅ Successfully removed item from cart', name: 'ApiService');
+        return;
+      }
+
+      // Handle 404 as success (item already removed)
+      if (response.statusCode == 404) {
+        log('ℹ️ Item not found in cart (already removed)', name: 'ApiService');
+        return;
+      }
+
+      // Handle other error cases
+      final errorMessage = jsonDecode(response.body)['message'] ?? 'Failed to remove item from cart';
+      throw Exception(errorMessage);
+    } catch (e) {
+      log('❌ Error removing from cart: $e', name: 'ApiService', error: e);
+      throw Exception('Error removing from cart: ${e.toString()}');
+    }
+  }
+
+  Future<void> updateCartItemQuantity(String productId, int quantity) async {
+    try {
+      log('🛒 Updating cart item quantity: productId=$productId, quantity=$quantity', name: 'ApiService');
+      
+      // First get the cart to find the actual cart item ID
+      final cartData = await getCart();
+      final cartItems = cartData['cartItems'] as List;
+      
+      // Find the actual cart item ID
+      String? cartItemId;
+      for (var item in cartItems) {
+        if (item['product']?['_id'] == productId || 
+            item['productId'] == productId) {
+          cartItemId = item['_id'];
+          break;
+        }
+      }
+
+      if (cartItemId == null) {
+        log('⚠️ Cart item not found for product: $productId', name: 'ApiService');
+        throw Exception('Cart item not found');
+      }
+
+      final response = await put(
+        endpoint: BackendEndpoints.updateCartItem(cartItemId),
+        body: {'quantity': quantity},
+        authorized: true,
+      );
+
+      log('🛒 Update quantity response status: ${response.statusCode}', name: 'ApiService');
+      log('🛒 Update quantity response body: ${response.body}', name: 'ApiService');
+
+      if (response.statusCode != 200) {
+        final errorMessage = jsonDecode(response.body)['message'] ?? 'Failed to update cart item quantity';
+        throw Exception(errorMessage);
+      }
+
+      // Verify the update was successful
+      final updatedCartData = await getCart();
+      final updatedCartItems = updatedCartData['cartItems'] as List;
+      final updatedItem = updatedCartItems.firstWhere(
+        (item) => item['_id'] == cartItemId,
+        orElse: () => null,
+      );
+
+      if (updatedItem == null || updatedItem['quantity'] != quantity) {
+        throw Exception('Failed to verify quantity update');
+      }
+
+      log('✅ Successfully updated cart item quantity', name: 'ApiService');
+    } catch (e) {
+      log('❌ Error updating cart item quantity: $e', name: 'ApiService', error: e);
+      throw Exception('Error updating cart item quantity: ${e.toString()}');
+    }
+  }
+
+  Future<void> clearCart() async {
+    try {
+      final response = await http.delete(
+        Uri.parse('$baseUrl${BackendEndpoints.cart}'),
+        headers: await _buildHeaders(authorized: true),
+      );
+
+      if (response.statusCode != 204) {
+        throw Exception('Failed to clear cart: ${response.body}');
+      }
+    } catch (e) {
+      throw Exception('Error clearing cart: ${e.toString()}');
+    }
+  }
+
+  Future<void> applyCoupon(String couponCode) async {
+    try {
+      final response = await put(
+        endpoint: BackendEndpoints.applyCoupon,
+        body: {'coupon': couponCode},
+        authorized: true,
+      );
+
+      if (response.statusCode != 200) {
+        throw Exception('Failed to apply coupon: ${response.body}');
+      }
+    } catch (e) {
+      throw Exception('Error applying coupon: ${e.toString()}');
+    }
+  }
+  Future<Map<String, dynamic>?> getProductById(String id) async {
+    try {
+      final response = await get(
+        endpoint: BackendEndpoints.getProductById(id),
+        authorized: true,
+      );
+      
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        if (data is Map && data.containsKey('data')) {
+          return data['data'];
+        }
+        return data;
+      } else if (response.statusCode == 404) {
+        log('Product not found: $id', name: 'ApiService');
+        return null;
+      } else {
+        log('Error getting product: ${response.statusCode} - ${response.body}', name: 'ApiService');
+        throw Exception('Failed to get product: ${response.body}');
+      }
+    } catch (e) {
+      log('Error in getProductById: $e', name: 'ApiService', error: e);
+      rethrow;
+    }
+  }
 }
+

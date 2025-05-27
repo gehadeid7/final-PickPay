@@ -26,7 +26,7 @@ final authRepo = getIt<AuthRepo>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await requestStoragePermission();
+  await requestPermissions();
 
   // Initialize Firebase
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -55,7 +55,7 @@ void main() async {
   );
 }
 
-Future<void> requestStoragePermission() async {
+Future<void> requestPermissions() async {
   if (!Platform.isAndroid) return;
 
   final androidInfo = await DeviceInfoPlugin().androidInfo;
@@ -82,6 +82,9 @@ Future<void> requestStoragePermission() async {
     // ignore: avoid_print
     print('❌ Permission denied.');
   }
+
+  // Request microphone permission for voice search
+  await Permission.microphone.request();
 }
 
 class Pickpay extends StatelessWidget {
@@ -92,15 +95,14 @@ class Pickpay extends StatelessWidget {
     final themeProvider = Provider.of<ThemeProvider>(context);
 
     return MaterialApp(
+      navigatorKey: CartCubit.navigatorKey,
       title: 'PickPay',
       theme: AppThemes.lightTheme,
       darkTheme: AppThemes.darkTheme,
       themeMode: themeProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light,
       onGenerateRoute: onGenerateRoute,
       initialRoute: SplashView.routeName,
-
       debugShowCheckedModeBanner: false,
-      // Add the routeObserver to navigatorObservers
       navigatorObservers: [routeObserver],
       builder: (context, child) {
         return AnimatedTheme(

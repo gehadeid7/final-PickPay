@@ -1,3 +1,5 @@
+import 'dart:developer' as dev;
+
 class ProductsViewsModel {
   // General product information
   final String id;
@@ -364,78 +366,80 @@ class ProductsViewsModel {
   });
 
   factory ProductsViewsModel.fromJson(Map<String, dynamic> json) {
-    return ProductsViewsModel(
-      id: json['_id']?['\$oid'] ?? json['id'] ?? '',
-      title: json['title'] ?? json['name'] ?? '',
-      price: (json['price'] ?? 0).toDouble(),
-      originalPrice: (json['originalPrice'] ?? json['listPrice'])?.toDouble(),
-      category: json['category'],
-      imagePaths: json['imagePaths'] != null
-          ? List<String>.from(json['imagePaths'])
-          : json['images'] != null
-              ? List<String>.from(json['images'])
-              : null,
-      rating: (json['rating'] as num?)?.toDouble(),
-      reviewCount: json['reviewCount'],
-      brand: json['brand'],
-      color: json['color'],
-      aboutThisItem: json['aboutThisItem'] ?? json['description'],
-      deliveryDate: json['deliveryDate'],
-      deliveryTimeLeft: json['deliveryTimeLeft'],
-      deliveryLocation: json['deliveryLocation'],
-      inStock: json['inStock'],
-      shipsFrom: json['shipsFrom'],
-      soldBy: json['soldBy'],
+    try {
+      if (json == null) {
+        throw Exception('Product data is null');
+      }
 
-      // Continue adding remaining fields below
-      material: json['material'],
-      dimensions: json['dimensions'],
-      style: json['style'],
-      installationType: json['installationType'],
-      accessLocation: json['accessLocation'],
-      settingsCount: json['settingsCount'],
-      powerSource: json['powerSource'],
-      modelName: json['modelName'],
-      formFactor: json['formFactor'],
-      controlsType: json['controlsType'],
-      itemWeight: json['itemWeight'],
-      efficiency: json['efficiency'],
-      mountingType: json['mountingType'],
-      capacity: json['capacity'],
-      technology: json['technology'],
-      configration: json['configration'],
-      energyEfficency: json['energyEfficency'],
-      spinSpeed: json['spinSpeed'],
-      modelNumber: json['modelNumber'],
-      numberofprograms: json['numberofprograms'],
-      noiselevel: json['noiselevel'],
-      recommendedUsesForProduct: json['recommendedUsesForProduct'],
-      outputWattage: json['outputWattage'],
-      wattage: json['wattage'],
-      coffeeMakerType: json['coffeeMakerType'],
-      filtertype: json['filtertype'],
-      stainlessSteelNumberofSpeeds: json['stainlessSteelNumberofSpeeds'],
-      bladeMaterial: json['bladeMaterial'],
-      voltage: json['voltage'],
-      components: json['components'],
-      powersource: json['powersource'],
-      pressure: json['pressure'],
-      maximumpressure: json['maximumpressure'],
-      controllertype: json['controllertype'],
-      electricFanDesign: json['electricFanDesign'],
-      roomtype: json['roomtype'],
-      surface: json['surface'],
-      isProductCordless: json['isProductCordless'],
-      frequency: json['frequency'],
-      slotcount: json['slotcount'],
-      drawertype: json['drawertype'],
-      defrostSystem: json['defrostSystem'],
-      size: json['size'],
-      specialfeatures: json['specialfeatures'],
-      finishType: json['finishType'],
-      containerType: json['containerType'],
-      manufacturer: json['manufacturer'],
-    );
+      // Handle both product and cart item formats
+      final productData = json['product'] ?? json;
+      if (productData == null) {
+        throw Exception('Product data is null');
+      }
+
+      // Get required fields with type checking
+      final id = productData['_id']?.toString() ?? productData['id']?.toString();
+      if (id == null) {
+        throw Exception('Product ID is missing');
+      }
+
+      final title = productData['title']?.toString();
+      if (title == null) {
+        throw Exception('Product title is missing');
+      }
+
+      // Handle price which could be int or double
+      final price = productData['price'];
+      if (price == null) {
+        throw Exception('Product price is missing');
+      }
+      final priceValue = price is int ? price.toDouble() : (price is double ? price : double.parse(price.toString()));
+
+      // Handle optional fields with null safety
+      final originalPrice = productData['originalPrice'];
+      final originalPriceValue = originalPrice == null ? null : 
+        (originalPrice is int ? originalPrice.toDouble() : 
+         (originalPrice is double ? originalPrice : double.parse(originalPrice.toString())));
+
+      // Handle image paths
+      List<String>? imagePaths;
+      if (productData['images'] != null) {
+        if (productData['images'] is List) {
+          imagePaths = (productData['images'] as List)
+              .map((img) => img.toString())
+              .toList();
+        } else if (productData['images'] is String) {
+          imagePaths = [productData['images']];
+        }
+      } else if (productData['imageCover'] != null) {
+        imagePaths = [productData['imageCover'].toString()];
+      }
+
+      return ProductsViewsModel(
+        id: id,
+        title: title,
+        price: priceValue,
+        originalPrice: originalPriceValue,
+        category: productData['category']?.toString(),
+        subcategory: productData['subcategory']?.toString(),
+        imagePaths: imagePaths,
+        rating: productData['ratingsAverage']?.toDouble(),
+        reviewCount: productData['ratingsQuantity']?.toInt(),
+        brand: productData['brand']?.toString(),
+        color: productData['color']?.toString(),
+        aboutThisItem: productData['aboutThisItem']?.toString(),
+        deliveryDate: productData['deliveryDate']?.toString(),
+        deliveryTimeLeft: productData['deliveryTimeLeft']?.toString(),
+        deliveryLocation: productData['deliveryLocation']?.toString(),
+        inStock: productData['inStock']?.toBool(),
+        shipsFrom: productData['shipsFrom']?.toString(),
+        soldBy: productData['soldBy']?.toString(),
+        // Add other fields as needed
+      );
+    } catch (e, stackTrace) {
+      dev.log('Error creating ProductsViewsModel: $e\n$stackTrace', name: 'ProductsViewsModel', error: e);
+      rethrow;
+    }
   }
 
   Map<String, dynamic> toJson() {
