@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pickpay/core/widgets/build_appbar.dart';
 import 'package:pickpay/features/categories_pages/models/product_model.dart';
+import 'package:pickpay/features/categories_pages/widgets/base_category_view.dart';
 import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product1.dart';
 import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product2.dart';
 import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product3.dart';
@@ -16,10 +16,6 @@ import 'package:pickpay/features/categories_pages/products_views/appliances_prod
 import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product13.dart';
 import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product14.dart';
 import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product15.dart';
-import 'package:pickpay/features/categories_pages/widgets/brand_filter_widget.dart';
-import 'package:pickpay/features/categories_pages/widgets/price_range_filter.dart';
-import 'package:pickpay/features/categories_pages/widgets/rating_filter.dart';
-import 'package:pickpay/features/categories_pages/widgets/product_card.dart';
 import 'package:pickpay/services/api_service.dart';
 
 class AppliancesViewBody extends StatefulWidget {
@@ -30,118 +26,36 @@ class AppliancesViewBody extends StatefulWidget {
 }
 
 class _AppliancesViewBodyState extends State<AppliancesViewBody> {
-  String? _selectedBrand;
-  double _minRating = 0;
-  RangeValues? _priceRange;
   late Future<List<ProductsViewsModel>> _productsFuture;
 
-  // Map of key phrases to detail pages with their static data
-  static final Map<String, Map<String, dynamic>> productData = {
-    '68252918a68b49cb0616420f': {
-      'page': const AppliancesProduct12(),
-      'rating': 4.5,
-      'reviewCount': 12,
-      'image': 'assets/appliances/product12/1.png',
-      'brand': 'Tornado',
-    },
-    '68252918a68b49cb0616420d': {
-      'page': const AppliancesProduct10(),
-      'rating': 4.6,
-      'reviewCount': 4576,
-      'image': 'assets/appliances/product10/1.png',
-      'brand': 'Generic',
-    },
-    '68252918a68b49cb06164212': {
-      'page': const AppliancesProduct15(),
-      'rating': 4.6,
-      'reviewCount': 1735,
-      'image': 'assets/appliances/product15/1.png',
-      'brand': 'Generic',
-    },
-    '68252918a68b49cb06164210': {
-      'page': const AppliancesProduct13(),
-      'rating': 4.9,
-      'reviewCount': 1439,
-      'image': 'assets/appliances/product13/1.png',
-      'brand': 'Generic',
-    },
-    '68252918a68b49cb06164206': {
-      'page': const AppliancesProduct3(),
-      'rating': 4.5,
-      'reviewCount': 12,
-      'image': 'assets/appliances/product3/1.png',
-      'brand': 'Generic',
-    },
-    '68252918a68b49cb06164209': {
-      'page': const AppliancesProduct6(),
-      'rating': 3.1,
-      'reviewCount': 9,
-      'image': 'assets/appliances/product6/1.png',
-      'brand': 'Generic',
-    },
-    '68252918a68b49cb06164204': {
-      'page': const AppliancesProduct1(),
-      'rating': 3.9,
-      'reviewCount': 9,
-      'image': 'assets/appliances/product1/1.png',
-      'brand': 'Generic',
-    },
-    '68252918a68b49cb06164205': {
-      'page': const AppliancesProduct2(),
-      'rating': 3.1,
-      'reviewCount': 9,
-      'image': 'assets/appliances/product2/1.png',
-      'brand': 'Generic',
-    },
-    '68252918a68b49cb06164207': {
-      'page': const AppliancesProduct4(),
-      'rating': 4.2,
-      'reviewCount': 14,
-      'image': 'assets/appliances/product4/1.png',
-      'brand': 'Generic',
-    },
-    '68252918a68b49cb06164208': {
-      'page': const AppliancesProduct5(),
-      'rating': 4.0,
-      'reviewCount': 11,
-      'image': 'assets/appliances/product5/1.png',
-      'brand': 'Generic',
-    },
-    '68252918a68b49cb0616420a': {
-      'page': const AppliancesProduct7(),
-      'rating': 3.1,
-      'reviewCount': 1288,
-      'image': 'assets/appliances/product7/1.png',
-      'brand': 'Generic',
-    },
-    '68252918a68b49cb0616420b': {
-      'page': const AppliancesProduct8(),
-      'rating': 4.6,
-      'reviewCount': 884,
-      'image': 'assets/appliances/product8/1.png',
-      'brand': 'Generic',
-    },
-    '68252918a68b49cb0616420c': {
-      'page': const AppliancesProduct9(),
-      'rating': 4.8,
-      'reviewCount': 1193,
-      'image': 'assets/appliances/product9/1.png',
-      'brand': 'Generic',
-    },
-    '68252918a68b49cb0616420e': {
-      'page': const AppliancesProduct11(),
-      'rating': 4.4,
-      'reviewCount': 674,
-      'image': 'assets/appliances/product11/1.png',
-      'brand': 'Generic',
-    },
-    '68252918a68b49cb06164211': {
-      'page': const AppliancesProduct14(),
-      'rating': 4.5,
-      'reviewCount': 1162,
-      'image': 'assets/appliances/product14/1.png',
-      'brand': 'Generic',
-    },
+  // Map of product detail pages
+  static final Map<String, Widget> detailPages = {
+    '68252918a68b49cb06164204':
+        const AppliancesProduct1(), // Koldair Water Dispenser
+    '68252918a68b49cb06164205':
+        const AppliancesProduct2(), // Fresh Jumbo Stainless Steel
+    '68252918a68b49cb06164206':
+        const AppliancesProduct3(), // Midea Refrigerator
+    '68252918a68b49cb06164207':
+        const AppliancesProduct4(), // Zanussi Washing Machine
+    '68252918a68b49cb06164208': const AppliancesProduct5(), // Midea Dishwasher
+    '68252918a68b49cb06164209': const AppliancesProduct6(), // deime Air Fryer
+    '68252918a68b49cb0616420a':
+        const AppliancesProduct7(), // Black & Decker Coffee Maker
+    '68252918a68b49cb0616420b':
+        const AppliancesProduct8(), // Black & Decker Toaster
+    '68252918a68b49cb0616420c': const AppliancesProduct9(), // Panasonic Iron
+    '68252918a68b49cb0616420d':
+        const AppliancesProduct10(), // Fresh Vacuum Cleaner
+    '68252918a68b49cb0616420e': const AppliancesProduct11(), // Fresh Wall Fan
+    '68252918a68b49cb0616420f':
+        const AppliancesProduct12(), // Tornado Water Heater
+    '68252918a68b49cb06164210':
+        const AppliancesProduct13(), // Black & Decker Blender
+    '68252918a68b49cb06164211':
+        const AppliancesProduct14(), // Black & Decker Kettle
+    '68252918a68b49cb06164212':
+        const AppliancesProduct15(), // Black & Decker Dough Mixer
   };
 
   @override
@@ -153,189 +67,89 @@ class _AppliancesViewBodyState extends State<AppliancesViewBody> {
   Future<List<ProductsViewsModel>> _loadProducts() async {
     final apiProducts = await ApiService().loadProducts();
 
-    for (var p in apiProducts) {
-      print('API Product ID: ${p.id}');
-    }
+    // Filter for appliance products and map them to our model
+    return apiProducts
+        .map((apiProduct) {
+          // Generate a default image path based on product ID
+          final imagePath =
+              'assets/appliances/product${detailPages.keys.toList().indexOf(apiProduct.id) + 1}/1.png';
 
-    return apiProducts.map((apiProduct) {
-      final matchingKey =
-          productData.containsKey(apiProduct.id) ? apiProduct.id : '';
-      print('Matching key for ${apiProduct.id} -> $matchingKey');
-
-      final brand = matchingKey.isNotEmpty
-          ? productData[matchingKey]!['brand'] as String
-          : 'Generic';
-
-      return ProductsViewsModel(
-        id: apiProduct.id,
-        title: apiProduct.name,
-        price: apiProduct.price,
-        originalPrice: apiProduct.originalPrice,
-        rating: productData[matchingKey]?['rating'] as double? ?? 4.0,
-        reviewCount: productData[matchingKey]?['reviewCount'] as int? ?? 0,
-        brand: brand,
-        imagePaths: [productData[matchingKey]?['image'] as String? ?? ''],
-      );
-    }).toList();
-  }
-
-  List<ProductsViewsModel> _filterProducts(List<ProductsViewsModel> products) {
-    return products.where((product) {
-      final brandMatch = _selectedBrand == null ||
-          _selectedBrand!.isEmpty ||
-          _selectedBrand == 'All Brands' ||
-          product.brand == _selectedBrand;
-
-      final ratingMatch =
-          product.rating != null && product.rating! >= _minRating;
-
-      final priceMatch = _priceRange == null ||
-          (product.price >= _priceRange!.start &&
-              product.price <= _priceRange!.end);
-      return brandMatch && ratingMatch && priceMatch;
-    }).toList();
+          return ProductsViewsModel(
+            id: apiProduct.id,
+            title: apiProduct.name,
+            price: apiProduct.price,
+            originalPrice: apiProduct.originalPrice,
+            rating:
+                4.5, // Default rating - could be fetched from a reviews service
+            reviewCount:
+                100, // Default review count - could be fetched from a reviews service
+            imagePaths: [imagePath],
+          );
+        })
+        .where((product) => detailPages.containsKey(product.id))
+        .toList();
   }
 
   Widget? _findDetailPageById(String productId) {
-    if (productData.containsKey(productId)) {
-      return productData[productId]!['page'] as Widget;
-    }
-    return null;
+    return detailPages[productId];
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: buildAppBar(context: context, title: 'Appliances'),
-      body: FutureBuilder<List<ProductsViewsModel>>(
-        future: _productsFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
+    return FutureBuilder<List<ProductsViewsModel>>(
+      future: _productsFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-          if (snapshot.hasError) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.error_outline, color: Colors.red, size: 60),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Error: ${snapshot.error}',
-                    style: const TextStyle(fontSize: 16),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () => setState(() {
-                      _productsFuture = _loadProducts();
-                    }),
-                    child: const Text('Retry'),
-                  ),
-                ],
-              ),
-            );
-          }
-
-          if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(
-              child: Text(
-                'No appliances available at the moment.',
-                style: TextStyle(fontSize: 16),
-              ),
-            );
-          }
-
-          final filteredProducts = _filterProducts(snapshot.data!);
-          final maxPrice = snapshot.data!
-              .map((product) => product.price)
-              .reduce((a, b) => a > b ? a : b);
-          _priceRange ??= RangeValues(0, maxPrice);
-
-          return RefreshIndicator(
-            onRefresh: () async {
-              setState(() {
-                _productsFuture = _loadProducts();
-              });
-            },
-            child: ListView(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+        if (snapshot.hasError) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Filters section
-                Card(
-                  elevation: 2,
-                  child: BrandFilterWidget(
-                    products: snapshot.data!,
-                    selectedBrand: _selectedBrand,
-                    onBrandChanged: (newBrand) {
-                      setState(() {
-                        _selectedBrand = newBrand;
-                      });
-                    },
-                  ),
-                ),
-                // Price and Rating filters in a row
-                Row(
-                  children: [
-                    // Price Filter (left side)
-                    Expanded(
-                      child: Card(
-                        elevation: 2,
-                        child: PriceRangeFilterWidget(
-                          values: _priceRange!,
-                          maxPrice: maxPrice,
-                          onChanged: (range) =>
-                              setState(() => _priceRange = range),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    // Rating Filter (right side)
-                    Expanded(
-                      child: Card(
-                        elevation: 2,
-                        child: RatingFilterWidget(
-                          value: _minRating,
-                          onChanged: (rating) =>
-                              setState(() => _minRating = rating),
-                        ),
-                      ),
-                    ),
-                  ],
+                const Icon(Icons.error_outline, color: Colors.red, size: 60),
+                const SizedBox(height: 16),
+                Text(
+                  'Error: ${snapshot.error}',
+                  style: const TextStyle(fontSize: 16),
+                  textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 16),
-
-                // Products list
-                ...filteredProducts.map((product) {
-                  final productPage = _findDetailPageById(product.id);
-                  if (productPage == null) return const SizedBox.shrink();
-
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 16),
-                    child: ProductCard(
-                      id: product.id,
-                      name: product.title,
-                      imagePaths: product.imagePaths ?? [],
-                      price: product.price,
-                      originalPrice: product.originalPrice ?? 0,
-                      rating: product.rating ?? 0,
-                      reviewCount: product.reviewCount ?? 0,
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => productPage),
-                        );
-                      },
-                    ),
-                  );
-                  // ignore: unnecessary_to_list_in_spreads
-                }).toList(),
+                ElevatedButton(
+                  onPressed: () =>
+                      setState(() => _productsFuture = _loadProducts()),
+                  child: const Text('Retry'),
+                ),
               ],
             ),
           );
-        },
-      ),
+        }
+
+        if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const Center(
+            child: Text(
+              'No appliances available at the moment.',
+              style: TextStyle(fontSize: 16),
+            ),
+          );
+        }
+
+        return BaseCategoryView(
+          categoryName: 'Appliances',
+          products: snapshot.data!,
+          productDetailBuilder: (productId) {
+            final detailPage = _findDetailPageById(productId);
+            if (detailPage != null) {
+              return detailPage;
+            }
+            return Scaffold(
+              appBar: AppBar(title: const Text('Product Not Found')),
+              body: const Center(child: Text('Product details not available')),
+            );
+          },
+        );
+      },
     );
   }
 }

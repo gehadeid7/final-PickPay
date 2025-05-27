@@ -14,7 +14,7 @@ import 'package:pickpay/features/categories_pages/widgets/product_card.dart';
 import 'package:http_parser/http_parser.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://192.168.1.4:3000/api/v1/';
+  static const String baseUrl = 'http://192.168.1.8:3000/api/v1/';
 
   Future<Map<String, String>> _buildHeaders({
     Map<String, String>? headers,
@@ -214,13 +214,6 @@ class ApiService {
 
         final productCards = products
             .map((productData) {
-              // Filter appliances locally
-              if (productData['category'] != null &&
-                  productData['category']['name'].toString().toLowerCase() !=
-                      'appliances') {
-                return null; // Skip non-appliance product
-              }
-
               List<String> imagePaths = [];
               if (productData['images'] != null) {
                 imagePaths = (productData['images'] as List).map((img) {
@@ -250,9 +243,10 @@ class ApiService {
                 rating:
                     (productData['ratingsAverage'] as num?)?.toDouble() ?? 0.0,
                 reviewCount: productData['ratingsQuantity'] ?? 0,
+                category: productData['category']?['name']?.toString(),
               );
             })
-            .whereType<ProductCard>() // Remove nulls from filtering
+            .where((card) => card != null) // Remove nulls from filtering
             .toList();
 
         return productCards;

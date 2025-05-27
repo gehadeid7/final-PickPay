@@ -378,12 +378,15 @@ class ProductsViewsModel {
       }
 
       // Get required fields with type checking
-      final id = productData['_id']?.toString() ?? productData['id']?.toString();
+      final id =
+          productData['_id']?.toString() ?? productData['id']?.toString();
       if (id == null) {
         throw Exception('Product ID is missing');
       }
 
-      final title = productData['title']?.toString();
+      // Handle title field which might be under 'title' or 'name'
+      final title =
+          productData['title']?.toString() ?? productData['name']?.toString();
       if (title == null) {
         throw Exception('Product title is missing');
       }
@@ -393,13 +396,19 @@ class ProductsViewsModel {
       if (price == null) {
         throw Exception('Product price is missing');
       }
-      final priceValue = price is int ? price.toDouble() : (price is double ? price : double.parse(price.toString()));
+      final priceValue = price is int
+          ? price.toDouble()
+          : (price is double ? price : double.parse(price.toString()));
 
       // Handle optional fields with null safety
       final originalPrice = productData['originalPrice'];
-      final originalPriceValue = originalPrice == null ? null : 
-        (originalPrice is int ? originalPrice.toDouble() : 
-         (originalPrice is double ? originalPrice : double.parse(originalPrice.toString())));
+      final originalPriceValue = originalPrice == null
+          ? null
+          : (originalPrice is int
+              ? originalPrice.toDouble()
+              : (originalPrice is double
+                  ? originalPrice
+                  : double.parse(originalPrice.toString())));
 
       // Handle image paths
       List<String>? imagePaths;
@@ -413,6 +422,14 @@ class ProductsViewsModel {
         }
       } else if (productData['imageCover'] != null) {
         imagePaths = [productData['imageCover'].toString()];
+      }
+
+      // Handle boolean fields
+      bool? parseInStock(dynamic value) {
+        if (value == null) return null;
+        if (value is bool) return value;
+        if (value is String) return value.toLowerCase() == 'true';
+        return null;
       }
 
       return ProductsViewsModel(
@@ -431,13 +448,14 @@ class ProductsViewsModel {
         deliveryDate: productData['deliveryDate']?.toString(),
         deliveryTimeLeft: productData['deliveryTimeLeft']?.toString(),
         deliveryLocation: productData['deliveryLocation']?.toString(),
-        inStock: productData['inStock']?.toBool(),
+        inStock: parseInStock(productData['inStock']),
         shipsFrom: productData['shipsFrom']?.toString(),
         soldBy: productData['soldBy']?.toString(),
         // Add other fields as needed
       );
     } catch (e, stackTrace) {
-      dev.log('Error creating ProductsViewsModel: $e\n$stackTrace', name: 'ProductsViewsModel', error: e);
+      dev.log('Error creating ProductsViewsModel: $e\n$stackTrace',
+          name: 'ProductsViewsModel', error: e);
       rethrow;
     }
   }
