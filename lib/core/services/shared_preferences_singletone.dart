@@ -82,7 +82,8 @@ class Prefs {
       rethrow;
     }
   }
- // مفتاح التخزين لقائمة الرغبات
+
+  // مفتاح التخزين لقائمة الرغبات
   static const _wishlistKey = 'wishlist';
 
   // حفظ قائمة الرغبات (تخزينها كـ JSON String)
@@ -121,6 +122,53 @@ class Prefs {
       print('✅ Wishlist cleared from local storage');
     } catch (e) {
       print('❌ Error clearing wishlist from local storage: $e');
+      rethrow;
+    }
+  }
+
+  // Order storage methods
+  static const _orderKey = 'user_orders';
+
+  // Save orders for a specific user
+  static Future<void> saveUserOrders(
+      String userId, List<dynamic> orders) async {
+    try {
+      final key = '${_orderKey}_$userId';
+      final jsonString = jsonEncode(orders);
+      await setString(key, jsonString);
+      print('✅ Orders saved to local storage for user: $userId');
+    } catch (e) {
+      print('❌ Error saving orders to local storage: $e');
+      rethrow;
+    }
+  }
+
+  // Load orders for a specific user
+  static List<dynamic>? getUserOrders(String userId) {
+    try {
+      final key = '${_orderKey}_$userId';
+      final jsonString = getString(key);
+      if (jsonString.isEmpty) {
+        print('ℹ️ No orders found in local storage for user: $userId');
+        return null;
+      }
+      final List<dynamic> orders = jsonDecode(jsonString);
+      print('✅ Orders loaded from local storage for user: $userId');
+      return orders;
+    } catch (e) {
+      print('❌ Error loading orders from local storage: $e');
+      return null;
+    }
+  }
+
+  // Clear orders for a specific user
+  static Future<void> clearUserOrders(String userId) async {
+    try {
+      final key = '${_orderKey}_$userId';
+      await remove(key);
+      print('✅ Orders cleared from local storage for user: $userId');
+    } catch (e) {
+      print('❌ Error clearing orders from local storage: $e');
       rethrow;
     }
   }

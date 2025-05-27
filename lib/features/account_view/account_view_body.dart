@@ -363,6 +363,8 @@ class AccountViewBody extends StatelessWidget {
           TextButton(
             onPressed: () async {
               await FirebaseAuth.instance.signOut();
+              // Clear orders when logging out
+              context.read<OrderCubit>().clearOrders();
               Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(builder: (context) => const SigninView()),
                 (route) => false,
