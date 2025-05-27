@@ -28,7 +28,8 @@ class SearchTextField extends StatefulWidget {
   State<SearchTextField> createState() => _SearchTextFieldState();
 }
 
-class _SearchTextFieldState extends State<SearchTextField> with SingleTickerProviderStateMixin {
+class _SearchTextFieldState extends State<SearchTextField>
+    with SingleTickerProviderStateMixin {
   late final AISearchService _aiService;
   List<Map<String, dynamic>> _searchResults = [];
   List<String> _suggestions = [];
@@ -45,10 +46,28 @@ class _SearchTextFieldState extends State<SearchTextField> with SingleTickerProv
   static const String _recentSearchesKey = 'recent_searches';
   static const int _maxRecent = 10;
   List<String> _categories = [
-    'Electronics', 'Fashion', 'Home', 'Beauty', 'Toys', 'Books', 'Grocery', 'Sports', 'Automotive', 'Health'
+    'Electronics',
+    'Fashion',
+    'Home',
+    'Beauty',
+    'Toys',
+    'Books',
+    'Grocery',
+    'Sports',
+    'Automotive',
+    'Health'
   ];
   List<String> _popularSearches = [
-    'iPhone', 'Laptop', 'Headphones', 'Air Fryer', 'Smart Watch', 'Sneakers', 'Backpack', 'Bluetooth Speaker', 'Camera', 'Coffee Maker'
+    'iPhone',
+    'Laptop',
+    'Headphones',
+    'Air Fryer',
+    'Smart Watch',
+    'Sneakers',
+    'Backpack',
+    'Bluetooth Speaker',
+    'Camera',
+    'Coffee Maker'
   ];
   String? _selectedCategory;
   String? _selectedPopular;
@@ -66,12 +85,12 @@ class _SearchTextFieldState extends State<SearchTextField> with SingleTickerProv
     super.initState();
     _aiService = AISearchService(apiService: ApiService());
     _speech = stt.SpeechToText();
-    
+
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
-    
+
     _scaleAnimation = Tween<double>(begin: 1.0, end: 1.05).animate(
       CurvedAnimation(
         parent: _animationController,
@@ -178,7 +197,8 @@ class _SearchTextFieldState extends State<SearchTextField> with SingleTickerProv
     }
   }
 
-  Future<void> _searchProducts(String query, {bool fromSuggestion = false}) async {
+  Future<void> _searchProducts(String query,
+      {bool fromSuggestion = false}) async {
     if (query.isEmpty) {
       setState(() {
         _searchResults = [];
@@ -225,9 +245,11 @@ class _SearchTextFieldState extends State<SearchTextField> with SingleTickerProv
               'images': result['images'] ?? result['imagePaths'] ?? [],
               'brand': result['brand'] ?? '',
               'category': result['category'] ?? '',
-              'description': result['description'] ?? result['aboutThisItem'] ?? '',
+              'description':
+                  result['description'] ?? result['aboutThisItem'] ?? '',
               'rating': result['rating'] ?? result['ratingsAverage'] ?? 0.0,
-              'reviewCount': result['reviewCount'] ?? result['ratingsQuantity'] ?? 0,
+              'reviewCount':
+                  result['reviewCount'] ?? result['ratingsQuantity'] ?? 0,
             };
             return processed;
           }).toList();
@@ -255,7 +277,8 @@ class _SearchTextFieldState extends State<SearchTextField> with SingleTickerProv
     });
   }
 
-  List<Map<String, dynamic>> _filterAndSortResults(List<Map<String, dynamic>> results, String query) {
+  List<Map<String, dynamic>> _filterAndSortResults(
+      List<Map<String, dynamic>> results, String query) {
     final lowerQuery = query.toLowerCase();
     final filtered = results.where((item) {
       final title = (item['title'] ?? '').toString().toLowerCase();
@@ -275,7 +298,11 @@ class _SearchTextFieldState extends State<SearchTextField> with SingleTickerProv
   }
 
   void _handleKey(RawKeyEvent event) {
-    final total = _suggestions.length + _searchResults.length + _categories.length + _popularSearches.length + _recentSearches.length;
+    final total = _suggestions.length +
+        _searchResults.length +
+        _categories.length +
+        _popularSearches.length +
+        _recentSearches.length;
     if (event is RawKeyDownEvent) {
       if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
         setState(() {
@@ -283,7 +310,8 @@ class _SearchTextFieldState extends State<SearchTextField> with SingleTickerProv
         });
       } else if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
         setState(() {
-          _highlightedIndex = (_highlightedIndex - 1 + max(total, 1).toInt()) % max(total, 1).toInt();
+          _highlightedIndex = (_highlightedIndex - 1 + max(total, 1).toInt()) %
+              max(total, 1).toInt();
         });
       } else if (event.logicalKey == LogicalKeyboardKey.enter) {
         if (_highlightedIndex >= 0 && _highlightedIndex < _suggestions.length) {
@@ -291,8 +319,10 @@ class _SearchTextFieldState extends State<SearchTextField> with SingleTickerProv
           widget.controller.text = suggestion;
           widget.onSearch(suggestion);
           _searchProducts(suggestion);
-        } else if (_highlightedIndex >= _suggestions.length && _highlightedIndex < total) {
-          final result = _searchResults[_highlightedIndex - _suggestions.length];
+        } else if (_highlightedIndex >= _suggestions.length &&
+            _highlightedIndex < total) {
+          final result =
+              _searchResults[_highlightedIndex - _suggestions.length];
           _handleProductSelection(result);
         }
       } else if (event.logicalKey == LogicalKeyboardKey.escape) {
@@ -319,17 +349,20 @@ class _SearchTextFieldState extends State<SearchTextField> with SingleTickerProv
     int idx = lowerText.indexOf(lowerQuery);
     while (idx != -1) {
       if (idx > start) {
-        spans.add(TextSpan(text: text.substring(start, idx), style: TextStyles.regular16));
+        spans.add(TextSpan(
+            text: text.substring(start, idx), style: TextStyles.regular16));
       }
       spans.add(TextSpan(
         text: text.substring(idx, idx + lowerQuery.length),
-        style: TextStyles.bold16.copyWith(backgroundColor: Colors.yellow.shade300),
+        style:
+            TextStyles.bold16.copyWith(backgroundColor: Colors.yellow.shade300),
       ));
       start = idx + lowerQuery.length;
       idx = lowerText.indexOf(lowerQuery, start);
     }
     if (start < text.length) {
-      spans.add(TextSpan(text: text.substring(start), style: TextStyles.regular16));
+      spans.add(
+          TextSpan(text: text.substring(start), style: TextStyles.regular16));
     }
     return RichText(text: TextSpan(children: spans));
   }
@@ -341,7 +374,8 @@ class _SearchTextFieldState extends State<SearchTextField> with SingleTickerProv
         children: [
           if (icon != null) Icon(icon, size: 18, color: Colors.grey),
           if (icon != null) const SizedBox(width: 6),
-          Text(title, style: TextStyles.bold16.copyWith(color: Colors.grey[700])),
+          Text(title,
+              style: TextStyles.bold16.copyWith(color: Colors.grey[700])),
         ],
       ),
     );
@@ -358,7 +392,8 @@ class _SearchTextFieldState extends State<SearchTextField> with SingleTickerProv
             context: context,
             builder: (context) => AlertDialog(
               title: const Text('Microphone Permission Required'),
-              content: const Text('To use voice search, please allow microphone access.'),
+              content: const Text(
+                  'To use voice search, please allow microphone access.'),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
@@ -381,7 +416,9 @@ class _SearchTextFieldState extends State<SearchTextField> with SingleTickerProv
       if (!available || _speech!.hasPermission != true) {
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Microphone permission not granted or speech recognition unavailable.')),
+            const SnackBar(
+                content: Text(
+                    'Microphone permission not granted or speech recognition unavailable.')),
           );
         }
         return;
@@ -406,7 +443,8 @@ class _SearchTextFieldState extends State<SearchTextField> with SingleTickerProv
 
   Widget _buildVoiceIcon() {
     return IconButton(
-      icon: Icon(_isListening ? Icons.mic : Icons.mic_none, color: Colors.blueAccent),
+      icon: Icon(_isListening ? Icons.mic : Icons.mic_none,
+          color: Colors.blueAccent),
       onPressed: _listenVoice,
       tooltip: 'Voice Search',
     );
@@ -460,7 +498,9 @@ class _SearchTextFieldState extends State<SearchTextField> with SingleTickerProv
     final borderColor = isDarkMode ? Colors.grey[700] : Colors.grey.shade400;
     final primaryColor = Theme.of(context).colorScheme.primary;
     final query = widget.controller.text;
-    final showRecent = _isFocused && widget.controller.text.isEmpty && _recentSearches.isNotEmpty;
+    final showRecent = _isFocused &&
+        widget.controller.text.isEmpty &&
+        _recentSearches.isNotEmpty;
 
     print('🎨 Building UI with:');
     print('  - Query: $query');
@@ -480,7 +520,6 @@ class _SearchTextFieldState extends State<SearchTextField> with SingleTickerProv
             curve: Curves.easeInOut,
             margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 0),
             decoration: BoxDecoration(
-              color: Colors.white,
               borderRadius: BorderRadius.circular(32),
               boxShadow: [
                 BoxShadow(
@@ -524,9 +563,12 @@ class _SearchTextFieldState extends State<SearchTextField> with SingleTickerProv
                     ),
                     decoration: InputDecoration(
                       isCollapsed: true,
-                      contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 12, horizontal: 16),
                       hintStyle: TextStyles.regular16.copyWith(
-                        color: isDarkMode ? Colors.grey[400] : const Color(0xFF949D9E),
+                        color: isDarkMode
+                            ? Colors.grey[400]
+                            : const Color(0xFF949D9E),
                       ),
                       hintText: 'Search for products, brands, categories...',
                       filled: true,
@@ -540,7 +582,9 @@ class _SearchTextFieldState extends State<SearchTextField> with SingleTickerProv
                             width: 20,
                             height: 20,
                             fit: BoxFit.contain,
-                            color: _isFocused ? primaryColor : (isDarkMode ? Colors.grey[400] : null),
+                            color: _isFocused
+                                ? primaryColor
+                                : (isDarkMode ? Colors.grey[400] : null),
                           ),
                         ),
                       ),
@@ -557,7 +601,9 @@ class _SearchTextFieldState extends State<SearchTextField> with SingleTickerProv
                               key: const ValueKey('clear'),
                               icon: Icon(
                                 Icons.clear,
-                                color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                                color: isDarkMode
+                                    ? Colors.grey[400]
+                                    : Colors.grey[600],
                               ),
                               onPressed: () {
                                 print('🗑️ Clear button pressed');
@@ -610,12 +656,18 @@ class _SearchTextFieldState extends State<SearchTextField> with SingleTickerProv
               padding: EdgeInsets.all(12.0),
               child: Center(child: CircularProgressIndicator()),
             ),
-          if (!_isLoading && _suggestions.isEmpty && _searchResults.isEmpty && widget.controller.text.isNotEmpty)
+          if (!_isLoading &&
+              _suggestions.isEmpty &&
+              _searchResults.isEmpty &&
+              widget.controller.text.isNotEmpty)
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Text('No results found', style: TextStyles.regular16),
             ),
-          if (_showDropdown && (_suggestions.isNotEmpty || _searchResults.isNotEmpty || showRecent))
+          if (_showDropdown &&
+              (_suggestions.isNotEmpty ||
+                  _searchResults.isNotEmpty ||
+                  showRecent))
             SizedBox(
               height: 400, // Limit dropdown height
               child: Container(
@@ -639,7 +691,8 @@ class _SearchTextFieldState extends State<SearchTextField> with SingleTickerProv
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            _buildSectionHeader('Recent Searches', icon: Icons.history),
+                            _buildSectionHeader('Recent Searches',
+                                icon: Icons.history),
                             TextButton(
                               onPressed: _clearRecentSearches,
                               child: const Text('Clear All'),
@@ -652,23 +705,31 @@ class _SearchTextFieldState extends State<SearchTextField> with SingleTickerProv
                               background: Container(
                                 color: Colors.red,
                                 alignment: Alignment.centerRight,
-                                padding: const EdgeInsets.symmetric(horizontal: 20),
-                                child: const Icon(Icons.delete, color: Colors.white),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 20),
+                                child: const Icon(Icons.delete,
+                                    color: Colors.white),
                               ),
                               onDismissed: (direction) async {
                                 setState(() => _recentSearches.remove(recent));
-                                final prefs = await SharedPreferences.getInstance();
-                                prefs.setStringList(_recentSearchesKey, _recentSearches);
+                                final prefs =
+                                    await SharedPreferences.getInstance();
+                                prefs.setStringList(
+                                    _recentSearchesKey, _recentSearches);
                               },
                               child: ListTile(
                                 leading: const Icon(Icons.history),
-                                title: Text(recent, style: TextStyles.regular16),
+                                title:
+                                    Text(recent, style: TextStyles.regular16),
                                 trailing: IconButton(
                                   icon: const Icon(Icons.close, size: 18),
                                   onPressed: () async {
-                                    setState(() => _recentSearches.remove(recent));
-                                    final prefs = await SharedPreferences.getInstance();
-                                    prefs.setStringList(_recentSearchesKey, _recentSearches);
+                                    setState(
+                                        () => _recentSearches.remove(recent));
+                                    final prefs =
+                                        await SharedPreferences.getInstance();
+                                    prefs.setStringList(
+                                        _recentSearchesKey, _recentSearches);
                                   },
                                 ),
                                 onTap: () {
@@ -680,15 +741,24 @@ class _SearchTextFieldState extends State<SearchTextField> with SingleTickerProv
                       ],
                       if (_suggestions.isNotEmpty) ...[
                         _buildSectionHeader('Suggestions', icon: Icons.search),
-                        ..._suggestions.take(3).toList().asMap().entries.map((entry) {
+                        ..._suggestions
+                            .take(3)
+                            .toList()
+                            .asMap()
+                            .entries
+                            .map((entry) {
                           final idx = entry.key;
                           final suggestion = entry.value;
-                          if (suggestion.trim().isEmpty) return SizedBox.shrink();
+                          if (suggestion.trim().isEmpty)
+                            return SizedBox.shrink();
                           return Material(
-                            color: _highlightedIndex == idx ? primaryColor.withOpacity(0.1) : Colors.transparent,
+                            color: _highlightedIndex == idx
+                                ? primaryColor.withOpacity(0.1)
+                                : Colors.transparent,
                             child: ListTile(
                               leading: const Icon(Icons.search),
-                              title: Text(suggestion, style: TextStyles.regular16),
+                              title:
+                                  Text(suggestion, style: TextStyles.regular16),
                               trailing: IconButton(
                                 icon: const Icon(Icons.close, size: 18),
                                 onPressed: () {
@@ -699,7 +769,8 @@ class _SearchTextFieldState extends State<SearchTextField> with SingleTickerProv
                               ),
                               onTap: () {
                                 _debounce?.cancel();
-                                _searchProducts(suggestion, fromSuggestion: true);
+                                _searchProducts(suggestion,
+                                    fromSuggestion: true);
                               },
                               selected: _highlightedIndex == idx,
                             ),
@@ -707,16 +778,21 @@ class _SearchTextFieldState extends State<SearchTextField> with SingleTickerProv
                         }),
                       ],
                       if (_searchResults.isNotEmpty) ...[
-                        _buildSectionHeader('Results', icon: Icons.shopping_bag),
+                        _buildSectionHeader('Results',
+                            icon: Icons.shopping_bag),
                         ..._searchResults.asMap().entries.map((entry) {
                           final idx = entry.key + _suggestions.length;
                           final result = entry.value;
                           print('🎯 Building result item: ${result['title']}');
                           return Material(
-                            color: _highlightedIndex == idx ? primaryColor.withOpacity(0.1) : Colors.transparent,
+                            color: _highlightedIndex == idx
+                                ? primaryColor.withOpacity(0.1)
+                                : Colors.transparent,
                             child: ListTile(
-                              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                              leading: result['images'] != null && result['images'].isNotEmpty
+                              contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 8),
+                              leading: result['images'] != null &&
+                                      result['images'].isNotEmpty
                                   ? ClipRRect(
                                       borderRadius: BorderRadius.circular(8),
                                       child: Image.network(
@@ -724,16 +800,20 @@ class _SearchTextFieldState extends State<SearchTextField> with SingleTickerProv
                                         width: 48,
                                         height: 48,
                                         fit: BoxFit.cover,
-                                        errorBuilder: (context, error, stackTrace) =>
-                                            Container(
-                                              width: 48,
-                                              height: 48,
-                                              decoration: BoxDecoration(
-                                                color: Colors.grey[200],
-                                                borderRadius: BorderRadius.circular(8),
-                                              ),
-                                              child: const Icon(Icons.image_not_supported, color: Colors.grey),
-                                            ),
+                                        errorBuilder:
+                                            (context, error, stackTrace) =>
+                                                Container(
+                                          width: 48,
+                                          height: 48,
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey[200],
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                          ),
+                                          child: const Icon(
+                                              Icons.image_not_supported,
+                                              color: Colors.grey),
+                                        ),
                                       ),
                                     )
                                   : Container(
@@ -743,9 +823,13 @@ class _SearchTextFieldState extends State<SearchTextField> with SingleTickerProv
                                         color: Colors.grey[200],
                                         borderRadius: BorderRadius.circular(8),
                                       ),
-                                      child: const Icon(Icons.image_not_supported, color: Colors.grey),
+                                      child: const Icon(
+                                          Icons.image_not_supported,
+                                          color: Colors.grey),
                                     ),
-                              title: _highlightText(result['title'] ?? 'No title', widget.controller.text),
+                              title: _highlightText(
+                                  result['title'] ?? 'No title',
+                                  widget.controller.text),
                               subtitle: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -757,29 +841,37 @@ class _SearchTextFieldState extends State<SearchTextField> with SingleTickerProv
                                         color: primaryColor,
                                       ),
                                     ),
-                                  if ((result['brand'] ?? '').toString().isNotEmpty) ...[
+                                  if ((result['brand'] ?? '')
+                                      .toString()
+                                      .isNotEmpty) ...[
                                     const SizedBox(height: 2),
                                     Text(
                                       'Brand: ${result['brand']}',
-                                      style: TextStyles.regular16.copyWith(color: Colors.grey[600]),
+                                      style: TextStyles.regular16
+                                          .copyWith(color: Colors.grey[600]),
                                     ),
                                   ],
-                                  if ((result['category'] ?? '').toString().isNotEmpty) ...[
+                                  if ((result['category'] ?? '')
+                                      .toString()
+                                      .isNotEmpty) ...[
                                     const SizedBox(height: 2),
                                     Text(
                                       'Category: ${result['category']}',
-                                      style: TextStyles.regular16.copyWith(color: Colors.grey[600]),
+                                      style: TextStyles.regular16
+                                          .copyWith(color: Colors.grey[600]),
                                     ),
                                   ],
                                   if ((result['rating'] ?? 0) > 0) ...[
                                     const SizedBox(height: 2),
                                     Row(
                                       children: [
-                                        Icon(Icons.star, size: 16, color: Colors.amber),
+                                        Icon(Icons.star,
+                                            size: 16, color: Colors.amber),
                                         const SizedBox(width: 4),
                                         Text(
                                           '${result['rating']} (${result['reviewCount']} reviews)',
-                                          style: TextStyles.regular16.copyWith(color: Colors.grey[600]),
+                                          style: TextStyles.regular16.copyWith(
+                                              color: Colors.grey[600]),
                                         ),
                                       ],
                                     ),

@@ -74,7 +74,8 @@ class _CustomHomeAppbarState extends State<CustomHomeAppbar> {
 
     try {
       // Check cache first
-      final cachedResults = await _historyService.getCachedResultsForQuery(query);
+      final cachedResults =
+          await _historyService.getCachedResultsForQuery(query);
       if (cachedResults != null) {
         setState(() {
           _searchResults = cachedResults;
@@ -85,11 +86,12 @@ class _CustomHomeAppbarState extends State<CustomHomeAppbar> {
 
       // If not in cache, perform search
       final results = await _apiService.searchProductsAI(query);
-      final mappedResults = results.map((item) => Map<String, dynamic>.from(item)).toList();
-      
+      final mappedResults =
+          results.map((item) => Map<String, dynamic>.from(item)).toList();
+
       // Cache the results
       await _historyService.cacheResults(query, mappedResults);
-      
+
       // Add to search history
       await _historyService.addToHistory(query);
       await _loadSearchHistory();
@@ -104,7 +106,8 @@ class _CustomHomeAppbarState extends State<CustomHomeAppbar> {
     }
   }
 
-  List<Map<String, dynamic>> _filterResults(List<Map<String, dynamic>> results) {
+  List<Map<String, dynamic>> _filterResults(
+      List<Map<String, dynamic>> results) {
     var filteredResults = results.where((product) {
       final price = product['price'] as num? ?? 0;
       final rating = product['rating'] as num? ?? 0;
@@ -112,7 +115,9 @@ class _CustomHomeAppbarState extends State<CustomHomeAppbar> {
 
       final priceMatch = price >= _priceRange.start && price <= _priceRange.end;
       final ratingMatch = rating >= _minRating;
-      final brandMatch = _selectedBrand == null || _selectedBrand == 'All Brands' || brand == _selectedBrand;
+      final brandMatch = _selectedBrand == null ||
+          _selectedBrand == 'All Brands' ||
+          brand == _selectedBrand;
 
       return priceMatch && ratingMatch && brandMatch;
     }).toList();
@@ -120,22 +125,28 @@ class _CustomHomeAppbarState extends State<CustomHomeAppbar> {
     // Apply sorting
     switch (_sortOption) {
       case SortOption.priceLowToHigh:
-        filteredResults.sort((a, b) => (a['price'] as num).compareTo(b['price'] as num));
+        filteredResults
+            .sort((a, b) => (a['price'] as num).compareTo(b['price'] as num));
         break;
       case SortOption.priceHighToLow:
-        filteredResults.sort((a, b) => (b['price'] as num).compareTo(a['price'] as num));
+        filteredResults
+            .sort((a, b) => (b['price'] as num).compareTo(a['price'] as num));
         break;
       case SortOption.ratingHighToLow:
-        filteredResults.sort((a, b) => (b['rating'] as num).compareTo(a['rating'] as num));
+        filteredResults
+            .sort((a, b) => (b['rating'] as num).compareTo(a['rating'] as num));
         break;
       case SortOption.newestFirst:
-        filteredResults.sort((a, b) => (b['createdAt'] as String).compareTo(a['createdAt'] as String));
+        filteredResults.sort((a, b) =>
+            (b['createdAt'] as String).compareTo(a['createdAt'] as String));
         break;
       case SortOption.nameAZ:
-        filteredResults.sort((a, b) => (a['title'] as String).compareTo(b['title'] as String));
+        filteredResults.sort(
+            (a, b) => (a['title'] as String).compareTo(b['title'] as String));
         break;
       case SortOption.nameZA:
-        filteredResults.sort((a, b) => (b['title'] as String).compareTo(a['title'] as String));
+        filteredResults.sort(
+            (a, b) => (b['title'] as String).compareTo(a['title'] as String));
         break;
     }
 
@@ -278,7 +289,7 @@ class _CustomHomeAppbarState extends State<CustomHomeAppbar> {
         ),
         const SizedBox(height: 8),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Column(
             children: [
               SearchTextField(
@@ -371,8 +382,12 @@ class _CustomHomeAppbarState extends State<CustomHomeAppbar> {
                             children: [
                               IconButton(
                                 icon: Icon(
-                                  _showFilters ? Icons.filter_list : Icons.filter_list_outlined,
-                                  color: _showFilters ? Theme.of(context).colorScheme.primary : null,
+                                  _showFilters
+                                      ? Icons.filter_list
+                                      : Icons.filter_list_outlined,
+                                  color: _showFilters
+                                      ? Theme.of(context).colorScheme.primary
+                                      : null,
                                 ),
                                 onPressed: () {
                                   setState(() => _showFilters = !_showFilters);
@@ -380,11 +395,16 @@ class _CustomHomeAppbarState extends State<CustomHomeAppbar> {
                               ),
                               IconButton(
                                 icon: Icon(
-                                  _showSortOptions ? Icons.sort : Icons.sort_outlined,
-                                  color: _showSortOptions ? Theme.of(context).colorScheme.primary : null,
+                                  _showSortOptions
+                                      ? Icons.sort
+                                      : Icons.sort_outlined,
+                                  color: _showSortOptions
+                                      ? Theme.of(context).colorScheme.primary
+                                      : null,
                                 ),
                                 onPressed: () {
-                                  setState(() => _showSortOptions = !_showSortOptions);
+                                  setState(() =>
+                                      _showSortOptions = !_showSortOptions);
                                 },
                               ),
                             ],
@@ -410,7 +430,8 @@ class _CustomHomeAppbarState extends State<CustomHomeAppbar> {
                         // Rating Filter
                         Row(
                           children: [
-                            Text('Min Rating: ${_minRating.toStringAsFixed(1)}'),
+                            Text(
+                                'Min Rating: ${_minRating.toStringAsFixed(1)}'),
                             Expanded(
                               child: Slider(
                                 value: _minRating,
@@ -458,32 +479,38 @@ class _CustomHomeAppbarState extends State<CustomHomeAppbar> {
                             _buildFilterChip(
                               'Price: Low to High',
                               _sortOption == SortOption.priceLowToHigh,
-                              () => setState(() => _sortOption = SortOption.priceLowToHigh),
+                              () => setState(() =>
+                                  _sortOption = SortOption.priceLowToHigh),
                             ),
                             _buildFilterChip(
                               'Price: High to Low',
                               _sortOption == SortOption.priceHighToLow,
-                              () => setState(() => _sortOption = SortOption.priceHighToLow),
+                              () => setState(() =>
+                                  _sortOption = SortOption.priceHighToLow),
                             ),
                             _buildFilterChip(
                               'Rating: High to Low',
                               _sortOption == SortOption.ratingHighToLow,
-                              () => setState(() => _sortOption = SortOption.ratingHighToLow),
+                              () => setState(() =>
+                                  _sortOption = SortOption.ratingHighToLow),
                             ),
                             _buildFilterChip(
                               'Newest First',
                               _sortOption == SortOption.newestFirst,
-                              () => setState(() => _sortOption = SortOption.newestFirst),
+                              () => setState(
+                                  () => _sortOption = SortOption.newestFirst),
                             ),
                             _buildFilterChip(
                               'Name: A-Z',
                               _sortOption == SortOption.nameAZ,
-                              () => setState(() => _sortOption = SortOption.nameAZ),
+                              () => setState(
+                                  () => _sortOption = SortOption.nameAZ),
                             ),
                             _buildFilterChip(
                               'Name: Z-A',
                               _sortOption == SortOption.nameZA,
-                              () => setState(() => _sortOption = SortOption.nameZA),
+                              () => setState(
+                                  () => _sortOption = SortOption.nameZA),
                             ),
                           ],
                         ),
