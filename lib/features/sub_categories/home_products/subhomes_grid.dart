@@ -12,16 +12,16 @@ class SubhomesGrid extends StatelessWidget {
     Widget page;
     switch (categoryName) {
       case 'Furniture':
-        page = const FurnitureView();
+        page = FurnitureView();
         break;
       case 'Home Decor':
-        page = const HomeDecorview();
+        page = HomeDecorview();
         break;
       case 'Bath & Bedding':
-        page = const BathView();
+        page = BathView();
         break;
       case 'Kitchen & Dining':
-        page = const Kitchenview();
+        page = Kitchenview();
         break;
       default:
         page = const Scaffold(

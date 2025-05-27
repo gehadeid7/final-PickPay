@@ -1,30 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:pickpay/core/widgets/build_appbar.dart';
 import 'package:pickpay/features/categories_pages/models/product_model.dart';
+import 'package:pickpay/features/categories_pages/widgets/base_category_view.dart';
 import 'package:pickpay/features/categories_pages/products_views/home_products/home_product1.dart';
 import 'package:pickpay/features/categories_pages/products_views/home_products/home_product11.dart';
 import 'package:pickpay/features/categories_pages/products_views/home_products/home_product12.dart';
 import 'package:pickpay/features/categories_pages/products_views/home_products/home_product13.dart';
 import 'package:pickpay/features/categories_pages/products_views/home_products/home_product14.dart';
 import 'package:pickpay/features/categories_pages/products_views/home_products/home_product15.dart';
-import 'package:pickpay/features/categories_pages/widgets/brand_filter_widget.dart';
-import 'package:pickpay/features/categories_pages/widgets/price_range_filter.dart';
-import 'package:pickpay/features/categories_pages/widgets/rating_filter.dart';
-import 'package:pickpay/features/categories_pages/widgets/product_card.dart';
 
-class Kitchenview extends StatefulWidget {
-  const Kitchenview({super.key});
+class Kitchenview extends StatelessWidget {
+  Kitchenview({super.key});
 
-  @override
-  State<Kitchenview> createState() => _Kitchenview();
-}
-
-class _Kitchenview extends State<Kitchenview> {
-  String? _selectedBrand;
-  double _minRating = 0;
-  RangeValues? _priceRange;
-
-  final List<ProductsViewsModel> _allProducts = [
+  final List<ProductsViewsModel> _products = [
     ProductsViewsModel(
       id: 'home11',
       title: 'Neoflam Pote Cookware Set 11-Pieces, Pink Marble',
@@ -80,135 +67,29 @@ class _Kitchenview extends State<Kitchenview> {
     ),
   ];
 
-  List<ProductsViewsModel> _filterProducts(List<ProductsViewsModel> products) {
-    return products.where((product) {
-      final brandMatch = _selectedBrand == null ||
-          _selectedBrand!.isEmpty ||
-          _selectedBrand == 'All Brands' ||
-          product.brand == _selectedBrand;
-
-      final ratingMatch =
-          product.rating != null && product.rating! >= _minRating;
-
-      final priceMatch = _priceRange == null ||
-          (product.price >= _priceRange!.start &&
-              product.price <= _priceRange!.end);
-
-      return brandMatch && ratingMatch && priceMatch;
-    }).toList();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    final maxPrice = _allProducts
-        .map((product) => product.price)
-        .reduce((a, b) => a > b ? a : b);
-    _priceRange = RangeValues(0, maxPrice);
+  Widget _buildProductDetail(String productId) {
+    switch (productId) {
+      case 'home11':
+        return const HomeProduct11();
+      case 'home12':
+        return const HomeProduct12();
+      case 'home13':
+        return const HomeProduct13();
+      case 'home14':
+        return const HomeProduct14();
+      case 'home15':
+        return const HomeProduct15();
+      default:
+        return const HomeProduct1();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final maxPrice = _allProducts
-        .map((product) => product.price)
-        .reduce((a, b) => a > b ? a : b);
-
-    final filteredProducts = _filterProducts(_allProducts);
-
-    return Scaffold(
-      appBar: buildAppBar(context: context, title: 'Kitchen & Dining'),
-      body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        children: [
-          // Filters section
-          Card(
-            elevation: 2,
-            child: BrandFilterWidget(
-              products: _allProducts,
-              selectedBrand: _selectedBrand,
-              onBrandChanged: (newBrand) {
-                setState(() {
-                  _selectedBrand = newBrand;
-                });
-              },
-            ),
-          ),
-
-          // Price and Rating filters
-          Row(
-            children: [
-              Expanded(
-                child: Card(
-                  elevation: 2,
-                  child: PriceRangeFilterWidget(
-                    values: _priceRange!, // crash if _priceRange is null
-                    maxPrice: maxPrice,
-                    onChanged: (range) => setState(() => _priceRange = range),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Card(
-                  elevation: 2,
-                  child: RatingFilterWidget(
-                    value: _minRating,
-                    onChanged: (rating) => setState(() => _minRating = rating),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-
-          // Product list
-          ...filteredProducts.map((product) {
-            return Column(
-              children: [
-                ProductCard(
-                  id: product.id,
-                  name: product.title,
-                  imagePaths: product.imagePaths ?? [],
-                  price: product.price,
-                  originalPrice: product.originalPrice ?? 0,
-                  rating: product.rating ?? 0,
-                  reviewCount: product.reviewCount ?? 0,
-                  onTap: () {
-                    Widget productDetailView;
-                    switch (product.id) {
-                      case 'home11':
-                        productDetailView = const HomeProduct11();
-                        break;
-                      case 'home12':
-                        productDetailView = const HomeProduct12();
-                        break;
-                      case 'home13':
-                        productDetailView = const HomeProduct13();
-                        break;
-                      case 'home14':
-                        productDetailView = const HomeProduct14();
-                        break;
-                      case 'home15':
-                        productDetailView = const HomeProduct15();
-                        break;
-                      default:
-                        productDetailView = const HomeProduct1();
-                    }
-
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => productDetailView),
-                    );
-                  },
-                ),
-                const SizedBox(height: 10),
-              ],
-            );
-          }).toList(),
-          const SizedBox(height: 20),
-        ],
-      ),
+    return BaseCategoryView(
+      categoryName: 'Kitchen & Dining',
+      products: _products,
+      productDetailBuilder: _buildProductDetail,
     );
   }
 }

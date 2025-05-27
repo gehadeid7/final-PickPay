@@ -1,30 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:pickpay/core/widgets/build_appbar.dart';
 import 'package:pickpay/features/categories_pages/models/product_model.dart';
+import 'package:pickpay/features/categories_pages/widgets/base_category_view.dart';
 import 'package:pickpay/features/categories_pages/products_views/home_products/home_product1.dart';
 import 'package:pickpay/features/categories_pages/products_views/home_products/home_product16.dart';
 import 'package:pickpay/features/categories_pages/products_views/home_products/home_product17.dart';
 import 'package:pickpay/features/categories_pages/products_views/home_products/home_product18.dart';
 import 'package:pickpay/features/categories_pages/products_views/home_products/home_product19.dart';
 import 'package:pickpay/features/categories_pages/products_views/home_products/home_product20.dart';
-import 'package:pickpay/features/categories_pages/widgets/brand_filter_widget.dart';
-import 'package:pickpay/features/categories_pages/widgets/price_range_filter.dart';
-import 'package:pickpay/features/categories_pages/widgets/rating_filter.dart';
-import 'package:pickpay/features/categories_pages/widgets/product_card.dart';
 
-class BathView extends StatefulWidget {
-  const BathView({super.key});
+class BathView extends StatelessWidget {
+  BathView({super.key});
 
-  @override
-  State<BathView> createState() => _BathViewState();
-}
-
-class _BathViewState extends State<BathView> {
-  String? _selectedBrand;
-  double _minRating = 0;
-  RangeValues _priceRange = const RangeValues(0, 10000);
-
-  final List<ProductsViewsModel> _allProducts = [
+  final List<ProductsViewsModel> _products = [
     ProductsViewsModel(
       id: 'home16',
       title: 'Banotex Cotton Towel 50x100 (Sugar)',
@@ -79,129 +66,29 @@ class _BathViewState extends State<BathView> {
     ),
   ];
 
-  List<ProductsViewsModel> get _filteredProducts {
-    return _allProducts.where((product) {
-      final brandMatch = _selectedBrand == null ||
-          _selectedBrand!.isEmpty ||
-          _selectedBrand == 'All Brands' ||
-          product.brand == _selectedBrand;
-
-      final ratingMatch =
-          product.rating != null && product.rating! >= _minRating;
-
-      final priceMatch = product.price >= _priceRange.start &&
-          product.price <= _priceRange.end;
-
-      return brandMatch && ratingMatch && priceMatch;
-    }).toList();
+  Widget _buildProductDetail(String productId) {
+    switch (productId) {
+      case 'home16':
+        return const HomeProduct16();
+      case 'home17':
+        return const HomeProduct17();
+      case 'home18':
+        return const HomeProduct18();
+      case 'home19':
+        return const HomeProduct19();
+      case 'home20':
+        return const HomeProduct20();
+      default:
+        return const HomeProduct1();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final maxPrice = _allProducts
-        .map((product) => product.price)
-        .reduce((a, b) => a > b ? a : b);
-
-    return Scaffold(
-      appBar: buildAppBar(context: context, title: 'Bath & Bedding'),
-      body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        children: [
-          // Filters section
-          Card(
-            elevation: 2,
-            child: BrandFilterWidget(
-              products: _allProducts,
-              selectedBrand: _selectedBrand,
-              onBrandChanged: (newBrand) {
-                setState(() {
-                  _selectedBrand = newBrand;
-                });
-              },
-            ),
-          ),
-          // Price and Rating filters in a row
-          Row(
-            children: [
-              // Price Filter (left side)
-              Expanded(
-                child: Card(
-                  elevation: 2,
-                  child: PriceRangeFilterWidget(
-                    values: _priceRange,
-                    maxPrice: maxPrice,
-                    onChanged: (range) => setState(() => _priceRange = range),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 8),
-              // Rating Filter (right side)
-              Expanded(
-                child: Card(
-                  elevation: 2,
-                  child: RatingFilterWidget(
-                    value: _minRating,
-                    onChanged: (rating) => setState(() => _minRating = rating),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          // Products list
-          ..._filteredProducts.map((product) {
-            return Column(
-              children: [
-                ProductCard(
-                  id: product.id,
-                  name: product.title,
-                  imagePaths: product.imagePaths ?? [],
-                  price: product.price,
-                  originalPrice: product.originalPrice ?? 0,
-                  rating: product.rating ?? 0,
-                  reviewCount: product.reviewCount ?? 0,
-                  onTap: () {
-                    // Navigate to the appropriate product detail view
-                    // based on the product ID
-                    final productId = product.id;
-                    Widget productDetailView;
-
-                    switch (productId) {
-                      case 'home16':
-                        productDetailView = const HomeProduct16();
-                        break;
-                      case 'home17':
-                        productDetailView = const HomeProduct17();
-                        break;
-                      case 'home18':
-                        productDetailView = const HomeProduct18();
-                        break;
-                      case 'home19':
-                        productDetailView = const HomeProduct19();
-                        break;
-                      case 'home20':
-                        productDetailView = const HomeProduct20();
-                        break;
-                      default:
-                        productDetailView =
-                            const HomeProduct1(); // Default fallback
-                    }
-
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => productDetailView),
-                    );
-                  },
-                ),
-                const SizedBox(height: 10),
-              ],
-            );
-            // ignore: unnecessary_to_list_in_spreads
-          }).toList(),
-          const SizedBox(height: 20),
-        ],
-      ),
+    return BaseCategoryView(
+      categoryName: 'Bath & Bedding',
+      products: _products,
+      productDetailBuilder: _buildProductDetail,
     );
   }
 }

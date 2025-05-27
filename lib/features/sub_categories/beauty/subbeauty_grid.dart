@@ -12,16 +12,16 @@ class SubbeautyGrid extends StatelessWidget {
     Widget page;
     switch (categoryName) {
       case 'Makeup':
-        page = const Makeup();
+        page = Makeup();
         break;
       case 'Skincare':
-        page = const Skincare();
+        page = Skincare();
         break;
       case 'Haircare':
-        page = const Haircare();
+        page = Haircare();
         break;
       case 'Fragrance':
-        page = const Fragrance();
+        page = Fragrance();
         break;
 
       default:

@@ -1,31 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:pickpay/core/widgets/build_appbar.dart';
 import 'package:pickpay/features/categories_pages/models/product_model.dart';
+import 'package:pickpay/features/categories_pages/widgets/base_category_view.dart';
 import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product1.dart';
 import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product10.dart';
 import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product11.dart';
 import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product12.dart';
 import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product13.dart';
 import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product14.dart';
-import 'package:pickpay/features/categories_pages/widgets/brand_filter_widget.dart';
-import 'package:pickpay/features/categories_pages/widgets/product_card.dart';
-import 'package:pickpay/features/categories_pages/widgets/price_range_filter.dart';
-import 'package:pickpay/features/categories_pages/widgets/rating_filter.dart';
 
-class Accessories extends StatefulWidget {
-  const Accessories({super.key});
+class Accessories extends StatelessWidget {
+  Accessories({super.key});
 
-  @override
-  State<Accessories> createState() => _Accessories();
-}
-
-class _Accessories extends State<Accessories> {
-  String? _selectedBrand;
-  double _minRating = 0;
-  RangeValues _priceRange =
-      const RangeValues(0, 30000); // Initial safe value for video games
-
-  final List<ProductsViewsModel> _allProducts = [
+  final List<ProductsViewsModel> _products = [
     ProductsViewsModel(
       id: 'vid10',
       title:
@@ -81,151 +67,30 @@ class _Accessories extends State<Accessories> {
       imagePaths: ['assets/videogames_products/Accessories/accessories5/1.png'],
     ),
   ];
-  @override
-  void initState() {
-    super.initState();
-    // Update price range after widget is initialized
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final maxPrice = _allProducts
-          .map((product) => product.price)
-          .reduce((a, b) => a > b ? a : b);
-      setState(() {
-        _priceRange = RangeValues(0, maxPrice);
-      });
-    });
-  }
 
-  List<ProductsViewsModel> get _filteredProducts {
-    return _allProducts.where((product) {
-      final brandMatch = _selectedBrand == null ||
-          _selectedBrand!.isEmpty ||
-          _selectedBrand == 'All Brands' ||
-          product.brand == _selectedBrand;
-
-      final ratingMatch =
-          product.rating != null && product.rating! >= _minRating;
-
-      final priceMatch = product.price >= _priceRange.start &&
-          product.price <= _priceRange.end;
-
-      return brandMatch && ratingMatch && priceMatch;
-    }).toList();
+  Widget _buildProductDetail(String productId) {
+    switch (productId) {
+      case 'vid10':
+        return const VideoGamesProduct10();
+      case 'vid11':
+        return const VideoGamesProduct11();
+      case 'vid12':
+        return const VideoGamesProduct12();
+      case 'vid13':
+        return const VideoGamesProduct13();
+      case 'vid14':
+        return const VideoGamesProduct14();
+      default:
+        return const VideoGamesProduct1();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final maxPrice = _allProducts
-        .map((product) => product.price)
-        .reduce((a, b) => a > b ? a : b);
-
-    // Ensure current range values are within bounds
-    final currentValues = RangeValues(
-      _priceRange.start.clamp(0, maxPrice),
-      _priceRange.end.clamp(0, maxPrice),
-    );
-
-    return Scaffold(
-      appBar: buildAppBar(context: context, title: 'Accessories'),
-      body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        children: [
-          // Filters section
-          Card(
-            elevation: 2,
-            child: BrandFilterWidget(
-              products: _allProducts,
-              selectedBrand: _selectedBrand,
-              onBrandChanged: (newBrand) {
-                setState(() {
-                  _selectedBrand = newBrand;
-                });
-              },
-            ),
-          ),
-          // Price and Rating filters in a row
-          Row(
-            children: [
-              // Price Filter (left side)
-              Expanded(
-                child: Card(
-                  elevation: 2,
-                  child: PriceRangeFilterWidget(
-                    values: currentValues,
-                    maxPrice: maxPrice,
-                    onChanged: (range) {
-                      setState(() {
-                        _priceRange = range;
-                      });
-                    },
-                  ),
-                ),
-              ),
-              const SizedBox(width: 8),
-              // Rating Filter (right side)
-              Expanded(
-                child: Card(
-                  elevation: 2,
-                  child: RatingFilterWidget(
-                    value: _minRating,
-                    onChanged: (rating) => setState(() => _minRating = rating),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          // Products list
-          ..._filteredProducts.map((product) {
-            return Column(
-              children: [
-                ProductCard(
-                  id: product.id,
-                  name: product.title,
-                  imagePaths: product.imagePaths ?? [],
-                  price: product.price,
-                  originalPrice: product.originalPrice ?? 0,
-                  rating: product.rating ?? 0,
-                  reviewCount: product.reviewCount ?? 0,
-                  onTap: () {
-                    final productId = product.id;
-                    Widget productDetailView;
-
-                    switch (productId) {
-                      case 'vid10':
-                        productDetailView = const VideoGamesProduct10();
-                        break;
-                      case 'vid11':
-                        productDetailView = const VideoGamesProduct11();
-                        break;
-                      case 'vid12':
-                        productDetailView = const VideoGamesProduct12();
-                        break;
-                      case 'vid13':
-                        productDetailView = const VideoGamesProduct13();
-                        break;
-                      case 'vid14':
-                        productDetailView = const VideoGamesProduct14();
-                        break;
-                      // Add cases for other products as needed
-                      default:
-                        productDetailView = const VideoGamesProduct1();
-                    }
-
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => productDetailView),
-                    );
-                  },
-                ),
-                const SizedBox(height: 10),
-              ],
-            );
-            // ignore: unnecessary_to_list_in_spreads
-          }).toList(),
-          const SizedBox(height: 20),
-        ],
-      ),
+    return BaseCategoryView(
+      categoryName: 'Accessories',
+      products: _products,
+      productDetailBuilder: _buildProductDetail,
     );
   }
 }

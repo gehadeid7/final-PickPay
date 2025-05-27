@@ -12,13 +12,13 @@ class SubvideoGrid extends StatelessWidget {
     Widget page;
     switch (categoryName) {
       case 'Console':
-        page = const Console();
+        page = Console();
         break;
       case 'Controllers':
-        page = const Controllers();
+        page = Controllers();
         break;
       case 'Accessories':
-        page = const Accessories();
+        page = Accessories();
         break;
       default:
         page = const Scaffold(

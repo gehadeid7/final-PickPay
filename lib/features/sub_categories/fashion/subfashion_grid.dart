@@ -12,13 +12,13 @@ class SubfashionGrid extends StatelessWidget {
     Widget page;
     switch (categoryName) {
       case "Women's fashion":
-        page = const Women();
+        page = Women();
         break;
       case "Men's Fashion":
-        page = const Men();
+        page = Men();
         break;
       case "Kids' Fashion":
-        page = const Kids();
+        page = Kids();
         break;
       default:
         page = const Scaffold(
