@@ -9,6 +9,10 @@ import 'package:pickpay/features/categories_pages/widgets/product_card.dart';
 import 'package:pickpay/features/categories_pages/widgets/rating_filter.dart';
 import 'package:pickpay/features/categories_pages/widgets/seller_filter_widget.dart';
 import 'package:pickpay/features/categories_pages/widgets/sort_filter_widget.dart';
+import 'package:pickpay/core/widgets/search_text_field.dart';
+import 'package:pickpay/core/services/ai_search_service.dart';
+import 'package:pickpay/services/api_service.dart';
+import 'dart:async';
 
 class BaseCategoryView extends StatefulWidget {
   final String categoryName;
@@ -41,6 +45,15 @@ class _BaseCategoryViewState extends State<BaseCategoryView>
   bool _showScrollToTop = false;
   SortOption _sortOption = SortOption.none;
 
+  // Search related variables
+  final TextEditingController _searchController = TextEditingController();
+  final AISearchService _aiService = AISearchService(apiService: ApiService());
+  List<Map<String, dynamic>> _searchResults = [];
+  List<String> _suggestions = [];
+  bool _isSearchLoading = false;
+  Timer? _searchDebounce;
+  String _searchQuery = '';
+
   @override
   void initState() {
     super.initState();
@@ -51,6 +64,7 @@ class _BaseCategoryViewState extends State<BaseCategoryView>
     );
     _scrollController = ScrollController();
     _scrollController.addListener(_onScroll);
+    _aiService.initialize();
   }
 
   void _onScroll() {
@@ -65,6 +79,8 @@ class _BaseCategoryViewState extends State<BaseCategoryView>
   void dispose() {
     _filterController.dispose();
     _scrollController.dispose();
+    _searchController.dispose();
+    _searchDebounce?.cancel();
     super.dispose();
   }
 
@@ -75,8 +91,79 @@ class _BaseCategoryViewState extends State<BaseCategoryView>
     _priceRange = RangeValues(0, maxPrice);
   }
 
+  Future<void> _handleSearch(String query) async {
+    if (query.isEmpty) {
+      setState(() {
+        _searchResults = [];
+        _suggestions = [];
+        _searchQuery = '';
+      });
+      return;
+    }
+
+    _searchDebounce?.cancel();
+    _searchDebounce = Timer(const Duration(milliseconds: 300), () async {
+      setState(() {
+        _isSearchLoading = true;
+        _searchQuery = query;
+      });
+
+      try {
+        final suggestions = await _aiService.fetchLiveSuggestions(query);
+        final results = await _aiService.searchProducts(query);
+
+        if (mounted) {
+          final processedResults = results.map((result) {
+            return {
+              'id': result['id'] ?? result['_id'] ?? '',
+              'title': result['title'] ?? result['name'] ?? '',
+              'price': result['price'] ?? 0.0,
+              'images': result['images'] ?? result['imagePaths'] ?? [],
+              'brand': result['brand'] ?? '',
+              'category': result['category'] ?? '',
+              'description':
+                  result['description'] ?? result['aboutThisItem'] ?? '',
+              'rating': result['rating'] ?? result['ratingsAverage'] ?? 0.0,
+              'reviewCount':
+                  result['reviewCount'] ?? result['ratingsQuantity'] ?? 0,
+            };
+          }).toList();
+
+          setState(() {
+            _suggestions = suggestions;
+            _searchResults = processedResults;
+            _isSearchLoading = false;
+          });
+        }
+      } catch (e) {
+        print('Error searching products: $e');
+        if (mounted) {
+          setState(() {
+            _isSearchLoading = false;
+          });
+        }
+      }
+    });
+  }
+
   List<ProductsViewsModel> get _filteredProducts {
-    List<ProductsViewsModel> filtered = widget.products.where((product) {
+    List<ProductsViewsModel> filtered = widget.products;
+
+    // Apply search filter first
+    if (_searchQuery.isNotEmpty) {
+      final lowerQuery = _searchQuery.toLowerCase();
+      filtered = filtered.where((product) {
+        final title = product.title.toLowerCase();
+        final brand = product.brand?.toLowerCase() ?? '';
+        final category = product.category?.toLowerCase() ?? '';
+        return title.contains(lowerQuery) ||
+            brand.contains(lowerQuery) ||
+            category.contains(lowerQuery);
+      }).toList();
+    }
+
+    // Apply other filters
+    filtered = filtered.where((product) {
       final brandMatch = _selectedBrand == null ||
           _selectedBrand!.isEmpty ||
           _selectedBrand == 'All Brands' ||
@@ -113,6 +200,7 @@ class _BaseCategoryViewState extends State<BaseCategoryView>
           priceMatch;
     }).toList();
 
+    // Apply sorting
     switch (_sortOption) {
       case SortOption.priceAsc:
         filtered.sort((a, b) => a.price.compareTo(b.price));
@@ -126,7 +214,6 @@ class _BaseCategoryViewState extends State<BaseCategoryView>
           final bRating = b.rating ?? 0.0;
           final ratingCompare = bRating.compareTo(aRating);
           if (ratingCompare != 0) return ratingCompare;
-          // If ratings are equal, sort by number of reviews as secondary criteria
           final aReviews = a.reviewCount ?? 0;
           final bReviews = b.reviewCount ?? 0;
           return bReviews.compareTo(aReviews);
@@ -138,7 +225,6 @@ class _BaseCategoryViewState extends State<BaseCategoryView>
           final bRating = b.rating ?? 0.0;
           final ratingCompare = aRating.compareTo(bRating);
           if (ratingCompare != 0) return ratingCompare;
-          // If ratings are equal, sort by number of reviews as secondary criteria
           final aReviews = a.reviewCount ?? 0;
           final bReviews = b.reviewCount ?? 0;
           return aReviews.compareTo(bReviews);
@@ -385,6 +471,17 @@ class _BaseCategoryViewState extends State<BaseCategoryView>
                         ),
                       ),
                     ),
+                  ),
+                ),
+              ),
+
+              // Search Bar
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+                  child: SearchTextField(
+                    controller: _searchController,
+                    onSearch: _handleSearch,
                   ),
                 ),
               ),
