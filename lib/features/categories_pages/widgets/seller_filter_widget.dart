@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pickpay/core/utils/app_text_styles.dart';
 import 'package:pickpay/features/categories_pages/models/product_model.dart';
 
 class SellerFilterWidget extends StatelessWidget {

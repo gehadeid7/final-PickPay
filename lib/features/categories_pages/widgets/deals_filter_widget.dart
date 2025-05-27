@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pickpay/features/categories_pages/models/product_model.dart';
 
 class DealsFilterWidget extends StatelessWidget {
   final String? selectedDealType;
