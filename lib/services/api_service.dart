@@ -16,7 +16,6 @@ import 'package:http_parser/http_parser.dart';
 class ApiService {
   static const String baseUrl = 'http://192.168.1.7:3000/api/v1/';
 
-  // 🔐 Builds headers for JSON requests
   Future<Map<String, String>> _buildHeaders({
     Map<String, String>? headers,
     bool authorized = false,
@@ -55,6 +54,7 @@ class ApiService {
   }
 
   // 🔐 Builds headers for multipart requests (no Content-Type)
+  // ignore: unused_element
   Future<Map<String, String>> _buildMultipartHeaders({
     bool authorized = false,
   }) async {
@@ -204,7 +204,7 @@ class ApiService {
     throw Exception('Unexpected error in PUT request');
   }
 
-  // 🛒 Load products from "Appliances" category
+// Load products
   Future<List<ProductCard>> loadProducts() async {
     try {
       // Fetch all products, no category filtering on backend
@@ -274,7 +274,7 @@ class ApiService {
     }
   }
 
-  // 🔄 Sync Firebase user to backend
+  //  Sync Firebase user to backend
   Future<UserModel> syncFirebaseUserToBackend({
     required String name,
     required String email,
@@ -315,7 +315,7 @@ class ApiService {
     }
   }
 
-  // 🔐 Forgot password
+  // Forgot password
   Future<http.Response> forgotPassword(String email) async {
     try {
       final methods =
@@ -354,7 +354,7 @@ class ApiService {
     }
   }
 
-  // 🔐 Reset password
+  // Reset password
   Future<http.Response> resetPassword({
     required String email,
     required String newPassword,
@@ -379,7 +379,7 @@ class ApiService {
     }
   }
 
-  // 🔁 Refresh Firebase token
+  // Token management
   Future<String?> refreshToken() async {
     try {
       final user = FirebaseAuth.instance.currentUser;
@@ -420,7 +420,7 @@ class ApiService {
     }
   }
 
-  // 📤 Upload image to server (used for profile image)
+  // Upload image to server (used for profile image)
   Future<http.StreamedResponse> uploadImage({
     required String endpoint,
     required File imageFile,
@@ -547,7 +547,7 @@ class ApiService {
     }
   }
 
-  // 🖼️ Pick image, upload it, then update user profile
+  // Pick image, upload it, then update user profile
   Future<String> uploadProfileImageAndUpdate(File imageFile) async {
     print('\n=== 💾 PROFILE IMAGE UPDATE START ===');
     try {
@@ -630,8 +630,10 @@ class ApiService {
     }
   }
 
+// Fetch products by category
   Future<List<ProductsViewsModel>> fetchProducts(String category) async {
     final url = Uri.parse('$baseUrl/products?category=$category');
+
     print('Fetching products from $url');
 
     try {

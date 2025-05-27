@@ -1,0 +1,520 @@
+lib folder
+|   constants.dart
+|   firebase_options.dart
+|   lib_structure.txt
+|   main.dart
+|   
++---animation
+|       animated_form_field.dart
+|       shake_animation.dart
+|       
++---core
+|   +---errors
+|   |       exceptions.dart
+|   |       failures.dart
+|   |       
+|   +---helper_functions
+|   |       build_error_bar.dart
+|   |       on_generate_routes.dart
+|   |       
+|   +---services
+|   |       bloc_observer.dart
+|   |       database_services.dart
+|   |       firebase_auth_service.dart
+|   |       firestore_servies.dart
+|   |       get_it_service.dart
+|   |       shared_preferences_singletone.dart
+|   |       
+|   +---themes
+|   |       app_themes.dart
+|   |       theme_provider.dart
+|   |       theme_switch_button.dart
+|   |       
+|   +---utils
+|   |       app_colors.dart
+|   |       app_images.dart
+|   |       app_text_styles.dart
+|   |       backend_endpoints.dart
+|   |       
+|   \---widgets
+|           app_flushbar.dart
+|           build_appbar.dart
+|           category_appbar.dart
+|           custom_appbar.dart
+|           custom_button.dart
+|           custom_error_widget.dart
+|           custom_prograss_hud.dart
+|           custom_text_field.dart
+|           footer_widget.dart
+|           password_field.dart
+|           search_text_field.dart
+|           
++---features
+|   +---account_view
+|   |       about_us_view.dart
+|   |       account_view.dart
+|   |       account_view_body.dart
+|   |       help_and_support_view.dart
+|   |       language_view.dart
+|   |       
+|   +---auth
+|   |   +---data
+|   |   |   +---models
+|   |   |   |       user_model.dart
+|   |   |   |       
+|   |   |   \---repos
+|   |   |           auth_repo_implementation.dart
+|   |   |           
+|   |   +---domain
+|   |   |   +---entities
+|   |   |   |       user_entity.dart
+|   |   |   |       
+|   |   |   \---repos
+|   |   |           auth_repo.dart
+|   |   |           
+|   |   \---presentation
+|   |       +---cubits
+|   |       |   +---change_password
+|   |       |   |       change_password_cubit.dart
+|   |       |   |       change_password_state.dart
+|   |       |   |       
+|   |       |   +---forgetpassword_cubit
+|   |       |   |       forgot_password_cubit.dart
+|   |       |   |       forgot_password_state.dart
+|   |       |   |       
+|   |       |   +---signin_cubit
+|   |       |   |       signin_cubit.dart
+|   |       |   |       signin_state.dart
+|   |       |   |       
+|   |       |   +---signup_cubits
+|   |       |   |       signup_cubit.dart
+|   |       |   |       signup_state.dart
+|   |       |   |       
+|   |       |   \---verify_email_state.dart
+|   |       |           verify_email_cubit.dart
+|   |       |           verify_email_state.dart
+|   |       |           
+|   |       \---views
+|   |           |   change_password_view.dart
+|   |           |   forgot_password_view.dart
+|   |           |   signin_view.dart
+|   |           |   sign_up_view.dart
+|   |           |   verify_email_view.dart
+|   |           |   
+|   |           \---widgets
+|   |                   custom_checkbox.dart
+|   |                   dont_have_an_account.dart
+|   |                   have_an_account.dart
+|   |                   or_divider.dart
+|   |                   signin_view_body.dart
+|   |                   signin_view_body_consumer.dart
+|   |                   signup_view_body_consumer.dart
+|   |                   sign_up_view_body.dart
+|   |                   social_login_button.dart
+|   |                   terms_and_conditions.dart
+|   |                   
+|   +---bottom_navigation
+|   |   |   active_item.dart
+|   |   |   bottom_navigation_items.dart
+|   |   |   custom_bottom_navigation_bar.dart
+|   |   |   in_active_item.dart
+|   |   |   navigation_bar_item.dart
+|   |   |   
+|   |   +---bottom_navigation_cubits
+|   |   |       bottom_navigation_cubit.dart
+|   |   |       bottom_navigation_state.dart
+|   |   |       
+|   |   \---entities
+|   |           bottom_navigation_bar_entity.dart
+|   |           
+|   +---cart
+|   |   |   cart_item_model.dart
+|   |   |   cart_view.dart
+|   |   |   cart_view_body.dart
+|   |   |   
+|   |   \---cart_cubits
+|   |           cart_cubit.dart
+|   |           cart_state.dart
+|   |           
+|   +---categories_pages
+|   |   +---appliances
+|   |   |   \---presentation
+|   |   |       \---views
+|   |   |           |   appliances_view.dart
+|   |   |           |   
+|   |   |           \---widgets
+|   |   |                   appliances_view_body.dart
+|   |   |                   
+|   |   +---beauty
+|   |   |   \---presentation
+|   |   |       \---views
+|   |   |           |   beauty_view.dart
+|   |   |           |   
+|   |   |           \---widgets
+|   |   |                   beauty_view_body.dart
+|   |   |                   
+|   |   +---electronics
+|   |   |   \---presentation
+|   |   |       \---views
+|   |   |           |   electronics_view.dart
+|   |   |           |   
+|   |   |           \---widgets
+|   |   |                   electronics_view_body.dart
+|   |   |                   
+|   |   +---fashion
+|   |   |   \---presentation
+|   |   |       \---views
+|   |   |           |   fashion_view.dart
+|   |   |           |   
+|   |   |           \---widgets
+|   |   |                   fashion_view.body.dart
+|   |   |                   
+|   |   +---homeCategory
+|   |   |   \---presentation
+|   |   |       \---views
+|   |   |           |   home_category_view.dart
+|   |   |           |   
+|   |   |           \---widgets
+|   |   |                   home_cat_view_body.dart
+|   |   |                   
+|   |   +---models
+|   |   |       product_model.dart
+|   |   |       
+|   |   +---products_views
+|   |   |   |   product_detail_view.dart
+|   |   |   |   
+|   |   |   +---appliances_products_views
+|   |   |   |       appliances_product1.dart
+|   |   |   |       appliances_product10.dart
+|   |   |   |       appliances_product11.dart
+|   |   |   |       appliances_product12.dart
+|   |   |   |       appliances_product13.dart
+|   |   |   |       appliances_product14.dart
+|   |   |   |       appliances_product15.dart
+|   |   |   |       appliances_product2.dart
+|   |   |   |       appliances_product3.dart
+|   |   |   |       appliances_product4.dart
+|   |   |   |       appliances_product5.dart
+|   |   |   |       appliances_product6.dart
+|   |   |   |       appliances_product7.dart
+|   |   |   |       appliances_product8.dart
+|   |   |   |       appliances_product9.dart
+|   |   |   |       
+|   |   |   +---beauty_products_views
+|   |   |   |       beauty_product1.dart
+|   |   |   |       beauty_product10.dart
+|   |   |   |       beauty_product11.dart
+|   |   |   |       beauty_product12.dart
+|   |   |   |       beauty_product13.dart
+|   |   |   |       beauty_product14.dart
+|   |   |   |       beauty_product15.dart
+|   |   |   |       beauty_product16.dart
+|   |   |   |       beauty_product17.dart
+|   |   |   |       beauty_product18.dart
+|   |   |   |       beauty_product19.dart
+|   |   |   |       beauty_product2.dart
+|   |   |   |       beauty_product20.dart
+|   |   |   |       beauty_product3.dart
+|   |   |   |       beauty_product4.dart
+|   |   |   |       beauty_product5.dart
+|   |   |   |       beauty_product6.dart
+|   |   |   |       beauty_product7.dart
+|   |   |   |       beauty_product8.dart
+|   |   |   |       beauty_product9.dart
+|   |   |   |       
+|   |   |   +---electronics_products_views
+|   |   |   |       product1.dart
+|   |   |   |       product10.dart
+|   |   |   |       product11.dart
+|   |   |   |       product12.dart
+|   |   |   |       product13.dart
+|   |   |   |       product14.dart
+|   |   |   |       product15.dart
+|   |   |   |       product2.dart
+|   |   |   |       product3.dart
+|   |   |   |       product4.dart
+|   |   |   |       product5.dart
+|   |   |   |       product6.dart
+|   |   |   |       product7.dart
+|   |   |   |       product8.dart
+|   |   |   |       product9.dart
+|   |   |   |       
+|   |   |   +---fashion_products_views
+|   |   |   |       fashion_product1.dart
+|   |   |   |       fashion_product10.dart
+|   |   |   |       fashion_product11.dart
+|   |   |   |       fashion_product12.dart
+|   |   |   |       fashion_product13.dart
+|   |   |   |       fashion_product14.dart
+|   |   |   |       fashion_product15.dart
+|   |   |   |       fashion_product2.dart
+|   |   |   |       fashion_product3.dart
+|   |   |   |       fashion_product4.dart
+|   |   |   |       fashion_product5.dart
+|   |   |   |       fashion_product6.dart
+|   |   |   |       fashion_product7.dart
+|   |   |   |       fashion_product8.dart
+|   |   |   |       fashion_product9.dart
+|   |   |   |       
+|   |   |   +---home_products
+|   |   |   |       home_product1.dart
+|   |   |   |       home_product10.dart
+|   |   |   |       home_product11.dart
+|   |   |   |       home_product12.dart
+|   |   |   |       home_product13.dart
+|   |   |   |       home_product14.dart
+|   |   |   |       home_product15.dart
+|   |   |   |       home_product16.dart
+|   |   |   |       home_product17.dart
+|   |   |   |       home_product18.dart
+|   |   |   |       home_product19.dart
+|   |   |   |       home_product2.dart
+|   |   |   |       home_product20.dart
+|   |   |   |       home_product3.dart
+|   |   |   |       home_product4.dart
+|   |   |   |       home_product5.dart
+|   |   |   |       home_product6.dart
+|   |   |   |       home_product7.dart
+|   |   |   |       home_product8.dart
+|   |   |   |       home_product9.dart
+|   |   |   |       
+|   |   |   \---video_games
+|   |   |           video_games_product1.dart
+|   |   |           video_games_product10.dart
+|   |   |           video_games_product11.dart
+|   |   |           video_games_product12.dart
+|   |   |           video_games_product13.dart
+|   |   |           video_games_product14.dart
+|   |   |           video_games_product2.dart
+|   |   |           video_games_product3.dart
+|   |   |           video_games_product4.dart
+|   |   |           video_games_product5.dart
+|   |   |           video_games_product6.dart
+|   |   |           video_games_product7.dart
+|   |   |           video_games_product8.dart
+|   |   |           video_games_product9.dart
+|   |   |           
+|   |   +---sharing_product
+|   |   |       app_constants.dart
+|   |   |       product_link_generator.dart
+|   |   |       share_service.dart
+|   |   |       
+|   |   +---videogames
+|   |   |   \---presentation
+|   |   |       \---views
+|   |   |           |   videogames_view.dart
+|   |   |           |   
+|   |   |           \---widgets
+|   |   |                   videogames_view_body.dart
+|   |   |                   
+|   |   \---widgets
+|   |           base_category_view.dart
+|   |           brand_filter_widget.dart
+|   |           color_option_selector.dart
+|   |           dropdown_count.dart
+|   |           info_icons_row.dart
+|   |           price_range_filter.dart
+|   |           products_view_appbar.dart
+|   |           product_card.dart
+|   |           product_rating.dart
+|   |           rating_filter.dart
+|   |           scent_option.dart
+|   |           size_option.dart
+|   |           
+|   +---checkout
+|   |   +---data
+|   |   +---domain
+|   |   |   \---models
+|   |   |           checkout_model.dart
+|   |   |           
+|   |   \---presentation
+|   |       +---cubits
+|   |       |   \---cubit
+|   |       |           checkout_cubit.dart
+|   |       |           checkout_state.dart
+|   |       |           
+|   |       \---views
+|   |           |   checkout_view.dart
+|   |           |   
+|   |           \---widgets
+|   |                   order_conformation.dart
+|   |                   payment_section.dart
+|   |                   shipping_section.dart
+|   |                   
+|   +---home
+|   |   +---domain
+|   |   |   \---models
+|   |   |           categories_view_model.dart
+|   |   |           
+|   |   \---presentation
+|   |       +---cubits
+|   |       |   \---categories_cubits
+|   |       |           categories_cubits_cubit.dart
+|   |       |           categories_cubits_state.dart
+|   |       |           
+|   |       \---views
+|   |           |   categories_view.dart
+|   |           |   home_view.dart
+|   |           |   main_navigation_screen.dart
+|   |           |   
+|   |           \---widgets
+|   |               |   card_item.dart
+|   |               |   categories_view_body.dart
+|   |               |   category_navigation_helper.dart
+|   |               |   home_view_body.dart
+|   |               |   main_navigation_body.dart
+|   |               |   
+|   |               +---appliances_section
+|   |               |       appliances_grid.dart
+|   |               |       appliances_header.dart
+|   |               |       
+|   |               +---beauty_section
+|   |               |       beauty_grid.dart
+|   |               |       beauty_header.dart
+|   |               |       
+|   |               +---electronics_section
+|   |               |       electronics_grid_view.dart
+|   |               |       electronics_header.dart
+|   |               |       
+|   |               +---Fashion_section
+|   |               |       fashion_grid.dart
+|   |               |       fashion_header.dart
+|   |               |       
+|   |               +---home_section
+|   |               |       home_section_grid.dart
+|   |               |       home_section_header.dart
+|   |               |       
+|   |               +---recommended_section
+|   |               |       recommended_foru_grid_view.dart
+|   |               |       recommended_foru_header.dart
+|   |               |       
+|   |               +---sliding_cards_bannars
+|   |               |       custom_card_items_feature.dart
+|   |               |       featured_model.dart
+|   |               |       sliding_cards_feature_list.dart
+|   |               |       
+|   |               +---todays_sale_section
+|   |               |       todays_sale_grid_view.dart
+|   |               |       
+|   |               \---video_games_bestsellers
+|   |                       vgames_grid.dart
+|   |                       vigames_section_header.dart
+|   |                       
+|   +---on_boarding
+|   |   \---presentation
+|   |       \---views
+|   |           |   on_boarding_view.dart
+|   |           |   
+|   |           \---widgets
+|   |                   on_boarding_page_view.dart
+|   |                   on_boarding_view_body.dart
+|   |                   page_view_item.dart
+|   |                   
+|   +---profile_change
+|   |   +---cubits
+|   |   |   \---cubit
+|   |   |           profile_chnage_cubit.dart
+|   |   |           profile_chnage_state.dart
+|   |   |           
+|   |   \---views
+|   |           profile_change_view.dart
+|   |           
+|   +---related_products_widget
+|   |       related_products.dart
+|   |       
+|   +---reviews
+|   |   |   review_service.dart
+|   |   |   
+|   |   +---cubit
+|   |   |       review_cubit.dart
+|   |   |       review_state.dart
+|   |   |       
+|   |   +---models
+|   |   |       review_model.dart
+|   |   |       
+|   |   +---screens
+|   |   |       review_screen.dart
+|   |   |       
+|   |   \---widgets
+|   |           rating_distribution.dart
+|   |           review_card.dart
+|   |           review_form.dart
+|   |           review_list.dart
+|   |           
+|   +---splash
+|   |   \---presentation
+|   |       \---views
+|   |           |   splash_view.dart
+|   |           |   
+|   |           \---widgets
+|   |                   splash_view_body.dart
+|   |                   
+|   +---sub_categories
+|   |   +---appliances
+|   |   |       appliances_grid.dart
+|   |   |       appliances_header.dart
+|   |   |       large_appliances.dart
+|   |   |       small_appliances.dart
+|   |   |       sub_appliances_card.dart
+|   |   |       
+|   |   +---beauty
+|   |   |       fragrance.dart
+|   |   |       haircare.dart
+|   |   |       makeup.dart
+|   |   |       skincare.dart
+|   |   |       subbeauty_card.dart
+|   |   |       subbeauty_grid.dart
+|   |   |       subbeauty_header.dart
+|   |   |       
+|   |   +---electronics
+|   |   |       electronics_grid.dart
+|   |   |       elec_header.dart
+|   |   |       laptop_page.dart
+|   |   |       mobile_and_tablets_page.dart
+|   |   |       sub_cat_card.dart
+|   |   |       tvs_page.dart
+|   |   |       
+|   |   +---fashion
+|   |   |       kids.dart
+|   |   |       men.dart
+|   |   |       subfashion_card.dart
+|   |   |       subfashion_grid.dart
+|   |   |       subfashion_header.dart
+|   |   |       women.dart
+|   |   |       
+|   |   +---home_products
+|   |   |       bath.dart
+|   |   |       furniture.dart
+|   |   |       home_decor.dart
+|   |   |       kitchen.dart
+|   |   |       subhomes_grid.dart
+|   |   |       subhome_header.dart
+|   |   |       sub_home_card.dart
+|   |   |       
+|   |   \---subvideo_games
+|   |           accessories.dart
+|   |           console.dart
+|   |           controllers.dart
+|   |           subvideo_card.dart
+|   |           subvideo_grid.dart
+|   |           subvideo_header.dart
+|   |           
+|   \---wishlist
+|       |   wishlist_button.dart
+|       |   wishlist_view.dart
+|       |   wishlist_view_body.dart
+|       |   
+|       \---wishlist_cubits
+|               wishlist_cubit.dart
+|               wishlist_state.dart
+|               
++---l10n
+|       intl_ar.arb
+|       intl_en.arb
+|       
++---services
+|       api_service.dart
+|       
+\---widgets
+        custom_card.dart
+        
