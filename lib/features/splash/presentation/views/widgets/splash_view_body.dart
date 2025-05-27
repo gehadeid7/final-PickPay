@@ -15,6 +15,9 @@ class SplashViewBody extends StatefulWidget {
 }
 
 class _SplashViewBodyState extends State<SplashViewBody> {
+  /// أقل زمن نريد أن يظهر فيه الـ Splash (للجانب الجمالي)
+  static const Duration _minSplashDuration = Duration(milliseconds: 1500);
+
   @override
   void initState() {
     super.initState();
@@ -23,27 +26,16 @@ class _SplashViewBodyState extends State<SplashViewBody> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              "PickPay",
-              style: TextStyle(
-                fontSize: 50,
-                fontWeight: FontWeight.bold,
-                foreground: Paint()
-                  ..shader = const LinearGradient(
-                    colors: <Color>[
-                      Color(0xFFFE1679), // pink
-                      Color(0xFF5440B3), // purple
-                    ],
-                  ).createShader(const Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
-              ),
+            _LogoAndTitle(),
+            SizedBox(height: 40),
+            CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFFE1679)),
             ),
-            const SizedBox(height: 32),
-            Image.asset(Assets.appLogo, width: 250, height: 250),
           ],
         ),
       ),
@@ -51,10 +43,21 @@ class _SplashViewBodyState extends State<SplashViewBody> {
   }
 
   Future<void> _navigateAfterSplash() async {
-    await Future.delayed(const Duration(seconds: 2)); // Splash delay
+    final stopwatch = Stopwatch()..start();
 
+    // التهيئة بالتوازي
     final bool isOnBoardingSeen = Prefs.getBool(kIsOnBoardingViewSeen);
     final bool isLoggedIn = FirebaseAuthService().isLoggedIn();
+
+    stopwatch.stop();
+
+    // ننتظر الباقي فقط إذا كان الزمن أقل من المطلوب
+    final remaining = _minSplashDuration - stopwatch.elapsed;
+    if (remaining > Duration.zero) {
+      await Future.delayed(remaining);
+    }
+
+    if (!mounted) return; // للتأكّد من أن الـ widget ما زال موجودًا
 
     if (!isOnBoardingSeen) {
       Navigator.pushReplacementNamed(context, OnBoardingView.routeName);
@@ -63,5 +66,34 @@ class _SplashViewBodyState extends State<SplashViewBody> {
     } else {
       Navigator.pushReplacementNamed(context, SigninView.routeName);
     }
+  }
+}
+
+/// فصلنا جزء الشعار واللوجو لتقليل الكود في البيلدر
+class _LogoAndTitle extends StatelessWidget {
+  const _LogoAndTitle();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          'PickPay',
+          style: TextStyle(
+            fontSize: 50,
+            fontWeight: FontWeight.bold,
+            foreground: Paint()
+              ..shader = const LinearGradient(
+                colors: [
+                  Color(0xFFFE1679), // pink
+                  Color(0xFF5440B3), // purple
+                ],
+              ).createShader(const Rect.fromLTWH(0, 0, 200, 70)),
+          ),
+        ),
+        const SizedBox(height: 32),
+        Image.asset(Assets.appLogo, width: 250, height: 250),
+      ],
+    );
   }
 }
