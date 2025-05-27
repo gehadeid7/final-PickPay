@@ -24,17 +24,19 @@ class _SubvideoCard extends State<SubvideoCard>
   late Animation<Alignment> _alignmentAnimation;
 
   static const List<List<Color>> _gradientColorsLight = [
-    [Color(0xFFA8DADC), Color(0xFF457B9D)], // Soft cyan to muted blue
-    [Color(0xFFF1FAEE), Color(0xFFA8DADC)], // Very light mint to soft cyan
-    [Color(0xFFD4ECDD), Color(0xFF8FB9A8)], // Pale green to sage green
+    [Color(0xFFE1BEE7), Color(0xFFBA68C8)], // Soft lavender to light purple
+    [Color(0xFFD05CEE), Color(0xFF9C27B0)], // Bright violet to deep purple
+    [Color(0xFFB39DDB), Color(0xFF7E57C2)], // Muted periwinkle to medium purple
   ];
 
   static const List<List<Color>> _gradientColorsDark = [
-    [Color(0xFF1D3557), Color(0xFF457B9D)], // Deep navy to muted blue
-    [Color(0xFF2A3A40), Color(0xFF5C6B73)], // Dark slate to dusty grey-blue
-    [Color(0xFF36454F), Color(0xFF576F72)], // Charcoal to teal-grey
+    [Color(0xFF4A148C), Color(0xFF7B1FA2)], // Deep purple to rich purple
+    [Color(0xFF311B92), Color(0xFF512DA8)], // Dark indigo to muted violet
+    [
+      Color(0xFFAA00FF),
+      Color(0xFF6200EA)
+    ], // Vibrant purple to deep electric purple
   ];
-
   @override
   void initState() {
     super.initState();

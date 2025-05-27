@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pickpay/features/sub_categories/electronics/sub_cat_card.dart';
 import 'package:pickpay/features/sub_categories/subvideo_games/accessories.dart';
 import 'package:pickpay/features/sub_categories/subvideo_games/console.dart';
 import 'package:pickpay/features/sub_categories/subvideo_games/controllers.dart';
@@ -32,17 +31,14 @@ class SubvideoGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final categories = [
-      {
-        'name': 'Console',
-        'image': 'assets/videogames_products/Consoles/console2/1.png'
-      },
+      {'name': 'Console', 'image': 'assets/subcategories/video_games/1.png'},
       {
         'name': 'Controllers',
-        'image': 'assets/videogames_products/Controllers/controller5/2.png'
+        'image': 'assets/subcategories/video_games/2.png'
       },
       {
         'name': 'Accessories',
-        'image': 'assets/videogames_products/Accessories/accessories2/1.png'
+        'image': 'assets/subcategories/video_games/3.png'
       },
     ];
 
@@ -55,7 +51,7 @@ class SubvideoGrid extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Expanded(
-                child: SubElectronicsCard(
+                child: SubvideoCard(
                   imagePath: categories[0]['image']!,
                   productName: categories[0]['name']!,
                   index: 0,
@@ -81,7 +77,7 @@ class SubvideoGrid extends StatelessWidget {
             alignment: Alignment.center,
             child: SizedBox(
               width: 180,
-              child: SubElectronicsCard(
+              child: SubvideoCard(
                 imagePath: categories[2]['image']!,
                 productName: categories[2]['name']!,
                 index: 2,
