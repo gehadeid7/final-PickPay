@@ -43,8 +43,8 @@ class _ElectronicsViewBodyState extends State<ElectronicsViewBody> {
     '6819e22b123a4faad16613c9': const Product11View(), // MacBook Pro
     '6819e22b123a4faad16613ca': const Product12View(), // Dell XPS
     '6819e22b123a4faad16613cb': const Product13View(), // HP Spectre
-    '6819e22b123a4faad16613cc': const Product14View(), // Lenovo ThinkPad
-    '6819e22b123a4faad16613c2': const Product15View(), // ASUS ROG
+    '6819e22b123a4faad16613cc': const Product14View(), // HP OfficeJet
+    '6819e22b123a4faad16613cd': const Product15View(), // ASUS ROG
   };
 
   @override

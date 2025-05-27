@@ -1,66 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:pickpay/core/widgets/build_appbar.dart';
 import 'package:pickpay/features/categories_pages/models/product_model.dart';
+import 'package:pickpay/features/categories_pages/widgets/base_category_view.dart';
 import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product1.dart';
 import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product2.dart';
 import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product3.dart';
 import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product4.dart';
 import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product5.dart';
-import 'package:pickpay/features/categories_pages/widgets/brand_filter_widget.dart';
-import 'package:pickpay/features/categories_pages/widgets/price_range_filter.dart';
-import 'package:pickpay/features/categories_pages/widgets/rating_filter.dart';
-import 'package:pickpay/features/categories_pages/widgets/product_card.dart';
 import 'package:pickpay/services/api_service.dart';
 
 class LargeAppliances extends StatefulWidget {
   const LargeAppliances({super.key});
 
   @override
-  State<LargeAppliances> createState() => _LargeAppliances();
+  State<LargeAppliances> createState() => _LargeAppliancesState();
 }
 
-class _LargeAppliances extends State<LargeAppliances> {
-  String? _selectedBrand;
-  double _minRating = 0;
-  RangeValues? _priceRange;
+class _LargeAppliancesState extends State<LargeAppliances> {
   late Future<List<ProductsViewsModel>> _productsFuture;
 
-  static final Map<String, Map<String, dynamic>> productData = {
-    'Refrigerator': {
-      'page': const AppliancesProduct3(),
-      'rating': 4.5,
-      'reviewCount': 12,
-      'image': 'assets/appliances/product3/1.png',
-      'brand': 'Generic',
-    },
-    'Water Dispenser': {
-      'page': const AppliancesProduct1(),
-      'rating': 3.9,
-      'reviewCount': 9,
-      'image': 'assets/appliances/product1/1.png',
-      'brand': 'Generic',
-    },
-    'Stainless Steel Potato': {
-      'page': const AppliancesProduct2(),
-      'rating': 3.1,
-      'reviewCount': 9,
-      'image': 'assets/appliances/product2/1.png',
-      'brand': 'Generic',
-    },
-    'Washing Machine': {
-      'page': const AppliancesProduct4(),
-      'rating': 4.2,
-      'reviewCount': 14,
-      'image': 'assets/appliances/product4/1.png',
-      'brand': 'Generic',
-    },
-    'Dishwasher': {
-      'page': const AppliancesProduct5(),
-      'rating': 4.0,
-      'reviewCount': 11,
-      'image': 'assets/appliances/product5/1.png',
-      'brand': 'Generic',
-    },
+  // Map of product detail pages
+  static final Map<String, Widget> detailPages = {
+    '68252918a68b49cb06164204': const AppliancesProduct1(), // Water Dispenser
+    '68252918a68b49cb06164205': const AppliancesProduct2(), // Stainless Steel
+    '68252918a68b49cb06164206': const AppliancesProduct3(), // Refrigerator
+    '68252918a68b49cb06164207': const AppliancesProduct4(), // Washing Machine
+    '68252918a68b49cb06164208': const AppliancesProduct5(), // Dishwasher
   };
 
   @override
@@ -71,197 +35,69 @@ class _LargeAppliances extends State<LargeAppliances> {
 
   Future<List<ProductsViewsModel>> _loadProducts() async {
     final apiProducts = await ApiService().loadProducts();
-    return apiProducts.map((apiProduct) {
-      final matchingKey = productData.keys.firstWhere(
-        (key) => apiProduct.name.toLowerCase().contains(key.toLowerCase()),
-        orElse: () => '',
-      );
+    return apiProducts
+        .where((product) =>
+            product.name.toLowerCase().contains('refrigerator') ||
+            product.name.toLowerCase().contains('washing machine') ||
+            product.name.toLowerCase().contains('dispenser') ||
+            product.name.toLowerCase().contains('dishwasher') ||
+            product.name.toLowerCase().contains('jumbo'))
+        .map((apiProduct) {
+          final productIndex =
+              detailPages.keys.toList().indexOf(apiProduct.id) + 1;
+          final imagePath = 'assets/appliances/product$productIndex/1.png';
 
-      final brand = matchingKey.isNotEmpty
-          ? productData[matchingKey]!['brand'] as String
-          : 'Generic';
-
-      return ProductsViewsModel(
-        id: apiProduct.id,
-        title: apiProduct.name,
-        price: apiProduct.price,
-        originalPrice: apiProduct.originalPrice,
-        rating: productData[matchingKey]?['rating'] as double? ?? 4.0,
-        reviewCount: productData[matchingKey]?['reviewCount'] as int? ?? 0,
-        brand: brand,
-        imagePaths: [productData[matchingKey]?['image'] as String? ?? ''],
-      );
-    }).toList();
+          return ProductsViewsModel(
+            id: apiProduct.id,
+            title: apiProduct.name,
+            price: apiProduct.price,
+            originalPrice: apiProduct.originalPrice,
+            rating: 4.5,
+            reviewCount: 100,
+            brand: 'Generic',
+            imagePaths: [imagePath],
+            soldBy: 'PickPay',
+            isPickPayFulfilled: true,
+            hasFreeDelivery: true,
+          );
+        })
+        .where((product) => detailPages.containsKey(product.id))
+        .toList();
   }
 
-  List<ProductsViewsModel> _filterProducts(List<ProductsViewsModel> products) {
-    return products.where((product) {
-      final brandMatch = _selectedBrand == null ||
-          _selectedBrand!.isEmpty ||
-          _selectedBrand == 'All Brands' ||
-          product.brand == _selectedBrand;
-
-      final ratingMatch =
-          product.rating != null && product.rating! >= _minRating;
-
-      final priceMatch = _priceRange == null ||
-          (product.price >= _priceRange!.start &&
-              product.price <= _priceRange!.end);
-
-      return brandMatch && ratingMatch && priceMatch;
-    }).toList();
-  }
-
-  Widget? _findDetailPage(String productTitle) {
-    for (var key in productData.keys) {
-      if (productTitle.toLowerCase().contains(key.toLowerCase())) {
-        return productData[key]!['page'] as Widget;
-      }
-    }
-    return null;
+  Widget? _findDetailPageById(String productId) {
+    return detailPages[productId];
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: buildAppBar(context: context, title: 'Large Appliances'),
-      body: FutureBuilder<List<ProductsViewsModel>>(
-        future: _productsFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
+    return FutureBuilder<List<ProductsViewsModel>>(
+      future: _productsFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-          if (snapshot.hasError) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.error_outline, color: Colors.red, size: 60),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Error: ${snapshot.error}',
-                    style: const TextStyle(fontSize: 16),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () => setState(() {
-                      _productsFuture = _loadProducts();
-                    }),
-                    child: const Text('Retry'),
-                  ),
-                ],
-              ),
+        if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        }
+
+        final products = snapshot.data ?? [];
+
+        return BaseCategoryView(
+          categoryName: 'Large Appliances',
+          products: products,
+          productDetailBuilder: (String productId) {
+            final detailPage = _findDetailPageById(productId);
+            if (detailPage != null) {
+              return detailPage;
+            }
+            return const Scaffold(
+              body: Center(child: Text('Product detail view coming soon')),
             );
-          }
-
-          if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(
-              child: Text(
-                'No appliances available at the moment.',
-                style: TextStyle(fontSize: 16),
-              ),
-            );
-          }
-
-          final products = snapshot.data!;
-          final maxPrice =
-              products.map((p) => p.price).reduce((a, b) => a > b ? a : b);
-          final minPrice =
-              products.map((p) => p.price).reduce((a, b) => a < b ? a : b);
-
-          if (_priceRange == null) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              setState(() {
-                _priceRange = RangeValues(minPrice, maxPrice);
-              });
-            });
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          final filteredProducts = _filterProducts(products);
-
-          return RefreshIndicator(
-            onRefresh: () async {
-              setState(() {
-                _productsFuture = _loadProducts();
-              });
-            },
-            child: ListView(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              children: [
-                // Filters section
-                Card(
-                  elevation: 2,
-                  child: BrandFilterWidget(
-                    products: products,
-                    selectedBrand: _selectedBrand,
-                    onBrandChanged: (newBrand) {
-                      setState(() {
-                        _selectedBrand = newBrand;
-                      });
-                    },
-                  ),
-                ),
-                // Price and Rating filters in a row
-                Row(
-                  children: [
-                    Expanded(
-                      child: Card(
-                        elevation: 2,
-                        child: PriceRangeFilterWidget(
-                          values: _priceRange!,
-                          maxPrice: maxPrice,
-                          onChanged: (range) =>
-                              setState(() => _priceRange = range),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Card(
-                        elevation: 2,
-                        child: RatingFilterWidget(
-                          value: _minRating,
-                          onChanged: (rating) =>
-                              setState(() => _minRating = rating),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-
-                // Products list
-                ...filteredProducts.map((product) {
-                  final productPage = _findDetailPage(product.title);
-                  if (productPage == null) return const SizedBox.shrink();
-
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 16),
-                    child: ProductCard(
-                      id: product.id,
-                      name: product.title,
-                      imagePaths: product.imagePaths ?? [],
-                      price: product.price,
-                      originalPrice: product.originalPrice ?? 0,
-                      rating: product.rating ?? 0,
-                      reviewCount: product.reviewCount ?? 0,
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => productPage),
-                        );
-                      },
-                    ),
-                  );
-                }).toList(),
-              ],
-            ),
-          );
-        },
-      ),
+          },
+        );
+      },
     );
   }
 }

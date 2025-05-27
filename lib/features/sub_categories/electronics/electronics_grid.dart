@@ -11,13 +11,13 @@ class SubElectronicsGrid extends StatelessWidget {
     Widget page;
     switch (categoryName) {
       case 'Mobile & Tablets':
-        page = const MobileAndTabletsPage();
+        page = MobileAndTabletsPage();
         break;
       case 'TVs':
-        page = const TVsPage();
+        page = TvsPage();
         break;
       case 'Laptop':
-        page = const LaptopPage();
+        page = LaptopPage();
         break;
       default:
         page = const Scaffold(
