@@ -9,14 +9,14 @@ class ElectronicsCarouselView extends StatefulWidget {
   const ElectronicsCarouselView({super.key});
 
   @override
-  State<ElectronicsCarouselView> createState() => _ElectronicsGridState();
+  State<ElectronicsCarouselView> createState() => _ElectronicsCarouselView();
 }
 
-class _ElectronicsGridState extends State<ElectronicsCarouselView> {
+class _ElectronicsCarouselView extends State<ElectronicsCarouselView> {
   late PageController _pageController;
-  int currentPage = 1; // Start at the first real item
+  int currentPage = 0;
 
-  final List<Map<String, dynamic>> originalItems = [
+  final List<Map<String, dynamic>> items = [
     {
       'imagePath':
           'assets/electronics_products/mobile_and_tablet/mobile_and_tablet3/1.png',
@@ -53,12 +53,7 @@ class _ElectronicsGridState extends State<ElectronicsCarouselView> {
     },
   ];
 
-  List<Map<String, dynamic>> get carouselItems {
-    final list = [...originalItems];
-    list.insert(0, originalItems.last); // Fake first item (last real)
-    list.add(originalItems.first); // Fake last item (first real)
-    return list;
-  }
+  int get pageCount => (items.length / 2).ceil();
 
   @override
   void initState() {
@@ -68,28 +63,17 @@ class _ElectronicsGridState extends State<ElectronicsCarouselView> {
 
   void _onPageChanged(int index) {
     setState(() => currentPage = index);
-
-    // Handle wrapping around
-    if (index == 0) {
-      Future.delayed(const Duration(milliseconds: 300), () {
-        _pageController.jumpToPage(originalItems.length);
-      });
-    } else if (index == originalItems.length + 1) {
-      Future.delayed(const Duration(milliseconds: 300), () {
-        _pageController.jumpToPage(1);
-      });
-    }
   }
 
   void _goLeft() {
-    if (_pageController.hasClients) {
+    if (_pageController.hasClients && currentPage > 0) {
       _pageController.previousPage(
           duration: const Duration(milliseconds: 400), curve: Curves.easeInOut);
     }
   }
 
   void _goRight() {
-    if (_pageController.hasClients) {
+    if (_pageController.hasClients && currentPage < pageCount - 1) {
       _pageController.nextPage(
           duration: const Duration(milliseconds: 400), curve: Curves.easeInOut);
     }
@@ -98,22 +82,17 @@ class _ElectronicsGridState extends State<ElectronicsCarouselView> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 230, // Adjusted height for better appearance
-      width: 600, // Increased width of the carousel
+      height: 230,
+      width: 600,
       child: Stack(
         children: [
           PageView.builder(
             controller: _pageController,
             onPageChanged: _onPageChanged,
-            itemCount: carouselItems.length,
+            itemCount: pageCount,
             itemBuilder: (context, index) {
-              final int firstIndex = index;
-              final int secondIndex = index + 1;
-
-              final item1 = carouselItems[firstIndex];
-              final item2 = secondIndex < carouselItems.length
-                  ? carouselItems[secondIndex]
-                  : null;
+              final int firstIndex = index * 2;
+              final int secondIndex = firstIndex + 1;
 
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -126,62 +105,65 @@ class _ElectronicsGridState extends State<ElectronicsCarouselView> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (_) => item1['detailPage']));
+                                  builder: (_) =>
+                                      items[firstIndex]['detailPage']));
                         },
                         child: CardItem(
-                          imagePath: item1['imagePath'],
-                          productName: item1['productName'],
-                          price: item1['price'],
-                          rating: item1['rating'],
-                          reviewCount: item1['reviewCount'],
+                          imagePath: items[firstIndex]['imagePath'],
+                          productName: items[firstIndex]['productName'],
+                          price: items[firstIndex]['price'],
+                          rating: items[firstIndex]['rating'],
+                          reviewCount: items[firstIndex]['reviewCount'],
                         ),
                       ),
                     ),
                     const SizedBox(width: 12),
-                    if (item2 != null)
+                    if (secondIndex < items.length)
                       Expanded(
                         child: GestureDetector(
                           onTap: () {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (_) => item2['detailPage']));
+                                    builder: (_) =>
+                                        items[secondIndex]['detailPage']));
                           },
                           child: CardItem(
-                            imagePath: item2['imagePath'],
-                            productName: item2['productName'],
-                            price: item2['price'],
-                            rating: item2['rating'],
-                            reviewCount: item2['reviewCount'],
+                            imagePath: items[secondIndex]['imagePath'],
+                            productName: items[secondIndex]['productName'],
+                            price: items[secondIndex]['price'],
+                            rating: items[secondIndex]['rating'],
+                            reviewCount: items[secondIndex]['reviewCount'],
                           ),
                         ),
                       )
                     else
-                      const Expanded(
-                          child: SizedBox()), // Empty slot if odd number
+                      const Expanded(child: SizedBox()),
                   ],
                 ),
               );
             },
           ),
-          Positioned(
-            left: 0,
-            top: 100,
-            child: IconButton(
-              icon: const Icon(Icons.arrow_back_ios),
-              onPressed: _goLeft,
-              splashRadius: 24,
+          if (currentPage > 0)
+            Positioned(
+              left: 0,
+              top: 100,
+              child: IconButton(
+                icon: const Icon(Icons.arrow_back_ios),
+                onPressed: _goLeft,
+                splashRadius: 24,
+              ),
             ),
-          ),
-          Positioned(
-            right: -4.5,
-            top: 100,
-            child: IconButton(
-              icon: const Icon(Icons.arrow_forward_ios),
-              onPressed: _goRight,
-              splashRadius: 24,
+          if (currentPage < pageCount - 1)
+            Positioned(
+              right: -4.5,
+              top: 100,
+              child: IconButton(
+                icon: const Icon(Icons.arrow_forward_ios),
+                onPressed: _goRight,
+                splashRadius: 24,
+              ),
             ),
-          ),
         ],
       ),
     );

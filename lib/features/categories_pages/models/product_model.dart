@@ -426,7 +426,6 @@ class ProductsViewsModel {
               : (originalPrice is double
                   ? originalPrice
                   : double.parse(originalPrice.toString())));
-    print('💵 Converted originalPrice: $originalPriceValue');
 
       // Handle image paths
       List<String>? imagePaths;

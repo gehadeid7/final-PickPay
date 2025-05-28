@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:pickpay/features/categories_pages/models/product_model.dart';
-import 'package:pickpay/features/categories_pages/widgets/base_category_view.dart';
+
 import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product1.dart';
+import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product10.dart';
+import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product11.dart';
+import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product12.dart';
+import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product13.dart';
+import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product14.dart';
+import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product15.dart';
 import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product2.dart';
 import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product3.dart';
 import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product4.dart';
@@ -10,226 +16,128 @@ import 'package:pickpay/features/categories_pages/products_views/fashion_product
 import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product7.dart';
 import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product8.dart';
 import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product9.dart';
-import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product10.dart';
-import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product11.dart';
-import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product12.dart';
-import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product13.dart';
-import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product14.dart';
-import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product15.dart';
+import 'package:pickpay/features/categories_pages/widgets/base_category_view.dart';
+import 'package:pickpay/services/api_service.dart';
 
-class FashionViewBody extends StatelessWidget {
-  FashionViewBody({super.key});
+class FashionCategoryViewBody extends StatefulWidget {
+  const FashionCategoryViewBody({super.key});
 
-  final List<ProductsViewsModel> _fashionProducts = [
-    ProductsViewsModel(
-      id: '68132a95ff7813b3d47f9da1',
-      title: "Women's Chiffon Lining Batwing Sleeve Dress",
-      price: 850.00,
-      originalPrice: 970.00,
-      rating: 5.0,
-      reviewCount: 88,
-      brand: 'Generic',
-      imagePaths: [
-        "assets/Fashion_products/Women_Fashion/women_fashion1/1.png"
-      ],
-    ),
-    ProductsViewsModel(
-      id: '68132a95ff7813b3d47f9da2',
-      title: "adidas womens ULTIMASHOW Shoes",
-      price: 1456.53,
-      originalPrice: 2188.06,
-      rating: 5.0,
-      reviewCount: 88,
-      brand: 'Adidas',
-      imagePaths: [
-        "assets/Fashion_products/Women_Fashion/women_fashion2/1.png"
-      ],
-    ),
-    ProductsViewsModel(
-      id: '68132a95ff7813b3d47f9da3',
-      title: "American Eagle Womens Low-Rise Baggy Wide-Leg Jean",
-      price: 2700.00,
-      originalPrice: 0,
-      rating: 5.0,
-      reviewCount: 88,
-      brand: 'American Eagle',
-      imagePaths: [
-        "assets/Fashion_products/Women_Fashion/women_fashion3/1.png"
-      ],
-    ),
-    ProductsViewsModel(
-      id: '68132a95ff7813b3d47f9da4',
-      title: "Dejavu womens JAL-DJTF-058 Sandal",
-      price: 1399.00,
-      originalPrice: 0,
-      rating: 5.0,
-      reviewCount: 92,
-      brand: 'Dejavu',
-      imagePaths: [
-        "assets/Fashion_products/Women_Fashion/women_fashion4/1.png"
-      ],
-    ),
-    ProductsViewsModel(
-      id: '68132a95ff7813b3d47f9da5',
-      title: "Aldo Caraever Ladies Satchel Handbags, Khaki, Khaki",
-      price: 799.00,
-      originalPrice: 0,
-      rating: 5.0,
-      reviewCount: 88,
-      brand: 'Aldo',
-      imagePaths: [
-        "assets/Fashion_products/Women_Fashion/women_fashion5/1.png"
-      ],
-    ),
-    ProductsViewsModel(
-      id: '68132a95ff7813b3d47f9da6',
-      title:
-          "DeFacto Man Modern Fit Polo Neck Short Sleeve B6374AX Polo T-Shirt",
-      price: 352.00,
-      originalPrice: 899.00,
-      rating: 4.0,
-      reviewCount: 19,
-      brand: 'DeFacto',
-      imagePaths: ["assets/Fashion_products/Men_Fashion/men_fashion1/1.png"],
-    ),
-    ProductsViewsModel(
-      id: '68132a95ff7813b3d47f9da7',
-      title: "DOTT JEANS WEAR Men's Relaxed Fit Jeans",
-      price: 718.30,
-      originalPrice: 799.00,
-      rating: 4.0,
-      reviewCount: 19,
-      brand: 'DOTT',
-      imagePaths: ["assets/Fashion_products/Men_Fashion/men_fashion2/1.png"],
-    ),
-    ProductsViewsModel(
-      id: '68132a95ff7813b3d47f9da8',
-      title:
-          "Sport-Q®Fury-X Latest Model Football Shoes X Football Shoes Combining Comfort Precision and Performance Excellence in Game.",
-      price: 269.00,
-      originalPrice: 299.00,
-      rating: 4.0,
-      reviewCount: 19,
-      brand: 'Sport-Q',
-      imagePaths: ["assets/Fashion_products/Men_Fashion/men_fashion3/1.png"],
-    ),
-    ProductsViewsModel(
-      id: '68132a95ff7813b3d47f9da9',
-      title: "Timberland Ek Larchmont Ftm_Chelsea, Men's Boots",
-      price: 10499.00,
-      originalPrice: 11000.00,
-      rating: 4.3,
-      reviewCount: 57,
-      brand: 'Timberland',
-      imagePaths: ["assets/Fashion_products/Men_Fashion/men_fashion4/1.png"],
-    ),
-    ProductsViewsModel(
-      id: '68132a95ff7813b3d47f9da10',
-      title:
-          "Timberland Men's Leather Trifold Wallet Hybrid, Brown/Black, One Size",
-      price: 1399.00,
-      originalPrice: 1511.00,
-      rating: 4.6,
-      reviewCount: 1118,
-      brand: 'Timberland',
-      imagePaths: ["assets/Fashion_products/Men_Fashion/men_fashion5/1.png"],
-    ),
-    ProductsViewsModel(
-      id: '68132a95ff7813b3d47f9da11',
-      title: "LC WAIKIKI Crew Neck Girl's Shorts Pajama Set",
-      price: 261.00,
-      originalPrice: 349.00,
-      rating: 4.3,
-      reviewCount: 11,
-      brand: 'LC WAIKIKI',
-      imagePaths: ["assets/Fashion_products/Kids_Fashion/kids_fashion1/1.png"],
-    ),
-    ProductsViewsModel(
-      id: '68132a95ff7813b3d47f9da12',
-      title: "Kidzo Boys Pajamas",
-      price: 580.00,
-      originalPrice: 621.00,
-      rating: 5.0,
-      reviewCount: 3,
-      brand: 'Kidzo',
-      imagePaths: ["assets/Fashion_products/Kids_Fashion/kids_fashion2/1.png"],
-    ),
-    ProductsViewsModel(
-      id: '68132a95ff7813b3d47f9da13',
-      title: "DeFacto Girls Cropped Fit Long Sleeve B9857A8 Denim Jacket",
-      price: 899.00,
-      originalPrice: 899.00,
-      rating: 4.0,
-      reviewCount: 19,
-      brand: 'DeFacto',
-      imagePaths: ["assets/Fashion_products/Kids_Fashion/kids_fashion3/1.png"],
-    ),
-    ProductsViewsModel(
-      id: '68132a95ff7813b3d47f9da14',
-      title:
-          "Baby Boys Jacket Fashion Comfortable High Quality Plush Full Warmth Jacket for Your Baby",
-      price: 425.00,
-      originalPrice: 475.00,
-      rating: 5.0,
-      reviewCount: 19,
-      brand: 'Generic',
-      imagePaths: ["assets/Fashion_products/Kids_Fashion/kids_fashion4/1.png"],
-    ),
-    ProductsViewsModel(
-      id: '68132a95ff7813b3d47f9da15',
-      title: "MIX & MAX, Ballerina Shoes, girls, Ballet Flat",
-      price: 354.65,
-      originalPrice: 429.00,
-      rating: 5.0,
-      reviewCount: 19,
-      brand: 'MIX & MAX',
-      imagePaths: ["assets/Fashion_products/Kids_Fashion/kids_fashion5/1.png"],
-    ),
-  ];
+  @override
+  State<FashionCategoryViewBody> createState() =>
+      _FashionCategoryViewBodyState();
+}
 
-  Widget _buildProductDetail(String productId) {
-    switch (productId) {
-      case '68132a95ff7813b3d47f9da1':
-        return const FashionProduct1();
-      case '68132a95ff7813b3d47f9da2':
-        return const FashionProduct2();
-      case '68132a95ff7813b3d47f9da3':
-        return const FashionProduct3();
-      case '68132a95ff7813b3d47f9da4':
-        return const FashionProduct4();
-      case '68132a95ff7813b3d47f9da5':
-        return const FashionProduct5();
-      case '68132a95ff7813b3d47f9da6':
-        return const FashionProduct6();
-      case '68132a95ff7813b3d47f9da7':
-        return const FashionProduct7();
-      case '68132a95ff7813b3d47f9da8':
-        return const FashionProduct8();
-      case '68132a95ff7813b3d47f9da9':
-        return const FashionProduct9();
-      case '68132a95ff7813b3d47f9da10':
-        return const FashionProduct10();
-      case '68132a95ff7813b3d47f9da11':
-        return const FashionProduct11();
-      case '68132a95ff7813b3d47f9da12':
-        return const FashionProduct12();
-      case '68132a95ff7813b3d47f9da13':
-        return const FashionProduct13();
-      case '68132a95ff7813b3d47f9da14':
-        return const FashionProduct14();
-      case '68132a95ff7813b3d47f9da15':
-        return const FashionProduct15();
-      default:
-        return const FashionProduct1();
-    }
+class _FashionCategoryViewBodyState extends State<FashionCategoryViewBody> {
+  late Future<List<ProductsViewsModel>> _productsFuture;
+
+  static final Map<String, Widget> detailPages = {
+    '682b00c26977bd89257c0e8e': const FashionProduct1(),
+    '682b00c26977bd89257c0e8f': const FashionProduct2(),
+    '682b00c26977bd89257c0e90': const FashionProduct3(),
+    '682b00c26977bd89257c0e91': const FashionProduct4(),
+    '682b00c26977bd89257c0e92': const FashionProduct5(),
+    '682b00c26977bd89257c0e93': const FashionProduct6(),
+    '682b00c26977bd89257c0e94': const FashionProduct7(),
+    '682b00c26977bd89257c0e95': const FashionProduct8(),
+    '682b00c26977bd89257c0e96': const FashionProduct9(),
+    '682b00c26977bd89257c0e97': const FashionProduct10(),
+    '682b00c26977bd89257c0e98': const FashionProduct11(),
+    '682b00c26977bd89257c0e99': const FashionProduct12(),
+    '682b00c26977bd89257c0e9a': const FashionProduct13(),
+    '682b00c26977bd89257c0e9b': const FashionProduct14(),
+    '682b00c26977bd89257c0e9c': const FashionProduct15(),
+  };
+
+  @override
+  void initState() {
+    super.initState();
+    _productsFuture = _loadProducts();
+  }
+
+  Future<List<ProductsViewsModel>> _loadProducts() async {
+    final apiProducts = await ApiService().loadProducts();
+
+    return apiProducts
+        .map((apiProduct) {
+          final productIndex =
+              detailPages.keys.toList().indexOf(apiProduct.id) + 1;
+          final imagePath =
+              'assets/fashion_products/fashion$productIndex/1.png';
+
+          return ProductsViewsModel(
+            id: apiProduct.id,
+            title: apiProduct.name,
+            price: apiProduct.price,
+            originalPrice: apiProduct.originalPrice,
+            rating: apiProduct.rating ?? 4.5,
+            reviewCount: apiProduct.reviewCount ?? 100,
+            imagePaths: [imagePath],
+          );
+        })
+        .where((product) => detailPages.containsKey(product.id))
+        .toList();
+  }
+
+  Widget? _findDetailPageById(String productId) {
+    return detailPages[productId];
   }
 
   @override
   Widget build(BuildContext context) {
-    return BaseCategoryView(
-      categoryName: 'Fashion',
-      products: _fashionProducts,
-      productDetailBuilder: _buildProductDetail,
+    return FutureBuilder<List<ProductsViewsModel>>(
+      future: _productsFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (snapshot.hasError) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.error_outline, color: Colors.red, size: 60),
+                const SizedBox(height: 16),
+                Text(
+                  'Error: ${snapshot.error}',
+                  style: const TextStyle(fontSize: 16),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () =>
+                      setState(() => _productsFuture = _loadProducts()),
+                  child: const Text('Retry'),
+                ),
+              ],
+            ),
+          );
+        }
+
+        if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const Center(
+            child: Text(
+              'No fashion products available at the moment.',
+              style: TextStyle(fontSize: 16),
+            ),
+          );
+        }
+
+        return BaseCategoryView(
+          categoryName: 'Fashion',
+          products: snapshot.data!,
+          productDetailBuilder: (productId) {
+            final detailPage = _findDetailPageById(productId);
+            if (detailPage != null) {
+              return detailPage;
+            }
+            return Scaffold(
+              appBar: AppBar(title: const Text('Product Not Found')),
+              body: const Center(child: Text('Product details not available')),
+            );
+          },
+        );
+      },
     );
   }
 }

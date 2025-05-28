@@ -8,7 +8,7 @@ class FashionProduct14 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: '68132a95ff7813b3d47f9da14',
+      id: '682b00c26977bd89257c0e9b',
       title:
           'Baby Boys Jacket Fashion Comfortable High Quality Plush Full Warmth Jacket for Your Baby',
       imagePaths: [

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product1.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product9.dart';
 import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product13.dart';
-import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product14.dart';
-import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product8.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product15.dart';
 import 'package:pickpay/features/home/presentation/views/widgets/card_item.dart';
 
 class RecommendedForuGridView extends StatefulWidget {
@@ -14,17 +13,26 @@ class RecommendedForuGridView extends StatefulWidget {
 
 class _RecommendedForuGridView extends State<RecommendedForuGridView> {
   late PageController _pageController;
-  int currentPage = 1; // Start at the first real item
+  int currentPage = 0;
 
-  final List<Map<String, dynamic>> originalItems = [
+  final List<Map<String, dynamic>> items = [
     {
-      'imagePath': 'assets/appliances/product1/1.png',
+      'imagePath': 'assets/Home_products/kitchen/kitchen5/1.png',
       'productName':
-          'Koldair Water Dispenser Cold And Hot 2 Tabs - Bottom Load KWDB Silver Cooler',
-      'price': '10.499',
+          "Dish Rack Dish Drying Stand Dish Drainer Plate Rack Dish rake Kitchen Organizer Dish Drying Rack Countertop Large Antibacterial Kitchen Utensils Dish racks Dish Stand (STYLE A)",
+      'price': ' 399.00',
+      'rating': 3.8,
+      'reviewCount': 476,
+      'detailPage': HomeProduct15(),
+    },
+    {
+      'imagePath': 'assets/appliances/product9/1.png',
+      'productName':
+          'Panasonic Powerful Steam/Dry Iron, 1800W, NI-M300TVTD- 1 Year Warranty',
+      'price': '10499',
       'rating': 4.8,
-      'reviewCount': 88,
-      'detailPage': const AppliancesProduct1(),
+      'reviewCount': 1193,
+      'detailPage': AppliancesProduct9(),
     },
     {
       'imagePath': 'assets/electronics_products/Laptop/Laptop3/1.png',
@@ -33,33 +41,20 @@ class _RecommendedForuGridView extends State<RecommendedForuGridView> {
       'price': '33.199',
       'rating': 4.6,
       'reviewCount': 150,
-      'detailPage': const Product13View(),
+      'detailPage': Product13View(),
     },
     {
-      'imagePath': 'assets/videogames_products/Controllers/controller4/1.png',
+      'imagePath': 'assets/Home_products/bath_and_bedding/bath5/1.png',
       'productName':
-          'PlayStation 5 DualSense Edge Wireless Controller (UAE Version)',
-      'price': '16.500',
-      'rating': 5.0,
-      'reviewCount': 954,
-      'detailPage': VideoGamesProduct8(),
-    },
-    {
-      'imagePath': 'assets/electronics_products/Laptop/Laptop4/1.png',
-      'productName': 'HP OfficeJet Pro 9720 Printer',
-      'price': '7199.00',
-      'rating': 4.4,
-      'reviewCount': 19,
-      'detailPage': const Product14View(),
+          "Home of Linen - Duvet Cover Set - 3 Pieces for Double Bed - 1 Duvet Cover (185cm*235cm) + 2 Pillow Cases (50cm*70cm) - 100% Egyptian Cotton - Zebra - 802",
+      'price': ' 948.00',
+      'rating': 3.8,
+      'reviewCount': 84,
+      'detailPage': HomeProduct15(),
     },
   ];
 
-  List<Map<String, dynamic>> get carouselItems {
-    final list = [...originalItems];
-    list.insert(0, originalItems.last); // Fake first item (last real)
-    list.add(originalItems.first); // Fake last item (first real)
-    return list;
-  }
+  int get pageCount => (items.length / 2).ceil();
 
   @override
   void initState() {
@@ -69,28 +64,17 @@ class _RecommendedForuGridView extends State<RecommendedForuGridView> {
 
   void _onPageChanged(int index) {
     setState(() => currentPage = index);
-
-    // Handle wrapping around
-    if (index == 0) {
-      Future.delayed(const Duration(milliseconds: 300), () {
-        _pageController.jumpToPage(originalItems.length);
-      });
-    } else if (index == originalItems.length + 1) {
-      Future.delayed(const Duration(milliseconds: 300), () {
-        _pageController.jumpToPage(1);
-      });
-    }
   }
 
   void _goLeft() {
-    if (_pageController.hasClients) {
+    if (_pageController.hasClients && currentPage > 0) {
       _pageController.previousPage(
           duration: const Duration(milliseconds: 400), curve: Curves.easeInOut);
     }
   }
 
   void _goRight() {
-    if (_pageController.hasClients) {
+    if (_pageController.hasClients && currentPage < pageCount - 1) {
       _pageController.nextPage(
           duration: const Duration(milliseconds: 400), curve: Curves.easeInOut);
     }
@@ -99,22 +83,17 @@ class _RecommendedForuGridView extends State<RecommendedForuGridView> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 230, // Adjusted height for better appearance
-      width: 600, // Increased width of the carousel
+      height: 230,
+      width: 600,
       child: Stack(
         children: [
           PageView.builder(
             controller: _pageController,
             onPageChanged: _onPageChanged,
-            itemCount: carouselItems.length,
+            itemCount: pageCount,
             itemBuilder: (context, index) {
-              final int firstIndex = index;
-              final int secondIndex = index + 1;
-
-              final item1 = carouselItems[firstIndex];
-              final item2 = secondIndex < carouselItems.length
-                  ? carouselItems[secondIndex]
-                  : null;
+              final int firstIndex = index * 2;
+              final int secondIndex = firstIndex + 1;
 
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -127,62 +106,63 @@ class _RecommendedForuGridView extends State<RecommendedForuGridView> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (_) => item1['detailPage']));
+                                  builder: (_) => items[firstIndex]['detailPage']));
                         },
                         child: CardItem(
-                          imagePath: item1['imagePath'],
-                          productName: item1['productName'],
-                          price: item1['price'],
-                          rating: item1['rating'],
-                          reviewCount: item1['reviewCount'],
+                          imagePath: items[firstIndex]['imagePath'],
+                          productName: items[firstIndex]['productName'],
+                          price: items[firstIndex]['price'],
+                          rating: items[firstIndex]['rating'],
+                          reviewCount: items[firstIndex]['reviewCount'],
                         ),
                       ),
                     ),
                     const SizedBox(width: 12),
-                    if (item2 != null)
+                    if (secondIndex < items.length)
                       Expanded(
                         child: GestureDetector(
                           onTap: () {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (_) => item2['detailPage']));
+                                    builder: (_) => items[secondIndex]['detailPage']));
                           },
                           child: CardItem(
-                            imagePath: item2['imagePath'],
-                            productName: item2['productName'],
-                            price: item2['price'],
-                            rating: item2['rating'],
-                            reviewCount: item2['reviewCount'],
+                            imagePath: items[secondIndex]['imagePath'],
+                            productName: items[secondIndex]['productName'],
+                            price: items[secondIndex]['price'],
+                            rating: items[secondIndex]['rating'],
+                            reviewCount: items[secondIndex]['reviewCount'],
                           ),
                         ),
                       )
                     else
-                      const Expanded(
-                          child: SizedBox()), // Empty slot if odd number
+                      const Expanded(child: SizedBox()),
                   ],
                 ),
               );
             },
           ),
-          Positioned(
-            left: 0,
-            top: 100,
-            child: IconButton(
-              icon: const Icon(Icons.arrow_back_ios),
-              onPressed: _goLeft,
-              splashRadius: 24,
+          if (currentPage > 0)
+            Positioned(
+              left: 0,
+              top: 100,
+              child: IconButton(
+                icon: const Icon(Icons.arrow_back_ios),
+                onPressed: _goLeft,
+                splashRadius: 24,
+              ),
             ),
-          ),
-          Positioned(
-            right: -4.5,
-            top: 100,
-            child: IconButton(
-              icon: const Icon(Icons.arrow_forward_ios),
-              onPressed: _goRight,
-              splashRadius: 24,
+          if (currentPage < pageCount - 1)
+            Positioned(
+              right: -4.5,
+              top: 100,
+              child: IconButton(
+                icon: const Icon(Icons.arrow_forward_ios),
+                onPressed: _goRight,
+                splashRadius: 24,
+              ),
             ),
-          ),
         ],
       ),
     );

@@ -1,5 +1,3 @@
-// ignore_for_file: deprecated_member_use
-
 import 'dart:io';
 import 'dart:async';
 import 'package:flutter/material.dart';
@@ -9,12 +7,12 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:pickpay/core/services/firebase_auth_service.dart';
 import 'package:pickpay/core/services/get_it_service.dart';
-import 'package:pickpay/core/utils/app_text_styles.dart';
 import 'package:pickpay/features/auth/domain/repos/auth_repo.dart';
 import 'package:pickpay/features/profile_change/cubits/cubit/profile_chnage_cubit.dart';
 import 'package:pickpay/features/profile_change/cubits/cubit/profile_chnage_state.dart';
 import 'dart:developer' as developer;
 import 'package:another_flushbar/flushbar.dart';
+import 'dart:ui';
 
 const Map<String, String> genderMap = {
   'Male': 'Male',
@@ -30,6 +28,39 @@ class ProfileValidationConstants {
   static const int maxAddressLength = 200;
   static const int maxFileSizeInMB = 5;
 }
+
+final Map<String, Map<String, Color>> themeColors = {
+  'light': {
+    'gradientStart': Color(0xFFF8F9FA),
+    'gradientEnd': Color(0xFFFFFFFF),
+    'cardBackground': Color(0xFFFFFFFF),
+    'textPrimary': Color(0xFF2D3436),
+    'textSecondary': Color(0xFF636E72),
+    'inputBackground': Color(0xFFF5F6F8),
+    'inputBorder': Color(0xFFE4E7EB),
+    'buttonPrimary': Color(0xFF0984E3),
+    'shimmerBase': Color(0xFFE0E0E0),
+    'shimmerHighlight': Color(0xFFF5F5F5),
+    'success': Color(0xFF00B894),
+    'error': Color(0xFFFF7675),
+  },
+  'dark': {
+    'gradientStart': Color(0xFF121212), // Deep grey background
+    'gradientEnd': Color(0xFF1E1E1E), // Lighter grey gradient
+    'cardBackground': Color(0xFF2C2C2C), // Medium grey cards
+    'textPrimary': Color(0xFFE8E8E8), // Crisp, clear white-grey text
+    'textSecondary': Color(0xFF9E9E9E), // Neutral grey for secondary text
+    'inputBackground': Color(0xFF262626), // Slightly lighter than background
+    'inputBorder': Color(0xFF404040), // Subtle but visible borders
+    'buttonPrimary': Color(0xFF64B5F6), // Softer blue that matches grey theme
+    'shimmerBase': Color(0xFF282828), // Subtle dark grey
+    'shimmerHighlight': Color(0xFF383838), // Gentle highlight
+    'success': Color(0xFF81C784), // Softer green that matches theme
+    'error': Color(0xFFE57373), // Softer red that matches theme
+  },
+};
+
+const Duration kAnimationDuration = Duration(milliseconds: 200);
 
 class ProfileChangeView extends StatelessWidget {
   const ProfileChangeView({super.key});
@@ -60,10 +91,29 @@ class _ProfileChangeViewContent extends StatefulWidget {
 }
 
 class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent>
-    with WidgetsBindingObserver {
+    with WidgetsBindingObserver, SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
   final _refreshKey = GlobalKey<RefreshIndicatorState>();
   StreamSubscription<ProfileState>? _stateSubscription;
+
+  // Initialize animation controller and animations
+  late final AnimationController _animationController = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 600),
+  );
+
+  late final Animation<double> _fadeAnimation = CurvedAnimation(
+    parent: _animationController,
+    curve: Curves.easeInOut,
+  );
+
+  late final Animation<Offset> _slideAnimation = Tween<Offset>(
+    begin: const Offset(0, 0.1),
+    end: Offset.zero,
+  ).animate(CurvedAnimation(
+    parent: _animationController,
+    curve: Curves.easeOutCubic,
+  ));
 
   // Controllers
   late TextEditingController _nameController;
@@ -265,9 +315,13 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent>
     WidgetsBinding.instance.addObserver(this);
     _initializeState();
     _setupStateListener();
-    // Load fresh data when view is opened
+
+    // Start the animation after widget is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _loadInitialData();
+      if (mounted) {
+        _animationController.forward();
+        _loadInitialData();
+      }
     });
   }
 
@@ -291,6 +345,7 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent>
     _ageFocus.dispose();
     _addressFocus.dispose();
     _scrollController.dispose();
+    _animationController.dispose();
     super.dispose();
   }
 
@@ -382,7 +437,7 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent>
           _isImageLoading = false;
         });
         if (state.errorMessage.isNotEmpty) {
-          _showErrorSnackBar(state.errorMessage);
+          _showMessage(state.errorMessage, isError: true);
         }
       }
     });
@@ -457,7 +512,7 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent>
     } catch (e) {
       _logError('Failed to load initial data', e);
       if (mounted) {
-        _showErrorSnackBar('فشل تحميل البيانات');
+        _showMessage('فشل تحميل البيانات');
       }
     } finally {
       if (mounted) {
@@ -673,19 +728,32 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent>
       {bool isError = false, bool isSaveMessage = false}) {
     if (!mounted) return;
 
-    // Use Flushbar instead of SnackBar for better visibility
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final colors = themeColors[isDark ? 'dark' : 'light']!;
+
     Flushbar(
       message: message,
-      messageColor: Colors.white,
-      backgroundColor: isError ? Colors.red.shade700 : Colors.green.shade700,
-      duration: const Duration(seconds: 2),
+      messageColor: colors['textPrimary'],
+      backgroundColor: isError
+          ? (isDark ? Colors.red.shade900 : Colors.red.shade50)
+          : (isDark ? Colors.green.shade900 : Colors.green.shade50),
+      duration: const Duration(seconds: 3),
       flushbarPosition: FlushbarPosition.TOP,
       margin: const EdgeInsets.all(8),
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: BorderRadius.circular(12),
+      boxShadows: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.1),
+          blurRadius: 8,
+          offset: const Offset(0, 2),
+        ),
+      ],
       icon: Icon(
         isError ? Icons.error_outline : Icons.check_circle_outline,
-        color: Colors.white,
+        color: isError ? Colors.red : Colors.green,
       ),
+      leftBarIndicatorColor: isError ? Colors.red : Colors.green,
     ).show(context);
   }
 
@@ -730,65 +798,877 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent>
   }
 
   Widget _buildSectionHeader(String title, IconData icon) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 20, top: 16),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: Colors.white.withOpacity(0.2),
-          width: 1,
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final colors = themeColors[isDark ? 'dark' : 'light']!;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: Container(
+        height: 45,
+        margin: const EdgeInsets.only(top: 5),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        decoration: BoxDecoration(
+          color: colors['cardBackground']!.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: colors['buttonPrimary']!.withOpacity(0.2),
+            width: 1,
+          ),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              icon,
+              color: colors['buttonPrimary'],
+            ),
+            const SizedBox(width: 12),
+            Text(
+              title,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: colors['textPrimary'],
+                  ),
+            ),
+          ],
         ),
       ),
-      child: Row(
+    );
+  }
+
+  Widget _buildLoadingSkeleton() {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final colors = themeColors[isDark ? 'dark' : 'light']!;
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: Colors.white.withOpacity(0.9)),
-          const SizedBox(width: 12),
-          Text(
-            title,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
+          Center(
+            child: _buildShimmerEffect(
+              width: 120,
+              height: 120,
+              borderRadius: BorderRadius.circular(60),
+            ),
+          ),
+          const SizedBox(height: 32),
+          ...List.generate(
+            3,
+            (index) => Padding(
+              padding: const EdgeInsets.only(bottom: 24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildShimmerEffect(
+                    width: 120,
+                    height: 20,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  const SizedBox(height: 8),
+                  _buildShimmerEffect(
+                    width: double.infinity,
+                    height: 48,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildLoadingSkeleton() {
-    return ListView.builder(
-      padding: const EdgeInsets.all(16),
-      itemCount: 6,
-      itemBuilder: (context, index) {
-        return Container(
-          margin: const EdgeInsets.only(bottom: 16),
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: 100,
-                height: 16,
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(8),
+  // Update the build method to use animations
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final colors = themeColors[isDark ? 'dark' : 'light']!;
+
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        extendBody: true,
+        extendBodyBehindAppBar: true,
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: colors['gradientStart'],
+          leading: IconButton(
+            icon: AnimatedContainer(
+              duration: kAnimationDuration,
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: colors['cardBackground']!.withOpacity(0.1),
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: colors['buttonPrimary']!.withOpacity(0.2),
+                  width: 1,
                 ),
               ),
-              const SizedBox(height: 12),
-              Container(
-                height: 48,
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(8),
+              child: Icon(
+                Icons.arrow_back_ios_new_rounded,
+                color: colors['textPrimary'],
+                size: 20,
+              ),
+            ),
+            onPressed: _isLoading ? null : () => Navigator.pop(context),
+            tooltip: 'Back',
+          ),
+          title: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Edit Profile',
+                style: TextStyle(
+                  color: colors['textPrimary'],
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 0.5,
+                ),
+              ),
+              AnimatedOpacity(
+                duration: kAnimationDuration,
+                opacity: _fieldChanges.isNotEmpty ? 1.0 : 0.0,
+                child: Text(
+                  '${_fieldChanges.length} change${_fieldChanges.length > 1 ? 's' : ''} pending',
+                  style: TextStyle(
+                    color: colors['textSecondary'],
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
               ),
             ],
+          ),
+          centerTitle: true,
+          actions: [
+            if (_fieldChanges.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: IconButton(
+                  onPressed: _isSaving ? null : _handleSave,
+                  tooltip: 'Save Changes',
+                  icon: AnimatedContainer(
+                    duration: kAnimationDuration,
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: colors['buttonPrimary']!.withOpacity(0.1),
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: colors['buttonPrimary']!.withOpacity(0.2),
+                        width: 1,
+                      ),
+                    ),
+                    child: _isSaving
+                        ? SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                colors['buttonPrimary']!,
+                              ),
+                            ),
+                          )
+                        : Icon(
+                            Icons.save_rounded,
+                            color: colors['buttonPrimary'],
+                            size: 20,
+                          ),
+                  ),
+                ),
+              ),
+          ],
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(1),
+            child: AnimatedOpacity(
+              duration: kAnimationDuration,
+              opacity: isDark ? 0.1 : 0.05,
+              child: Container(
+                height: 1,
+                color: colors['textPrimary'],
+              ),
+            ),
+          ),
+        ),
+        body: AnimatedBuilder(
+          animation: _animationController,
+          builder: (context, child) {
+            return FadeTransition(
+              opacity: _fadeAnimation,
+              child: SlideTransition(
+                position: _slideAnimation,
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        colors['gradientStart']!,
+                        colors['gradientEnd']!
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                  ),
+                  child: SafeArea(
+                    child: BlocConsumer<ProfileCubit, ProfileState>(
+                      listener: (context, state) {
+                        if (!mounted) return;
+
+                        if (state.status == ProfileStatus.loadSuccess) {
+                          // Update UI with new state data
+                          setState(() {
+                            _nameController.text = state.name;
+                            _emailController.text = state.email;
+
+                            // Handle phone number format
+                            String phoneNumber = state.phone;
+                            if (phoneNumber.startsWith('+20')) {
+                              phoneNumber = '0${phoneNumber.substring(3)}';
+                            }
+                            _phoneController.text = phoneNumber;
+
+                            // Update other fields
+                            _genderController.text = state.gender;
+                            _dobController.text = state.dob;
+                            _ageController.text = state.age;
+                            _addressController.text = state.address;
+                            _profileImageUrl = state.profileImageUrl;
+
+                            // Handle gender mapping
+                            String gender = state.gender;
+                            if (genderMap.containsKey(gender)) {
+                              gender = genderMap[gender]!;
+                            }
+                            _selectedGender = gender;
+
+                            if (!_isInitialized) {
+                              _isInitialized = true;
+                            }
+                          });
+                        }
+
+                        if (state.status == ProfileStatus.error) {
+                          setState(() {
+                            _isSaving = false;
+                            _isImageLoading = false;
+                          });
+                          if (state.errorMessage.isNotEmpty) {
+                            _showMessage(state.errorMessage, isError: true);
+                          }
+                          context.read<ProfileCubit>().resetStatus();
+                        }
+
+                        if (state.status == ProfileStatus.saveSuccess) {
+                          setState(() {
+                            _fieldChanges.clear();
+                            _isSaving = false;
+                            _isImageLoading = false;
+                          });
+                          _showMessage('Profile updated successfully',
+                              isSaveMessage: true);
+                          // Force reload after successful save
+                          _loadInitialData();
+                        }
+                      },
+                      builder: (context, state) {
+                        if (!_isInitialized &&
+                            state.status == ProfileStatus.initial) {
+                          return _buildLoadingSkeleton();
+                        }
+
+                        final isImageLoading =
+                            state.status == ProfileStatus.loading &&
+                                state.fieldBeingEdited == 'photoUrl';
+                        final isSaving =
+                            state.status == ProfileStatus.loading &&
+                                state.fieldBeingEdited == 'save';
+                        final isLoading = state.status == ProfileStatus.loading;
+
+                        print('Name controller: ${_nameController.text}');
+                        print('Phone controller: ${_phoneController.text}');
+                        print('Address controller: ${_addressController.text}');
+
+                        return Stack(
+                          children: [
+                            RefreshIndicator(
+                              key: _refreshKey,
+                              onRefresh: _onRefresh,
+                              color: colors['buttonPrimary'],
+                              backgroundColor: colors['cardBackground'],
+                              strokeWidth: 2.5,
+                              displacement: 16,
+                              child: SingleChildScrollView(
+                                controller: _scrollController,
+                                physics: const AlwaysScrollableScrollPhysics(
+                                  parent: BouncingScrollPhysics(),
+                                ),
+                                padding: EdgeInsets.only(
+                                  bottom: _fieldChanges.isNotEmpty ? 80 : 16,
+                                ),
+                                child: Form(
+                                  key: _formKey,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      _buildProfileImage(state),
+                                      _buildSectionHeader(
+                                        'Personal Information',
+                                        Icons.person_outline,
+                                      ),
+                                      Card(
+                                        elevation: isDark ? 2 : 4,
+                                        color: colors['cardBackground'],
+                                        shadowColor: Colors.black
+                                            .withOpacity(isDark ? 0.3 : 0.1),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(16),
+                                          side: BorderSide(
+                                            color: colors['inputBorder']!
+                                                .withOpacity(0.1),
+                                            width: 1,
+                                          ),
+                                        ),
+                                        child: AnimatedContainer(
+                                          duration: kAnimationDuration,
+                                          padding: const EdgeInsets.all(24),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(16),
+                                            gradient: LinearGradient(
+                                              begin: Alignment.topLeft,
+                                              end: Alignment.bottomRight,
+                                              colors: [
+                                                colors['cardBackground']!,
+                                                colors['cardBackground']!
+                                                    .withOpacity(0.95),
+                                              ],
+                                            ),
+                                          ),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              _buildFieldWithSaveCancel(
+                                                fieldName: 'name',
+                                                label: 'Full Name',
+                                                controller: _nameController,
+                                                onSave: (_) => _handleSave(),
+                                                prefixIcon:
+                                                    Icons.person_outline,
+                                                hintText:
+                                                    'Enter your full name',
+                                                validator: (value) {
+                                                  if (value == null ||
+                                                      value.trim().isEmpty) {
+                                                    return 'Name is required';
+                                                  }
+                                                  if (value.trim().length < 3) {
+                                                    return 'Name must be at least 3 characters';
+                                                  }
+                                                  if (value.trim().length >
+                                                      ProfileValidationConstants
+                                                          .maxNameLength) {
+                                                    return 'Name must not exceed ${ProfileValidationConstants.maxNameLength} characters';
+                                                  }
+                                                  return null;
+                                                },
+                                              ),
+                                              const SizedBox(height: 16),
+                                              _buildFieldWithSaveCancel(
+                                                fieldName: 'email',
+                                                label: 'Email Address',
+                                                controller: _emailController,
+                                                onSave: (_) => _handleSave(),
+                                                prefixIcon:
+                                                    Icons.email_outlined,
+                                                keyboardType:
+                                                    TextInputType.emailAddress,
+                                              ),
+                                              const SizedBox(height: 16),
+                                              _buildFieldWithSaveCancel(
+                                                fieldName: 'phone',
+                                                label: 'Phone Number',
+                                                controller: _phoneController,
+                                                onSave: (_) => _handleSave(),
+                                                prefixIcon:
+                                                    Icons.phone_outlined,
+                                                hintText:
+                                                    'Enter your phone number',
+                                                keyboardType:
+                                                    TextInputType.phone,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 16),
+                                      _buildSectionHeader(
+                                        'Additional Information',
+                                        Icons.info_outline,
+                                      ),
+                                      Card(
+                                        elevation: isDark ? 2 : 4,
+                                        color: colors['cardBackground'],
+                                        shadowColor: Colors.black
+                                            .withOpacity(isDark ? 0.3 : 0.1),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(16),
+                                          side: BorderSide(
+                                            color: colors['inputBorder']!
+                                                .withOpacity(0.1),
+                                            width: 1,
+                                          ),
+                                        ),
+                                        child: AnimatedContainer(
+                                          duration: kAnimationDuration,
+                                          padding: const EdgeInsets.all(24),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(16),
+                                            gradient: LinearGradient(
+                                              begin: Alignment.topLeft,
+                                              end: Alignment.bottomRight,
+                                              colors: [
+                                                colors['cardBackground']!,
+                                                colors['cardBackground']!
+                                                    .withOpacity(0.95),
+                                              ],
+                                            ),
+                                          ),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              _buildFieldWithSaveCancel(
+                                                fieldName: 'dob',
+                                                label: 'Date of Birth',
+                                                controller: _dobController,
+                                                onSave: (_) => _handleSave(),
+                                                prefixIcon: Icons
+                                                    .calendar_today_outlined,
+                                                hintText:
+                                                    'Select your date of birth',
+                                              ),
+                                              const SizedBox(height: 16),
+                                              _buildFieldWithSaveCancel(
+                                                fieldName: 'age',
+                                                label: 'Age',
+                                                controller: _ageController,
+                                                onSave: (_) => _handleSave(),
+                                                prefixIcon: Icons.cake_outlined,
+                                              ),
+                                              const SizedBox(height: 16),
+                                              _buildFieldWithSaveCancel(
+                                                fieldName: 'address',
+                                                label: 'Address',
+                                                controller: _addressController,
+                                                onSave: (_) => _handleSave(),
+                                                prefixIcon:
+                                                    Icons.location_on_outlined,
+                                                hintText: 'Enter your address',
+                                                keyboardType:
+                                                    TextInputType.streetAddress,
+                                                maxLines: 2,
+                                              ),
+                                              const SizedBox(height: 16),
+                                              _buildFieldWithSaveCancel(
+                                                fieldName: 'gender',
+                                                label: 'Gender',
+                                                controller: _selectedGender,
+                                                onSave: (_) => _handleSave(),
+                                                prefixIcon:
+                                                    Icons.people_outline,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            if (isLoading && !isImageLoading && !isSaving)
+                              Container(
+                                color:
+                                    colors['cardBackground']!.withOpacity(0.7),
+                                child: BackdropFilter(
+                                  filter:
+                                      ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+                                  child: Center(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        CircularProgressIndicator(
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                            colors['buttonPrimary']!,
+                                          ),
+                                          strokeWidth: 3,
+                                        ),
+                                        const SizedBox(height: 16),
+                                        Text(
+                                          'Loading...',
+                                          style: TextStyle(
+                                            color: colors['textPrimary'],
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
+          child: SafeArea(
+            child: BlocConsumer<ProfileCubit, ProfileState>(
+              listener: (context, state) {
+                if (!mounted) return;
+
+                if (state.status == ProfileStatus.loadSuccess) {
+                  // Update UI with new state data
+                  setState(() {
+                    _nameController.text = state.name;
+                    _emailController.text = state.email;
+
+                    // Handle phone number format
+                    String phoneNumber = state.phone;
+                    if (phoneNumber.startsWith('+20')) {
+                      phoneNumber = '0${phoneNumber.substring(3)}';
+                    }
+                    _phoneController.text = phoneNumber;
+
+                    // Update other fields
+                    _genderController.text = state.gender;
+                    _dobController.text = state.dob;
+                    _ageController.text = state.age;
+                    _addressController.text = state.address;
+                    _profileImageUrl = state.profileImageUrl;
+
+                    // Handle gender mapping
+                    String gender = state.gender;
+                    if (genderMap.containsKey(gender)) {
+                      gender = genderMap[gender]!;
+                    }
+                    _selectedGender = gender;
+
+                    if (!_isInitialized) {
+                      _isInitialized = true;
+                    }
+                  });
+                }
+
+                if (state.status == ProfileStatus.error) {
+                  setState(() {
+                    _isSaving = false;
+                    _isImageLoading = false;
+                  });
+                  if (state.errorMessage.isNotEmpty) {
+                    _showMessage(state.errorMessage, isError: true);
+                  }
+                  context.read<ProfileCubit>().resetStatus();
+                }
+
+                if (state.status == ProfileStatus.saveSuccess) {
+                  setState(() {
+                    _fieldChanges.clear();
+                    _isSaving = false;
+                    _isImageLoading = false;
+                  });
+                  _showMessage('Profile updated successfully',
+                      isSaveMessage: true);
+                  // Force reload after successful save
+                  _loadInitialData();
+                }
+              },
+              builder: (context, state) {
+                if (!_isInitialized && state.status == ProfileStatus.initial) {
+                  return _buildLoadingSkeleton();
+                }
+
+                final isImageLoading = state.status == ProfileStatus.loading &&
+                    state.fieldBeingEdited == 'photoUrl';
+                final isSaving = state.status == ProfileStatus.loading &&
+                    state.fieldBeingEdited == 'save';
+                final isLoading = state.status == ProfileStatus.loading;
+
+                print('Name controller: ${_nameController.text}');
+                print('Phone controller: ${_phoneController.text}');
+                print('Address controller: ${_addressController.text}');
+
+                return Stack(
+                  children: [
+                    RefreshIndicator(
+                      key: _refreshKey,
+                      onRefresh: _onRefresh,
+                      color: colors['buttonPrimary'],
+                      backgroundColor: colors['cardBackground'],
+                      strokeWidth: 2.5,
+                      displacement: 16,
+                      child: SingleChildScrollView(
+                        controller: _scrollController,
+                        physics: const AlwaysScrollableScrollPhysics(
+                          parent: BouncingScrollPhysics(),
+                        ),
+                        padding: EdgeInsets.only(
+                          bottom: _fieldChanges.isNotEmpty ? 80 : 16,
+                        ),
+                        child: Form(
+                          key: _formKey,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _buildProfileImage(state),
+                              _buildSectionHeader(
+                                'Personal Information',
+                                Icons.person_outline,
+                              ),
+                              Card(
+                                elevation: isDark ? 2 : 4,
+                                color: colors['cardBackground'],
+                                shadowColor: Colors.black
+                                    .withOpacity(isDark ? 0.3 : 0.1),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                  side: BorderSide(
+                                    color:
+                                        colors['inputBorder']!.withOpacity(0.1),
+                                    width: 1,
+                                  ),
+                                ),
+                                child: AnimatedContainer(
+                                  duration: kAnimationDuration,
+                                  padding: const EdgeInsets.all(24),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(16),
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                      colors: [
+                                        colors['cardBackground']!,
+                                        colors['cardBackground']!
+                                            .withOpacity(0.95),
+                                      ],
+                                    ),
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      _buildFieldWithSaveCancel(
+                                        fieldName: 'name',
+                                        label: 'Full Name',
+                                        controller: _nameController,
+                                        onSave: (_) => _handleSave(),
+                                        prefixIcon: Icons.person_outline,
+                                        hintText: 'Enter your full name',
+                                        validator: (value) {
+                                          if (value == null ||
+                                              value.trim().isEmpty) {
+                                            return 'Name is required';
+                                          }
+                                          if (value.trim().length < 3) {
+                                            return 'Name must be at least 3 characters';
+                                          }
+                                          if (value.trim().length >
+                                              ProfileValidationConstants
+                                                  .maxNameLength) {
+                                            return 'Name must not exceed ${ProfileValidationConstants.maxNameLength} characters';
+                                          }
+                                          return null;
+                                        },
+                                      ),
+                                      const SizedBox(height: 16),
+                                      _buildFieldWithSaveCancel(
+                                        fieldName: 'email',
+                                        label: 'Email Address',
+                                        controller: _emailController,
+                                        onSave: (_) => _handleSave(),
+                                        prefixIcon: Icons.email_outlined,
+                                        keyboardType:
+                                            TextInputType.emailAddress,
+                                      ),
+                                      const SizedBox(height: 16),
+                                      _buildFieldWithSaveCancel(
+                                        fieldName: 'phone',
+                                        label: 'Phone Number',
+                                        controller: _phoneController,
+                                        onSave: (_) => _handleSave(),
+                                        prefixIcon: Icons.phone_outlined,
+                                        hintText: 'Enter your phone number',
+                                        keyboardType: TextInputType.phone,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 24),
+                              _buildSectionHeader(
+                                'Additional Information',
+                                Icons.info_outline,
+                              ),
+                              Card(
+                                elevation: isDark ? 2 : 4,
+                                color: colors['cardBackground'],
+                                shadowColor: Colors.black
+                                    .withOpacity(isDark ? 0.3 : 0.1),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                  side: BorderSide(
+                                    color:
+                                        colors['inputBorder']!.withOpacity(0.1),
+                                    width: 1,
+                                  ),
+                                ),
+                                child: AnimatedContainer(
+                                  duration: kAnimationDuration,
+                                  padding: const EdgeInsets.all(24),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(16),
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                      colors: [
+                                        colors['cardBackground']!,
+                                        colors['cardBackground']!
+                                            .withOpacity(0.95),
+                                      ],
+                                    ),
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      _buildFieldWithSaveCancel(
+                                        fieldName: 'dob',
+                                        label: 'Date of Birth',
+                                        controller: _dobController,
+                                        onSave: (_) => _handleSave(),
+                                        prefixIcon:
+                                            Icons.calendar_today_outlined,
+                                        hintText: 'Select your date of birth',
+                                      ),
+                                      const SizedBox(height: 16),
+                                      _buildFieldWithSaveCancel(
+                                        fieldName: 'age',
+                                        label: 'Age',
+                                        controller: _ageController,
+                                        onSave: (_) => _handleSave(),
+                                        prefixIcon: Icons.cake_outlined,
+                                      ),
+                                      const SizedBox(height: 16),
+                                      _buildFieldWithSaveCancel(
+                                        fieldName: 'address',
+                                        label: 'Address',
+                                        controller: _addressController,
+                                        onSave: (_) => _handleSave(),
+                                        prefixIcon: Icons.location_on_outlined,
+                                        hintText: 'Enter your address',
+                                        keyboardType:
+                                            TextInputType.streetAddress,
+                                        maxLines: 2,
+                                      ),
+                                      const SizedBox(height: 16),
+                                      _buildFieldWithSaveCancel(
+                                        fieldName: 'gender',
+                                        label: 'Gender',
+                                        controller: _selectedGender,
+                                        onSave: (_) => _handleSave(),
+                                        prefixIcon: Icons.people_outline,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    if (isLoading && !isImageLoading && !isSaving)
+                      Container(
+                        color: colors['cardBackground']!.withOpacity(0.7),
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+                          child: Center(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    colors['buttonPrimary']!,
+                                  ),
+                                  strokeWidth: 3,
+                                ),
+                                const SizedBox(height: 16),
+                                Text(
+                                  'Loading...',
+                                  style: TextStyle(
+                                    color: colors['textPrimary'],
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                );
+              },
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Add shimmer effect widget
+  Widget _buildShimmerEffect({
+    required double width,
+    required double height,
+    BorderRadius? borderRadius,
+  }) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final colors = themeColors[isDark ? 'dark' : 'light']!;
+
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0.0, end: 1.0),
+      duration: const Duration(milliseconds: 1500),
+      builder: (context, value, child) {
+        return Container(
+          width: width,
+          height: height,
+          decoration: BoxDecoration(
+            borderRadius: borderRadius ?? BorderRadius.circular(8),
+            gradient: LinearGradient(
+              begin: Alignment(-1.0 + (value * 3), 0),
+              end: Alignment(-1.0 + (value * 3) + 1, 0),
+              colors: [
+                colors['shimmerBase']!,
+                colors['shimmerHighlight']!,
+                colors['shimmerBase']!,
+              ],
+              stops: const [0.0, 0.5, 1.0],
+            ),
           ),
         );
       },
@@ -841,6 +1721,56 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent>
     String? hintText,
     List<TextInputFormatter>? inputFormatters,
   }) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final colors = themeColors[isDark ? 'dark' : 'light']!;
+
+    final defaultDecoration = InputDecoration(
+      labelText: label,
+      labelStyle: TextStyle(
+        color: colors['textSecondary'],
+        fontSize: 16,
+      ),
+      hintText: hintText ?? 'Enter $label',
+      hintStyle: TextStyle(
+        color: colors['textSecondary']!.withOpacity(0.7),
+        fontSize: 14,
+      ),
+      prefixIcon: Icon(
+        prefixIcon ?? Icons.edit,
+        color: colors['textSecondary'],
+      ),
+      filled: true,
+      fillColor: colors['inputBackground'],
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: colors['inputBorder']!),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: colors['inputBorder']!),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(
+          color: colors['buttonPrimary']!,
+          width: 2,
+        ),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: Colors.red, width: 1),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: Colors.red, width: 2),
+      ),
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: 16,
+        vertical: 16,
+      ),
+    );
+
     // Special handling for DOB field
     if (fieldName == 'dob') {
       return TextFormField(
@@ -848,28 +1778,36 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent>
         focusNode: _getFocusNode(fieldName),
         readOnly: true,
         onTap: () => _selectDate(context),
-        decoration: InputDecoration(
-          labelText: label,
-          hintText: hintText ?? 'Select date of birth',
-          prefixIcon: Icon(prefixIcon ?? Icons.calendar_today_outlined),
-          filled: true,
-          fillColor: Theme.of(context).cardColor,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(color: Theme.of(context).dividerColor),
+        style: TextStyle(
+          color: colors['textPrimary'],
+          fontSize: 16,
+        ),
+        decoration: defaultDecoration.copyWith(
+          prefixIcon: Icon(
+            Icons.calendar_today_outlined,
+            color: colors['textSecondary'],
           ),
         ),
         validator: validator,
       );
     }
 
-    // Special handling for different field types
-    if (fieldName == 'phone') {
-      return _buildPhoneField();
+    // Special handling for read-only fields
+    if (fieldName == 'email' || fieldName == 'age') {
+      return TextFormField(
+        controller: controller as TextEditingController,
+        readOnly: true,
+        style: TextStyle(
+          color: colors['textPrimary']!.withOpacity(0.8),
+          fontSize: 16,
+        ),
+        decoration: defaultDecoration.copyWith(
+          fillColor: colors['inputBackground']!.withOpacity(0.7),
+        ),
+      );
     }
-    if (fieldName == 'address') {
-      return _buildAddressField();
-    }
+
+    // Special handling for gender field
     if (fieldName == 'gender') {
       return _GenderField(
         selectedGender: _selectedGender,
@@ -881,27 +1819,12 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent>
             });
           }
         },
-        onSave: (_) {}, // Empty callback since we're not auto-saving
-        fieldColor: Theme.of(context).cardColor,
-        borderColor: Theme.of(context).dividerColor,
+        onSave: onSave,
+        fieldColor: colors['inputBackground']!,
+        borderColor: colors['inputBorder']!,
         focusNode: _genderFocus,
-      );
-    }
-
-    // For read-only fields
-    if (fieldName == 'email' || fieldName == 'age') {
-      return TextFormField(
-        controller: controller as TextEditingController,
-        readOnly: true,
-        decoration: InputDecoration(
-          labelText: label,
-          filled: true,
-          fillColor: Theme.of(context).cardColor,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(color: Theme.of(context).dividerColor),
-          ),
-        ),
+        textColor: colors['textPrimary']!,
+        hintColor: colors['textSecondary']!,
       );
     }
 
@@ -912,21 +1835,14 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent>
         focusNode: _getFocusNode(fieldName),
         onChanged: (value) => _handleFieldChange(value, fieldName),
         textInputAction: TextInputAction.next,
-        style: const TextStyle(fontSize: 16),
+        style: TextStyle(
+          color: colors['textPrimary'],
+          fontSize: 16,
+        ),
         keyboardType: keyboardType,
         maxLines: maxLines,
         inputFormatters: inputFormatters,
-        decoration: InputDecoration(
-          labelText: label,
-          hintText: hintText ?? 'Enter $label',
-          prefixIcon: Icon(prefixIcon ?? Icons.person_outline),
-          filled: true,
-          fillColor: Theme.of(context).cardColor,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(color: Theme.of(context).dividerColor),
-          ),
-        ),
+        decoration: defaultDecoration,
         validator: validator,
       );
     }
@@ -1033,6 +1949,8 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent>
     required void Function(String) onSave,
     required Color fieldColor,
     required Color borderColor,
+    required Color textColor,
+    required Color hintColor,
     required FocusNode focusNode,
   }) {
     return DropdownButtonFormField<String>(
@@ -1040,18 +1958,48 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent>
       focusNode: focusNode,
       decoration: InputDecoration(
         labelText: 'Gender',
-        prefixIcon: const Icon(Icons.person_outline),
+        labelStyle: TextStyle(
+          color: hintColor,
+          fontSize: 16,
+        ),
+        prefixIcon: Icon(
+          Icons.person_outline,
+          color: hintColor,
+        ),
         filled: true,
         fillColor: fieldColor,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(color: borderColor),
         ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: borderColor),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(
+            color: Theme.of(context).primaryColor,
+            width: 2,
+          ),
+        ),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 16,
+        ),
       ),
+      style: TextStyle(
+        color: textColor,
+        fontSize: 16,
+      ),
+      dropdownColor: fieldColor,
       items: genders.map((gender) {
         return DropdownMenuItem<String>(
           value: gender,
-          child: Text(gender),
+          child: Text(
+            gender,
+            style: TextStyle(color: textColor),
+          ),
         );
       }).toList(),
       onChanged: (value) {
@@ -1066,356 +2014,9 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent>
         }
         return null;
       },
-    );
-  }
-
-  // Update the save button UI to be more compact and fixed
-  Widget _buildSaveButton(bool isSaving) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        color: Theme.of(context).scaffoldBackgroundColor,
-        border: Border(
-          top: BorderSide(
-            color: Theme.of(context).dividerColor.withOpacity(0.1),
-            width: 1,
-          ),
-        ),
-      ),
-      child: SafeArea(
-        child: Row(
-          children: [
-            if (_fieldChanges.isNotEmpty)
-              Expanded(
-                child: Text(
-                  '${_fieldChanges.length} field${_fieldChanges.length > 1 ? 's' : ''} changed',
-                  style: TextStyle(
-                    color: Theme.of(context).textTheme.bodySmall?.color,
-                    fontSize: 12,
-                  ),
-                ),
-              ),
-            SizedBox(
-              width: 200,
-              child: ElevatedButton(
-                onPressed: isSaving ? null : _handleSave,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).primaryColor,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  elevation: 2,
-                ),
-                child: isSaving
-                    ? const SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(Colors.white),
-                        ),
-                      )
-                    : const Text('Save Changes'),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDarkMode = theme.brightness == Brightness.dark;
-
-    // Modern gradient colors
-    const Color gradientStart = Color(0xFF1A237E); // Deep Indigo
-    const Color gradientEnd = Color(0xFF0D47A1); // Darker Blue
-
-    return WillPopScope(
-      onWillPop: _onWillPop,
-      child: Scaffold(
-        extendBody: true,
-        extendBodyBehindAppBar: true,
-        backgroundColor: Colors.transparent,
-        body: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [gradientStart, gradientEnd],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-          child: SafeArea(
-            child: BlocConsumer<ProfileCubit, ProfileState>(
-              listener: (context, state) {
-                if (!mounted) return;
-
-                if (state.status == ProfileStatus.loadSuccess) {
-                  // Update UI with new state data
-                  setState(() {
-                    _nameController.text = state.name;
-                    _emailController.text = state.email;
-
-                    // Handle phone number format
-                    String phoneNumber = state.phone;
-                    if (phoneNumber.startsWith('+20')) {
-                      phoneNumber = '0${phoneNumber.substring(3)}';
-                    }
-                    _phoneController.text = phoneNumber;
-
-                    // Update other fields
-                    _genderController.text = state.gender;
-                    _dobController.text = state.dob;
-                    _ageController.text = state.age;
-                    _addressController.text = state.address;
-                    _profileImageUrl = state.profileImageUrl;
-
-                    // Handle gender mapping
-                    String gender = state.gender;
-                    if (genderMap.containsKey(gender)) {
-                      gender = genderMap[gender]!;
-                    }
-                    _selectedGender = gender;
-
-                    if (!_isInitialized) {
-                      _isInitialized = true;
-                    }
-                  });
-                }
-
-                if (state.status == ProfileStatus.error) {
-                  setState(() {
-                    _isSaving = false;
-                    _isImageLoading = false;
-                  });
-                  if (state.errorMessage.isNotEmpty) {
-                    _showMessage(state.errorMessage, isError: true);
-                  }
-                  context.read<ProfileCubit>().resetStatus();
-                }
-
-                if (state.status == ProfileStatus.saveSuccess) {
-                  setState(() {
-                    _fieldChanges.clear();
-                    _isSaving = false;
-                    _isImageLoading = false;
-                  });
-                  _showMessage('Profile updated successfully',
-                      isSaveMessage: true);
-                  // Force reload after successful save
-                  _loadInitialData();
-                }
-              },
-              builder: (context, state) {
-                // Show loading skeleton while initializing
-                if (!_isInitialized && state.status == ProfileStatus.initial) {
-                  return _buildLoadingSkeleton();
-                }
-
-                final isImageLoading = state.status == ProfileStatus.loading &&
-                    state.fieldBeingEdited == 'photoUrl';
-                final isSaving = state.status == ProfileStatus.loading &&
-                    state.fieldBeingEdited == 'save';
-                final isLoading = state.status == ProfileStatus.loading;
-
-                print('Name controller: ${_nameController.text}');
-                print('Phone controller: ${_phoneController.text}');
-                print('Address controller: ${_addressController.text}');
-
-                return Scaffold(
-                  extendBody: true,
-                  extendBodyBehindAppBar: true,
-                  backgroundColor: Colors.transparent,
-                  appBar: AppBar(
-                    backgroundColor: Colors.transparent,
-                    elevation: 0,
-                    leading: IconButton(
-                      icon: Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
-                          shape: BoxShape.circle,
-                        ),
-                        child:
-                            const Icon(Icons.arrow_back, color: Colors.white),
-                      ),
-                      onPressed:
-                          isLoading ? null : () => Navigator.pop(context),
-                    ),
-                    title: Text(
-                      'Edit Profile',
-                      style: TextStyles.bold19.copyWith(
-                        color: Colors.white,
-                        shadows: [
-                          Shadow(
-                            color: Colors.black.withOpacity(0.3),
-                            offset: const Offset(0, 1),
-                            blurRadius: 3,
-                          ),
-                        ],
-                      ),
-                    ),
-                    centerTitle: true,
-                  ),
-                  bottomNavigationBar: _fieldChanges.isNotEmpty
-                      ? _buildSaveButton(isSaving)
-                      : null,
-                  body: Stack(
-                    children: [
-                      RefreshIndicator(
-                        key: _refreshKey,
-                        onRefresh: _onRefresh,
-                        child: SingleChildScrollView(
-                          controller: _scrollController,
-                          physics: const AlwaysScrollableScrollPhysics(),
-                          padding: EdgeInsets.only(
-                            bottom: _fieldChanges.isNotEmpty
-                                ? 80
-                                : 16, // Add padding when save button is visible
-                          ),
-                          child: Form(
-                            key: _formKey,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                _buildProfileImage(state),
-                                _buildSectionHeader('Personal Information',
-                                    Icons.person_outline),
-                                Card(
-                                  elevation: 4,
-                                  shadowColor: Colors.black.withOpacity(0.2),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(16),
-                                  ),
-                                  child: Container(
-                                    padding: const EdgeInsets.all(16),
-                                    child: Column(
-                                      children: [
-                                        _buildFieldWithSaveCancel(
-                                          fieldName: 'name',
-                                          label: 'Full Name',
-                                          controller: _nameController,
-                                          onSave: (_) => _handleSave(),
-                                          prefixIcon: Icons.person_outline,
-                                          hintText: 'Enter your full name',
-                                          validator: (value) {
-                                            if (value == null ||
-                                                value.trim().isEmpty) {
-                                              return 'Name is required';
-                                            }
-                                            if (value.trim().length < 3) {
-                                              return 'Name must be at least 3 characters';
-                                            }
-                                            if (value.trim().length >
-                                                ProfileValidationConstants
-                                                    .maxNameLength) {
-                                              return 'Name must not exceed ${ProfileValidationConstants.maxNameLength} characters';
-                                            }
-                                            return null;
-                                          },
-                                        ),
-                                        const SizedBox(height: 16),
-                                        _buildFieldWithSaveCancel(
-                                          fieldName: 'email',
-                                          label: 'Email Address',
-                                          controller: _emailController,
-                                          onSave: (_) => _handleSave(),
-                                          prefixIcon: Icons.email_outlined,
-                                          keyboardType:
-                                              TextInputType.emailAddress,
-                                        ),
-                                        const SizedBox(height: 16),
-                                        _buildFieldWithSaveCancel(
-                                          fieldName: 'phone',
-                                          label: 'Phone Number',
-                                          controller: _phoneController,
-                                          onSave: (_) => _handleSave(),
-                                          prefixIcon: Icons.phone_outlined,
-                                          hintText: 'Enter your phone number',
-                                          keyboardType: TextInputType.phone,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                _buildSectionHeader('Additional Information',
-                                    Icons.info_outline),
-                                Card(
-                                  elevation: 4,
-                                  shadowColor: Colors.black.withOpacity(0.2),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(16),
-                                  ),
-                                  child: Container(
-                                    padding: const EdgeInsets.all(16),
-                                    child: Column(
-                                      children: [
-                                        _buildFieldWithSaveCancel(
-                                          fieldName: 'dob',
-                                          label: 'Date of Birth',
-                                          controller: _dobController,
-                                          onSave: (_) => _handleSave(),
-                                          prefixIcon:
-                                              Icons.calendar_today_outlined,
-                                          hintText: 'Select your date of birth',
-                                        ),
-                                        const SizedBox(height: 16),
-                                        _buildFieldWithSaveCancel(
-                                          fieldName: 'age',
-                                          label: 'Age',
-                                          controller: _ageController,
-                                          onSave: (_) => _handleSave(),
-                                          prefixIcon: Icons.cake_outlined,
-                                        ),
-                                        const SizedBox(height: 16),
-                                        _buildFieldWithSaveCancel(
-                                          fieldName: 'address',
-                                          label: 'Address',
-                                          controller: _addressController,
-                                          onSave: (_) => _handleSave(),
-                                          prefixIcon:
-                                              Icons.location_on_outlined,
-                                          hintText: 'Enter your address',
-                                          keyboardType:
-                                              TextInputType.streetAddress,
-                                          maxLines: 2,
-                                        ),
-                                        const SizedBox(height: 16),
-                                        _buildFieldWithSaveCancel(
-                                          fieldName: 'gender',
-                                          label: 'Gender',
-                                          controller: _selectedGender,
-                                          onSave: (_) => _handleSave(),
-                                          prefixIcon: Icons.people_outline,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      if (isLoading && !isImageLoading && !isSaving)
-                        Container(
-                          color: Colors.black.withOpacity(0.3),
-                          child: const Center(
-                            child: CircularProgressIndicator(),
-                          ),
-                        ),
-                    ],
-                  ),
-                );
-              },
-            ),
-          ),
-        ),
+      icon: Icon(
+        Icons.arrow_drop_down,
+        color: hintColor,
       ),
     );
   }
@@ -1703,6 +2304,8 @@ class _GenderField extends StatelessWidget {
   final void Function(String) onSave;
   final Color fieldColor;
   final Color borderColor;
+  final Color textColor;
+  final Color hintColor;
   final FocusNode focusNode;
 
   const _GenderField({
@@ -1711,6 +2314,8 @@ class _GenderField extends StatelessWidget {
     required this.onSave,
     required this.fieldColor,
     required this.borderColor,
+    required this.textColor,
+    required this.hintColor,
     required this.focusNode,
   });
 
@@ -1721,18 +2326,48 @@ class _GenderField extends StatelessWidget {
       focusNode: focusNode,
       decoration: InputDecoration(
         labelText: 'Gender',
-        prefixIcon: const Icon(Icons.person_outline),
+        labelStyle: TextStyle(
+          color: hintColor,
+          fontSize: 16,
+        ),
+        prefixIcon: Icon(
+          Icons.person_outline,
+          color: hintColor,
+        ),
         filled: true,
         fillColor: fieldColor,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(color: borderColor),
         ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: borderColor),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(
+            color: Theme.of(context).primaryColor,
+            width: 2,
+          ),
+        ),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 16,
+        ),
       ),
+      style: TextStyle(
+        color: textColor,
+        fontSize: 16,
+      ),
+      dropdownColor: fieldColor,
       items: genders.map((gender) {
         return DropdownMenuItem<String>(
           value: gender,
-          child: Text(gender),
+          child: Text(
+            gender,
+            style: TextStyle(color: textColor),
+          ),
         );
       }).toList(),
       onChanged: (value) {
@@ -1747,6 +2382,10 @@ class _GenderField extends StatelessWidget {
         }
         return null;
       },
+      icon: Icon(
+        Icons.arrow_drop_down,
+        color: hintColor,
+      ),
     );
   }
 }
@@ -1768,87 +2407,128 @@ class _ProfileImageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final colors = themeColors[isDark ? 'dark' : 'light']!;
+
     return Center(
       child: Container(
-        margin: const EdgeInsets.only(top: 20, bottom: 30),
+        margin: const EdgeInsets.only(top: 24, bottom: 32),
         child: Stack(
           alignment: Alignment.bottomRight,
           children: [
-            GestureDetector(
-              onTap: isLoading ? null : onTap,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  if (localImage != null)
-                    CircleAvatar(
-                      radius: 60,
-                      backgroundColor: Colors.white.withOpacity(0.3),
-                      backgroundImage: FileImage(localImage!),
-                    )
-                  else if (imageUrl != null && imageUrl!.isNotEmpty)
-                    CircleAvatar(
-                      radius: 60,
-                      backgroundColor: Colors.white.withOpacity(0.3),
-                      child: ClipOval(
-                        child: Image.network(
-                          imageUrl!,
-                          width: 120,
-                          height: 120,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            developer.log(
-                                'ProfileChangeView: Error loading network image: $error');
-                            return const Icon(Icons.person,
-                                size: 60, color: Colors.white);
-                          },
-                          loadingBuilder: (context, child, loadingProgress) {
-                            if (loadingProgress == null) return child;
-                            return Container(
-                              width: 120,
-                              height: 120,
-                              decoration: BoxDecoration(
-                                color: Colors.black.withOpacity(0.4),
-                                shape: BoxShape.circle,
-                              ),
-                              child: Center(
-                                child: CircularProgressIndicator(
-                                  value: loadingProgress.expectedTotalBytes !=
-                                          null
-                                      ? loadingProgress.cumulativeBytesLoaded /
-                                          loadingProgress.expectedTotalBytes!
-                                      : null,
-                                  color: Colors.white,
-                                  strokeWidth: 2,
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    )
-                  else
-                    CircleAvatar(
-                      radius: 60,
-                      backgroundColor: Colors.white.withOpacity(0.3),
-                      child: const Icon(Icons.person,
-                          size: 60, color: Colors.white),
+            TweenAnimationBuilder<double>(
+              tween: Tween(begin: 0.0, end: 1.0),
+              duration: const Duration(milliseconds: 500),
+              builder: (context, value, child) {
+                return Transform.scale(
+                  scale: 0.8 + (0.2 * value),
+                  child: child,
+                );
+              },
+              child: GestureDetector(
+                onTap: isLoading ? null : onTap,
+                child: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: colors['buttonPrimary']!.withOpacity(0.3),
+                      width: 3,
                     ),
-                  if (isLoading)
-                    Container(
-                      width: 120,
-                      height: 120,
-                      decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.4),
-                        shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: colors['buttonPrimary']!.withOpacity(0.2),
+                        blurRadius: 12,
+                        spreadRadius: 2,
                       ),
-                      child: const Center(
-                        child: CircularProgressIndicator(
-                          color: Colors.white,
-                          strokeWidth: 2,
-                        ),
-                      ),
+                    ],
+                  ),
+                  child: Hero(
+                    tag: 'profile_image',
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        if (localImage != null)
+                          CircleAvatar(
+                            radius: 60,
+                            backgroundColor: colors['inputBackground'],
+                            backgroundImage: FileImage(localImage!),
+                          )
+                        else if (imageUrl != null && imageUrl!.isNotEmpty)
+                          CircleAvatar(
+                            radius: 60,
+                            backgroundColor: colors['inputBackground'],
+                            child: ClipOval(
+                              child: Image.network(
+                                imageUrl!,
+                                width: 120,
+                                height: 120,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Icon(
+                                    Icons.person,
+                                    size: 60,
+                                    color: colors['textSecondary'],
+                                  );
+                                },
+                                loadingBuilder:
+                                    (context, child, loadingProgress) {
+                                  if (loadingProgress == null) return child;
+                                  return Container(
+                                    width: 120,
+                                    height: 120,
+                                    decoration: BoxDecoration(
+                                      color: colors['inputBackground'],
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Center(
+                                      child: CircularProgressIndicator(
+                                        value: loadingProgress
+                                                    .expectedTotalBytes !=
+                                                null
+                                            ? loadingProgress
+                                                    .cumulativeBytesLoaded /
+                                                loadingProgress
+                                                    .expectedTotalBytes!
+                                            : null,
+                                        color: colors['buttonPrimary'],
+                                        strokeWidth: 2,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          )
+                        else
+                          CircleAvatar(
+                            radius: 60,
+                            backgroundColor: colors['inputBackground'],
+                            child: Icon(
+                              Icons.person,
+                              size: 60,
+                              color: colors['textSecondary'],
+                            ),
+                          ),
+                        if (isLoading)
+                          Container(
+                            width: 120,
+                            height: 120,
+                            decoration: BoxDecoration(
+                              color: colors['cardBackground']!.withOpacity(0.8),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                color: colors['buttonPrimary'],
+                                strokeWidth: 2,
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
-                ],
+                  ),
+                ),
               ),
             ),
             if (!isLoading)
@@ -1860,37 +2540,43 @@ class _ProfileImageWidget extends StatelessWidget {
                       margin: const EdgeInsets.only(right: 8),
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor,
+                        color: colors['buttonPrimary'],
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.3),
-                            blurRadius: 4,
+                            color: Colors.black.withOpacity(0.2),
+                            blurRadius: 6,
                             offset: const Offset(0, 2),
                           ),
                         ],
                       ),
                       child: GestureDetector(
                         onTap: onSave,
-                        child: const Icon(Icons.save,
-                            size: 20, color: Colors.white),
+                        child: const Icon(
+                          Icons.save,
+                          size: 20,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor,
+                      color: colors['buttonPrimary'],
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.3),
-                          blurRadius: 4,
+                          color: Colors.black.withOpacity(0.2),
+                          blurRadius: 6,
                           offset: const Offset(0, 2),
                         ),
                       ],
                     ),
-                    child:
-                        const Icon(Icons.edit, size: 20, color: Colors.white),
+                    child: const Icon(
+                      Icons.edit,
+                      size: 20,
+                      color: Colors.white,
+                    ),
                   ),
                 ],
               ),

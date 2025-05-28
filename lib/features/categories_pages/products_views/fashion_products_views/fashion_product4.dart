@@ -8,7 +8,7 @@ class FashionProduct4 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: '68132a95ff7813b3d47f9da4',
+      id: '682b00c26977bd89257c0e91',
       title: 'Dejavu womens JAL-DJTF-058 Sandal',
       imagePaths: [
         "assets/Fashion_products/Women_Fashion/women_fashion4/1.png",

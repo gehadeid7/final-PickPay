@@ -8,7 +8,7 @@ class FashionProduct1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: '68132a95ff7813b3d47f9da1',
+      id: '682b00c26977bd89257c0e8e',
       title: "Women's Chiffon Lining Batwing Sleeve Dress",
       imagePaths: [
         'assets/Fashion_products/Women_Fashion/women_fashion1/1.png',

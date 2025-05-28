@@ -92,6 +92,8 @@ dependencies:
   flutter_rating_bar: ^4.0.1
   fluttertoast: ^8.2.4
   speech_to_text: ^7.0.0
+  google_fonts: ^6.1.0
+
 
 dev_dependencies:
   flutter_test:
@@ -236,6 +238,8 @@ flutter:
   - assets/videogames_products/Controllers/controller3/
   - assets/videogames_products/Controllers/controller4/
   - assets/videogames_products/Controllers/controller5/
+  - assets/subcategories/video_games/
+  - assets/subcategories/electronics/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 

@@ -19,7 +19,7 @@ class CategoriesCubit extends Cubit<CategoriesState> {
             name: 'Home', image: 'assets/Categories/Home/Furniture.png'),
         CategoryModel(
             name: 'Fashion',
-            image: 'assets/Fashion_products/Men_Fashion/men_fashion1/1.png'),
+            image: 'assets/Fashion_products/Kids_Fashion/kids_fashion3/1.png'),
         CategoryModel(
             name: 'Beauty', image: 'assets/Categories/Beauty/makeup.png'),
         CategoryModel(

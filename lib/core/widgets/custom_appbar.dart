@@ -177,7 +177,7 @@ class _CustomHomeAppbarState extends State<CustomHomeAppbar> {
     final containerColor = isDarkMode ? Colors.grey[800] : Colors.grey.shade200;
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Row(
           children: [
@@ -289,7 +289,7 @@ class _CustomHomeAppbarState extends State<CustomHomeAppbar> {
         ),
         const SizedBox(height: 8),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 5),
           child: Column(
             children: [
               SearchTextField(

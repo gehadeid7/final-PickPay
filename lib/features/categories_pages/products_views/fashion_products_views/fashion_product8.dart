@@ -8,7 +8,7 @@ class FashionProduct8 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: '68132a95ff7813b3d47f9da8',
+      id: '682b00c26977bd89257c0e95',
       title:
           "Sport-Q®Fury-X Latest Model Football Shoes X Football Shoes Combining Comfort Precision and Performance Excellence in Game.",
       imagePaths: [

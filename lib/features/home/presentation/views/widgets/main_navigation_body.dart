@@ -17,11 +17,7 @@ class MainNavigationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authRepo = getIt<AuthRepo>();
-
-    return BlocProvider(
-      create: (_) => BottomNavigationCubit(),
-      child: _MainNavigationView(authRepo: authRepo),
-    );
+    return _MainNavigationView(authRepo: authRepo);
   }
 }
 
@@ -88,7 +84,7 @@ class MainNavigationScreenBody extends StatelessWidget {
             const HomeView(),
             const CategoriesView(),
             const CartView(),
-            AccountView(), // Pass authRepo if AccountView needs it
+            AccountView(),
           ],
         );
       },

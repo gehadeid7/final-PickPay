@@ -8,7 +8,7 @@ class HomeProduct17 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: 'home17',
+      id: '681dab0df9c9147444b452dd',
       title: "Fiber pillow 2 pieces size 40x60",
       imagePaths: [
         'assets/Home_products/bath_and_bedding/bath2/1.png',
