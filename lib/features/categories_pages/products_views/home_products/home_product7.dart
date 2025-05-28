@@ -8,7 +8,7 @@ class HomeProduct7 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: 'home7',
+      id: '681dab0df9c9147444b452d3',
       title:
           "Luxury Bathroom Rug Shaggy Bath Mat 60 x 40 Cm, Washable Non Slip Bath Rugs for Bathroom Shower, Soft Plush Chenille Absorbent Carpets Mats, Gray (Small 60×40)",
       imagePaths: [

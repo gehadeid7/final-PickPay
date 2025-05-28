@@ -8,7 +8,7 @@ class HomeProduct2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: 'home2',
+      id: '681dab0df9c9147444b452ce',
       title: "Star Bags Bean Bag Chair - Purple, 95*95*97 cm, Unisex Adults",
       imagePaths: [
         'assets/Home_products/furniture/furniture2/1.png',

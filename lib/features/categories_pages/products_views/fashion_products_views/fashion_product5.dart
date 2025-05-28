@@ -8,7 +8,7 @@ class FashionProduct5 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: '68132a95ff7813b3d47f9da5',
+      id: '682b00c26977bd89257c0e92',
       title: '"Aldo Caraever Ladies Satchel Handbags, Khaki, Khaki"',
       imagePaths: [
         "assets/Fashion_products/Women_Fashion/women_fashion5/1.png",

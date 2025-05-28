@@ -8,7 +8,7 @@ class FashionProduct9 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: '68132a95ff7813b3d47f9da9',
+      id: '682b00c26977bd89257c0e96',
       title: "Timberland Ek Larchmont Ftm_Chelsea, Men's Boots",
       imagePaths: [
         "assets/Fashion_products/Men_Fashion/men_fashion4/1.png",

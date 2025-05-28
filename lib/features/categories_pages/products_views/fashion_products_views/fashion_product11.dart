@@ -8,7 +8,7 @@ class FashionProduct11 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: '68132a95ff7813b3d47f9da11',
+      id: '682b00c26977bd89257c0e98',
       title: "LC WAIKIKI Crew Neck Girl's Shorts Pajama Set",
       imagePaths: [
         "assets/Fashion_products/Kids_Fashion/kids_fashion1/1.png",

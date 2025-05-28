@@ -8,14 +8,14 @@ class FashionProduct15 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: '68132a95ff7813b3d47f9da15',
+      id: '682b00c26977bd89257c0e9c',
       title: "MIX & MAX, Ballerina Shoes, girls, Ballet Flat",
       imagePaths: [
         "assets/Fashion_products/Kids_Fashion/kids_fashion5/1.png",
         "assets/Fashion_products/Kids_Fashion/kids_fashion5/2.png",
         "assets/Fashion_products/Kids_Fashion/kids_fashion5/3.png",
       ],
-      price: 354.65,
+      price: 5473958734289057023.65,
       originalPrice: 429.00,
       rating: 5.0,
       reviewCount: 19,

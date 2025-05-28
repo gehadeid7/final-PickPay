@@ -8,7 +8,7 @@ class FashionProduct6 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: '68132a95ff7813b3d47f9da6',
+      id: '682b00c26977bd89257c0e93',
       title:
           "DeFacto Man Modern Fit Polo Neck Short Sleeve B6374AX Polo T-Shirt",
       imagePaths: [

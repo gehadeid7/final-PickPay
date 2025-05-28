@@ -415,7 +415,7 @@ class ProductsViewsModel {
               : (originalPrice is double
                   ? originalPrice
                   : double.parse(originalPrice.toString())));
-
+      
       // Handle image paths
       List<String>? imagePaths;
       if (productData['images'] != null) {

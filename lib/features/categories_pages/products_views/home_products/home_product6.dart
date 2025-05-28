@@ -8,7 +8,7 @@ class HomeProduct6 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: 'home6',
+      id: '681dab0df9c9147444b452d2',
       title: "Golden Lighting LED Gold Lampshade + 1 Crystal Cylinder Bulb.",
       imagePaths: [
         'assets/Home_products/home-decor/home_decor1/1.png',

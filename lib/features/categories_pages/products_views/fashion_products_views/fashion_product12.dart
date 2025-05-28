@@ -8,7 +8,7 @@ class FashionProduct12 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: '68132a95ff7813b3d47f9da12',
+      id: '682b00c26977bd89257c0e99',
       title: "Kidzo Boys Pajamas",
       imagePaths: [
         "assets/Fashion_products/Kids_Fashion/kids_fashion2/1.png",

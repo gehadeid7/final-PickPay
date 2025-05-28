@@ -8,7 +8,7 @@ class FashionProduct3 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: '68132a95ff7813b3d47f9da3',
+      id: '682b00c26977bd89257c0e90',
       title: 'American Eagle Womens Low-Rise Baggy Wide-Leg Jean',
       imagePaths: [
         'assets/Fashion_products/Women_Fashion/women_fashion3/1.png',

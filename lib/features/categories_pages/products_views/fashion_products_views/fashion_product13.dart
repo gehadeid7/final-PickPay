@@ -8,7 +8,7 @@ class FashionProduct13 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: '68132a95ff7813b3d47f9da13',
+      id: '682b00c26977bd89257c0e9a',
       title: 'DeFacto Girls Cropped Fit Long Sleeve B9857A8 Denim Jacket',
       imagePaths: [
         "assets/Fashion_products/Kids_Fashion/kids_fashion3/1.png",

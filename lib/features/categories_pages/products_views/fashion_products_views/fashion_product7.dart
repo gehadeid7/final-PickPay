@@ -8,7 +8,7 @@ class FashionProduct7 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: '68132a95ff7813b3d47f9da7',
+      id: '682b00c26977bd89257c0e94',
       title: "DOTT JEANS WEAR Men's Relaxed Fit Jean",
       imagePaths: [
         "assets/Fashion_products/Men_Fashion/men_fashion2/1.png",
