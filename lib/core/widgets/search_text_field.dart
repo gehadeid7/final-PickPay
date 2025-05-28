@@ -518,7 +518,7 @@ class _SearchTextFieldState extends State<SearchTextField>
           AnimatedContainer(
             duration: const Duration(milliseconds: 250),
             curve: Curves.easeInOut,
-            margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 0),
+            margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(32),
               boxShadow: [
@@ -570,7 +570,7 @@ class _SearchTextFieldState extends State<SearchTextField>
                             ? Colors.grey[400]
                             : const Color(0xFF949D9E),
                       ),
-                      hintText: 'Search for products, brands, categories...',
+                      hintText: 'Search for products',
                       filled: true,
                       fillColor: Colors.transparent,
                       prefixIcon: AnimatedSwitcher(
@@ -642,7 +642,6 @@ class _SearchTextFieldState extends State<SearchTextField>
                     ),
                   ),
                 ),
-                const SizedBox(width: 8),
               ],
             ),
           ),
