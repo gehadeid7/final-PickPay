@@ -239,6 +239,7 @@ flutter:
   - assets/videogames_products/Controllers/controller4/
   - assets/videogames_products/Controllers/controller5/
   - assets/subcategories/video_games/
+  - assets/subcategories/electronics/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 
