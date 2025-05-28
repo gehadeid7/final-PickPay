@@ -14,7 +14,7 @@ import 'package:pickpay/features/categories_pages/widgets/product_card.dart';
 import 'package:http_parser/http_parser.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://192.168.1.8:3000/api/v1/';
+  static const String baseUrl = 'http://192.168.1.4:3000/api/v1/';
 
   Future<Map<String, String>> _buildHeaders({
     Map<String, String>? headers,
@@ -126,6 +126,8 @@ class ApiService {
     bool authorized = false,
     int maxRetries = 2,
   }) async {
+      log('🔍 Endpoint raw value: "$endpoint"'); // <-- أضف هذا السطر لفحص endpoint
+
     final url = '$baseUrl$endpoint';
     final requestHeaders =
         await _buildHeaders(headers: headers, authorized: authorized);
@@ -631,29 +633,46 @@ class ApiService {
   }
 
   // 🔍 AI Product Search
-  Future<List<dynamic>> searchProductsAI(String query) async {
-    try {
-      final response = await post(
-        endpoint: BackendEndpoints.aiProductSearch,
-        body: {'query': query},
-        authorized: false,
-      );
+Future<List<dynamic>> searchProductsAI(String query) async {
+  try {
+    final response = await post(
+      endpoint: BackendEndpoints.aiProductSearch,
+      body: {'query': query},
+      authorized: false,
+    );
 
-      if (response.statusCode == 200) {
-        final result = jsonDecode(response.body);
+    print('📥 Response status code: ${response.statusCode}');
+    print('📥 Response body: ${response.body}');
 
-        if (result is Map<String, dynamic> && result.containsKey('products')) {
+    if (response.statusCode == 200) {
+      final result = jsonDecode(response.body);
+      print('📦 Parsed response type: ${result.runtimeType}');
+      if (result is Map<String, dynamic>) {
+        print('📦 Response keys: ${result.keys.toList()}');
+        if (result.containsKey('products')) {
+          print('📦 products field type: ${result['products'].runtimeType}');
+          if (result['products'] is List) {
+            print('📦 Number of products: ${(result['products'] as List).length}');
+          }
           return result['products']; // ✅ Return the actual list
         } else {
+          print('⚠️ Warning: "products" key not found in response.');
           throw Exception('Unexpected AI response format');
         }
       } else {
-        throw Exception('AI Search failed: ${response.body}');
+        throw Exception('Unexpected AI response format: not a JSON object');
       }
-    } catch (e) {
-      throw Exception('Error during AI product search: ${e.toString()}');
+    } else {
+      print('❌ AI Search failed with status: ${response.statusCode}');
+      throw Exception('AI Search failed: ${response.body}');
     }
+  } catch (e, stackTrace) {
+    print('❌ Error during AI product search: $e');
+    print('Stack trace: $stackTrace');
+    rethrow;
   }
+}
+
 
   Future<List<Map<String, dynamic>>> searchProducts(String query) async {
     try {

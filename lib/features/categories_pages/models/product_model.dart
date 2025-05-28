@@ -373,9 +373,11 @@ class ProductsViewsModel {
 
   factory ProductsViewsModel.fromJson(Map<String, dynamic> json) {
     try {
+      
       if (json == null) {
         throw Exception('Product data is null');
       }
+    print('🔍 Parsing product JSON: $json');
 
       // Handle both product and cart item formats
       final productData = json['product'] ?? json;
@@ -386,6 +388,8 @@ class ProductsViewsModel {
       // Get required fields with type checking
       final id =
           productData['_id']?.toString() ?? productData['id']?.toString();
+              print('🆔 Parsed id: $id');
+
       if (id == null) {
         throw Exception('Product ID is missing');
       }
@@ -393,21 +397,28 @@ class ProductsViewsModel {
       // Handle title field which might be under 'title' or 'name'
       final title =
           productData['title']?.toString() ?? productData['name']?.toString();
+              print('📝 Parsed title: $title');
+
       if (title == null) {
         throw Exception('Product title is missing');
       }
 
       // Handle price which could be int or double
       final price = productData['price'];
+          print('💰 Parsed raw price: $price (type: ${price.runtimeType})');
+
       if (price == null) {
         throw Exception('Product price is missing');
       }
       final priceValue = price is int
           ? price.toDouble()
           : (price is double ? price : double.parse(price.toString()));
+    print('💰 Converted price: $priceValue');
 
       // Handle optional fields with null safety
       final originalPrice = productData['originalPrice'];
+          print('💵 Parsed originalPrice: $originalPrice (type: ${originalPrice?.runtimeType})');
+
       final originalPriceValue = originalPrice == null
           ? null
           : (originalPrice is int
@@ -415,6 +426,7 @@ class ProductsViewsModel {
               : (originalPrice is double
                   ? originalPrice
                   : double.parse(originalPrice.toString())));
+    print('💵 Converted originalPrice: $originalPriceValue');
 
       // Handle image paths
       List<String>? imagePaths;
@@ -429,6 +441,7 @@ class ProductsViewsModel {
       } else if (productData['imageCover'] != null) {
         imagePaths = [productData['imageCover'].toString()];
       }
+    print('🖼️ Parsed imagePaths: $imagePaths');
 
       // Handle boolean fields
       bool? parseInStock(dynamic value) {

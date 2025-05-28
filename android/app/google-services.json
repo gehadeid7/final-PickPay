@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "35186220381-0fvrkq71nsqk2li5tke9buv884jjmf3b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.pickpay",
+            "certificate_hash": "793c3946608f78541cff5b5f58528a5c0816140e"
+          }
+        },
+        {
           "client_id": "35186220381-8uidu9omkl8qtgckkhl8qthad17gba3p.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
