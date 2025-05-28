@@ -23,23 +23,22 @@ class _CategoryCardState extends State<CategoryCard>
   late AnimationController _controller;
   late Animation<Alignment> _alignmentAnimation;
   bool _isPressed = false;
-
   static const List<List<Color>> _gradientColorsLight = [
-    [Color(0xFFA8DADC), Color(0xFF457B9D)], // Soft cyan to muted blue
-    [Color(0xFFF1FAEE), Color(0xFFA8DADC)], // Very light mint to soft cyan
-    [Color(0xFFEAEAEA), Color(0xFFB0BEC5)], // Light grey to cool steel blue
-    [Color(0xFFD4ECDD), Color(0xFF8FB9A8)], // Pale green to sage green
-    [Color(0xFFF9F7F7), Color(0xFFD3C0CD)], // Soft off-white to muted mauve
-    [Color(0xFFF4E1D2), Color(0xFFBC9CA3)], // Light peach to dusty rose
+    [Color(0xFFE1F0FF), Color(0xFFB3DAF1)], // Gentle blue sky
+    [Color(0xFFB3DAF1), Color(0xFF8EC5E8)], // Calm lake blue
+    [Color(0xFF8EC5E8), Color(0xFF6FB1E1)], // Refreshing blue
+    [Color(0xFF6FB1E1), Color(0xFF56A0DA)], // Soft aqua
+    [Color(0xFF56A0DA), Color(0xFF3F90D3)], // Light steel blue
+    [Color(0xFF3F90D3), Color(0xFF2F7FC2)], // Balanced sky blue
   ];
 
   static const List<List<Color>> _gradientColorsDark = [
-    [Color(0xFF1D3557), Color(0xFF457B9D)], // Deep navy to muted blue
-    [Color(0xFF2A3A40), Color(0xFF5C6B73)], // Dark slate to dusty grey-blue
-    [Color(0xFF36454F), Color(0xFF576F72)], // Charcoal to teal-grey
-    [Color(0xFF3B3A40), Color(0xFF6D7B8D)], // Dark charcoal to muted blue-grey
-    [Color(0xFF5C4D7D), Color(0xFF7E6A9E)], // Dusty purple to lavender-grey
-    [Color(0xFF4B474A), Color(0xFF7E7A82)], // Dark grey to soft lavender-grey
+    [Color(0xFF1C2C3D), Color(0xFF24405C)], // Calm dusk
+    [Color(0xFF24405C), Color(0xFF2E5679)], // Deeper blue focus
+    [Color(0xFF2E5679), Color(0xFF3A6E99)], // Subtle steel
+    [Color(0xFF3A6E99), Color(0xFF4A80AC)], // Deep sky tone
+    [Color(0xFF4A80AC), Color(0xFF5C92BE)], // Ocean clarity
+    [Color(0xFF5C92BE), Color(0xFF6CA5D1)], // Evening calm
   ];
 
   @override
