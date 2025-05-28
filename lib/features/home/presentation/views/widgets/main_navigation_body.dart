@@ -8,7 +8,6 @@ import 'package:pickpay/features/cart/cart_view.dart';
 import 'package:pickpay/features/home/presentation/views/categories_view.dart';
 import 'package:pickpay/features/home/presentation/views/home_view.dart';
 import 'package:pickpay/features/bottom_navigation/custom_bottom_navigation_bar.dart';
-import 'package:pickpay/features/home/presentation/cubits/categories_cubits/categories_cubits_cubit.dart';
 
 class MainNavigationScreen extends StatelessWidget {
   const MainNavigationScreen({super.key});

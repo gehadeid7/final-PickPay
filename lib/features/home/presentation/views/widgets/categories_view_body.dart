@@ -58,17 +58,17 @@ class CategoriesViewBody extends StatelessWidget {
         {
           'name': 'Mobile & Tablets',
           'image':
-              'assets/electronics_products/mobile_and_tablet/mobile_and_tablet1/1.png',
+              'assets/electronics_products/mobile_and_tablet/mobile_and_tablet3/1.png',
           'index': 0,
         },
         {
           'name': 'TVs',
-          'image': 'assets/electronics_products/tvscreens/tv2/2.png',
+          'image': 'assets/electronics_products/tvscreens/tv2/1.png',
           'index': 1,
         },
         {
           'name': 'Laptop',
-          'image': 'assets/electronics_products/Laptop/Laptop2/1.png',
+          'image': 'assets/electronics_products/Laptop/Laptop3/1.png',
           'index': 2,
         },
       ],
