@@ -30,7 +30,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await requestPermissions();
 
-  // Initialize Firebase
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await Prefs.init();
   setupGetIt();
