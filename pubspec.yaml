@@ -93,6 +93,11 @@ dependencies:
   fluttertoast: ^8.2.4
   speech_to_text: ^7.0.0
   google_fonts: ^6.1.0
+  connectivity_plus: ^6.1.4
+  audioplayers: ^6.4.0
+  lottie: ^3.3.1
+  shimmer_animation: ^2.2.2
+  shimmer: ^3.0.0
 
 
 dev_dependencies:
@@ -240,6 +245,7 @@ flutter:
   - assets/videogames_products/Controllers/controller5/
   - assets/subcategories/video_games/
   - assets/subcategories/electronics/
+  - assets/sounds/pickpay_jingle.wav
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 
