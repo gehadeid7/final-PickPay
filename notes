@@ -9,22 +9,6 @@ backend :
 8- order view
 .......................................................
 
-front :
-1- Search ✅
-2- Wishlist Icon ✅
-3- Navigation > Checkout ✅
-4- Footer ✅
-5- Sub Categories ✅
-6- Shared Preferences> Cart - Wishlist ✅ 
-7- reviews section ✅ 
-8- product card ✅
-9- Recommend related products  ✅
-10- order view ✅
-11- base file  ✅
-12- Profile UI  ✅
-13-switch between sub Categorie & Categories ✅
-
-
 
 color widget 
 products details + home view
@@ -32,6 +16,6 @@ link reviews section with review and rating
 loading indicator
 admin view
 link subCategories 
-
-
+fix subCategories products navigation
+cart + Wishlist > image + color/ size
 

@@ -198,6 +198,24 @@ class _ProductDetailViewState extends State<ProductDetailView>
   }
 
   Widget _buildImageSlider(ProductsViewsModel product, bool isDarkMode) {
+    // If there are no images, show a placeholder
+    if (product.imagePaths == null || product.imagePaths!.isEmpty) {
+      return Container(
+        height: 320,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          color: isDarkMode ? Colors.grey[850] : Colors.grey[100],
+        ),
+        child: Center(
+          child: Icon(
+            Icons.image_not_supported_outlined,
+            size: 64,
+            color: isDarkMode ? Colors.grey[700] : Colors.grey[400],
+          ),
+        ),
+      );
+    }
+
     return Stack(
       alignment: Alignment.bottomCenter,
       children: [
@@ -209,7 +227,7 @@ class _ProductDetailViewState extends State<ProductDetailView>
           ),
           child: PageView.builder(
             controller: _pageController,
-            itemCount: product.imagePaths?.length ?? 0,
+            itemCount: product.imagePaths!.length,
             itemBuilder: (context, index) => Padding(
               padding: const EdgeInsets.all(8.0),
               child: ClipRRect(
@@ -222,28 +240,28 @@ class _ProductDetailViewState extends State<ProductDetailView>
             ),
           ),
         ),
-        Positioned(
-          bottom: 20,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(
-              // ignore: deprecated_member_use
-              color: Colors.black.withOpacity(0.6),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: SmoothPageIndicator(
-              controller: _pageController,
-              count: product.imagePaths?.length ?? 0,
-              effect: ExpandingDotsEffect(
-                dotHeight: 6,
-                dotWidth: 6,
-                activeDotColor: Colors.white,
-                // ignore: deprecated_member_use
-                dotColor: Colors.white.withOpacity(0.5),
+        if (product.imagePaths!.length >
+            1) // Only show indicator if there's more than one image
+          Positioned(
+            bottom: 20,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.6),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: SmoothPageIndicator(
+                controller: _pageController,
+                count: product.imagePaths!.length,
+                effect: ExpandingDotsEffect(
+                  dotHeight: 6,
+                  dotWidth: 6,
+                  activeDotColor: Colors.white,
+                  dotColor: Colors.white.withOpacity(0.5),
+                ),
               ),
             ),
           ),
-        ),
       ],
     );
   }
@@ -291,23 +309,25 @@ class _ProductDetailViewState extends State<ProductDetailView>
                     ),
                 ],
               ),
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(
-                  // ignore: deprecated_member_use
-                  color: Colors.red.shade100.withOpacity(0.3),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: Colors.red.shade200),
-                ),
-                child: Text(
-                  "${((product.originalPrice! - product.price) / product.originalPrice! * 100).toStringAsFixed(0)}% OFF",
-                  style: TextStyle(
-                    color: Colors.red.shade800,
-                    fontWeight: FontWeight.bold,
+              if (product.originalPrice != null &&
+                  product.originalPrice! > product.price)
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    // ignore: deprecated_member_use
+                    color: Colors.red.shade100.withOpacity(0.3),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: Colors.red.shade200),
+                  ),
+                  child: Text(
+                    "${((product.originalPrice! - product.price) / product.originalPrice! * 100).toStringAsFixed(0)}% OFF",
+                    style: TextStyle(
+                      color: Colors.red.shade800,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-              ),
             ],
           ),
           const SizedBox(height: 12),
