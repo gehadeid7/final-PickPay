@@ -18,7 +18,8 @@ class _FashionGridState extends State<FashionGrid> {
 
   final List<Map<String, dynamic>> items = [
     {
-      'imagePath': 'assets/Fashion_products/Men_Fashion/men_fashion1/1.png',
+      'imagePath':
+          'assets/Fashion_products/Men_Fashion/men_fashion1/navy/1.png',
       'productName':
           'DeFacto Man Modern Fit Polo Neck Short Sleeve B6374AX Polo T-Shirt',
       'price': '352.00',

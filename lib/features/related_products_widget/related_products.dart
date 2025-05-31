@@ -129,7 +129,61 @@ class RelatedProducts extends StatelessWidget {
       return (widget.build(context) as ProductDetailView).product;
     }
     if (widget is FashionProduct6) {
-      return (widget.build(context) as ProductDetailView).product;
+      final colorImages = {
+        'Navy': [
+          "assets/Fashion_products/Men_Fashion/men_fashion1/navy/1.png",
+        ],
+        'Antracite': [
+          "assets/Fashion_products/Men_Fashion/men_fashion1/antracite/antracite.jpg",
+        ],
+        'Grey': [
+          "assets/Fashion_products/Men_Fashion/men_fashion1/grey/grey.jpg",
+        ],
+        'Blue': [
+          "assets/Fashion_products/Men_Fashion/men_fashion1/blue/blue.jpg",
+        ],
+      };
+
+      return ProductsViewsModel(
+        id: '682b00c26977bd89257c0e93',
+        title:
+            "DeFacto Man Modern Fit Polo Neck Short Sleeve B6374AX Polo T-Shirt",
+        imagePaths: colorImages['Navy'],
+        colorImages: colorImages,
+        availableSizes: [
+          'XSmall',
+          'Small',
+          'Medium',
+          'Large',
+          'XLarge',
+          'XXLarge'
+        ],
+        colorOptions: ['Navy', 'Antracite', 'Grey', 'Blue'],
+        colorAvailability: {
+          'Navy': true,
+          'Antracite': true,
+          'Grey': false,
+          'Blue': true,
+        },
+        careInstruction: 'Machine washable',
+        aboutThisItem: '''B6374AX
+Polyester 100%
+Modern Fit
+Polo Neck
+Short Sleeve''',
+        price: 599,
+        originalPrice: 640,
+        rating: 5.0,
+        reviewCount: 438,
+        category: 'Fashion',
+        subcategory: "Men's Fashion",
+        deliveryDate: 'Sunday, 9 March',
+        deliveryTimeLeft: '20hrs 36 mins',
+        deliveryLocation: 'Egypt',
+        inStock: true,
+        shipsFrom: 'Pickpay',
+        soldBy: 'Pickpay',
+      );
     }
     if (widget is FashionProduct7) {
       return (widget.build(context) as ProductDetailView).product;
@@ -723,7 +777,7 @@ class RelatedProducts extends StatelessWidget {
   }
 }
 
-class _RelatedProductCard extends StatelessWidget {
+class _RelatedProductCard extends StatefulWidget {
   final ProductsViewsModel product;
   final int index;
 
@@ -733,13 +787,18 @@ class _RelatedProductCard extends StatelessWidget {
   });
 
   @override
+  State<_RelatedProductCard> createState() => _RelatedProductCardState();
+}
+
+class _RelatedProductCardState extends State<_RelatedProductCard> {
+  @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    final discountPercentage = product.originalPrice != null &&
-            product.originalPrice! > 0 &&
-            product.originalPrice! > product.price
-        ? ((product.originalPrice! - product.price) /
-                product.originalPrice! *
+    final discountPercentage = widget.product.originalPrice != null &&
+            widget.product.originalPrice! > 0 &&
+            widget.product.originalPrice! > widget.product.price
+        ? ((widget.product.originalPrice! - widget.product.price) /
+                widget.product.originalPrice! *
                 100)
             .round()
         : 0;
@@ -749,7 +808,7 @@ class _RelatedProductCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ProductDetailView(product: product),
+            builder: (context) => ProductDetailView(product: widget.product),
           ),
         );
       },
@@ -771,12 +830,13 @@ class _RelatedProductCard extends StatelessWidget {
                     borderRadius:
                         const BorderRadius.vertical(top: Radius.circular(12)),
                     child: Hero(
-                      tag: 'related_product_${product.id}_$index',
+                      tag:
+                          'related_product_${widget.product.id}_${widget.index}',
                       child: Container(
                         padding: const EdgeInsets.all(8),
                         child: Image.asset(
-                          (product.imagePaths?.isNotEmpty ?? false)
-                              ? product.imagePaths![0]
+                          (widget.product.imagePaths?.isNotEmpty ?? false)
+                              ? widget.product.imagePaths![0]
                               : 'assets/placeholder.png',
                           height: 140,
                           width: double.infinity,
@@ -829,7 +889,7 @@ class _RelatedProductCard extends StatelessWidget {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            product.rating.toString(),
+                            widget.product.rating.toString(),
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
@@ -849,7 +909,7 @@ class _RelatedProductCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        product.title,
+                        widget.product.title,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
@@ -866,7 +926,7 @@ class _RelatedProductCard extends StatelessWidget {
                             children: [
                               Flexible(
                                 child: Text(
-                                  'EGP ${product.price.toStringAsFixed(2)}',
+                                  'EGP ${widget.product.price.toStringAsFixed(2)}',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 15,
@@ -877,9 +937,9 @@ class _RelatedProductCard extends StatelessWidget {
                               ),
                             ],
                           ),
-                          if (product.originalPrice != null)
+                          if (widget.product.originalPrice != null)
                             Text(
-                              'EGP ${product.originalPrice!.toStringAsFixed(2)}',
+                              'EGP ${widget.product.originalPrice!.toStringAsFixed(2)}',
                               style: TextStyle(
                                 decoration: TextDecoration.lineThrough,
                                 color: Colors.grey[600],
@@ -899,7 +959,7 @@ class _RelatedProductCard extends StatelessWidget {
                           const SizedBox(width: 4),
                           Expanded(
                             child: Text(
-                              '${product.reviewCount} orders',
+                              '${widget.product.reviewCount} orders',
                               style: TextStyle(
                                 fontSize: 11,
                                 color: isDarkMode

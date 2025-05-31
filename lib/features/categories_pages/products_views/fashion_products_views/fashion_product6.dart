@@ -2,8 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:pickpay/features/categories_pages/models/product_model.dart';
 import 'package:pickpay/features/categories_pages/products_views/product_detail_view.dart';
 
-class FashionProduct6 extends StatelessWidget {
+class FashionProduct6 extends StatefulWidget {
   const FashionProduct6({super.key});
+
+  @override
+  State<FashionProduct6> createState() => _FashionProduct6State();
+}
+
+class _FashionProduct6State extends State<FashionProduct6> {
+  String _selectedColor = 'Navy';
+
+  final Map<String, List<String>> colorImages = {
+    'Navy': [
+      "assets/Fashion_products/Men_Fashion/men_fashion1/navy/1.png",
+    ],
+    'Antracite': [
+      "assets/Fashion_products/Men_Fashion/men_fashion1/antracite/antracite.jpg",
+    ],
+    'Grey': [
+      "assets/Fashion_products/Men_Fashion/men_fashion1/grey/grey.jpg",
+    ],
+    'Blue': [
+      "assets/Fashion_products/Men_Fashion/men_fashion1/blue/blue.jpg",
+    ],
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -11,12 +33,8 @@ class FashionProduct6 extends StatelessWidget {
       id: '682b00c26977bd89257c0e93',
       title:
           "DeFacto Man Modern Fit Polo Neck Short Sleeve B6374AX Polo T-Shirt",
-      imagePaths: [
-        "assets/Fashion_products/Men_Fashion/men_fashion1/1.png",
-        "assets/Fashion_products/Men_Fashion/men_fashion1/2.png",
-        "assets/Fashion_products/Men_Fashion/men_fashion1/3.png",
-        "assets/Fashion_products/Men_Fashion/men_fashion1/4.png",
-      ],
+      imagePaths: colorImages[_selectedColor],
+      colorImages: colorImages,
       availableSizes: [
         'XSmall',
         'Small',
@@ -25,12 +43,7 @@ class FashionProduct6 extends StatelessWidget {
         'XLarge',
         'XXLarge'
       ],
-      colorOptions: [
-        'Navy',
-        'Antracite',
-        'Grey',
-        'Blue',
-      ],
+      colorOptions: ['Navy', 'Antracite', 'Grey', 'Blue'],
       colorAvailability: {
         'Navy': true,
         'Antracite': true,
@@ -56,6 +69,11 @@ Short Sleeve
       inStock: true,
       shipsFrom: 'Pickpay',
       soldBy: 'Pickpay',
+      onColorSelected: (color) {
+        setState(() {
+          _selectedColor = color;
+        });
+      },
     );
 
     return ProductDetailView(product: product);

@@ -9,10 +9,12 @@ class ProductsViewsModel {
   final String? category;
   final String? subcategory;
   final List<String>? imagePaths;
+  final Map<String, List<String>>? colorImages;
   final double? rating;
   final int? reviewCount;
   final String? brand;
   final String? color;
+  final Function(String)? onColorSelected;
   final String? aboutThisItem;
   final String? deliveryDate;
   final String? deliveryTimeLeft;
@@ -199,10 +201,12 @@ class ProductsViewsModel {
     this.category,
     this.subcategory,
     this.imagePaths,
+    this.colorImages,
     this.rating,
     this.reviewCount,
     this.brand,
     this.color,
+    this.onColorSelected,
     this.amperage,
     this.aboutThisItem,
     this.deliveryDate,
@@ -373,11 +377,10 @@ class ProductsViewsModel {
 
   factory ProductsViewsModel.fromJson(Map<String, dynamic> json) {
     try {
-      
       if (json == null) {
         throw Exception('Product data is null');
       }
-    print('🔍 Parsing product JSON: $json');
+      print('🔍 Parsing product JSON: $json');
 
       // Handle both product and cart item formats
       final productData = json['product'] ?? json;
@@ -388,7 +391,7 @@ class ProductsViewsModel {
       // Get required fields with type checking
       final id =
           productData['_id']?.toString() ?? productData['id']?.toString();
-              print('🆔 Parsed id: $id');
+      print('🆔 Parsed id: $id');
 
       if (id == null) {
         throw Exception('Product ID is missing');
@@ -397,7 +400,7 @@ class ProductsViewsModel {
       // Handle title field which might be under 'title' or 'name'
       final title =
           productData['title']?.toString() ?? productData['name']?.toString();
-              print('📝 Parsed title: $title');
+      print('📝 Parsed title: $title');
 
       if (title == null) {
         throw Exception('Product title is missing');
@@ -405,7 +408,7 @@ class ProductsViewsModel {
 
       // Handle price which could be int or double
       final price = productData['price'];
-          print('💰 Parsed raw price: $price (type: ${price.runtimeType})');
+      print('💰 Parsed raw price: $price (type: ${price.runtimeType})');
 
       if (price == null) {
         throw Exception('Product price is missing');
@@ -413,11 +416,12 @@ class ProductsViewsModel {
       final priceValue = price is int
           ? price.toDouble()
           : (price is double ? price : double.parse(price.toString()));
-    print('💰 Converted price: $priceValue');
+      print('💰 Converted price: $priceValue');
 
       // Handle optional fields with null safety
       final originalPrice = productData['originalPrice'];
-          print('💵 Parsed originalPrice: $originalPrice (type: ${originalPrice?.runtimeType})');
+      print(
+          '💵 Parsed originalPrice: $originalPrice (type: ${originalPrice?.runtimeType})');
 
       final originalPriceValue = originalPrice == null
           ? null
@@ -440,7 +444,23 @@ class ProductsViewsModel {
       } else if (productData['imageCover'] != null) {
         imagePaths = [productData['imageCover'].toString()];
       }
-    print('🖼️ Parsed imagePaths: $imagePaths');
+      print('🖼️ Parsed imagePaths: $imagePaths');
+
+      // Handle color images
+      Map<String, List<String>>? colorImages;
+      if (productData['colorImages'] != null) {
+        if (productData['colorImages'] is Map) {
+          colorImages = Map.fromEntries(
+            (productData['colorImages'] as Map).entries.map(
+                  (entry) => MapEntry(
+                    entry.key.toString(),
+                    (entry.value as List).map((img) => img.toString()).toList(),
+                  ),
+                ),
+          );
+        }
+      }
+      print('🖼️ Parsed colorImages: $colorImages');
 
       // Handle boolean fields
       bool? parseInStock(dynamic value) {
@@ -458,6 +478,7 @@ class ProductsViewsModel {
         category: productData['category']?.toString(),
         subcategory: productData['subcategory']?.toString(),
         imagePaths: imagePaths,
+        colorImages: colorImages,
         rating: productData['ratingsAverage']?.toDouble(),
         reviewCount: productData['ratingsQuantity']?.toInt(),
         brand: productData['brand']?.toString(),
@@ -486,6 +507,7 @@ class ProductsViewsModel {
       if (originalPrice != null) 'originalPrice': originalPrice,
       if (category != null) 'category': category,
       if (imagePaths != null) 'imagePaths': imagePaths,
+      if (colorImages != null) 'colorImages': colorImages,
       if (rating != null) 'rating': rating,
       if (reviewCount != null) 'reviewCount': reviewCount,
       if (brand != null) 'brand': brand,
@@ -571,5 +593,55 @@ class ProductsViewsModel {
       if (colorOptions != null) 'colorOptions': colorOptions,
       if (scentOption != null) 'scentOption': scentOption,
     };
+  }
+
+  ProductsViewsModel copyWith({
+    String? id,
+    String? title,
+    List<String>? imagePaths,
+    Map<String, List<String>>? colorImages,
+    List<String>? availableSizes,
+    List<String>? colorOptions,
+    Map<String, bool>? colorAvailability,
+    String? careInstruction,
+    String? aboutThisItem,
+    double? price,
+    double? originalPrice,
+    double? rating,
+    int? reviewCount,
+    String? category,
+    String? subcategory,
+    String? deliveryDate,
+    String? deliveryTimeLeft,
+    String? deliveryLocation,
+    bool? inStock,
+    String? shipsFrom,
+    String? soldBy,
+    Function(String)? onColorSelected,
+  }) {
+    return ProductsViewsModel(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      imagePaths: imagePaths ?? this.imagePaths,
+      colorImages: colorImages ?? this.colorImages,
+      availableSizes: availableSizes ?? this.availableSizes,
+      colorOptions: colorOptions ?? this.colorOptions,
+      colorAvailability: colorAvailability ?? this.colorAvailability,
+      careInstruction: careInstruction ?? this.careInstruction,
+      aboutThisItem: aboutThisItem ?? this.aboutThisItem,
+      price: price ?? this.price,
+      originalPrice: originalPrice ?? this.originalPrice,
+      rating: rating ?? this.rating,
+      reviewCount: reviewCount ?? this.reviewCount,
+      category: category ?? this.category,
+      subcategory: subcategory ?? this.subcategory,
+      deliveryDate: deliveryDate ?? this.deliveryDate,
+      deliveryTimeLeft: deliveryTimeLeft ?? this.deliveryTimeLeft,
+      deliveryLocation: deliveryLocation ?? this.deliveryLocation,
+      inStock: inStock ?? this.inStock,
+      shipsFrom: shipsFrom ?? this.shipsFrom,
+      soldBy: soldBy ?? this.soldBy,
+      onColorSelected: onColorSelected ?? this.onColorSelected,
+    );
   }
 }

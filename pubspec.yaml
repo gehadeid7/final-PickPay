@@ -248,6 +248,11 @@ flutter:
   - assets/subcategories/electronics/
   - assets/sounds/pickpay_jingle.wav
   - assets/animations/
+  - assets/Fashion_products/Men_Fashion/men_fashion1/antracite/
+  - assets/Fashion_products/Men_Fashion/men_fashion1/blue/
+  - assets/Fashion_products/Men_Fashion/men_fashion1/grey/
+  - assets/Fashion_products/Men_Fashion/men_fashion1/navy/
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 

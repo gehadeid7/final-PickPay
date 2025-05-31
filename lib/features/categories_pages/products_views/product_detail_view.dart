@@ -33,10 +33,14 @@ class _ProductDetailViewState extends State<ProductDetailView>
   Animation<Offset>? _slideAnimation;
   final ScrollController _scrollController = ScrollController();
   bool _showAddToCartButton = true;
+  String? _selectedColor;
 
   @override
   void initState() {
     super.initState();
+    _selectedColor = widget.product.colorOptions?.isNotEmpty == true
+        ? widget.product.colorOptions!.first
+        : null;
 
     _animationController = AnimationController(
       vsync: this,
@@ -75,6 +79,16 @@ class _ProductDetailViewState extends State<ProductDetailView>
     _scrollController.dispose();
     _pageController.dispose();
     super.dispose();
+  }
+
+  List<String> _getCurrentImages() {
+    final product = widget.product;
+    if (_selectedColor != null &&
+        product.colorImages != null &&
+        product.colorImages!.containsKey(_selectedColor)) {
+      return product.colorImages![_selectedColor]!;
+    }
+    return product.imagePaths ?? [];
   }
 
   @override
@@ -198,8 +212,10 @@ class _ProductDetailViewState extends State<ProductDetailView>
   }
 
   Widget _buildImageSlider(ProductsViewsModel product, bool isDarkMode) {
+    final currentImages = _getCurrentImages();
+
     // If there are no images, show a placeholder
-    if (product.imagePaths == null || product.imagePaths!.isEmpty) {
+    if (currentImages.isEmpty) {
       return Container(
         height: 320,
         decoration: BoxDecoration(
@@ -227,21 +243,52 @@ class _ProductDetailViewState extends State<ProductDetailView>
           ),
           child: PageView.builder(
             controller: _pageController,
-            itemCount: product.imagePaths!.length,
+            itemCount: currentImages.length,
             itemBuilder: (context, index) => Padding(
               padding: const EdgeInsets.all(8.0),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12),
-                child: Image.asset(
-                  product.imagePaths![index],
-                  fit: BoxFit.contain,
-                ),
+                child: currentImages[index].startsWith('http')
+                    ? Image.network(
+                        currentImages[index],
+                        fit: BoxFit.contain,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            color: isDarkMode
+                                ? Colors.grey[850]
+                                : Colors.grey[100],
+                            child: Center(
+                              child: Icon(
+                                Icons.error_outline,
+                                size: 48,
+                                color: isDarkMode
+                                    ? Colors.grey[700]
+                                    : Colors.grey[400],
+                              ),
+                            ),
+                          );
+                        },
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return Center(
+                            child: CircularProgressIndicator(
+                              value: loadingProgress.expectedTotalBytes != null
+                                  ? loadingProgress.cumulativeBytesLoaded /
+                                      loadingProgress.expectedTotalBytes!
+                                  : null,
+                            ),
+                          );
+                        },
+                      )
+                    : Image.asset(
+                        currentImages[index],
+                        fit: BoxFit.contain,
+                      ),
               ),
             ),
           ),
         ),
-        if (product.imagePaths!.length >
-            1) // Only show indicator if there's more than one image
+        if (currentImages.length > 1)
           Positioned(
             bottom: 20,
             child: Container(
@@ -252,7 +299,7 @@ class _ProductDetailViewState extends State<ProductDetailView>
               ),
               child: SmoothPageIndicator(
                 controller: _pageController,
-                count: product.imagePaths!.length,
+                count: currentImages.length,
                 effect: ExpandingDotsEffect(
                   dotHeight: 6,
                   dotWidth: 6,
@@ -363,7 +410,14 @@ class _ProductDetailViewState extends State<ProductDetailView>
             if (product.colorOptions?.isNotEmpty ?? false) ...[
               ColorOptionSelector(
                 colorOptions: product.colorOptions!,
+                selectedColor: _selectedColor,
                 colorAvailability: product.colorAvailability,
+                onColorSelected: (color) {
+                  setState(() {
+                    _selectedColor = color;
+                    _pageController.jumpToPage(0);
+                  });
+                },
               ),
               const SizedBox(height: 16),
             ],
