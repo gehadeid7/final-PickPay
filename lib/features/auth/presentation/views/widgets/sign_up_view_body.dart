@@ -269,6 +269,7 @@ class _SignUpViewBodyState extends State<SignUpViewBody>
                         onPressed: state is SignupLoading ? null : _submit,
                         buttonText: 'Create account',
                         isLoading: state is SignupLoading,
+                        showLoadingIndicator: false,
                       ),
                     );
                   },

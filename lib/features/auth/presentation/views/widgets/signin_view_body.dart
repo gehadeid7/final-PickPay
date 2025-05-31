@@ -264,6 +264,7 @@ class _SigninViewBodyState extends State<SigninViewBody>
                             onPressed: state is SigninLoading ? null : _submit,
                             buttonText: 'Log In',
                             isLoading: state is SigninLoading,
+                            showLoadingIndicator: false,
                           ),
                         ),
                       ),

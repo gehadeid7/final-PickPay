@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lottie/lottie.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:pickpay/core/widgets/app_flushbar.dart';
 import 'package:pickpay/features/auth/presentation/cubits/signup_cubits/signup_cubit.dart';
@@ -26,10 +27,17 @@ class SignupViewBodyBlocConsumer extends StatelessWidget {
         }
       },
       builder: (context, state) {
-        return ModalProgressHUD(
-          inAsyncCall: state is SignupLoading,
-          child: const SignUpViewBody(),
-        );
+return ModalProgressHUD(
+  inAsyncCall: state is SignupLoading,
+  opacity: 0.4,
+  progressIndicator: Lottie.asset(
+    'assets/animations/loading.json',
+    width: 200,
+    fit: BoxFit.contain,
+  ),
+  child: const SignUpViewBody(),
+);
+
       },
     );
   }

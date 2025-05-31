@@ -1160,4 +1160,35 @@ class ApiService {
       rethrow;
     }
   }
+Future<List<Map<String, dynamic>>> processVoiceSearch(String voiceText) async {
+  try {
+    final url = Uri.parse(baseUrl).resolve('voice-search');
+
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'text': voiceText,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final results = data['results'];
+
+      if (results is List) {
+        return results.whereType<Map<String, dynamic>>().toList();
+      }
+    } else {
+      print('Voice search API error: ${response.statusCode}');
+      print('Response body: ${response.body}');
+    }
+  } catch (e) {
+    print('Voice search network error: $e');
+  }
+  return [];
+}
+
 }

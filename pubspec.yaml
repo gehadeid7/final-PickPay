@@ -131,6 +131,7 @@ flutter:
   - assets/banners/
   - assets/images/
   - assets/icons/
+  - assets/animations/loading.json
   - assets/Categories/DailyDeals/
   - assets/Categories/Electronics/
   - assets/Categories/Appliances/

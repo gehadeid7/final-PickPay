@@ -540,49 +540,164 @@ class _SearchTextFieldState extends State<SearchTextField>
     _focusNode.unfocus();
   }
 
-  // Enhanced voice search
-  Future<void> _listenVoice() async {
-    if (!_speechAvailable) {
-      _showSnackBar('Voice search is not available on this device', isError: true);
-      return;
-    }
+// In your search_text_field.dart file, update the _listenVoice method:
 
-    final status = await Permission.microphone.request();
-    if (!status.isGranted) {
-      _showPermissionDialog();
-      return;
-    }
-
-    try {
-      if (_isListening) {
-        await _speech!.stop();
-        setState(() => _isListening = false);
-      } else {
-        setState(() => _isListening = true);
-        
-        await _speech!.listen(
-          onResult: (result) {
-            setState(() {
-              _voiceInput = result.recognizedWords;
-              widget.controller.text = _voiceInput;
-            });
-            
-            if (result.finalResult && _voiceInput.isNotEmpty) {
-              _searchProducts(_voiceInput);
-              setState(() => _isListening = false);
-            }
-          },
-          listenFor: const Duration(seconds: 10),
-          pauseFor: const Duration(seconds: 3),
-          partialResults: true,
-        );
-      }
-    } catch (e) {
-      print('❌ Voice search error: $e');
-      setState(() => _isListening = false);
-      _showSnackBar('Voice search failed', isError: true);
-    }
+Future<void> _listenVoice() async {
+  if (!_speechAvailable) {
+    _showSnackBar('Voice search is not available on this device', isError: true);
+    return;
   }
+
+  final status = await Permission.microphone.request();
+  if (!status.isGranted) {
+    _showPermissionDialog();
+    return;
+  }
+
+  try {
+    if (_isListening) {
+      await _speech!.stop();
+      setState(() => _isListening = false);
+    } else {
+      setState(() => _isListening = true);
+      
+      await _speech!.listen(
+        onResult: (result) async {
+          setState(() {
+            _voiceInput = result.recognizedWords;
+            widget.controller.text = _voiceInput;
+          });
+          
+          if (result.finalResult && _voiceInput.isNotEmpty) {
+            setState(() => _isListening = false);
+            
+            // Send voice input to backend for processing
+            await _processVoiceSearch(_voiceInput);
+          }
+        },
+        listenFor: const Duration(seconds: 10),
+        pauseFor: const Duration(seconds: 3),
+        partialResults: true,
+      );
+    }
+  } catch (e) {
+    print('❌ Voice search error: $e');
+    setState(() => _isListening = false);
+    _showSnackBar('Voice search failed', isError: true);
+  }
+}
+
+// Add this new method to process voice search through backend
+Future<void> _processVoiceSearch(String voiceText) async {
+  if (voiceText.trim().isEmpty) return;
+  
+  setState(() {
+    _isLoading = true;
+    _showDropdown = true;
+  });
+
+  try {
+    final api = ApiService();
+    
+    // Call the voice search API endpoint
+    final voiceSearchResults = await api.processVoiceSearch(voiceText);
+    
+    if (voiceSearchResults != null && voiceSearchResults.isNotEmpty) {
+      // Process the backend results
+      final processedResults = _processVoiceSearchResults(voiceSearchResults);
+      
+      if (mounted) {
+        setState(() {
+          _searchResults = processedResults;
+          _isLoading = false;
+        });
+        
+        // Update the search field with the processed text if available
+        if (processedResults.isNotEmpty) {
+          // You might want to extract keywords from the results for the search field
+          final firstResult = processedResults.first;
+          final keywords = _extractKeywords(firstResult['title'] ?? '');
+          if (keywords.isNotEmpty) {
+            widget.controller.text = keywords;
+          }
+        }
+      }
+    } else {
+      // Fallback to regular search if backend doesn't return results
+      _searchProducts(voiceText);
+    }
+  } catch (e) {
+    print('❌ Voice search processing error: $e');
+    // Fallback to regular search on error
+    _searchProducts(voiceText);
+  }
+}
+
+// Helper method to process voice search results from backend
+List<Map<String, dynamic>> _processVoiceSearchResults(List<dynamic> results) {
+  return results.map((result) {
+    if (result is Map<String, dynamic>) {
+      return {
+        'id': result['slug'] ?? result['id'] ?? '',
+        'title': result['title'] ?? 'Unknown Product',
+        'price': _parsePrice(result['price']),
+        'images': result['imageUrls'] ?? result['images'] ?? [],
+        'brand': result['brand'] ?? '',
+        'category': result['category'] ?? '',
+        'description': result['description'] ?? '',
+        'rating': _parseRating(result['rating']),
+        'reviewCount': _parseReviewCount(result['reviewCount']),
+        'inStock': result['inStock'] ?? true,
+        'discount': _parseDiscount(result['discount']),
+        'pageUrl': result['pageUrl'] ?? '',
+        'slug': result['slug'] ?? '',
+      };
+    } else if (result is String) {
+      return {
+        'id': '',
+        'title': result,
+        'price': null,
+        'images': [],
+        'brand': '',
+        'category': '',
+        'description': '',
+        'rating': null,
+        'reviewCount': null,
+        'inStock': true,
+        'discount': null,
+        'pageUrl': '',
+        'slug': '',
+      };
+    } else {
+      return {
+        'id': '',
+        'title': 'Unknown',
+        'images': [],
+      };
+    }
+  }).toList();
+}
+
+
+// Helper method to extract keywords from product title
+String _extractKeywords(String title) {
+  if (title.isEmpty) return '';
+  
+  // Simple keyword extraction - take first few meaningful words
+  final words = title.split(' ');
+  final meaningfulWords = words
+      .where((word) => word.length > 2 && !_isStopWord(word.toLowerCase()))
+      .take(3)
+      .join(' ');
+  
+  return meaningfulWords;
+}
+
+// Helper method to identify stop words
+bool _isStopWord(String word) {
+  const stopWords = {'the', 'and', 'for', 'with', 'pro', 'max', 'mini'};
+  return stopWords.contains(word);
+}
 
   void _showPermissionDialog() {
     showDialog(
@@ -1178,7 +1293,7 @@ class _SearchTextFieldState extends State<SearchTextField>
     final textColor = isDark ? Colors.white : Colors.black87;
     final title = product['title'] ?? 'Unknown Product';
     final price = product['price'] ?? 0.0;
-    final images = product['images'] as List<String>? ?? [];
+    final images = (product['images'] as List<dynamic>?)?.cast<String>() ?? [];
     final brand = product['brand'] ?? '';
     final rating = product['rating'] ?? 0.0;
     final reviewCount = product['reviewCount'] ?? 0;
