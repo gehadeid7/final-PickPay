@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:pickpay/core/utils/app_images.dart';
 import 'package:pickpay/core/utils/app_text_styles.dart';
 import 'package:pickpay/core/services/ai_search_service.dart';
 import 'package:pickpay/features/categories_pages/models/product_model.dart';
 import 'package:pickpay/services/api_service.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:math';
 import 'package:flutter/gestures.dart';
 import 'dart:async';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
@@ -48,20 +46,6 @@ class _SearchTextFieldState extends State<SearchTextField>
   static const String _recentSearchesKey = 'recent_searches';
   static const int _maxRecent = 8;
   
-  // Enhanced categories with better coverage
-  final List<String> _categories = [
-    'Electronics',
-    'Fashion',
-    'Home & Garden',
-    'Beauty',
-    'Sports',
-    'Books',
-    'Grocery',
-    'Toys',
-    'Automotive',
-    'Health'
-  ];
-  
   // Updated popular searches
   final List<String> _popularSearches = [
     'iPhone 15 Pro',
@@ -76,8 +60,11 @@ class _SearchTextFieldState extends State<SearchTextField>
     'Wireless Charger'
   ];
   
-  String? _selectedCategory;
-  List<String> _filters = [];
+  // Removed unused fields
+  // final List<String> _categories = [ ... ];
+  // String? _selectedCategory;
+  // List<String> _filters = [];
+  
   bool _showDropdown = false;
   Timer? _debounce;
   final Map<String, List<Map<String, dynamic>>> _searchCache = {};
@@ -248,6 +235,20 @@ class _SearchTextFieldState extends State<SearchTextField>
       await prefs.remove(_recentSearchesKey);
     } catch (e) {
       print('❌ Error clearing recent searches: $e');
+    }
+  }
+
+  // Remove a single recent search item
+  Future<void> _removeRecentSearch(String query) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      setState(() {
+        _recentSearches.remove(query);
+      });
+      await prefs.setStringList(_recentSearchesKey, _recentSearches);
+    } catch (e) {
+      print('❌ Error removing recent search: $e');
+      _showSnackBar('Failed to remove search history item', isError: true);
     }
   }
 
@@ -601,8 +602,7 @@ Future<void> _processVoiceSearch(String voiceText) async {
     
     // Call the voice search API endpoint
     final voiceSearchResults = await api.processVoiceSearch(voiceText);
-    
-    if (voiceSearchResults != null && voiceSearchResults.isNotEmpty) {
+    if (voiceSearchResults.isNotEmpty) {
       // Process the backend results
       final processedResults = _processVoiceSearchResults(voiceSearchResults);
       
@@ -1036,11 +1036,22 @@ bool _isStopWord(String word) {
                         _searchProducts(search);
                       },
                       isHighlighted: _highlightedIndex == globalIndex,
-                      trailing: IconButton(
-                        icon: Icon(Icons.north_west, size: 16, color: Colors.grey[500]),
-                        onPressed: () => widget.controller.text = search,
-                        splashRadius: 12,
-                        tooltip: 'Fill search',
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.north_west, size: 16, color: Colors.grey[500]),
+                            onPressed: () => widget.controller.text = search,
+                            splashRadius: 12,
+                            tooltip: 'Fill search',
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.delete_outline, size: 18, color: Colors.red[400]),
+                            onPressed: () => _removeRecentSearch(search),
+                            splashRadius: 14,
+                            tooltip: 'Remove from history',
+                          ),
+                        ],
                       ),
                     );
                   }).toList(),
