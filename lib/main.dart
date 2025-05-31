@@ -67,10 +67,8 @@ Future<void> requestPermissions() async {
   Permission permissionToRequest;
 
   if (sdkInt >= 33) {
-    // Android 13+ → READ_MEDIA_IMAGES
     permissionToRequest = Permission.photos;
   } else {
-    // Android 12 or lower → READ_EXTERNAL_STORAGE
     permissionToRequest = Permission.storage;
   }
 
