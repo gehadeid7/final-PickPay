@@ -14,7 +14,7 @@ import 'package:pickpay/features/categories_pages/widgets/product_card.dart';
 import 'package:http_parser/http_parser.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://192.168.1.4:3000/api/v1/';
+  static const String baseUrl = 'http://192.168.1.8:3000/api/v1/';
 
   Future<Map<String, String>> _buildHeaders({
     Map<String, String>? headers,
@@ -1160,35 +1160,36 @@ class ApiService {
       rethrow;
     }
   }
-Future<List<Map<String, dynamic>>> processVoiceSearch(String voiceText) async {
-  try {
-    final url = Uri.parse(baseUrl).resolve('voice-search');
 
-    final response = await http.post(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode({
-        'text': voiceText,
-      }),
-    );
+  Future<List<Map<String, dynamic>>> processVoiceSearch(
+      String voiceText) async {
+    try {
+      final url = Uri.parse(baseUrl).resolve('voice-search');
 
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      final results = data['results'];
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'text': voiceText,
+        }),
+      );
 
-      if (results is List) {
-        return results.whereType<Map<String, dynamic>>().toList();
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final results = data['results'];
+
+        if (results is List) {
+          return results.whereType<Map<String, dynamic>>().toList();
+        }
+      } else {
+        print('Voice search API error: ${response.statusCode}');
+        print('Response body: ${response.body}');
       }
-    } else {
-      print('Voice search API error: ${response.statusCode}');
-      print('Response body: ${response.body}');
+    } catch (e) {
+      print('Voice search network error: $e');
     }
-  } catch (e) {
-    print('Voice search network error: $e');
+    return [];
   }
-  return [];
-}
-
 }

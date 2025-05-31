@@ -35,6 +35,19 @@ class _SmallAppliancesState extends State<SmallAppliances> {
     '68252918a68b49cb06164212': const AppliancesProduct15(), // Dough Mixer
   };
 
+  // Map product IDs to their corresponding image numbers
+  static final Map<String, int> productImageNumbers = {
+    '68252918a68b49cb06164209': 6, // Air Fryer
+    '68252918a68b49cb0616420a': 7, // Coffee Maker
+    '68252918a68b49cb0616420b': 8, // Toaster
+    '68252918a68b49cb0616420c': 9, // Iron
+    '68252918a68b49cb0616420d': 10, // Vacuum Cleaner
+    '68252918a68b49cb0616420f': 12, // Water Heater
+    '68252918a68b49cb06164210': 13, // Blender
+    '68252918a68b49cb06164211': 14, // Kettle
+    '68252918a68b49cb06164212': 15, // Dough Mixer
+  };
+
   @override
   void initState() {
     super.initState();
@@ -44,20 +57,12 @@ class _SmallAppliancesState extends State<SmallAppliances> {
   Future<List<ProductsViewsModel>> _loadProducts() async {
     final apiProducts = await ApiService().loadProducts();
     return apiProducts
-        .where((product) =>
-            product.name.toLowerCase().contains('fryer') ||
-            product.name.toLowerCase().contains('coffee') ||
-            product.name.toLowerCase().contains('toaster') ||
-            product.name.toLowerCase().contains('iron') ||
-            product.name.toLowerCase().contains('vacuum') ||
-            product.name.toLowerCase().contains('heater') ||
-            product.name.toLowerCase().contains('blender') ||
-            product.name.toLowerCase().contains('kettle') ||
-            product.name.toLowerCase().contains('mixer'))
+        .where((product) => detailPages.containsKey(product.id))
         .map((apiProduct) {
-          final productIndex =
-              detailPages.keys.toList().indexOf(apiProduct.id) + 1;
-          final imagePath = 'assets/appliances/product$productIndex/1.png';
+          final productNumber = productImageNumbers[apiProduct.id];
+          if (productNumber == null) return null;
+
+          final imagePath = 'assets/appliances/product$productNumber/1.png';
 
           return ProductsViewsModel(
             id: apiProduct.id,
@@ -73,7 +78,8 @@ class _SmallAppliancesState extends State<SmallAppliances> {
             hasFreeDelivery: true,
           );
         })
-        .where((product) => detailPages.containsKey(product.id))
+        .where((product) => product != null)
+        .cast<ProductsViewsModel>()
         .toList();
   }
 
