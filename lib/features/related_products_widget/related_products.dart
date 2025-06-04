@@ -66,7 +66,7 @@ import 'package:pickpay/features/categories_pages/products_views/fashion_product
 import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product7.dart';
 import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product8.dart';
 import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product9.dart'
-    show FashionProduct9;
+    show FashionProduct9, _FashionProduct9State;
 import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product10.dart';
 import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product11.dart';
 import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product12.dart';
@@ -242,12 +242,23 @@ Durable Construction: Crafted with high-quality materials for long-lasting durab
       return (widget.build(context) as ProductDetailView).product;
     }
     if (widget is FashionProduct9) {
-      final product = ProductsViewsModel(
-        id: '682b00c26977bd89257c0e96',
-        title: "Timberland Ek Larchmont Ftm_Chelsea, Men's Boots",
-        imagePaths: [
+      final colorImages = {
+        'Black Full Grain': [
           "assets/Fashion_products/Men_Fashion/men_fashion4/black/1.png",
         ],
+        'Green Olive Full Grain': [
+          "assets/Fashion_products/Men_Fashion/men_fashion4/Olive/1.jpg",
+        ],
+        'Rust Full Grain': [
+          "assets/Fashion_products/Men_Fashion/men_fashion4/Rust/1.jpg",
+        ],
+      };
+
+      return ProductsViewsModel(
+        id: '682b00c26977bd89257c0e96',
+        title: "Timberland Ek Larchmont Ftm_Chelsea, Men's Boots",
+        imagePaths: colorImages['Black Full Grain'],
+        colorImages: colorImages,
         category: 'Fashion',
         subcategory: "Men's Fashion",
         price: 10499,
@@ -302,7 +313,6 @@ Perfect for casual and semi-formal occasions''',
         shipsFrom: 'Pickpay',
         soldBy: 'Pickpay',
       );
-      return product;
     }
     if (widget is FashionProduct10) {
       return (widget.build(context) as ProductDetailView).product;
