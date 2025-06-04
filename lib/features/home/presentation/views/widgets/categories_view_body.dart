@@ -45,7 +45,8 @@ class CategoriesViewBody extends StatelessWidget {
         },
         {
           'name': "Men's Fashion",
-          'image': 'assets/Fashion_products/Men_Fashion/men_fashion4/1.png',
+          'image':
+              "assets/Fashion_products/Men_Fashion/men_fashion4/black/1.png",
           'index': 10,
         },
         {

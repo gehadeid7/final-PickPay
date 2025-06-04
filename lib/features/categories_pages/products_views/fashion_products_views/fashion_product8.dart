@@ -32,22 +32,22 @@ class FashionProduct8 extends StatelessWidget {
         '44 EU': true,
         '45 EU': false
       },
-      style: 'Tartan & Stars',
+      style: 'Tartan',
       soleMaterial: 'Plastic',
       outerMaterial: 'Plastic',
       closureType: 'Lace-Up',
       aboutThisItem:
-          '''✅💗IMPORTANT ALLERT TO SELECT YOUR SIZE CHOICE 】 To ensure the best comfort of shoes please choose the bigger size shoes of your choice of everyday shoes
+          '''IMPORTANT ALLERT TO SELECT YOUR SIZE CHOICE 】 To ensure the best comfort of shoes please choose the bigger size shoes of your choice of everyday shoes
 
-✅ UNMATCHED SPEED 】 Lightweight and flexible design allows you to move at high speed on the field, giving you excitement over your opponents.
+UNMATCHED SPEED 】 Lightweight and flexible design allows you to move at high speed on the field, giving you excitement over your opponents.
 
-✅💗✅ STYLISH & STYLISH DESIGN 】High performance with appealing looks, to match your style on and off the court.
+STYLISH & STYLISH DESIGN 】High performance with appealing looks, to match your style on and off the court.
 
-✅ HIGH-QUALITY MATERIALS 】 Shoes are made of durable materials, ensuring long use and lasting efficacy.
+HIGH-QUALITY MATERIALS 】 Shoes are made of durable materials, ensuring long use and lasting efficacy.
 
-✅ OUTSIDE SOLE TAILORS 】 To ensure quality assurance, we have sewn the shoe to bring you the life of the shoe
+OUTSIDE SOLE TAILORS 】 To ensure quality assurance, we have sewn the shoe to bring you the life of the shoe
 
-✅💗✅ INNOVATIVE SOLE 】 Innovative sole provides a firm grip on all types of playgrounds, reducing slippage and increasing your stability.''',
+INNOVATIVE SOLE 】 Innovative sole provides a firm grip on all types of playgrounds, reducing slippage and increasing your stability.''',
       deliveryDate: 'Sunday, 9 March',
       deliveryTimeLeft: '20hrs 36 mins',
       deliveryLocation: 'Egypt',

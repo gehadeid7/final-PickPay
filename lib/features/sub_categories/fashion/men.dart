@@ -56,7 +56,9 @@ class Men extends StatelessWidget {
       rating: 4.3,
       reviewCount: 57,
       brand: 'Timberland',
-      imagePaths: ["assets/Fashion_products/Men_Fashion/men_fashion4/1.png"],
+      imagePaths: [
+        "assets/Fashion_products/Men_Fashion/men_fashion4/black/1.png"
+      ],
     ),
     ProductsViewsModel(
       id: '68132a95ff7813b3d47f9da10',

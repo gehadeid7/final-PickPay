@@ -145,6 +145,9 @@ flutter:
   - assets/Categories/VideoGames/products/games/
   - assets/Categories/VideoGames/products/headset/
   - assets/Fashion_products/Men_Fashion/men_fashion1/navy/
+  - assets/Fashion_products/Men_Fashion/men_fashion4/black/
+  - assets/Fashion_products/Men_Fashion/men_fashion4/Olive/
+  - assets/Fashion_products/Men_Fashion/men_fashion4/Rust/
   - assets/appliances/product1/
   - assets/appliances/product2/
   - assets/appliances/product3/
@@ -256,6 +259,9 @@ flutter:
   - assets/Fashion_products/Men_Fashion/men_fashion2/light_blue/
   - assets/Fashion_products/Men_Fashion/men_fashion2/greenish/
   - assets/Fashion_products/Men_Fashion/men_fashion2/dark_blue/
+  - assets/Fashion_products/Men_Fashion/men_fashion4/black/
+  - assets/Fashion_products/Men_Fashion/men_fashion4/Olive/
+  - assets/Fashion_products/Men_Fashion/men_fashion4/Rust/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

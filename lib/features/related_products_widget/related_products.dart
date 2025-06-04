@@ -65,7 +65,8 @@ import 'package:pickpay/features/categories_pages/products_views/fashion_product
 import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product6.dart';
 import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product7.dart';
 import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product8.dart';
-import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product9.dart';
+import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product9.dart'
+    show FashionProduct9;
 import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product10.dart';
 import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product11.dart';
 import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product12.dart';
@@ -241,7 +242,67 @@ Durable Construction: Crafted with high-quality materials for long-lasting durab
       return (widget.build(context) as ProductDetailView).product;
     }
     if (widget is FashionProduct9) {
-      return (widget.build(context) as ProductDetailView).product;
+      final product = ProductsViewsModel(
+        id: '682b00c26977bd89257c0e96',
+        title: "Timberland Ek Larchmont Ftm_Chelsea, Men's Boots",
+        imagePaths: [
+          "assets/Fashion_products/Men_Fashion/men_fashion4/black/1.png",
+        ],
+        category: 'Fashion',
+        subcategory: "Men's Fashion",
+        price: 10499,
+        originalPrice: 11000,
+        rating: 4.3,
+        reviewCount: 57,
+        colorOptions: [
+          'Black Full Grain',
+          'Green Olive Full Grain',
+          'Rust Full Grain',
+        ],
+        colorAvailability: {
+          'Black Full Grain': true,
+          'Green Olive Full Grain': true,
+          'Rust Full Grain': true,
+        },
+        availableSizes: [
+          '42 EU',
+          '43 EU',
+          '44 EU',
+          '45 EU',
+          '45.5 EU',
+          '47.5 EU',
+        ],
+        sizeAvailability: {
+          '42 EU': false,
+          '43 EU': true,
+          '44 EU': false,
+          '45 EU': false,
+          '45.5 EU': true,
+          '47.5 EU': false,
+        },
+        materialcomposition: 'Leather',
+        soleMaterial: 'Rubber',
+        shaftHeight: 'Ankle',
+        outerMaterial: 'Leather',
+        aboutThisItem: '''Premium full grain leather upper with tonal stitching
+
+Breathable textile lining for comfort
+
+Durable rubber outsole for excellent traction
+
+Classic Chelsea boot design with elastic side panels
+
+Timberland logo detailing
+
+Perfect for casual and semi-formal occasions''',
+        deliveryDate: 'Sunday, 9 March',
+        deliveryTimeLeft: '20hrs 36 mins',
+        deliveryLocation: 'Egypt',
+        inStock: true,
+        shipsFrom: 'Pickpay',
+        soldBy: 'Pickpay',
+      );
+      return product;
     }
     if (widget is FashionProduct10) {
       return (widget.build(context) as ProductDetailView).product;
