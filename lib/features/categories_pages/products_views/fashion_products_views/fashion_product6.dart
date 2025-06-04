@@ -15,15 +15,22 @@ class _FashionProduct6State extends State<FashionProduct6> {
   final Map<String, List<String>> colorImages = {
     'Navy': [
       "assets/Fashion_products/Men_Fashion/men_fashion1/navy/1.png",
+      "assets/Fashion_products/Men_Fashion/men_fashion1/navy/2.png",
+      "assets/Fashion_products/Men_Fashion/men_fashion1/navy/3.png",
+      "assets/Fashion_products/Men_Fashion/men_fashion1/navy/4.png",
     ],
     'Antracite': [
       "assets/Fashion_products/Men_Fashion/men_fashion1/antracite/antracite.jpg",
+      "assets/Fashion_products/Men_Fashion/men_fashion1/antracite/arc2.jpg",
+      "assets/Fashion_products/Men_Fashion/men_fashion1/antracite/arc3.jpg",
     ],
     'Grey': [
       "assets/Fashion_products/Men_Fashion/men_fashion1/grey/grey.jpg",
     ],
     'Blue': [
       "assets/Fashion_products/Men_Fashion/men_fashion1/blue/blue.jpg",
+      "assets/Fashion_products/Men_Fashion/men_fashion1/blue/blue2.jpg",
+      "assets/Fashion_products/Men_Fashion/men_fashion1/blue/blue3.jpg",
     ],
   };
 
@@ -55,8 +62,7 @@ class _FashionProduct6State extends State<FashionProduct6> {
 Polyester 100%
 Modern Fit
 Polo Neck
-Short Sleeve
-''',
+Short Sleeve''',
       price: 599,
       originalPrice: 640,
       rating: 5.0,

@@ -186,7 +186,56 @@ Short Sleeve''',
       );
     }
     if (widget is FashionProduct7) {
-      return (widget.build(context) as ProductDetailView).product;
+      final colorImages = {
+        'Light Blue': [
+          "assets/Fashion_products/Men_Fashion/men_fashion2/light_blue/1.png",
+        ],
+        'greenish blue': [
+          "assets/Fashion_products/Men_Fashion/men_fashion2/greenish/1.jpg",
+        ],
+        'Dark Blue': [
+          "assets/Fashion_products/Men_Fashion/men_fashion2/dark_blue/1.jpg",
+        ],
+      };
+
+      return ProductsViewsModel(
+        id: '682b00c26977bd89257c0e94',
+        title: "DOTT JEANS WEAR Men's Relaxed Fit Jean",
+        imagePaths: colorImages['Light Blue'],
+        colorImages: colorImages,
+        colorOptions: ['greenish blue', 'Dark Blue', 'Light Blue'],
+        colorAvailability: {
+          'Light Blue': true,
+          'greenish blue': true,
+          'Dark Blue': true,
+        },
+        availableSizes: ['29', '30', '32', '34', '36', '38'],
+        sizeAvailability: {
+          '29': true,
+          '30': true,
+          '32': true,
+          '34': true,
+          '36': true,
+          '38': true,
+        },
+        closureType: 'Zipper',
+        price: 799,
+        originalPrice: 830,
+        rating: 4.3,
+        reviewCount: 16,
+        category: 'Fashion',
+        subcategory: "Men's Fashion",
+        aboutThisItem:
+            '''Relaxed Fit: These jeans offer a comfortable, relaxed fit for all-day wear.
+
+Durable Construction: Crafted with high-quality materials for long-lasting durability.''',
+        deliveryDate: 'Sunday, 9 March',
+        deliveryTimeLeft: '20hrs 36 mins',
+        deliveryLocation: 'Egypt',
+        inStock: true,
+        shipsFrom: 'Pickpay',
+        soldBy: 'Pickpay',
+      );
     }
     if (widget is FashionProduct8) {
       return (widget.build(context) as ProductDetailView).product;

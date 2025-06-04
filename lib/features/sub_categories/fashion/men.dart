@@ -33,7 +33,9 @@ class Men extends StatelessWidget {
       rating: 4.0,
       reviewCount: 19,
       brand: 'DOTT',
-      imagePaths: ["assets/Fashion_products/Men_Fashion/men_fashion2/1.png"],
+      imagePaths: [
+        "assets/Fashion_products/Men_Fashion/men_fashion2/light_blue/1.png"
+      ],
     ),
     ProductsViewsModel(
       id: '68132a95ff7813b3d47f9da8',
