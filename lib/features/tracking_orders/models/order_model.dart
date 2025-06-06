@@ -2,45 +2,73 @@ import 'package:flutter/foundation.dart';
 
 enum OrderStatus {
   pending,
+  paid,
   delivered,
 }
 
 class OrderModel {
   final String id;
   final String userId;
-  final String productId;
-  final double amount;
+  final List<Map<String, dynamic>> cartItems;
+  final Map<String, dynamic> shippingAddress;
+  final double totalAmount;
   final OrderStatus status;
   final DateTime createdAt;
+  final DateTime? paidAt;
   final DateTime? deliveredAt;
 
   OrderModel({
     required this.id,
     required this.userId,
-    required this.productId,
-    required this.amount,
+    required this.cartItems,
+    required this.shippingAddress,
+    required this.totalAmount,
     required this.status,
     required this.createdAt,
+    this.paidAt,
     this.deliveredAt,
   });
 
   OrderModel copyWith({
     String? id,
     String? userId,
-    String? productId,
-    double? amount,
+    List<Map<String, dynamic>>? cartItems,
+    Map<String, dynamic>? shippingAddress,
+    double? totalAmount,
     OrderStatus? status,
     DateTime? createdAt,
+    DateTime? paidAt,
     DateTime? deliveredAt,
   }) {
     return OrderModel(
       id: id ?? this.id,
       userId: userId ?? this.userId,
-      productId: productId ?? this.productId,
-      amount: amount ?? this.amount,
+      cartItems: cartItems ?? this.cartItems,
+      shippingAddress: shippingAddress ?? this.shippingAddress,
+      totalAmount: totalAmount ?? this.totalAmount,
       status: status ?? this.status,
       createdAt: createdAt ?? this.createdAt,
+      paidAt: paidAt ?? this.paidAt,
       deliveredAt: deliveredAt ?? this.deliveredAt,
+    );
+  }
+
+  factory OrderModel.fromJson(Map<String, dynamic> json) {
+    return OrderModel(
+      id: json['_id'] ?? json['id'],
+      userId: json['user']?['_id'] ?? '', 
+      cartItems: List<Map<String, dynamic>>.from(json['cartItems'] ?? []),
+      shippingAddress: Map<String, dynamic>.from(json['shippingAddress'] ?? {}),
+      totalAmount: (json['totalOrderPrice'] ?? 0).toDouble(),
+      status: _parseStatus(
+        isPaid: json['isPaid'] == true,
+        isDelivered: json['isDelivered'] == true,
+      ),
+      createdAt: DateTime.parse(json['createdAt']),
+      paidAt: json['paidAt'] != null ? DateTime.tryParse(json['paidAt']) : null,
+      deliveredAt: json['deliveredAt'] != null
+          ? DateTime.tryParse(json['deliveredAt'])
+          : null,
     );
   }
 
@@ -48,28 +76,22 @@ class OrderModel {
     return {
       'id': id,
       'userId': userId,
-      'productId': productId,
-      'amount': amount,
+      'cartItems': cartItems,
+      'shippingAddress': shippingAddress,
+      'totalOrderPrice': totalAmount,
       'status': status.toString(),
       'createdAt': createdAt.toIso8601String(),
+      'paidAt': paidAt?.toIso8601String(),
       'deliveredAt': deliveredAt?.toIso8601String(),
     };
   }
 
-  factory OrderModel.fromJson(Map<String, dynamic> json) {
-    return OrderModel(
-      id: json['id'] as String,
-      userId: json['userId'] as String,
-      productId: json['productId'] as String,
-      amount: json['amount'] as double,
-      status: OrderStatus.values.firstWhere(
-        (e) => e.toString() == json['status'],
-        orElse: () => OrderStatus.pending,
-      ),
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      deliveredAt: json['deliveredAt'] != null
-          ? DateTime.parse(json['deliveredAt'] as String)
-          : null,
-    );
+  static OrderStatus _parseStatus({
+    required bool isPaid,
+    required bool isDelivered,
+  }) {
+    if (isDelivered) return OrderStatus.delivered;
+    if (isPaid) return OrderStatus.paid;
+    return OrderStatus.pending;
   }
 }

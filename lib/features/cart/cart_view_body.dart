@@ -147,7 +147,7 @@ class CartViewBody extends StatelessWidget {
             final cartItems = (state as CartLoaded).cartItems;
             final totalPrice = cartItems.fold<double>(
               0,
-              (sum, item) => sum + (item.product.price ?? 0) * item.quantity,
+              (sum, item) => sum + item.product.price * item.quantity,
             );
             final totalItems = cartItems.fold<int>(
               0,
@@ -286,7 +286,7 @@ class CartViewBody extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: InkWell(
           onTap: () {
-            if (item.product.id != null && item.product.id!.isNotEmpty) {
+            if (item.product.id.isNotEmpty) {
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -360,14 +360,14 @@ class CartViewBody extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        item.product.title ?? 'Unknown Product',
+                        item.product.title,
                         style: TextStyles.semiBold16,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        '\$${item.product.price?.toStringAsFixed(2) ?? '0.00'}',
+                        '\$${item.product.price.toStringAsFixed(2)}',
                         style: TextStyles.semiBold16.copyWith(
                           color: AppColors.primaryColor,
                         ),
@@ -382,18 +382,18 @@ class CartViewBody extends StatelessWidget {
                               IconButton(
                                 icon: const Icon(Icons.remove_circle_outline),
                                 onPressed: () {
-                                  if (item.product.id != null) {
+                                  if (item.product.id.isNotEmpty) {
                                     if (item.quantity > 1) {
                                       context
                                           .read<CartCubit>()
                                           .updateCartItemQuantity(
-                                            item.product.id!,
+                                            item.product.id,
                                             item.quantity - 1,
                                           );
                                     } else {
                                       context
                                           .read<CartCubit>()
-                                          .removeFromCart(item.product.id!);
+                                          .removeFromCart(item.product.id);
                                     }
                                   }
                                 },
@@ -408,11 +408,11 @@ class CartViewBody extends StatelessWidget {
                               IconButton(
                                 icon: const Icon(Icons.add_circle_outline),
                                 onPressed: () {
-                                  if (item.product.id != null) {
+                                  if (item.product.id.isNotEmpty) {
                                     context
                                         .read<CartCubit>()
                                         .updateCartItemQuantity(
-                                          item.product.id!,
+                                          item.product.id,
                                           item.quantity + 1,
                                         );
                                   }
@@ -427,10 +427,10 @@ class CartViewBody extends StatelessWidget {
                           IconButton(
                             icon: const Icon(Icons.delete_outline),
                             onPressed: () {
-                              if (item.product.id != null) {
+                              if (item.product.id.isNotEmpty) {
                                 context
                                     .read<CartCubit>()
-                                    .removeFromCart(item.product.id!);
+                                    .removeFromCart(item.product.id);
                               }
                             },
                             color: isDarkMode ? Colors.red[300] : Colors.red,

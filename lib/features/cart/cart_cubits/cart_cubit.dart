@@ -95,7 +95,7 @@ class CartCubit extends Cubit<CartState> {
           _productCache.clear();
           return;
         }
-
+        final String? cartId = response['_id']; 
         final List<dynamic> items = response['cartItems'] ?? [];
         // Ensure no duplicate items by using a Map
         final Map<String, CartItemModel> uniqueItems = {};
@@ -116,8 +116,8 @@ class CartCubit extends Cubit<CartState> {
         
         final cartItems = uniqueItems.values.toList();
         dev.log('Processed cart items: ${cartItems.length}', name: 'CartCubit');
-        _updateUIState(cartItems);
-      } catch (e) {
+       _updateUIState(cartItems, cartId: cartId);
+             } catch (e) {
         // Handle 404 as a valid empty cart state
         if (e.toString().contains('404') || e.toString().contains('no cart for this user')) {
           dev.log('No cart exists for user, initializing empty cart', name: 'CartCubit');
@@ -473,41 +473,48 @@ class CartCubit extends Cubit<CartState> {
     }
   }
 
-  Future<void> clearCart() async {
-    if (_isOperationInProgress) return;
-    
-    try {
-      _isOperationInProgress = true;
-      dev.log('Clearing cart', name: 'CartCubit');
-      
+Future<void> clearCart({bool force = false}) async {
+  if (_isOperationInProgress) return;
+
+  try {
+    _isOperationInProgress = true;
+    dev.log('Clearing cart', name: 'CartCubit');
+
+    if (!force) {
       // Show confirmation dialog
       final shouldClear = await _showClearCartConfirmationDialog();
       if (!shouldClear) {
         dev.log('User cancelled cart clearing', name: 'CartCubit');
         return;
       }
+    }
 
-      emit(CartLoading());
+    emit(CartLoading());
 
-      // Clear server first
-      try {
-        await _apiService.clearCart();
-        dev.log('Successfully cleared cart', name: 'CartCubit');
-        emit(CartLoaded([], action: CartAction.removed, message: 'Cart cleared'));
-        _showToast('Cart cleared');
-      } catch (e) {
-        dev.log('Error clearing server: $e', name: 'CartCubit', error: e);
-        emit(CartError('Failed to clear cart: ${e.toString()}', action: CartAction.error));
-        _showToast('Failed to clear cart', isError: true);
-      }
-    } catch (e, stackTrace) {
-      dev.log('Error in clearCart: $e\n$stackTrace', name: 'CartCubit', error: e);
+    // Clear server first
+    try {
+      await _apiService.clearCart();
+      dev.log('Successfully cleared cart', name: 'CartCubit');
+      _cartItemCache.clear();
+      _productCache.clear();
+      // If you use shared preferences for cart, clear it here as well
+      // await Prefs.clearCart();
+      emit(CartLoaded([], action: CartAction.removed, message: 'Cart cleared'));
+      _showToast('Cart cleared');
+    } catch (e) {
+      dev.log('Error clearing server: $e', name: 'CartCubit', error: e);
       emit(CartError('Failed to clear cart: ${e.toString()}', action: CartAction.error));
       _showToast('Failed to clear cart', isError: true);
-    } finally {
-      _isOperationInProgress = false;
     }
+  } catch (e, stackTrace) {
+    dev.log('Error in clearCart: $e\n$stackTrace', name: 'CartCubit', error: e);
+    emit(CartError('Failed to clear cart: ${e.toString()}', action: CartAction.error));
+    _showToast('Failed to clear cart', isError: true);
+  } finally {
+    _isOperationInProgress = false;
   }
+}
+
 
   Future<void> applyCoupon(String couponCode) async {
     try {
@@ -576,7 +583,12 @@ class CartCubit extends Cubit<CartState> {
   }
 
   // Add method to handle UI updates more efficiently
-  void _updateUIState(List<CartItemModel> items, {CartAction? action, String? message}) {
+void _updateUIState(
+  List<CartItemModel> items, {
+  CartAction? action,
+  String? message,
+  String? cartId, // ✅ new param
+}) {
     try {
       if (items.isEmpty) {
         emit(CartLoaded([], action: action, message: message));
@@ -588,7 +600,7 @@ class CartCubit extends Cubit<CartState> {
             return; // Don't emit if items haven't changed
           }
         }
-        emit(CartLoaded(items, action: action, message: message));
+emit(CartLoaded(items, action: action, message: message, cartId: cartId));
       }
     } catch (e) {
       dev.log('Error updating UI state: $e', name: 'CartCubit', error: e);

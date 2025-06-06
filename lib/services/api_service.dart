@@ -14,7 +14,7 @@ import 'package:pickpay/features/categories_pages/widgets/product_card.dart';
 import 'package:http_parser/http_parser.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://192.168.1.8:3000/api/v1/';
+  static const String baseUrl = 'http://192.168.1.4:3000/api/v1/';
 
   Future<Map<String, String>> _buildHeaders({
     Map<String, String>? headers,
@@ -1103,20 +1103,34 @@ class ApiService {
     }
   }
 
-  Future<void> clearCart() async {
-    try {
-      final response = await http.delete(
-        Uri.parse('$baseUrl${BackendEndpoints.cart}'),
-        headers: await _buildHeaders(authorized: true),
-      );
+Future<void> clearCart() async {
+  try {
+    print('clearCart: Starting DELETE request to clear cart.');
 
-      if (response.statusCode != 204) {
-        throw Exception('Failed to clear cart: ${response.body}');
-      }
-    } catch (e) {
-      throw Exception('Error clearing cart: ${e.toString()}');
+    final url = Uri.parse('$baseUrl${BackendEndpoints.cart}');
+    print('clearCart: URL = $url');
+
+    final headers = await _buildHeaders(authorized: true);
+    print('clearCart: Headers = $headers');
+
+    final response = await http.delete(url, headers: headers);
+
+    print('clearCart: Response status code = ${response.statusCode}');
+    print('clearCart: Response body = ${response.body}');
+
+    if (response.statusCode == 204) {
+      print('clearCart: Cart cleared successfully.');
+      return;
+    } else {
+      print('clearCart: Failed to clear cart. Throwing exception.');
+      throw Exception('Failed to clear cart: ${response.statusCode} ${response.body}');
     }
+  } catch (e, stackTrace) {
+    print('clearCart: Exception caught - ${e.toString()}');
+    print('clearCart: Stack trace:\n$stackTrace');
+    throw Exception('Error clearing cart: ${e.toString()}');
   }
+}
 
   Future<void> applyCoupon(String couponCode) async {
     try {
@@ -1191,5 +1205,194 @@ class ApiService {
       print('Voice search network error: $e');
     }
     return [];
+  }
+  // ✅ Create Cash Order
+  Future<Map<String, dynamic>> createCashOrder(
+    String cartId,
+    Map<String, dynamic> shippingAddress,
+  ) async {
+  final url = Uri.parse(baseUrl).resolve(BackendEndpoints.createCashOrder(cartId));
+
+    try {
+      final headers = await _buildHeaders(authorized: true);
+
+      print('\n🟡 [CREATE ORDER] Sending request...');
+      print('➡️ POST $url');
+      print('🧾 Headers: $headers');
+      print('📦 Body: ${jsonEncode({'shippingAddress': shippingAddress})}');
+
+      final response = await http.post(
+        url,
+        headers: headers,
+        body: jsonEncode({'shippingAddress': shippingAddress}),
+      );
+
+      print('📬 Status Code: ${response.statusCode}');
+      print('📨 Response: ${response.body}');
+
+      if (response.statusCode == 201) {
+        final result = jsonDecode(response.body);
+        print('✅ [CREATE ORDER] Success: ${result['data']}');
+        return result['data'] ?? {};
+      } else {
+        print('❌ [CREATE ORDER] Failed: ${response.body}');
+        throw Exception('Create cash order failed: ${response.body}');
+      }
+    } catch (e) {
+      print('🔥 [CREATE ORDER] Error: $e');
+      throw Exception('Error creating cash order: ${e.toString()}');
+    }
+  }
+
+  // ✅ Get Checkout Session
+  Future<Map<String, dynamic>> getCheckoutSession(String cartId) async {
+  final url = Uri.parse(baseUrl).resolve(BackendEndpoints.checkoutSession(cartId));
+
+    try {
+      final headers = await _buildHeaders(authorized: true);
+
+      print('\n🟡 [CHECKOUT SESSION] Getting session...');
+      print('➡️ GET $url');
+      print('🧾 Headers: $headers');
+
+      final response = await http.get(url, headers: headers);
+
+      print('📬 Status Code: ${response.statusCode}');
+      print('📨 Response: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final result = jsonDecode(response.body);
+        print('✅ [CHECKOUT SESSION] Success');
+        return result['session'] ?? {};
+      } else {
+        print('❌ [CHECKOUT SESSION] Failed: ${response.body}');
+        throw Exception('Checkout session failed: ${response.body}');
+      }
+    } catch (e) {
+      print('🔥 [CHECKOUT SESSION] Error: $e');
+      throw Exception('Error retrieving checkout session: ${e.toString()}');
+    }
+  }
+
+  // ✅ Get All Orders
+  Future<List<Map<String, dynamic>>> getAllOrders() async {
+  final url = Uri.parse(baseUrl).resolve(BackendEndpoints.allOrders);
+
+    try {
+      final headers = await _buildHeaders(authorized: true);
+
+      print('\n🟡 [GET ALL ORDERS] Fetching...');
+      print('➡️ GET $url');
+      print('🧾 Headers: $headers');
+
+      final response = await http.get(url, headers: headers);
+
+      print('📬 Status Code: ${response.statusCode}');
+      print('📨 Response: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final result = jsonDecode(response.body);
+        print('✅ [GET ALL ORDERS] Success');
+        final data = result['data'];
+        if (data is List) {
+          return List<Map<String, dynamic>>.from(data);
+        }
+        throw Exception('Unexpected order list format');
+      } else {
+        print('❌ [GET ALL ORDERS] Failed: ${response.body}');
+        throw Exception('Failed to fetch orders: ${response.body}');
+      }
+    } catch (e) {
+      print('🔥 [GET ALL ORDERS] Error: $e');
+      throw Exception('Error fetching orders: ${e.toString()}');
+    }
+  }
+
+  // ✅ Get Order Details
+  Future<Map<String, dynamic>> getOrderDetails(String orderId) async {
+  final url = Uri.parse(baseUrl).resolve(BackendEndpoints.specificOrder(orderId));
+
+    try {
+      final headers = await _buildHeaders(authorized: true);
+
+      print('\n🟡 [ORDER DETAILS] Fetching...');
+      print('➡️ GET $url');
+      print('🧾 Headers: $headers');
+
+      final response = await http.get(url, headers: headers);
+
+      print('📬 Status Code: ${response.statusCode}');
+      print('📨 Response: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final result = jsonDecode(response.body);
+        print('✅ [ORDER DETAILS] Success');
+        return result['data'] ?? {};
+      } else {
+        print('❌ [ORDER DETAILS] Failed: ${response.body}');
+        throw Exception('Failed to fetch order: ${response.body}');
+      }
+    } catch (e) {
+      print('🔥 [ORDER DETAILS] Error: $e');
+      throw Exception('Error fetching order details: ${e.toString()}');
+    }
+  }
+
+  // ✅ Mark as Paid
+  Future<bool> markOrderAsPaid(String orderId) async {
+  final url = Uri.parse(baseUrl).resolve(BackendEndpoints.markAsPaid(orderId));
+
+    try {
+      final headers = await _buildHeaders(authorized: true);
+
+      print('\n🟡 [MARK AS PAID] Updating...');
+      print('➡️ PUT $url');
+      print('🧾 Headers: $headers');
+
+      final response = await http.put(url, headers: headers);
+
+      print('📬 Status Code: ${response.statusCode}');
+      print('📨 Response: ${response.body}');
+
+      if (response.statusCode == 200) {
+        print('✅ [MARK AS PAID] Success');
+        return true;
+      }
+
+      print('❌ [MARK AS PAID] Failed: ${response.body}');
+      throw Exception('Mark as paid failed: ${response.body}');
+    } catch (e) {
+      print('🔥 [MARK AS PAID] Error: $e');
+      throw Exception('Error marking order as paid: ${e.toString()}');
+    }
+  }
+
+  // ✅ Mark as Delivered
+  Future<bool> markOrderAsDelivered(String orderId) async {
+  final url = Uri.parse(baseUrl).resolve(BackendEndpoints.markAsDelivered(orderId));
+
+    try {
+      final headers = await _buildHeaders(authorized: true);
+
+      print('\n🟡 [MARK AS DELIVERED] Updating...');
+      print('➡️ PUT $url');
+      print('🧾 Headers: $headers');
+
+      final response = await http.put(url, headers: headers);
+
+      print('📬 Status Code: ${response.statusCode}');
+      print('📨 Response: ${response.body}');
+
+      if (response.statusCode == 200) {
+        print('✅ [MARK AS DELIVERED] Success');
+        return true;
+      }
+
+      print('❌ [MARK AS DELIVERED] Failed: ${response.body}');
+      throw Exception('Mark as delivered failed: ${response.body}');
+    } catch (e) {
+      print('🔥 [MARK AS DELIVERED] Error: $e');
+      throw Exception('Error marking order as delivered: ${e.toString()}');
+    }
   }
 }

@@ -239,44 +239,66 @@ class _CheckoutViewState extends State<CheckoutView> {
     );
   }
 
-  void _processCheckout(
-    BuildContext context,
-    List<CartItemModel> items,
-    double total,
-  ) {
-    if (!_formKey.currentState!.validate()) return;
-    _formKey.currentState!.save();
+Future<void> _processCheckout(
+  BuildContext context,
+  List<CartItemModel> items,
+  double total,
+) async {
+  if (!_formKey.currentState!.validate()) return;
+  _formKey.currentState!.save();
 
-    final checkoutCubit = context.read<CheckoutCubit>();
-    final orderCubit = context.read<OrderCubit>();
+  final checkoutCubit = context.read<CheckoutCubit>();
+  final orderCubit = context.read<OrderCubit>();
+  final cartCubit = context.read<CartCubit>();
 
-    final paymentInfo = PaymentInfo(
-      method: _paymentMethod,
-      cardLastFour: _cardNumber.length > 4
-          ? _cardNumber.substring(_cardNumber.length - 4)
-          : '0000',
-      transactionId: 'TXN-${DateTime.now().millisecondsSinceEpoch}',
-    );
+  final paymentInfo = PaymentInfo(
+    method: _paymentMethod,
+    cardLastFour: _cardNumber.length > 4
+        ? _cardNumber.substring(_cardNumber.length - 4)
+        : '0000',
+    transactionId: 'TXN-${DateTime.now().millisecondsSinceEpoch}',
+  );
 
-    checkoutCubit
-        .placeOrder(
+  try {
+    await checkoutCubit.placeOrder(
       items: items,
       total: total,
       shippingInfo: _shippingInfo,
       paymentInfo: paymentInfo,
-    )
-        .then((value) {
-      // Create a tracking order
-      final trackingOrder = tracking.OrderModel(
-        id: 'ORD-${DateTime.now().millisecondsSinceEpoch}',
-        userId: 'current_user_id', // Replace with actual user ID
-        productId: items.map((e) => e.product.id).join(','),
-        amount: total,
-        status: tracking.OrderStatus.pending,
-        createdAt: DateTime.now(),
+    );
+
+    final cartState = cartCubit.state;
+    if (cartState is CartLoaded && cartState.cartId != null) {
+      final cartId = cartState.cartId!;
+
+      // تأكيد نجاح الإرسال إلى الباك إند
+      await orderCubit.addOrderFromBackend(
+        cartId,
+        {
+          'name': _shippingInfo.name,
+          'address': _shippingInfo.address,
+          'city': _shippingInfo.city,
+          'state': _shippingInfo.state,
+          'zipCode': _shippingInfo.zipCode,
+          'phone': _shippingInfo.phone,
+          'email': _shippingInfo.email,
+        },
+          cartCubit,
       );
 
-      orderCubit.addOrder(trackingOrder);
-    });
+      print('✅ Order sent to backend successfully.');
+
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Cart not available for checkout.')),
+      );
+    }
+  } catch (e) {
+    print('❌ Error during checkout: $e');
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Checkout failed: $e')),
+    );
   }
+}
+
 }

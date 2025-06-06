@@ -28,6 +28,7 @@ class CartError extends CartState {
 class CartLoaded extends CartState {
   final List<CartItemModel> cartItems;
   final CartAction? action;
+  final String? cartId;
   final CartItemModel? updatedItem;
   final String? message;
 
@@ -36,6 +37,7 @@ class CartLoaded extends CartState {
     this.action,
     this.updatedItem,
     this.message,
+    this.cartId,
   });
 
   @override
@@ -44,6 +46,7 @@ class CartLoaded extends CartState {
         action,
         updatedItem,
         message,
+        cartId,
       ];
 }
 

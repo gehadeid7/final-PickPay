@@ -49,4 +49,13 @@ class BackendEndpoints {
   static const String applyCoupon = 'cart/applyCoupon';
   static String updateCartItem(String itemId) => 'cart/$itemId';
   static String removeCartItem(String itemId) => 'cart/$itemId';
+
+  //order endpoints 
+   static const String base = 'orders';
+  static String createCashOrder(String cartId) => '$base/$cartId';
+  static String checkoutSession(String cartId) => '$base/checkout-session/$cartId';
+  static const String allOrders = base;
+  static String specificOrder(String orderId) => '$base/$orderId';
+  static String markAsPaid(String orderId) => '$base/$orderId/pay';
+  static String markAsDelivered(String orderId) => '$base/$orderId/deliver';
 }

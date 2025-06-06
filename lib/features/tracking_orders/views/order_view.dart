@@ -180,7 +180,7 @@ class _OrderList extends StatelessWidget {
               ],
             ),
             const Divider(height: 24),
-            _buildInfoRow('Amount', '\$${order.amount.toStringAsFixed(2)}'),
+            _buildInfoRow('Amount', '\$${order.totalAmount.toStringAsFixed(2)}'),
             const SizedBox(height: 8),
             _buildInfoRow('Created', _formatDate(order.createdAt)),
             if (order.deliveredAt != null) ...[

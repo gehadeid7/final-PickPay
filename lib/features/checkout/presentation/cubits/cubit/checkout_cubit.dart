@@ -33,8 +33,6 @@ class CheckoutCubit extends Cubit<CheckoutState> {
         paymentInfo: paymentInfo,
       );
 
-      // In a real app, you would send this to your backend
-      // await _orderRepository.createOrder(order);
 
       emit(CheckoutSuccess(order: order));
     } catch (e) {
