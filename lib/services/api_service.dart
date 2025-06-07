@@ -14,7 +14,7 @@ import 'package:pickpay/features/categories_pages/widgets/product_card.dart';
 import 'package:http_parser/http_parser.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://192.168.1.4:3000/api/v1/';
+  static const String baseUrl = 'http://192.168.1.2:3000/api/v1/';
 
   Future<Map<String, String>> _buildHeaders({
     Map<String, String>? headers,
@@ -1103,34 +1103,35 @@ class ApiService {
     }
   }
 
-Future<void> clearCart() async {
-  try {
-    print('clearCart: Starting DELETE request to clear cart.');
+  Future<void> clearCart() async {
+    try {
+      print('clearCart: Starting DELETE request to clear cart.');
 
-    final url = Uri.parse('$baseUrl${BackendEndpoints.cart}');
-    print('clearCart: URL = $url');
+      final url = Uri.parse('$baseUrl${BackendEndpoints.cart}');
+      print('clearCart: URL = $url');
 
-    final headers = await _buildHeaders(authorized: true);
-    print('clearCart: Headers = $headers');
+      final headers = await _buildHeaders(authorized: true);
+      print('clearCart: Headers = $headers');
 
-    final response = await http.delete(url, headers: headers);
+      final response = await http.delete(url, headers: headers);
 
-    print('clearCart: Response status code = ${response.statusCode}');
-    print('clearCart: Response body = ${response.body}');
+      print('clearCart: Response status code = ${response.statusCode}');
+      print('clearCart: Response body = ${response.body}');
 
-    if (response.statusCode == 204) {
-      print('clearCart: Cart cleared successfully.');
-      return;
-    } else {
-      print('clearCart: Failed to clear cart. Throwing exception.');
-      throw Exception('Failed to clear cart: ${response.statusCode} ${response.body}');
+      if (response.statusCode == 204) {
+        print('clearCart: Cart cleared successfully.');
+        return;
+      } else {
+        print('clearCart: Failed to clear cart. Throwing exception.');
+        throw Exception(
+            'Failed to clear cart: ${response.statusCode} ${response.body}');
+      }
+    } catch (e, stackTrace) {
+      print('clearCart: Exception caught - ${e.toString()}');
+      print('clearCart: Stack trace:\n$stackTrace');
+      throw Exception('Error clearing cart: ${e.toString()}');
     }
-  } catch (e, stackTrace) {
-    print('clearCart: Exception caught - ${e.toString()}');
-    print('clearCart: Stack trace:\n$stackTrace');
-    throw Exception('Error clearing cart: ${e.toString()}');
   }
-}
 
   Future<void> applyCoupon(String couponCode) async {
     try {
@@ -1206,12 +1207,14 @@ Future<void> clearCart() async {
     }
     return [];
   }
+
   // ✅ Create Cash Order
   Future<Map<String, dynamic>> createCashOrder(
     String cartId,
     Map<String, dynamic> shippingAddress,
   ) async {
-  final url = Uri.parse(baseUrl).resolve(BackendEndpoints.createCashOrder(cartId));
+    final url =
+        Uri.parse(baseUrl).resolve(BackendEndpoints.createCashOrder(cartId));
 
     try {
       final headers = await _buildHeaders(authorized: true);
@@ -1246,7 +1249,8 @@ Future<void> clearCart() async {
 
   // ✅ Get Checkout Session
   Future<Map<String, dynamic>> getCheckoutSession(String cartId) async {
-  final url = Uri.parse(baseUrl).resolve(BackendEndpoints.checkoutSession(cartId));
+    final url =
+        Uri.parse(baseUrl).resolve(BackendEndpoints.checkoutSession(cartId));
 
     try {
       final headers = await _buildHeaders(authorized: true);
@@ -1276,7 +1280,7 @@ Future<void> clearCart() async {
 
   // ✅ Get All Orders
   Future<List<Map<String, dynamic>>> getAllOrders() async {
-  final url = Uri.parse(baseUrl).resolve(BackendEndpoints.allOrders);
+    final url = Uri.parse(baseUrl).resolve(BackendEndpoints.allOrders);
 
     try {
       final headers = await _buildHeaders(authorized: true);
@@ -1310,7 +1314,8 @@ Future<void> clearCart() async {
 
   // ✅ Get Order Details
   Future<Map<String, dynamic>> getOrderDetails(String orderId) async {
-  final url = Uri.parse(baseUrl).resolve(BackendEndpoints.specificOrder(orderId));
+    final url =
+        Uri.parse(baseUrl).resolve(BackendEndpoints.specificOrder(orderId));
 
     try {
       final headers = await _buildHeaders(authorized: true);
@@ -1340,7 +1345,8 @@ Future<void> clearCart() async {
 
   // ✅ Mark as Paid
   Future<bool> markOrderAsPaid(String orderId) async {
-  final url = Uri.parse(baseUrl).resolve(BackendEndpoints.markAsPaid(orderId));
+    final url =
+        Uri.parse(baseUrl).resolve(BackendEndpoints.markAsPaid(orderId));
 
     try {
       final headers = await _buildHeaders(authorized: true);
@@ -1369,7 +1375,8 @@ Future<void> clearCart() async {
 
   // ✅ Mark as Delivered
   Future<bool> markOrderAsDelivered(String orderId) async {
-  final url = Uri.parse(baseUrl).resolve(BackendEndpoints.markAsDelivered(orderId));
+    final url =
+        Uri.parse(baseUrl).resolve(BackendEndpoints.markAsDelivered(orderId));
 
     try {
       final headers = await _buildHeaders(authorized: true);

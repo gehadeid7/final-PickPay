@@ -66,7 +66,6 @@ class FooterWidget extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: primaryColor,
             blurRadius: 10,
             offset: const Offset(0, -2),
           ),
