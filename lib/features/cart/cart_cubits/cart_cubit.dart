@@ -81,12 +81,12 @@ class CartCubit extends Cubit<CartState> {
 
   Future<void> getCart() async {
     try {
-      dev.log('Getting cart data...', name: 'CartCubit');
+      dev.log('[CartCubit] Getting cart data...', name: 'CartCubit');
       emit(CartLoading());
       
       try {
         final response = await _apiService.getCart();
-        dev.log('Cart response: $response', name: 'CartCubit');
+        dev.log('[CartCubit] Cart response: $response', name: 'CartCubit');
         
         // Handle null or empty response
         if (response == null) {
@@ -474,47 +474,60 @@ class CartCubit extends Cubit<CartState> {
   }
 
 Future<void> clearCart({bool force = false}) async {
-  if (_isOperationInProgress) return;
+  if (_isOperationInProgress) {
+    dev.log('[CartCubit] clearCart: Operation already in progress, skipping.', name: 'CartCubit');
+    return;
+  }
 
   try {
     _isOperationInProgress = true;
-    dev.log('Clearing cart', name: 'CartCubit');
+    dev.log('[CartCubit] clearCart: Start (force: $force)', name: 'CartCubit');
 
     if (!force) {
-      // Show confirmation dialog
+      dev.log('[CartCubit] clearCart: Showing confirmation dialog', name: 'CartCubit');
       final shouldClear = await _showClearCartConfirmationDialog();
+      dev.log('[CartCubit] clearCart: Confirmation dialog result: $shouldClear', name: 'CartCubit');
       if (!shouldClear) {
-        dev.log('User cancelled cart clearing', name: 'CartCubit');
+        dev.log('[CartCubit] clearCart: User cancelled cart clearing', name: 'CartCubit');
         return;
       }
     }
 
     emit(CartLoading());
+    dev.log('[CartCubit] clearCart: Emitted CartLoading()', name: 'CartCubit');
 
-    // Clear server first
     try {
+      dev.log('[CartCubit] clearCart: Calling _apiService.clearCart()', name: 'CartCubit');
       await _apiService.clearCart();
-      dev.log('Successfully cleared cart', name: 'CartCubit');
-      _cartItemCache.clear();
-      _productCache.clear();
-      // If you use shared preferences for cart, clear it here as well
-      // await Prefs.clearCart();
-      emit(CartLoaded([], action: CartAction.removed, message: 'Cart cleared'));
-      _showToast('Cart cleared');
-    } catch (e) {
-      dev.log('Error clearing server: $e', name: 'CartCubit', error: e);
-      emit(CartError('Failed to clear cart: ${e.toString()}', action: CartAction.error));
-      _showToast('Failed to clear cart', isError: true);
+      dev.log('[CartCubit] clearCart: Successfully cleared cart on backend', name: 'CartCubit');
+    } catch (e, st) {
+      final errorString = e.toString();
+      if (errorString.contains('There is no cart for this user')) {
+        dev.log('[CartCubit] clearCart: Cart already empty on backend. Treating as success.', name: 'CartCubit');
+      } else {
+        dev.log('[CartCubit] clearCart: Error clearing server: $e', name: 'CartCubit', error: e, stackTrace: st);
+        emit(CartError('Failed to clear cart: ${e.toString()}', action: CartAction.error));
+        _showToast('Failed to clear cart', isError: true);
+        return;
+      }
     }
+
+    _cartItemCache.clear();
+    _productCache.clear();
+    dev.log('[CartCubit] clearCart: Cleared in-memory cart cache', name: 'CartCubit');
+
+    emit(CartLoaded([], action: CartAction.removed, message: 'Cart cleared'));
+    dev.log('[CartCubit] clearCart: Emitted CartLoaded([]) after clear', name: 'CartCubit');
+    _showToast('Cart cleared');
   } catch (e, stackTrace) {
-    dev.log('Error in clearCart: $e\n$stackTrace', name: 'CartCubit', error: e);
+    dev.log('[CartCubit] clearCart: Unexpected error: $e', name: 'CartCubit', error: e, stackTrace: stackTrace);
     emit(CartError('Failed to clear cart: ${e.toString()}', action: CartAction.error));
     _showToast('Failed to clear cart', isError: true);
   } finally {
     _isOperationInProgress = false;
+    dev.log('[CartCubit] clearCart: Finished. _isOperationInProgress set to false.', name: 'CartCubit');
   }
 }
-
 
   Future<void> applyCoupon(String couponCode) async {
     try {

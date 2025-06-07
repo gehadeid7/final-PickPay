@@ -39,6 +39,30 @@ class ShippingInfo {
     required this.phone,
     required this.email,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'address': address,
+      'city': city,
+      'state': state,
+      'zipCode': zipCode,
+      'phone': phone,
+      'email': email,
+    };
+  }
+
+  factory ShippingInfo.fromJson(Map<String, dynamic> json) {
+    return ShippingInfo(
+      name: json['name'] ?? '',
+      address: json['address'] ?? '',
+      city: json['city'] ?? '',
+      state: json['state'] ?? '',
+      zipCode: json['zipCode'] ?? '',
+      phone: json['phone'] ?? '',
+      email: json['email'] ?? '',
+    );
+  }
 }
 
 class PaymentInfo {

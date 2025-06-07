@@ -33,6 +33,9 @@ class _CheckoutViewState extends State<CheckoutView> {
   // ignore: unused_field
   String _cvv = '';
 
+  final _scrollController = ScrollController();
+  String? _errorSummary;
+
   @override
   void initState() {
     super.initState();
@@ -67,11 +70,25 @@ class _CheckoutViewState extends State<CheckoutView> {
           },
         ),
         body: Center(
-          child: Text(
-            'Your cart is empty',
-            style: TextStyles.regular13.copyWith(
-              color: theme.colorScheme.onBackground,
-            ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.remove_shopping_cart, size: 64, color: theme.colorScheme.primary.withOpacity(0.2)),
+              const SizedBox(height: 16),
+              Text(
+                'Your cart is empty',
+                style: TextStyles.bold16.copyWith(
+                  color: theme.colorScheme.onBackground,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Add items to your cart to start checkout.',
+                style: TextStyles.regular13.copyWith(
+                  color: theme.colorScheme.onBackground.withOpacity(0.6),
+                ),
+              ),
+            ],
           ),
         ),
       );
@@ -80,7 +97,7 @@ class _CheckoutViewState extends State<CheckoutView> {
     final items = cartState.cartItems;
     final total = items.fold<double>(
       0,
-      (sum, item) => sum + (item.product.price ?? 0) * item.quantity,
+      (sum, item) => sum + item.product.price * item.quantity,
     );
 
     return Scaffold(
@@ -117,21 +134,58 @@ class _CheckoutViewState extends State<CheckoutView> {
           }
         },
         child: SingleChildScrollView(
+          controller: _scrollController,
           padding: const EdgeInsets.all(16),
           child: Form(
             key: _formKey,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildSectionTitle('Order Summary', theme),
+                if (_errorSummary != null)
+                  Container(
+                    width: double.infinity,
+                    margin: const EdgeInsets.only(bottom: 16),
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.error.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.error_outline, color: theme.colorScheme.error),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            _errorSummary!,
+                            style: TextStyle(color: theme.colorScheme.error),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 400),
+                  child: _buildSectionTitle('Order Summary', theme),
+                ),
                 _buildOrderSummary(items, total, theme),
                 const SizedBox(height: 24),
-                _buildSectionTitle('Shipping Information', theme),
+                Divider(thickness: 1, color: theme.dividerColor.withOpacity(0.15)),
+                const SizedBox(height: 24),
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 400),
+                  child: _buildSectionTitle('Shipping Information', theme),
+                ),
                 ShippingInfoForm(
                   onSaved: (info) => _shippingInfo = info,
                 ),
                 const SizedBox(height: 24),
-                _buildSectionTitle('Payment Method', theme),
+                Divider(thickness: 1, color: theme.dividerColor.withOpacity(0.15)),
+                const SizedBox(height: 24),
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 400),
+                  child: _buildSectionTitle('Payment Method', theme),
+                ),
                 PaymentMethodSelector(
                   onMethodSelected: (method) => _paymentMethod = method,
                   onCardDetailsSaved: (number, expiry, cvv) {
@@ -143,18 +197,38 @@ class _CheckoutViewState extends State<CheckoutView> {
                 const SizedBox(height: 32),
                 BlocBuilder<CheckoutCubit, CheckoutState>(
                   builder: (context, state) {
-                    return CustomButton(
-                      onPressed: state is CheckoutLoading
-                          ? () {}
-                          : () {
-                              if (_formKey.currentState!.validate()) {
-                                _formKey.currentState!.save();
-                                _processCheckout(context, items, total);
-                              }
-                            },
-                      buttonText: state is CheckoutLoading
-                          ? 'Processing...'
-                          : 'Place Order (EGP ${total.toStringAsFixed(2)})',
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        CustomButton(
+                          onPressed: state is CheckoutLoading
+                              ? () {}
+                              : () async {
+                                  // Auto-trim all text fields before validation
+                                  FocusScope.of(context).unfocus();
+                                  _errorSummary = null;
+                                  bool valid = _formKey.currentState!.validate();
+                                  if (!valid) {
+                                    setState(() {
+                                      _errorSummary = 'Please fill all required fields correctly.';
+                                    });
+                                    await Future.delayed(const Duration(milliseconds: 100));
+                                    _scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+                                    return;
+                                  }
+                                  _formKey.currentState!.save();
+                                  _processCheckout(context, items, total);
+                                },
+                          buttonText: state is CheckoutLoading
+                              ? 'Processing...'
+                              : 'Place Order (EGP ${total.toStringAsFixed(2)})',
+                        ),
+                        if (state is CheckoutLoading)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 12),
+                            child: LinearProgressIndicator(minHeight: 3),
+                          ),
+                      ],
                     );
                   },
                 ),
@@ -265,6 +339,7 @@ Future<void> _processCheckout(
       total: total,
       shippingInfo: _shippingInfo,
       paymentInfo: paymentInfo,
+      cartCubit: context.read<CartCubit>(), 
     );
 
     final cartState = cartCubit.state;
@@ -289,9 +364,7 @@ Future<void> _processCheckout(
       print('✅ Order sent to backend successfully.');
 
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Cart not available for checkout.')),
-      );
+      // No UI message shown if cart not available for checkout
     }
   } catch (e) {
     print('❌ Error during checkout: $e');
@@ -300,5 +373,4 @@ Future<void> _processCheckout(
     );
   }
 }
-
 }
