@@ -1115,11 +1115,19 @@ Future<void> clearCart() async {
 
     final response = await http.delete(url, headers: headers);
 
-    print('clearCart: Response status code = ${response.statusCode}');
+    print('clearCart: Response status code = [32m${response.statusCode}[0m');
     print('clearCart: Response body = ${response.body}');
 
     if (response.statusCode == 204) {
-      print('clearCart: Cart cleared successfully.');
+      print('clearCart: Cart cleared successfully. Verifying...');
+      // Fetch the cart to verify it is empty
+      final cartData = await getCart();
+      final cartItems = cartData['cartItems'] as List;
+      if (cartItems.isNotEmpty) {
+        print('clearCart: Cart still has items after clear: $cartItems');
+        throw Exception('Cart was not cleared successfully');
+      }
+      print('clearCart: Cart is empty after clear.');
       return;
     } else {
       print('clearCart: Failed to clear cart. Throwing exception.');

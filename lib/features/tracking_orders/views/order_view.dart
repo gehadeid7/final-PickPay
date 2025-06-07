@@ -51,14 +51,33 @@ class OrderView extends StatelessWidget {
                       ],
                     ),
                     child: TabBar(
-                      tabs: const [
-                        Tab(text: 'Pending'),
-                        Tab(text: 'Delivered'),
+                      tabs: [
+                        Tab(
+                          child: Container(
+                            alignment: Alignment.center,
+                            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(25),
+                            ),
+                            child: const Text('Pending'),
+                          ),
+                        ),
+                        Tab(
+                          child: Container(
+                            alignment: Alignment.center,
+                            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(25),
+                            ),
+                            child: const Text('Delivered'),
+                          ),
+                        ),
                       ],
                       indicator: BoxDecoration(
                         borderRadius: BorderRadius.circular(25),
                         color: theme.primaryColor,
                       ),
+                      indicatorSize: TabBarIndicatorSize.tab,
                       labelColor: Colors.white,
                       unselectedLabelColor:
                           isDarkMode ? Colors.white70 : Colors.grey[600],
@@ -66,13 +85,17 @@ class OrderView extends StatelessWidget {
                     ),
                   ),
                   Expanded(
-                    child: TabBarView(
-                      children: [
-                        _OrderList(
-                            orders: state.pendingOrders, isPending: true),
-                        _OrderList(
-                            orders: state.deliveredOrders, isPending: false),
-                      ],
+                    child: AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 400),
+                      child: TabBarView(
+                        key: ValueKey(state.orders.length.toString() + state.orders.hashCode.toString()),
+                        children: [
+                          _OrderList(
+                              orders: state.pendingOrders, isPending: true),
+                          _OrderList(
+                              orders: state.deliveredOrders, isPending: false),
+                        ],
+                      ),
                     ),
                   ),
                 ],
@@ -93,9 +116,9 @@ class OrderView extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.local_shipping_outlined,
-            size: 64,
-            color: isDarkMode ? Colors.white54 : Colors.grey[400],
+            Icons.inbox_rounded,
+            size: 80,
+            color: isDarkMode ? Colors.white24 : Colors.grey[300],
           ),
           const SizedBox(height: 16),
           Text(
@@ -147,68 +170,189 @@ class _OrderList extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       itemBuilder: (context, index) {
         final order = orders[index];
-        return _buildOrderCard(context, order);
+        return AnimatedSwitcher(
+          duration: const Duration(milliseconds: 500),
+          transitionBuilder: (child, animation) => SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(1, 0),
+              end: Offset.zero,
+            ).animate(animation),
+            child: FadeTransition(opacity: animation, child: child),
+          ),
+          child: _buildOrderCard(context, order, key: ValueKey(order.id)),
+        );
       },
     );
   }
 
-  Widget _buildOrderCard(BuildContext context, OrderModel order) {
+  Widget _buildOrderCard(BuildContext context, OrderModel order, {Key? key}) {
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
+    final orderCubit = context.read<OrderCubit>();
+    bool isLoading = false;
 
-    return Card(
-      margin: const EdgeInsets.only(bottom: 16),
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      color: isDarkMode ? Colors.grey[800] : Colors.white,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return StatefulBuilder(
+      builder: (context, setState) => GestureDetector(
+        key: key,
+        onTapDown: (_) {
+          // Optional: Add a subtle scale animation or ripple effect
+        },
+        child: Card(
+          margin: const EdgeInsets.only(bottom: 16),
+          elevation: 2,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          color: isDarkMode ? Colors.grey[800] : Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Order #${order.id}',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: isDarkMode ? Colors.white : Colors.black87,
-                  ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        'Order #${order.id}',
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: isDarkMode ? Colors.white : Colors.black87,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    _buildStatusChip(context, order.status),
+                  ],
                 ),
-                _buildStatusChip(context, order.status),
-              ],
-            ),
-            const Divider(height: 24),
-            _buildInfoRow('Amount', '\$${order.totalAmount.toStringAsFixed(2)}'),
-            const SizedBox(height: 8),
-            _buildInfoRow('Created', _formatDate(order.createdAt)),
-            if (order.deliveredAt != null) ...[
-              const SizedBox(height: 8),
-              _buildInfoRow('Delivered', _formatDate(order.deliveredAt!)),
-            ],
-            if (isPending) ...[
-              const SizedBox(height: 16),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    context
-                        .read<OrderCubit>()
-                        .updateOrderStatus(order.id, OrderStatus.delivered);
-                  },
-                  icon: const Icon(Icons.check_circle_outline),
-                  label: const Text('Mark as Delivered'),
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                const Divider(height: 24),
+                _buildInfoRow('Amount', 'EGP ${order.totalAmount.toStringAsFixed(2)}'),
+                const SizedBox(height: 8),
+                _buildInfoRow('Created', _formatDate(order.createdAt)),
+                if (order.deliveredAt != null) ...[
+                  const SizedBox(height: 8),
+                  _buildInfoRow('Delivered', _formatDate(order.deliveredAt!)),
+                ],
+                if (isPending) ...[
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton.icon(
+                      onPressed: isLoading
+                          ? null
+                          : () async {
+                              final confirm = await showDialog<bool>(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  title: const Text('Confirm Delivery'),
+                                  content: const Text('Are you sure you want to mark this order as delivered?'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.of(context).pop(false),
+                                      child: const Text('Cancel'),
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: () => Navigator.of(context).pop(true),
+                                      child: const Text('Yes, Mark as Delivered'),
+                                    ),
+                                  ],
+                                ),
+                              );
+                              if (confirm == true) {
+                                setState(() => isLoading = true);
+                                try {
+                                  await orderCubit.updateOrderStatus(order.id, OrderStatus.delivered);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Row(
+                                        children: [
+                                          Icon(
+                                            Icons.check_circle,
+                                            color: Colors.white,
+                                            size: 28,
+                                          ),
+                                          const SizedBox(width: 12),
+                                          const Text('Order marked as delivered!'),
+                                        ],
+                                      ),
+                                      duration: const Duration(seconds: 2),
+                                      behavior: SnackBarBehavior.floating,
+                                      backgroundColor: theme.primaryColor,
+                                    ),
+                                  );
+                                } catch (e) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Row(
+                                        children: [
+                                          Icon(Icons.error, color: Colors.white, size: 28),
+                                          const SizedBox(width: 12),
+                                          Text('Failed: ${e.toString()}'),
+                                        ],
+                                      ),
+                                      duration: const Duration(seconds: 2),
+                                      behavior: SnackBarBehavior.floating,
+                                      backgroundColor: theme.colorScheme.error,
+                                    ),
+                                  );
+                                } finally {
+                                  setState(() => isLoading = false);
+                                }
+                              }
+                            },
+                      icon: isLoading
+                          ? const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                            )
+                          : const Icon(Icons.check_circle_outline),
+                      label: Text(isLoading ? 'Processing...' : 'Mark as Delivered'),
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-            ],
-          ],
+                ],
+                if (!isPending) ...[
+                  const SizedBox(height: 8),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: const Text('Order Details'),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Order ID: ${order.id}'),
+                                Text('Amount: EGP ${order.totalAmount.toStringAsFixed(2)}'),
+                                Text('Created: ${_formatDate(order.createdAt)}'),
+                                if (order.deliveredAt != null)
+                                  Text('Delivered: ${_formatDate(order.deliveredAt!)}'),
+                                // Add more details as needed
+                              ],
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.of(context).pop(),
+                                child: const Text('Close'),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                      child: const Text('View Details'),
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -240,23 +384,41 @@ class _OrderList extends StatelessWidget {
   }
 
   Widget _buildInfoRow(String label, String value) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(
-            color: Colors.grey,
-            fontWeight: FontWeight.w500,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Flexible(
+            flex: 2,
+            child: Text(
+              label,
+              style: const TextStyle(
+                color: Colors.grey,
+                fontWeight: FontWeight.w500,
+              ),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
+            ),
           ),
-        ),
-        Text(
-          value,
-          style: const TextStyle(
-            fontWeight: FontWeight.w500,
+          const SizedBox(width: 12),
+          Flexible(
+            flex: 3,
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Text(
+                value,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w500,
+                ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
+                textAlign: TextAlign.right,
+              ),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
