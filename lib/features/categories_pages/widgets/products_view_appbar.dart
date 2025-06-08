@@ -10,11 +10,13 @@ class ProductDetailAppBar extends StatelessWidget
     implements PreferredSizeWidget {
   final ProductsViewsModel product;
   final VoidCallback onBackPressed;
+  final VoidCallback onHomePressed;
 
   const ProductDetailAppBar({
     super.key,
     required this.product,
     required this.onBackPressed,
+    required this.onHomePressed,
   });
 
   @override
@@ -29,19 +31,18 @@ class ProductDetailAppBar extends StatelessWidget
         : Colors.black.withOpacity(0.05);
 
     return AppBar(
-      backgroundColor: Colors.transparent,
+      backgroundColor: isDarkMode ? Colors.grey.shade900 : Colors.white,
       elevation: 0,
-      automaticallyImplyLeading: false,
+      leading: _buildCircleIcon(
+        icon: Icons.arrow_back,
+        onTap: onBackPressed,
+        iconColor: iconColor,
+        circleColor: circleColor,
+      ),
       title: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         child: Row(
           children: [
-            _buildCircleIcon(
-              icon: Icons.arrow_back,
-              onTap: onBackPressed,
-              iconColor: iconColor,
-              circleColor: circleColor,
-            ),
             const Spacer(),
             _buildCircleIcon(
               child: WishlistButton(
@@ -61,6 +62,12 @@ class ProductDetailAppBar extends StatelessWidget
             _buildCircleIcon(
               icon: Icons.shopping_cart_outlined,
               onTap: () => _navigateToCart(context),
+              iconColor: iconColor,
+              circleColor: circleColor,
+            ),
+            _buildCircleIcon(
+              icon: Icons.home,
+              onTap: onHomePressed,
               iconColor: iconColor,
               circleColor: circleColor,
             ),

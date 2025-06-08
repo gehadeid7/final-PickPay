@@ -1,5 +1,5 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pickpay/core/services/get_it_service.dart';
 import 'package:pickpay/features/auth/domain/repos/auth_repo.dart';
@@ -59,23 +59,178 @@ class _MainNavigationView extends StatelessWidget {
   const _MainNavigationView({
     required this.authRepo,
   });
-
-  Future<bool> _onWillPop(BuildContext context) async {
+  Future<bool> _showExitConfirmation(BuildContext context) async {
     final shouldExit = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Do you want to exit?'),
-        content: const Text('Are you sure you want to exit the app?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('No'),
+      barrierDismissible: false, // Prevent dismissing by tapping outside
+      builder: (context) => Dialog(
+        insetPadding: const EdgeInsets.all(24),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24),
+        ),
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        elevation: 12,
+        shadowColor: Colors.black.withOpacity(0.2),
+        child: AnimatedPadding(
+          padding: MediaQuery.of(context).viewInsets,
+          duration: const Duration(milliseconds: 100),
+          curve: Curves.easeOut,
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Animated icon with splash effect
+                  ScaleTransition(
+                    scale: CurvedAnimation(
+                      parent: ModalRoute.of(context)!.animation!,
+                      curve: Curves.elasticOut,
+                    ),
+                    child: Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            Colors.red.shade100,
+                            Colors.red.shade300,
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.red.withOpacity(0.3),
+                            blurRadius: 15,
+                            spreadRadius: 2,
+                            offset: const Offset(0, 5),
+                          )
+                        ],
+                      ),
+                      child: Icon(
+                        Icons.exit_to_app,
+                        size: 42,
+                        color: Colors.red.shade700,
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 24),
+
+                  // Title with fade animation
+                  FadeTransition(
+                    opacity: CurvedAnimation(
+                      parent: ModalRoute.of(context)!.animation!,
+                      curve: const Interval(0.2, 1.0),
+                    ),
+                    child: Text(
+                      'Hold On!',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w700,
+                        color: Theme.of(context).colorScheme.onSurface,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 8),
+
+                  // Subtitle
+                  FadeTransition(
+                    opacity: CurvedAnimation(
+                      parent: ModalRoute.of(context)!.animation!,
+                      curve: const Interval(0.3, 1.0),
+                    ),
+                    child: Text(
+                      'Are you sure you want to exit?',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 16,
+                        height: 1.4,
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withOpacity(0.8),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 28),
+                  const Divider(height: 1, thickness: 0.5),
+
+                  const SizedBox(height: 20),
+
+                  // Buttons with slide animation
+                  SlideTransition(
+                    position: Tween<Offset>(
+                      begin: const Offset(0, 0.5),
+                      end: Offset.zero,
+                    ).animate(
+                      CurvedAnimation(
+                        parent: ModalRoute.of(context)!.animation!,
+                        curve: const Interval(0.4, 1.0, curve: Curves.easeOut),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        // Cancel button
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(false),
+                          style: TextButton.styleFrom(
+                            foregroundColor:
+                                Theme.of(context).colorScheme.primary,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 24, vertical: 14),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            backgroundColor: Theme.of(context)
+                                .colorScheme
+                                .primary
+                                .withOpacity(0.1),
+                          ),
+                          child: const Text(
+                            'Cancel',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        // Exit button
+                        ElevatedButton(
+                          onPressed: () => Navigator.of(context).pop(true),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red.shade500,
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 24, vertical: 14),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            elevation: 2,
+                            shadowColor: Colors.red.withOpacity(0.3),
+                          ),
+                          child: const Text(
+                            'Exit',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
-          TextButton(
-            onPressed: () => exit(0),
-            child: const Text('Yes'),
-          ),
-        ],
+        ),
       ),
     );
     return shouldExit ?? false;
@@ -83,9 +238,16 @@ class _MainNavigationView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // ignore: deprecated_member_use
-    return WillPopScope(
-      onWillPop: () => _onWillPop(context),
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        if (didPop) return;
+
+        final shouldExit = await _showExitConfirmation(context);
+        if (shouldExit) {
+          SystemNavigator.pop();
+        }
+      },
       child: Scaffold(
         extendBody: true,
         body: SafeArea(

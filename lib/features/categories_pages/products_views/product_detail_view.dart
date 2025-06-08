@@ -6,6 +6,7 @@ import 'package:pickpay/features/categories_pages/widgets/color_option_selector.
 import 'package:pickpay/features/categories_pages/widgets/info_icons_row.dart';
 import 'package:pickpay/features/categories_pages/widgets/product_rating.dart';
 import 'package:pickpay/features/categories_pages/widgets/products_view_appbar.dart';
+import 'package:pickpay/features/home/presentation/views/main_navigation_screen.dart';
 import 'package:pickpay/features/related_products_widget/related_products.dart';
 import 'package:pickpay/features/categories_pages/widgets/scent_option.dart';
 import 'package:pickpay/features/categories_pages/widgets/size_option.dart';
@@ -102,6 +103,11 @@ class _ProductDetailViewState extends State<ProductDetailView>
       appBar: ProductDetailAppBar(
         product: product,
         onBackPressed: () => Navigator.of(context).pop(),
+        onHomePressed: () => Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => MainNavigationScreen()),
+          (route) => false,
+        ),
       ),
       body: Stack(
         children: [
