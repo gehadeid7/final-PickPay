@@ -282,165 +282,217 @@ class CartViewBody extends StatelessWidget {
   Widget _buildCartItem(
       BuildContext context, CartItemModel item, bool isDarkMode) {
     try {
-      return Card(
+      return AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: InkWell(
-          onTap: () {
-            if (item.product.id.isNotEmpty) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ProductDetailView(
-                    product: item.product,
+        decoration: BoxDecoration(
+          color: isDarkMode ? Colors.grey[900] : Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(isDarkMode ? 0.2 : 0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(16),
+            onTap: () {
+              if (item.product.id.isNotEmpty) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ProductDetailView(
+                      product: item.product,
+                    ),
                   ),
-                ),
-              );
-            } else {
-              _showMessage(
-                  context, 'Product details not available', CartAction.error);
-            }
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(12),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Product Image with loading and error states
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: SizedBox(
-                    width: 80,
-                    height: 80,
-                    child: item.product.imagePaths?.isNotEmpty == true
-                        ? Image.network(
-                            item.product.imagePaths!.first,
-                            fit: BoxFit.cover,
-                            loadingBuilder: (context, child, loadingProgress) {
-                              if (loadingProgress == null) return child;
-                              return Center(
-                                child: CircularProgressIndicator(
-                                  value: loadingProgress.expectedTotalBytes !=
-                                          null
-                                      ? loadingProgress.cumulativeBytesLoaded /
-                                          loadingProgress.expectedTotalBytes!
-                                      : null,
-                                ),
-                              );
-                            },
-                            errorBuilder: (context, error, stackTrace) {
-                              return Container(
+                );
+              } else {
+                _showMessage(
+                    context, 'Product details not available', CartAction.error);
+              }
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Product Image with loading and error states
+                  Hero(
+                    tag: 'product-${item.product.id}',
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Container(
+                        width: 100,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          color:
+                              isDarkMode ? Colors.grey[800] : Colors.grey[100],
+                        ),
+                        child: item.product.imagePaths?.isNotEmpty == true
+                            ? (item.product.imagePaths!.first.startsWith('http')
+                                ? Image.network(
+                                    item.product.imagePaths!.first,
+                                    fit: BoxFit.cover,
+                                    loadingBuilder:
+                                        (context, child, loadingProgress) {
+                                      if (loadingProgress == null) return child;
+                                      return Center(
+                                        child: CircularProgressIndicator(
+                                          value: loadingProgress
+                                                      .expectedTotalBytes !=
+                                                  null
+                                              ? loadingProgress
+                                                      .cumulativeBytesLoaded /
+                                                  loadingProgress
+                                                      .expectedTotalBytes!
+                                              : null,
+                                          strokeWidth: 2,
+                                        ),
+                                      );
+                                    },
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Icon(
+                                        Icons.image_not_supported,
+                                        color: isDarkMode
+                                            ? Colors.grey[600]
+                                            : Colors.grey[400],
+                                        size: 32,
+                                      );
+                                    },
+                                  )
+                                : Image.asset(
+                                    item.product.imagePaths!.first,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Icon(
+                                        Icons.image_not_supported,
+                                        color: isDarkMode
+                                            ? Colors.grey[600]
+                                            : Colors.grey[400],
+                                        size: 32,
+                                      );
+                                    },
+                                  ))
+                            : Icon(
+                                Icons.image_not_supported,
+                                color: isDarkMode
+                                    ? Colors.grey[600]
+                                    : Colors.grey[400],
+                                size: 32,
+                              ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          item.product.title,
+                          style: TextStyles.semiBold16.copyWith(
+                            height: 1.2,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          '\$${item.product.price.toStringAsFixed(2)}',
+                          style: TextStyles.semiBold16.copyWith(
+                            color: AppColors.primaryColor,
+                            fontSize: 18,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            // Quantity Controls
+                            Container(
+                              decoration: BoxDecoration(
                                 color: isDarkMode
                                     ? Colors.grey[800]
-                                    : Colors.grey[200],
-                                child: Icon(
-                                  Icons.image_not_supported,
-                                  color: isDarkMode
-                                      ? Colors.grey[600]
-                                      : Colors.grey[400],
-                                ),
-                              );
-                            },
-                          )
-                        : Container(
-                            color: isDarkMode
-                                ? Colors.grey[800]
-                                : Colors.grey[200],
-                            child: Icon(
-                              Icons.image_not_supported,
-                              color: isDarkMode
-                                  ? Colors.grey[600]
-                                  : Colors.grey[400],
+                                    : Colors.grey[100],
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Row(
+                                children: [
+                                  IconButton(
+                                    icon: const Icon(Icons.remove),
+                                    onPressed: () {
+                                      if (item.product.id.isNotEmpty) {
+                                        if (item.quantity > 1) {
+                                          context
+                                              .read<CartCubit>()
+                                              .updateCartItemQuantity(
+                                                item.product.id,
+                                                item.quantity - 1,
+                                              );
+                                        } else {
+                                          context
+                                              .read<CartCubit>()
+                                              .removeFromCart(item.product.id);
+                                        }
+                                      }
+                                    },
+                                    color: isDarkMode
+                                        ? Colors.grey[400]
+                                        : Colors.grey[600],
+                                    iconSize: 20,
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 12),
+                                    child: Text(
+                                      '${item.quantity}',
+                                      style: TextStyles.semiBold16,
+                                    ),
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.add),
+                                    onPressed: () {
+                                      if (item.product.id.isNotEmpty) {
+                                        context
+                                            .read<CartCubit>()
+                                            .updateCartItemQuantity(
+                                              item.product.id,
+                                              item.quantity + 1,
+                                            );
+                                      }
+                                    },
+                                    color: isDarkMode
+                                        ? Colors.grey[400]
+                                        : Colors.grey[600],
+                                    iconSize: 20,
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        item.product.title,
-                        style: TextStyles.semiBold16,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        '\$${item.product.price.toStringAsFixed(2)}',
-                        style: TextStyles.semiBold16.copyWith(
-                          color: AppColors.primaryColor,
+                            // Remove Button
+                            IconButton(
+                              icon: const Icon(Icons.delete_outline),
+                              onPressed: () {
+                                if (item.product.id.isNotEmpty) {
+                                  context
+                                      .read<CartCubit>()
+                                      .removeFromCart(item.product.id);
+                                }
+                              },
+                              color: isDarkMode ? Colors.red[300] : Colors.red,
+                              iconSize: 24,
+                            ),
+                          ],
                         ),
-                      ),
-                      const SizedBox(height: 8),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          // Quantity Controls
-                          Row(
-                            children: [
-                              IconButton(
-                                icon: const Icon(Icons.remove_circle_outline),
-                                onPressed: () {
-                                  if (item.product.id.isNotEmpty) {
-                                    if (item.quantity > 1) {
-                                      context
-                                          .read<CartCubit>()
-                                          .updateCartItemQuantity(
-                                            item.product.id,
-                                            item.quantity - 1,
-                                          );
-                                    } else {
-                                      context
-                                          .read<CartCubit>()
-                                          .removeFromCart(item.product.id);
-                                    }
-                                  }
-                                },
-                                color: isDarkMode
-                                    ? Colors.grey[400]
-                                    : Colors.grey[600],
-                              ),
-                              Text(
-                                '${item.quantity}',
-                                style: TextStyles.semiBold16,
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.add_circle_outline),
-                                onPressed: () {
-                                  if (item.product.id.isNotEmpty) {
-                                    context
-                                        .read<CartCubit>()
-                                        .updateCartItemQuantity(
-                                          item.product.id,
-                                          item.quantity + 1,
-                                        );
-                                  }
-                                },
-                                color: isDarkMode
-                                    ? Colors.grey[400]
-                                    : Colors.grey[600],
-                              ),
-                            ],
-                          ),
-                          // Remove Button
-                          IconButton(
-                            icon: const Icon(Icons.delete_outline),
-                            onPressed: () {
-                              if (item.product.id.isNotEmpty) {
-                                context
-                                    .read<CartCubit>()
-                                    .removeFromCart(item.product.id);
-                              }
-                            },
-                            color: isDarkMode ? Colors.red[300] : Colors.red,
-                          ),
-                        ],
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -455,14 +507,14 @@ class CartViewBody extends StatelessWidget {
   Widget _buildTotalSection(
       BuildContext context, double totalPrice, bool isDarkMode) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: isDarkMode ? Theme.of(context).cardTheme.color : Colors.white,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+        color: isDarkMode ? Colors.grey[900] : Colors.white,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
+            color: Colors.black.withOpacity(isDarkMode ? 0.2 : 0.05),
+            blurRadius: 15,
             offset: const Offset(0, -5),
           ),
         ],
@@ -476,17 +528,19 @@ class CartViewBody extends StatelessWidget {
                 'Total',
                 style: TextStyles.semiBold16.copyWith(
                   color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                  fontSize: 18,
                 ),
               ),
               Text(
                 '\$${totalPrice.toStringAsFixed(2)}',
                 style: TextStyles.bold19.copyWith(
                   color: AppColors.primaryColor,
+                  fontSize: 24,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
           Text(
             'Shipping and taxes calculated at checkout',
             style: TextStyles.regular13.copyWith(
