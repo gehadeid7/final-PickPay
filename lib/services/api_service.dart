@@ -14,7 +14,7 @@ import 'package:pickpay/features/categories_pages/widgets/product_card.dart';
 import 'package:http_parser/http_parser.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://192.168.1.2:3000/api/v1/';
+  static const String baseUrl = 'http://192.168.1.4:3000/api/v1/';
 
   Future<Map<String, String>> _buildHeaders({
     Map<String, String>? headers,
@@ -1402,4 +1402,55 @@ class ApiService {
       throw Exception('Error marking order as delivered: ${e.toString()}');
     }
   }
+  Future<http.Response> createReview({
+  required String productId,
+  required double rating,
+  required String review,
+}) async {
+  return await post(
+    endpoint: BackendEndpoints.getReviewsByProduct(productId),
+    body: {
+      'ratings': rating, 
+      'content': review, 
+      'product': productId,
+    },
+    authorized: true,
+  );
+}
+Future<List<Map<String, dynamic>>> getReviewsByProduct(String productId) async {
+  final response = await get(
+    endpoint: BackendEndpoints.getReviewsByProduct(productId),
+    authorized: false,
+  );
+
+  if (response.statusCode == 200) {
+    final data = jsonDecode(response.body);
+    return List<Map<String, dynamic>>.from(data['data']);
+  } else {
+    throw Exception('Failed to fetch reviews: ${response.body}');
+  }
+}
+Future<http.Response> updateReview({
+  required String reviewId,
+  double? rating,
+  String? review,
+}) async {
+  final Map<String, dynamic> body = {};
+  if (rating != null) body['rating'] = rating;
+  if (review != null) body['review'] = review;
+
+  return await put(
+    endpoint: BackendEndpoints.updateReview(reviewId),
+    body: body,
+    authorized: true,
+  );
+}
+Future<http.Response> deleteReview(String reviewId) async {
+  final url = '$baseUrl${BackendEndpoints.deleteReview(reviewId)}';
+  final headers = await _buildHeaders(authorized: true);
+  final response = await http.delete(Uri.parse(url), headers: headers);
+
+  if (response.statusCode == 204) return response;
+  throw Exception('Failed to delete review: ${response.body}');
+}
 }

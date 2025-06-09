@@ -50,12 +50,31 @@ class CartItemModel {
       }
 
       // Create product model from the data
+      // Ensure imagePaths is always null if no image is available
+      List<String>? imagePaths;
+      if (productData['images'] != null) {
+        if (productData['images'] is List) {
+          imagePaths = (productData['images'] as List)
+              .where((img) => img != null && img.toString().isNotEmpty)
+              .map((img) => img.toString())
+              .toList();
+        } else if (productData['images'] is String && productData['images'].toString().isNotEmpty) {
+          imagePaths = [productData['images'].toString()];
+        }
+      }
+      if ((imagePaths == null || imagePaths.isEmpty || (imagePaths.length == 1 && imagePaths[0].isEmpty)) && productData['imageCover'] != null && productData['imageCover'].toString().isNotEmpty) {
+        imagePaths = [productData['imageCover'].toString()];
+      }
+      if (imagePaths == null || imagePaths.isEmpty || (imagePaths.length == 1 && imagePaths[0].isEmpty)) {
+        imagePaths = null; // Let the UI handle the placeholder
+      }
+
       final product = ProductsViewsModel.fromJson({
         ...productData,
         'id': productData['_id'] ?? productData['id'],
         'title': productData['title'] ?? productData['name'] ?? 'Unnamed Product',
         'price': productData['price'] ?? 0.0,
-        'imagePaths': productData['images'] ?? [productData['imageCover']],
+        'imagePaths': imagePaths,
         'category': productData['category'],
         'subcategory': productData['subcategory'],
         'brand': productData['brand'],

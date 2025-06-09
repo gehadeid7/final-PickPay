@@ -384,6 +384,8 @@ class ProductsViewsModel {
 
       // Handle both product and cart item formats
       final productData = json['product'] ?? json;
+          print('🔍 productData extracted: $productData');  // طباعة productData بالكامل
+
       if (productData == null) {
         throw Exception('Product data is null');
       }
@@ -430,19 +432,27 @@ class ProductsViewsModel {
               : (originalPrice is double
                   ? originalPrice
                   : double.parse(originalPrice.toString())));
+ 
+    print('🖼️ Raw images field: ${productData['images']} (type: ${productData['images']?.runtimeType})');
+    print('🖼️ Raw imageCover field: ${productData['imageCover']}');
 
       // Handle image paths
       List<String>? imagePaths;
       if (productData['images'] != null) {
         if (productData['images'] is List) {
           imagePaths = (productData['images'] as List)
+              .where((img) => img != null && img.toString().isNotEmpty)
               .map((img) => img.toString())
               .toList();
-        } else if (productData['images'] is String) {
-          imagePaths = [productData['images']];
+        } else if (productData['images'] is String && productData['images'].toString().isNotEmpty) {
+          imagePaths = [productData['images'].toString()];
         }
-      } else if (productData['imageCover'] != null) {
+      }
+      if ((imagePaths == null || imagePaths.isEmpty) && productData['imageCover'] != null && productData['imageCover'].toString().isNotEmpty) {
         imagePaths = [productData['imageCover'].toString()];
+      }
+      if (imagePaths == null || imagePaths.isEmpty) {
+        imagePaths = null;
       }
       print('🖼️ Parsed imagePaths: $imagePaths');
 

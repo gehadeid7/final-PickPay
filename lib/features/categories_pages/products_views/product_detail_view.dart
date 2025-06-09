@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pickpay/core/services/get_it_service.dart';
 import 'package:pickpay/core/utils/app_text_styles.dart';
 import 'package:pickpay/features/categories_pages/models/product_model.dart';
 import 'package:pickpay/features/categories_pages/widgets/color_option_selector.dart';
@@ -14,6 +15,7 @@ import 'package:pickpay/features/cart/cart_item_model.dart';
 import 'package:pickpay/features/cart/cart_cubits/cart_cubit.dart';
 import 'package:pickpay/features/reviews/cubit/review_cubit.dart';
 import 'package:pickpay/features/reviews/screens/review_screen.dart';
+import 'package:pickpay/services/api_service.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 
@@ -1534,7 +1536,7 @@ class _ProductDetailViewState extends State<ProductDetailView>
           ),
           BlocProvider(
             create: (context) {
-              final cubit = ReviewCubit();
+              final cubit = ReviewCubit(apiService: getIt<ApiService>());
               // Fetch reviews immediately when created
               cubit.fetchReviews(productId: product.id);
               return cubit;

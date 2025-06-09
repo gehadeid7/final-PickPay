@@ -23,6 +23,8 @@ class ReviewsLoaded extends ReviewState {
 
 class ReviewSubmitted extends ReviewState {}
 
+class ReviewUpdated extends ReviewState {} // ✅ Added
+
 class ReviewDeleted extends ReviewState {}
 
 class ReviewError extends ReviewState {
@@ -32,4 +34,13 @@ class ReviewError extends ReviewState {
 
   @override
   List<Object> get props => [message];
+}
+
+class ReviewLoaded extends ReviewState {
+  final List<Review> reviews;
+
+  const ReviewLoaded(this.reviews);
+
+  @override
+  List<Object> get props => [reviews];
 }

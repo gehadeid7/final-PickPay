@@ -201,13 +201,10 @@ class _ReviewFormState extends State<ReviewForm> {
                   onPressed: () {
                     if (_formKey.currentState!.validate() && _rating > 0) {
                       context.read<ReviewCubit>().submitReview(
-                            userId: currentUser.uId,
-                            userImage: currentUser.photoUrl ?? '',
-                            userName: currentUser.fullName,
-                            content: _contentController.text,
-                            rating: _rating,
-                            productId: widget.productId,
-                          );
+                        productId: widget.productId!,
+                        rating: _rating,
+                        reviewContent: _contentController.text,
+                      );
                     } else if (_rating == 0) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(

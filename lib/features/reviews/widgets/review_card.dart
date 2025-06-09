@@ -43,25 +43,29 @@ class _ReviewCardState extends State<ReviewCard> {
                 height: 40,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
-                  return Text(
-                    widget.review.userName[0].toUpperCase(),
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: isDarkMode ? Colors.white : Colors.grey[700],
-                    ),
-                  );
+                  return (widget.review.userName.isNotEmpty)
+                      ? Text(
+                          widget.review.userName[0].toUpperCase(),
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: isDarkMode ? Colors.white : Colors.grey[700],
+                          ),
+                        )
+                      : Icon(Icons.person, color: isDarkMode ? Colors.white : Colors.grey[700]);
                 },
               ),
             )
-          : Text(
-              widget.review.userName[0].toUpperCase(),
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: isDarkMode ? Colors.white : Colors.grey[700],
-              ),
-            ),
+          : (widget.review.userName.isNotEmpty
+              ? Text(
+                  widget.review.userName[0].toUpperCase(),
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: isDarkMode ? Colors.white : Colors.grey[700],
+                  ),
+                )
+              : Icon(Icons.person, color: isDarkMode ? Colors.white : Colors.grey[700])),
     );
   }
 
@@ -116,7 +120,10 @@ class _ReviewCardState extends State<ReviewCard> {
     if (confirmed == true && mounted) {
       setState(() => _isDeleting = true);
       try {
-        await _reviewCubit.deleteReview(widget.review.id);
+        await _reviewCubit.deleteReview(
+          reviewId: widget.review.id,
+          productId: widget.review.productId!,
+        );
         if (mounted && widget.onDeleted != null) {
           widget.onDeleted!();
         }

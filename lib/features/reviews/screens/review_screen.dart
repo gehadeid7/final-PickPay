@@ -46,8 +46,8 @@ class _ReviewScreenState extends State<ReviewScreen> {
   }
 
   Future<void> _loadReviews() async {
-    if (mounted) {
-      await _reviewCubit.fetchReviews(productId: widget.productId);
+    if (mounted && widget.productId != null) {
+      await _reviewCubit.fetchReviews(productId: widget.productId!);
     }
   }
 
@@ -114,63 +114,62 @@ class _ReviewScreenState extends State<ReviewScreen> {
                 ),
                 child: RatingDistribution(reviews: state.reviews),
               ),
-              if (currentUser != null) ...[
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        _showReviewForm = !_showReviewForm;
-                      });
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: isDarkMode
-                          ? theme.primaryColor.withOpacity(0.2)
-                          : theme.primaryColor.withOpacity(0.1),
-                      foregroundColor: theme.primaryColor,
-                      elevation: 0,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 16, horizontal: 20),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        side: BorderSide(
-                          color: theme.primaryColor.withOpacity(0.5),
-                          width: 1.5,
-                        ),
+              // Always show the review button and form as part of the UI
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      _showReviewForm = !_showReviewForm;
+                    });
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: isDarkMode
+                        ? theme.primaryColor.withOpacity(0.2)
+                        : theme.primaryColor.withOpacity(0.1),
+                    foregroundColor: theme.primaryColor,
+                    elevation: 0,
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 16, horizontal: 20),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      side: BorderSide(
+                        color: theme.primaryColor.withOpacity(0.5),
+                        width: 1.5,
                       ),
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          _showReviewForm ? Icons.close : Icons.rate_review,
-                          size: 20,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        _showReviewForm ? Icons.close : Icons.rate_review,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        _showReviewForm ? 'Cancel Review' : 'Write a Review',
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
                         ),
-                        const SizedBox(width: 8),
-                        Text(
-                          _showReviewForm ? 'Cancel Review' : 'Write a Review',
-                          style: const TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              if (_showReviewForm)
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  margin: const EdgeInsets.only(top: 16.0),
+                  child: Provider<UserModel>.value(
+                    value: currentUser ?? UserModel(uId: '', email: '', fullName: '', phone: '', emailVerified: false),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: ReviewForm(productId: widget.productId!),
                     ),
                   ),
                 ),
-                if (_showReviewForm)
-                  AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    margin: const EdgeInsets.only(top: 16.0),
-                    child: Provider<UserModel>.value(
-                      value: currentUser!,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: ReviewForm(productId: widget.productId),
-                      ),
-                    ),
-                  ),
-              ],
               if (state.reviews.isNotEmpty) ...[
                 Padding(
                   padding: const EdgeInsets.symmetric(
@@ -210,7 +209,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: ReviewList(
-                  productId: widget.productId,
+                  productId: widget.productId!,
                   reviews: state.reviews,
                   scrollable: !widget.isEmbedded,
                 ),

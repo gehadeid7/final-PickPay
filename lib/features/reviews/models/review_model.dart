@@ -28,18 +28,20 @@ class Review {
     if (createdAtData is Timestamp) {
       createdAt = createdAtData.toDate();
     } else if (createdAtData is String) {
-      createdAt = DateTime.parse(createdAtData);
+      createdAt = DateTime.tryParse(createdAtData) ?? DateTime.now();
     } else {
       createdAt = DateTime.now(); // Fallback
     }
 
     return Review(
-      id: json['id'] as String,
-      userId: json['userId'] as String,
-      userImage: json['userImage'] as String,
-      userName: json['userName'] as String,
-      content: json['content'] as String,
-      rating: (json['rating'] as num).toDouble(),
+      id: json['id'] as String? ?? '',
+      userId: json['userId'] as String? ?? '',
+      userImage: json['userImage'] as String? ?? '',
+      userName: (json['user'] != null && json['user']['name'] != null)
+          ? json['user']['name']
+          : 'User',
+      content: json['content'] as String? ?? '',
+      rating: (json['ratings'] as num?)?.toDouble() ?? 0.0,
       createdAt: createdAt,
       productId: json['productId'] as String?,
     );

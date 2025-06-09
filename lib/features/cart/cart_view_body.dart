@@ -329,61 +329,73 @@ class CartViewBody extends StatelessWidget {
                         width: 100,
                         height: 100,
                         decoration: BoxDecoration(
-                          color:
-                              isDarkMode ? Colors.grey[800] : Colors.grey[100],
+                          color: isDarkMode ? Colors.grey[800] : Colors.grey[100],
                         ),
-                        child: item.product.imagePaths?.isNotEmpty == true
-                            ? (item.product.imagePaths!.first.startsWith('http')
-                                ? Image.network(
-                                    item.product.imagePaths!.first,
-                                    fit: BoxFit.cover,
-                                    loadingBuilder:
-                                        (context, child, loadingProgress) {
-                                      if (loadingProgress == null) return child;
-                                      return Center(
-                                        child: CircularProgressIndicator(
-                                          value: loadingProgress
-                                                      .expectedTotalBytes !=
-                                                  null
-                                              ? loadingProgress
-                                                      .cumulativeBytesLoaded /
-                                                  loadingProgress
-                                                      .expectedTotalBytes!
-                                              : null,
-                                          strokeWidth: 2,
-                                        ),
-                                      );
-                                    },
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return Icon(
-                                        Icons.image_not_supported,
-                                        color: isDarkMode
-                                            ? Colors.grey[600]
-                                            : Colors.grey[400],
-                                        size: 32,
-                                      );
-                                    },
-                                  )
-                                : Image.asset(
-                                    item.product.imagePaths!.first,
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return Icon(
-                                        Icons.image_not_supported,
-                                        color: isDarkMode
-                                            ? Colors.grey[600]
-                                            : Colors.grey[400],
-                                        size: 32,
-                                      );
-                                    },
-                                  ))
-                            : Icon(
+                        child: Builder(
+                          builder: (context) {
+                            final product = item.product;
+                            final paths = product.imagePaths;
+                            final productJson = product.toJson();
+                            String? imageCover = productJson['imageCover'] as String?;
+                            print('Cart product: ' + productJson.toString());
+                            print('Cart product imagePaths: $paths, imageCover: $imageCover');
+                            String? path;
+                            if (paths != null && paths.isNotEmpty && paths.first.isNotEmpty) {
+                              path = paths.first;
+                            } else if (imageCover != null && imageCover.isNotEmpty) {
+                              path = imageCover;
+                            } else {
+                              path = null;
+                            }
+                            print('Cart image path selected: $path');
+                            if (path == null) {
+                              return Icon(
                                 Icons.image_not_supported,
-                                color: isDarkMode
-                                    ? Colors.grey[600]
-                                    : Colors.grey[400],
+                                color: isDarkMode ? Colors.grey[600] : Colors.grey[400],
                                 size: 32,
-                              ),
+                              );
+                            }
+                            if (path.startsWith('http')) {
+                              return Image.network(
+                                path,
+                                fit: BoxFit.cover,
+                                loadingBuilder: (context, child, loadingProgress) {
+                                  if (loadingProgress == null) return child;
+                                  return Center(
+                                    child: CircularProgressIndicator(
+                                      value: loadingProgress.expectedTotalBytes != null
+                                          ? loadingProgress.cumulativeBytesLoaded /
+                                              loadingProgress.expectedTotalBytes!
+                                          : null,
+                                      strokeWidth: 2,
+                                    ),
+                                  );
+                                },
+                                errorBuilder: (context, error, stackTrace) {
+                                  print('Network image error: $error');
+                                  return Icon(
+                                    Icons.image_not_supported,
+                                    color: isDarkMode ? Colors.grey[600] : Colors.grey[400],
+                                    size: 32,
+                                  );
+                                },
+                              );
+                            } else {
+                              return Image.asset(
+                                path,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  print('Asset image error: $error');
+                                  return Icon(
+                                    Icons.image_not_supported,
+                                    color: isDarkMode ? Colors.grey[600] : Colors.grey[400],
+                                    size: 32,
+                                  );
+                                },
+                              );
+                            }
+                          },
+                        ),
                       ),
                     ),
                   ),

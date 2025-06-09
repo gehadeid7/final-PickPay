@@ -58,4 +58,10 @@ class BackendEndpoints {
   static String specificOrder(String orderId) => '$base/$orderId';
   static String markAsPaid(String orderId) => '$base/$orderId/pay';
   static String markAsDelivered(String orderId) => '$base/$orderId/deliver';
+
+   // ⭐ Review endpoints
+  static String getReviewsByProduct(String productId) =>'products/$productId/reviews';
+  static const String createReview = 'reviews';
+  static String updateReview(String reviewId) => 'reviews/$reviewId';
+  static String deleteReview(String reviewId) => 'reviews/$reviewId';
 }

@@ -1,15 +1,9 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:developer' as dev;
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:http/http.dart' as http;
-import 'package:pickpay/constants.dart';
-import 'package:pickpay/core/services/shared_preferences_singletone.dart';
 import 'package:pickpay/features/cart/cart_item_model.dart';
-import 'package:pickpay/core/utils/backend_endpoints.dart';
 import 'package:pickpay/services/api_service.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:bloc/bloc.dart';
@@ -51,25 +45,21 @@ class CartCubit extends Cubit<CartState> {
       dev.log('Syncing cart with server...', name: 'CartCubit');
       final serverCart = await _apiService.getCart();
       
-      if (serverCart != null) {
-        final List<dynamic> serverItems = serverCart['cartItems'] ?? [];
-        final serverCartItems = serverItems.map((item) => CartItemModel.fromJson(item)).toList();
-        
-        // Update cache
-        _cartItemCache.clear();
-        for (var item in serverCartItems) {
-          if (item.product.id != null) {
-            _cartItemCache[item.product.id!] = item;
-            _productCache[item.product.id!] = item.product;
-          }
-        }
-        
-        // Only update UI if there are actual changes
-        if (state is CartLoaded) {
-          final currentState = state as CartLoaded;
-          if (!_areItemsEqual(currentState.cartItems, serverCartItems)) {
-            _updateUIState(serverCartItems);
-          }
+      final List<dynamic> serverItems = serverCart['cartItems'] ?? [];
+      final serverCartItems = serverItems.map((item) => CartItemModel.fromJson(item)).toList();
+      
+      // Update cache
+      _cartItemCache.clear();
+      for (var item in serverCartItems) {
+          _cartItemCache[item.product.id] = item;
+          _productCache[item.product.id] = item.product;
+      }
+      
+      // Only update UI if there are actual changes
+      if (state is CartLoaded) {
+        final currentState = state as CartLoaded;
+        if (!_areItemsEqual(currentState.cartItems, serverCartItems)) {
+          _updateUIState(serverCartItems);
         }
       }
     } catch (e) {
@@ -83,41 +73,36 @@ class CartCubit extends Cubit<CartState> {
     try {
       dev.log('[CartCubit] Getting cart data...', name: 'CartCubit');
       emit(CartLoading());
-      
       try {
         final response = await _apiService.getCart();
         dev.log('[CartCubit] Cart response: $response', name: 'CartCubit');
-        
-        // Handle null or empty response
-        if (response == null) {
-          dev.log('Empty cart response, initializing empty cart', name: 'CartCubit');
-          _updateUIState([]);
-          _productCache.clear();
-          return;
-        }
-        final String? cartId = response['_id']; 
+        // Remove null check for response, as it can't be null
+        final String? cartId = response['_id'];
         final List<dynamic> items = response['cartItems'] ?? [];
         // Ensure no duplicate items by using a Map
         final Map<String, CartItemModel> uniqueItems = {};
-        
         for (var item in items) {
           try {
-            final cartItem = CartItemModel.fromJson(item);
-            if (cartItem.product.id != null) {
-              uniqueItems[cartItem.product.id!] = cartItem;
-              // Update cache with product details
-              _productCache[cartItem.product.id!] = cartItem.product;
-            }
+            // Always fetch the latest product details by ID
+            final productId = item['product']?['_id'] ?? item['product']?['id'] ?? item['productId'];
+            if (productId == null) continue;
+            final fullProduct = await _getProductDetails(productId);
+            final quantity = item['quantity'] ?? 1;
+            final cartItem = CartItemModel(
+              product: fullProduct,
+              quantity: quantity is int ? quantity : int.parse(quantity.toString()),
+            );
+            uniqueItems[productId] = cartItem;
+            _productCache[productId] = fullProduct;
           } catch (e) {
             dev.log('Error processing cart item: $e', name: 'CartCubit', error: e);
             continue;
           }
         }
-        
         final cartItems = uniqueItems.values.toList();
-        dev.log('Processed cart items: ${cartItems.length}', name: 'CartCubit');
-       _updateUIState(cartItems, cartId: cartId);
-             } catch (e) {
+        dev.log('Processed cart items: [32m${cartItems.length}[0m', name: 'CartCubit');
+        _updateUIState(cartItems, cartId: cartId);
+      } catch (e) {
         // Handle 404 as a valid empty cart state
         if (e.toString().contains('404') || e.toString().contains('no cart for this user')) {
           dev.log('No cart exists for user, initializing empty cart', name: 'CartCubit');
@@ -154,28 +139,14 @@ class CartCubit extends Cubit<CartState> {
     }
   }
 
-  Future<void> _startOperation(String operationKey) {
-    final completer = Completer<void>();
-    _pendingOperations[operationKey] = completer;
-    return completer.future;
-  }
-
-  void _completeOperation(String operationKey) {
-    _pendingOperations[operationKey]?.complete();
-    _pendingOperations.remove(operationKey);
-  }
-
   Future<void> addToCart(String productId, String color) async {
     final operationKey = 'add_$productId';
     if (_isOperationInProgress) {
       await _waitForPendingOperation(operationKey);
       return;
     }
-    
     try {
       _isOperationInProgress = true;
-      final operation = _startOperation(operationKey);
-      
       dev.log('Adding product $productId to cart with color $color', name: 'CartCubit');
 
       // Validate product ID
@@ -243,7 +214,6 @@ class CartCubit extends Cubit<CartState> {
       _showToast('Failed to add item to cart', isError: true);
     } finally {
       _isOperationInProgress = false;
-      _completeOperation(operationKey);
     }
   }
 
@@ -256,8 +226,6 @@ class CartCubit extends Cubit<CartState> {
     
     try {
       _isOperationInProgress = true;
-      final operation = _startOperation(operationKey);
-      
       dev.log('Removing product $productId from cart', name: 'CartCubit');
       
       // Show confirmation dialog if not skipped
@@ -313,7 +281,6 @@ class CartCubit extends Cubit<CartState> {
       _showToast('Failed to remove item from cart', isError: true);
     } finally {
       _isOperationInProgress = false;
-      _completeOperation(operationKey);
     }
   }
 
@@ -326,8 +293,6 @@ class CartCubit extends Cubit<CartState> {
 
     try {
       _isOperationInProgress = true;
-      final operation = _startOperation(operationKey);
-      
       dev.log('Updating quantity for product $productId to $quantity', name: 'CartCubit');
       
       // If quantity is 0 or less, remove the item instead
@@ -388,7 +353,6 @@ class CartCubit extends Cubit<CartState> {
       _showMessage('Failed to update item quantity');
     } finally {
       _isOperationInProgress = false;
-      _completeOperation(operationKey);
     }
   }
 

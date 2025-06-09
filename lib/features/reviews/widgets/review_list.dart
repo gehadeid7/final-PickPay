@@ -56,13 +56,17 @@ class ReviewList extends StatelessWidget {
       itemCount: reviews.length,
       padding: EdgeInsets.zero,
       itemBuilder: (context, index) {
+        if (index < 0 || index >= reviews.length) {
+          // Defensive: should never happen, but avoids RangeError
+          return const SizedBox.shrink();
+        }
         return Provider<UserModel>.value(
           value: currentUser!,
           child: ReviewCard(
             review: reviews[index],
             onDeleted: () {
               // Refresh the reviews after deletion
-              context.read<ReviewCubit>().fetchReviews(productId: productId);
+              context.read<ReviewCubit>().fetchReviews(productId: productId!);
             },
           ),
         );
