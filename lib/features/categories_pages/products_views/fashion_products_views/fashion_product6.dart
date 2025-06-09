@@ -54,7 +54,7 @@ class _FashionProduct6State extends State<FashionProduct6> {
       colorAvailability: {
         'Navy': true,
         'Antracite': true,
-        'Grey': false,
+        'Grey': true,
         'Blue': true,
       },
       careInstruction: 'Machine washable',

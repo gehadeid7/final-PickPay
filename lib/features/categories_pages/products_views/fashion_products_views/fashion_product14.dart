@@ -2,8 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:pickpay/features/categories_pages/models/product_model.dart';
 import 'package:pickpay/features/categories_pages/products_views/product_detail_view.dart';
 
-class FashionProduct14 extends StatelessWidget {
+class FashionProduct14 extends StatefulWidget {
   const FashionProduct14({super.key});
+
+  @override
+  State<FashionProduct14> createState() => _FashionProduct14State();
+}
+
+class _FashionProduct14State extends State<FashionProduct14> {
+  String _selectedColor = 'white';
+
+  final Map<String, List<String>> colorImages = {
+    'white': [
+      "assets/Fashion_products/Kids_Fashion/kids_fashion4/1.png",
+      "assets/Fashion_products/Kids_Fashion/kids_fashion4/2.png",
+    ],
+    'Brown': [
+      "assets/Fashion_products/Kids_Fashion/kids_fashion4/brown.png",
+    ],
+  };
+
+  void _handleColorSelection(String color) {
+    setState(() {
+      _selectedColor = color;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -11,10 +34,8 @@ class FashionProduct14 extends StatelessWidget {
       id: '682b00c26977bd89257c0e9b',
       title:
           'Baby Boys Jacket Fashion Comfortable High Quality Plush Full Warmth Jacket for Your Baby',
-      imagePaths: [
-        "assets/Fashion_products/Kids_Fashion/kids_fashion4/1.png",
-        "assets/Fashion_products/Kids_Fashion/kids_fashion4/2.png",
-      ],
+      imagePaths: colorImages[_selectedColor],
+      colorImages: colorImages,
       price: 425,
       originalPrice: 475,
       rating: 5.0,
@@ -22,12 +43,12 @@ class FashionProduct14 extends StatelessWidget {
       category: 'Fashion',
       subcategory: "Kids' Fashion",
       colorOptions: [
-        'Brown',
         'white',
+        'Brown',
       ],
       colorAvailability: {
-        'Brown': true,
         'white': true,
+        'Brown': true,
       },
       availableSizes: ['1-3 Years'],
       sizeAvailability: {
@@ -44,6 +65,7 @@ class FashionProduct14 extends StatelessWidget {
       inStock: true,
       shipsFrom: 'Pickpay',
       soldBy: 'Pickpay',
+      onColorSelected: _handleColorSelection,
     );
 
     return ProductDetailView(product: product);

@@ -2,19 +2,53 @@ import 'package:flutter/material.dart';
 import 'package:pickpay/features/categories_pages/models/product_model.dart';
 import 'package:pickpay/features/categories_pages/products_views/product_detail_view.dart';
 
-class FashionProduct2 extends StatelessWidget {
+class FashionProduct2 extends StatefulWidget {
   const FashionProduct2({super.key});
+
+  @override
+  State<FashionProduct2> createState() => _FashionProduct2State();
+}
+
+class _FashionProduct2State extends State<FashionProduct2> {
+  String _selectedColor = 'Power Pink';
+
+  final Map<String, List<String>> colorImages = {
+    'Power Pink': [
+      'assets/Fashion_products/Women_Fashion/women_fashion2/1.png',
+      'assets/Fashion_products/Women_Fashion/women_fashion2/2.png',
+      'assets/Fashion_products/Women_Fashion/women_fashion2/3.png',
+    ],
+    'Sky Tint': [
+      'assets/Fashion_products/Women_Fashion/women_fashion2/sky_tint/1.png',
+      'assets/Fashion_products/Women_Fashion/women_fashion2/sky_tint/2.png',
+      'assets/Fashion_products/Women_Fashion/women_fashion2/sky_tint/3.png',
+      'assets/Fashion_products/Women_Fashion/women_fashion2/sky_tint/4.png',
+      'assets/Fashion_products/Women_Fashion/women_fashion2/sky_tint/5.png',
+      'assets/Fashion_products/Women_Fashion/women_fashion2/sky_tint/6.png',
+    ],
+    'Core Black': [
+      'assets/Fashion_products/Women_Fashion/women_fashion2/core_black/1.png',
+      'assets/Fashion_products/Women_Fashion/women_fashion2/core_black/2.png',
+      'assets/Fashion_products/Women_Fashion/women_fashion2/core_black/3.png',
+      'assets/Fashion_products/Women_Fashion/women_fashion2/core_black/4.png',
+      'assets/Fashion_products/Women_Fashion/women_fashion2/core_black/5.png',
+      'assets/Fashion_products/Women_Fashion/women_fashion2/core_black/6.png',
+    ],
+  };
+
+  void _handleColorSelection(String color) {
+    setState(() {
+      _selectedColor = color;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
       id: '682b00c26977bd89257c0e8f',
       title: 'adidas womens ULTIMASHOW Shoes',
-      imagePaths: [
-        'assets/Fashion_products/Women_Fashion/women_fashion2/1.png',
-        'assets/Fashion_products/Women_Fashion/women_fashion2/2.png',
-        'assets/Fashion_products/Women_Fashion/women_fashion2/3.png',
-      ],
+      imagePaths: colorImages[_selectedColor],
+      colorImages: colorImages,
       price: 2600,
       originalPrice: 2750,
       rating: 4.4,
@@ -23,15 +57,13 @@ class FashionProduct2 extends StatelessWidget {
       subcategory: "Women's Fashion",
       colorOptions: [
         'Power Pink',
-        'Cloud White',
         'Sky Tint',
         'Core Black',
       ],
       colorAvailability: {
         'Power Pink': true,
-        'Cloud White': true,
         'Sky Tint': true,
-        'Core Black': false,
+        'Core Black': true,
       },
       availableSizes: [
         '37',
@@ -64,6 +96,7 @@ REGULAR FIT''',
       inStock: true,
       shipsFrom: 'Pickpay Warehouse',
       soldBy: 'Pickpay Official',
+      onColorSelected: _handleColorSelection,
     );
 
     return ProductDetailView(product: product);
