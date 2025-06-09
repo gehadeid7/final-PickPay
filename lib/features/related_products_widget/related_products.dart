@@ -390,16 +390,198 @@ Perfect for casual and semi-formal occasions''',
       return (widget.build(context) as ProductDetailView).product;
     }
     if (widget is FashionProduct12) {
-      return (widget.build(context) as ProductDetailView).product;
+      final colorImages = {
+        'Green': [
+          "assets/Fashion_products/Kids_Fashion/kids_fashion2/1.png",
+          "assets/Fashion_products/Kids_Fashion/kids_fashion2/2.png",
+        ],
+        'Gray': [
+          "assets/Fashion_products/Kids_Fashion/kids_fashion2/grey/1.jpg",
+          "assets/Fashion_products/Kids_Fashion/kids_fashion2/grey/2.jpg",
+        ],
+      };
+
+      return ProductsViewsModel(
+        id: '682b00c26977bd89257c0e99',
+        title: "Kidzo Boys Pajamas",
+        imagePaths: colorImages['Green'],
+        colorImages: colorImages,
+        price: 580,
+        originalPrice: 621,
+        rating: 5.0,
+        reviewCount: 3,
+        category: 'Fashion',
+        subcategory: "Kids' Fashion",
+        colorOptions: [
+          'Green',
+          'Gray',
+        ],
+        colorAvailability: {
+          'Green': true,
+          'Gray': true,
+        },
+        availableSizes: [
+          '2-3 Years',
+          '3-4 Years',
+          '4-5 Years',
+          '5-6 Years',
+          '6-7 Years',
+        ],
+        sizeAvailability: {
+          '2-3 Years': true,
+          '3-4 Years': true,
+          '4-5 Years': true,
+          '5-6 Years': false,
+          '6-7 Years': true,
+        },
+        careInstruction: 'Machine wash',
+        closureType: 'Pull On',
+        deliveryDate: 'Sunday, 9 March',
+        deliveryTimeLeft: '20hrs 36 mins',
+        deliveryLocation: 'Egypt',
+        inStock: true,
+        shipsFrom: 'Pickpay',
+        soldBy: 'Pickpay',
+      );
     }
     if (widget is FashionProduct13) {
       return (widget.build(context) as ProductDetailView).product;
     }
     if (widget is FashionProduct14) {
-      return (widget.build(context) as ProductDetailView).product;
+      final colorImages = {
+        'white': [
+          "assets/Fashion_products/Kids_Fashion/kids_fashion4/1.png",
+          "assets/Fashion_products/Kids_Fashion/kids_fashion4/2.png",
+        ],
+        'Brown': [
+          "assets/Fashion_products/Kids_Fashion/kids_fashion4/brown.png",
+        ],
+      };
+
+      return ProductsViewsModel(
+        id: '682b00c26977bd89257c0e9b',
+        title:
+            'Baby Boys Jacket Fashion Comfortable High Quality Plush Full Warmth Jacket for Your Baby',
+        imagePaths: colorImages['white'],
+        colorImages: colorImages,
+        price: 425,
+        originalPrice: 475,
+        rating: 5.0,
+        reviewCount: 19,
+        category: 'Fashion',
+        subcategory: "Kids' Fashion",
+        colorOptions: [
+          'white',
+          'Brown',
+        ],
+        colorAvailability: {
+          'white': true,
+          'Brown': true,
+        },
+        availableSizes: ['1-3 Years'],
+        sizeAvailability: {
+          '1-3 Years': true,
+        },
+        careInstruction: 'Machine wash',
+        closureType: 'Button',
+        lining: 'Unlined',
+        aboutThisItem:
+            'Fashionable and comfortable high quality plush jacket provides the complete warmth of your baby',
+        deliveryDate: 'Sunday, 9 March',
+        deliveryTimeLeft: '20hrs 36 mins',
+        deliveryLocation: 'Egypt',
+        inStock: true,
+        shipsFrom: 'Pickpay',
+        soldBy: 'Pickpay',
+      );
     }
     if (widget is FashionProduct15) {
-      return (widget.build(context) as ProductDetailView).product;
+      final colorImages = {
+        'White': [
+          "assets/Fashion_products/Kids_Fashion/kids_fashion5/1.png",
+          "assets/Fashion_products/Kids_Fashion/kids_fashion5/2.png",
+          "assets/Fashion_products/Kids_Fashion/kids_fashion5/3.png",
+        ],
+        'Beige': [
+          "assets/Fashion_products/Kids_Fashion/kids_fashion5/beige/1.png",
+          "assets/Fashion_products/Kids_Fashion/kids_fashion5/beige/2.png",
+          "assets/Fashion_products/Kids_Fashion/kids_fashion5/beige/3.png",
+          "assets/Fashion_products/Kids_Fashion/kids_fashion5/beige/4.png",
+        ],
+        'Black': [
+          "assets/Fashion_products/Kids_Fashion/kids_fashion5/black/1.png",
+          "assets/Fashion_products/Kids_Fashion/kids_fashion5/black/2.png",
+          "assets/Fashion_products/Kids_Fashion/kids_fashion5/black/3.png",
+          "assets/Fashion_products/Kids_Fashion/kids_fashion5/black/4.png",
+        ],
+        'Red': [
+          "assets/Fashion_products/Kids_Fashion/kids_fashion5/red/1.png",
+          "assets/Fashion_products/Kids_Fashion/kids_fashion5/red/2.png",
+          "assets/Fashion_products/Kids_Fashion/kids_fashion5/red/3.png",
+        ],
+        'Rose': [
+          "assets/Fashion_products/Kids_Fashion/kids_fashion5/rose/1.png",
+          "assets/Fashion_products/Kids_Fashion/kids_fashion5/rose/2.png",
+          "assets/Fashion_products/Kids_Fashion/kids_fashion5/rose/3.png",
+          "assets/Fashion_products/Kids_Fashion/kids_fashion5/rose/4.png",
+        ],
+      };
+      return ProductsViewsModel(
+        id: '682b00c26977bd89257c0e9c',
+        title: "MIX & MAX, Ballerina Shoes, girls, Ballet Flat",
+        imagePaths: colorImages['White'],
+        colorImages: colorImages,
+        price: 429.00,
+        originalPrice: 429.00,
+        rating: 5.0,
+        reviewCount: 19,
+        category: 'Fashion',
+        subcategory: "Kids' Fashion",
+        colorOptions: [
+          'White',
+          'Beige',
+          'Black',
+          'Red',
+          'Rose',
+        ],
+        colorAvailability: {
+          'White': true,
+          'Beige': true,
+          'Black': true,
+          'Red': false,
+          'Rose': false,
+        },
+        availableSizes: [
+          '0-6 Months',
+          '6-12 Months',
+          '12-18 Months',
+        ],
+        sizeAvailability: {
+          '0-6 Months': false,
+          '6-12 Months': false,
+          '12-18 Months': true,
+        },
+        soleMaterial: 'Synthetic Leather',
+        outerMaterial: 'Faux Leather',
+        closureType: 'Hook & Loop',
+        waterResistanceLevel: 'Not Water Resistant',
+        aboutThisItem: '''
+Color: Black&Red /Size: 1-6Month/Insole Length: 11cm
+
+Made In: China
+
+Material: Synthetic Leather
+
+Brand: Mix&Max
+
+Target Gender: Girls''',
+        deliveryDate: 'Sunday, 9 March',
+        deliveryTimeLeft: '20hrs 36 mins',
+        deliveryLocation: 'Egypt',
+        inStock: true,
+        shipsFrom: 'Pickpay',
+        soldBy: 'Pickpay',
+      );
     }
     // Electronics products
     if (widget is Product1View) {
