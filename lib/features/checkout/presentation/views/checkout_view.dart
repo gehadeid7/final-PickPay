@@ -73,7 +73,8 @@ class _CheckoutViewState extends State<CheckoutView> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.remove_shopping_cart, size: 64, color: theme.colorScheme.primary.withOpacity(0.2)),
+              Icon(Icons.remove_shopping_cart,
+                  size: 64, color: theme.colorScheme.primary.withOpacity(0.2)),
               const SizedBox(height: 16),
               Text(
                 'Your cart is empty',
@@ -153,7 +154,8 @@ class _CheckoutViewState extends State<CheckoutView> {
                     ),
                     child: Row(
                       children: [
-                        Icon(Icons.error_outline, color: theme.colorScheme.error),
+                        Icon(Icons.error_outline,
+                            color: theme.colorScheme.error),
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
@@ -169,9 +171,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                   child: _buildSectionTitle('Order Summary', theme),
                 ),
                 _buildOrderSummary(items, total, theme),
-                const SizedBox(height: 24),
-                Divider(thickness: 1, color: theme.dividerColor.withOpacity(0.15)),
-                const SizedBox(height: 24),
+                const SizedBox(height: 30),
                 AnimatedSwitcher(
                   duration: const Duration(milliseconds: 400),
                   child: _buildSectionTitle('Shipping Information', theme),
@@ -180,7 +180,8 @@ class _CheckoutViewState extends State<CheckoutView> {
                   onSaved: (info) => _shippingInfo = info,
                 ),
                 const SizedBox(height: 24),
-                Divider(thickness: 1, color: theme.dividerColor.withOpacity(0.15)),
+                Divider(
+                    thickness: 1, color: theme.dividerColor.withOpacity(0.15)),
                 const SizedBox(height: 24),
                 AnimatedSwitcher(
                   duration: const Duration(milliseconds: 400),
@@ -192,6 +193,16 @@ class _CheckoutViewState extends State<CheckoutView> {
                     _cardNumber = number;
                     _expiryDate = expiry;
                     _cvv = cvv;
+                  },
+                ),
+                const SizedBox(height: 15),
+                PromoCodeSection(
+                  onApply: (code) {
+                    // Handle the promo code logic here
+                    // For example, show a snackbar for now
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Promo code "$code" applied!')),
+                    );
                   },
                 ),
                 const SizedBox(height: 32),
@@ -207,13 +218,19 @@ class _CheckoutViewState extends State<CheckoutView> {
                                   // Auto-trim all text fields before validation
                                   FocusScope.of(context).unfocus();
                                   _errorSummary = null;
-                                  bool valid = _formKey.currentState!.validate();
+                                  bool valid =
+                                      _formKey.currentState!.validate();
                                   if (!valid) {
                                     setState(() {
-                                      _errorSummary = 'Please fill all required fields correctly.';
+                                      _errorSummary =
+                                          'Please fill all required fields correctly.';
                                     });
-                                    await Future.delayed(const Duration(milliseconds: 100));
-                                    _scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+                                    await Future.delayed(
+                                        const Duration(milliseconds: 100));
+                                    _scrollController.animateTo(0,
+                                        duration:
+                                            const Duration(milliseconds: 300),
+                                        curve: Curves.easeInOut);
                                     return;
                                   }
                                   _formKey.currentState!.save();
@@ -313,64 +330,273 @@ class _CheckoutViewState extends State<CheckoutView> {
     );
   }
 
-Future<void> _processCheckout(
-  BuildContext context,
-  List<CartItemModel> items,
-  double total,
-) async {
-  if (!_formKey.currentState!.validate()) return;
-  _formKey.currentState!.save();
+  Future<void> _processCheckout(
+    BuildContext context,
+    List<CartItemModel> items,
+    double total,
+  ) async {
+    if (!_formKey.currentState!.validate()) return;
+    _formKey.currentState!.save();
 
-  final checkoutCubit = context.read<CheckoutCubit>();
-  final orderCubit = context.read<OrderCubit>();
-  final cartCubit = context.read<CartCubit>();
+    final checkoutCubit = context.read<CheckoutCubit>();
+    final orderCubit = context.read<OrderCubit>();
+    final cartCubit = context.read<CartCubit>();
 
-  final paymentInfo = PaymentInfo(
-    method: _paymentMethod,
-    cardLastFour: _cardNumber.length > 4
-        ? _cardNumber.substring(_cardNumber.length - 4)
-        : '0000',
-    transactionId: 'TXN-${DateTime.now().millisecondsSinceEpoch}',
-  );
-
-  try {
-    await checkoutCubit.placeOrder(
-      items: items,
-      total: total,
-      shippingInfo: _shippingInfo,
-      paymentInfo: paymentInfo,
-      cartCubit: context.read<CartCubit>(), 
+    final paymentInfo = PaymentInfo(
+      method: _paymentMethod,
+      cardLastFour: _cardNumber.length > 4
+          ? _cardNumber.substring(_cardNumber.length - 4)
+          : '0000',
+      transactionId: 'TXN-${DateTime.now().millisecondsSinceEpoch}',
     );
 
-    final cartState = cartCubit.state;
-    if (cartState is CartLoaded && cartState.cartId != null) {
-      final cartId = cartState.cartId!;
-
-      // تأكيد نجاح الإرسال إلى الباك إند
-      await orderCubit.addOrderFromBackend(
-        cartId,
-        {
-          'name': _shippingInfo.name,
-          'address': _shippingInfo.address,
-          'city': _shippingInfo.city,
-          'state': _shippingInfo.state,
-          'zipCode': _shippingInfo.zipCode,
-          'phone': _shippingInfo.phone,
-          'email': _shippingInfo.email,
-        },
-          cartCubit,
+    try {
+      await checkoutCubit.placeOrder(
+        items: items,
+        total: total,
+        shippingInfo: _shippingInfo,
+        paymentInfo: paymentInfo,
+        cartCubit: context.read<CartCubit>(),
       );
 
-      print('✅ Order sent to backend successfully.');
+      final cartState = cartCubit.state;
+      if (cartState is CartLoaded && cartState.cartId != null) {
+        final cartId = cartState.cartId!;
 
-    } else {
-      // No UI message shown if cart not available for checkout
+        // تأكيد نجاح الإرسال إلى الباك إند
+        await orderCubit.addOrderFromBackend(
+          cartId,
+          {
+            'name': _shippingInfo.name,
+            'address': _shippingInfo.address,
+            'city': _shippingInfo.city,
+            'state': _shippingInfo.state,
+            'zipCode': _shippingInfo.zipCode,
+            'phone': _shippingInfo.phone,
+            'email': _shippingInfo.email,
+          },
+          cartCubit,
+        );
+
+        print('✅ Order sent to backend successfully.');
+      } else {
+        // No UI message shown if cart not available for checkout
+      }
+    } catch (e) {
+      print('❌ Error during checkout: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Checkout failed: $e')),
+      );
     }
-  } catch (e) {
-    print('❌ Error during checkout: $e');
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Checkout failed: $e')),
-    );
   }
 }
+
+class PromoCodeSection extends StatefulWidget {
+  final Function(String) onApply;
+  final String? initialCode;
+
+  const PromoCodeSection({
+    super.key,
+    required this.onApply,
+    this.initialCode,
+  });
+
+  @override
+  State<PromoCodeSection> createState() => _PromoCodeSectionState();
+}
+
+class _PromoCodeSectionState extends State<PromoCodeSection> {
+  final _promoController = TextEditingController();
+  String? _error;
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialCode != null) {
+      _promoController.text = widget.initialCode!;
+    }
+  }
+
+  @override
+  void dispose() {
+    _promoController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _applyPromo() async {
+    final code = _promoController.text.trim();
+
+    if (code.isEmpty) {
+      setState(() {
+        _error = 'Please enter a promo code';
+      });
+      return;
+    }
+
+    setState(() {
+      _error = null;
+      _isLoading = true;
+    });
+
+    try {
+      await widget.onApply(code);
+    } catch (e) {
+      setState(() {
+        _error = e.toString();
+      });
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+
+    // Enhanced background colors for both modes
+    final textFieldBgColor = isDarkMode
+        ? theme.colorScheme.surfaceVariant.withOpacity(0.8)
+        : theme.colorScheme.surfaceVariant.withOpacity(0.4);
+
+    final focusedBorderColor = theme.colorScheme.primary;
+    final unfocusedBorderColor = isDarkMode
+        ? theme.dividerColor.withOpacity(0.3)
+        : theme.dividerColor.withOpacity(0.2);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(
+                'Promo Code',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Icon(
+                Icons.local_offer_outlined,
+                size: 18,
+                color: theme.colorScheme.primary,
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: _promoController,
+                  decoration: InputDecoration(
+                    hintText: 'Enter promo code',
+                    hintStyle: TextStyle(
+                      color:
+                          theme.hintColor.withOpacity(isDarkMode ? 0.6 : 0.7),
+                    ),
+                    errorText: _error,
+                    errorMaxLines: 2,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(
+                        color: unfocusedBorderColor,
+                        width: 1.0,
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(
+                        color: unfocusedBorderColor,
+                        width: 1.0,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(
+                        color: focusedBorderColor,
+                        width: 1.5,
+                      ),
+                    ),
+                    filled: true,
+                    fillColor: textFieldBgColor,
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 16,
+                    ),
+                    suffixIcon: _promoController.text.isNotEmpty
+                        ? IconButton(
+                            icon: Icon(
+                              Icons.clear,
+                              color:
+                                  theme.colorScheme.onSurface.withOpacity(0.5),
+                            ),
+                            onPressed: () {
+                              _promoController.clear();
+                              setState(() {
+                                _error = null;
+                              });
+                            },
+                          )
+                        : null,
+                  ),
+                  style: TextStyle(
+                    color: theme.colorScheme.onSurface,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  onSubmitted: (_) => _applyPromo(),
+                ),
+              ),
+              const SizedBox(width: 12),
+              SizedBox(
+                height: 56,
+                child: ElevatedButton(
+                  onPressed: _isLoading ? null : _applyPromo,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: theme.colorScheme.primary,
+                    foregroundColor: theme.colorScheme.onPrimary,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 16,
+                    ),
+                    elevation: 0,
+                    shadowColor: Colors.transparent,
+                  ),
+                  child: _isLoading
+                      ? SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: theme.colorScheme.onPrimary,
+                          ),
+                        )
+                      : const Text('Apply'),
+                ),
+              ),
+            ],
+          ),
+          if (_error != null) ...[
+            const SizedBox(height: 8),
+            Text(
+              _error!,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.error,
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
 }
