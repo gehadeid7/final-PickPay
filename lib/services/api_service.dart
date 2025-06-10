@@ -1446,11 +1446,17 @@ Future<http.Response> updateReview({
   );
 }
 Future<http.Response> deleteReview(String reviewId) async {
+  if (reviewId.isEmpty) {
+    throw Exception('Review ID is missing');
+  }
   final url = '$baseUrl${BackendEndpoints.deleteReview(reviewId)}';
   final headers = await _buildHeaders(authorized: true);
   final response = await http.delete(Uri.parse(url), headers: headers);
 
   if (response.statusCode == 204) return response;
+  // Log the URL and response for debugging
+  print('❌ DELETE $url');
+  print('❌ Response [${response.statusCode}]: ${response.body}');
   throw Exception('Failed to delete review: ${response.body}');
 }
 }
