@@ -71,7 +71,27 @@ class _ReviewCardState extends State<ReviewCard> {
 
   Future<void> _handleDelete(BuildContext context, bool isDarkMode) async {
     if (_isDeleting) return;
-
+    final reviewId = widget.review.id;
+    final productId = widget.review.productId ?? '';
+    if (reviewId.isEmpty || productId.isEmpty) {
+      String missing = '';
+      if (reviewId.isEmpty && productId.isEmpty) {
+        missing = 'Review ID and Product ID are missing.';
+      } else if (reviewId.isEmpty) {
+        missing = 'Review ID is missing.';
+      } else {
+        missing = 'Product ID is missing.';
+      }
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: ' + missing),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+      return;
+    }
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (BuildContext dialogContext) {
@@ -121,8 +141,8 @@ class _ReviewCardState extends State<ReviewCard> {
       setState(() => _isDeleting = true);
       try {
         await _reviewCubit.deleteReview(
-          reviewId: widget.review.id,
-          productId: widget.review.productId!,
+          reviewId: reviewId,
+          productId: productId,
         );
         if (mounted && widget.onDeleted != null) {
           widget.onDeleted!();
@@ -208,7 +228,105 @@ class _ReviewCardState extends State<ReviewCard> {
                           ],
                         ),
                       ),
-                      if (isOwner && !_isDeleting)
+                      if (isOwner && !_isDeleting) ...[
+                        IconButton(
+                          icon: Icon(
+                            Icons.edit_outlined,
+                            color: theme.primaryColor,
+                          ),
+                          tooltip: 'Edit Review',
+                          onPressed: () async {
+                            final result = await showDialog<Map<String, dynamic>>(
+                              context: context,
+                              builder: (context) {
+                                final _editController = TextEditingController(text: widget.review.content);
+                                double _editRating = widget.review.rating;
+                                return StatefulBuilder(
+                                  builder: (context, setState) {
+                                    return AlertDialog(
+                                      backgroundColor: isDarkMode ? Colors.grey[850] : Colors.white,
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                      title: Text('Edit Review', style: TextStyle(color: isDarkMode ? Colors.white : Colors.black)),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          TextFormField(
+                                            controller: _editController,
+                                            maxLines: 3,
+                                            decoration: InputDecoration(
+                                              labelText: 'Your Review',
+                                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                                            ),
+                                          ),
+                                          const SizedBox(height: 16),
+                                          Row(
+                                            children: [
+                                              const Text('Rating:'),
+                                              const SizedBox(width: 8),
+                                              Expanded(
+                                                child: Slider(
+                                                  value: _editRating,
+                                                  min: 1,
+                                                  max: 5,
+                                                  divisions: 4,
+                                                  label: _editRating.toStringAsFixed(1),
+                                                  onChanged: (v) {
+                                                    setState(() => _editRating = v);
+                                                  },
+                                                ),
+                                              ),
+                                              Text(_editRating.toStringAsFixed(1)),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () => Navigator.of(context).pop(),
+                                          child: const Text('Cancel'),
+                                        ),
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop({
+                                              'content': _editController.text,
+                                              'rating': _editRating,
+                                            });
+                                          },
+                                          child: const Text('Save'),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                            );
+                            if (result != null && result['content'] != null && result['rating'] != null) {
+                              if (widget.review.id.isEmpty || (widget.review.productId ?? '').isEmpty) {
+                                String missing = '';
+                                if (widget.review.id.isEmpty && (widget.review.productId ?? '').isEmpty) {
+                                  missing = 'Review ID and Product ID are missing.';
+                                } else if (widget.review.id.isEmpty) {
+                                  missing = 'Review ID is missing.';
+                                } else {
+                                  missing = 'Product ID is missing.';
+                                }
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('Error: ' + missing),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                                return;
+                              }
+                              await _reviewCubit.updateReview(
+                                reviewId: widget.review.id,
+                                rating: result['rating'],
+                                reviewContent: result['content'],
+                                productId: widget.review.productId ?? '',
+                              );
+                            }
+                          },
+                        ),
                         IconButton(
                           icon: Icon(
                             Icons.delete_outline,
@@ -216,6 +334,7 @@ class _ReviewCardState extends State<ReviewCard> {
                           ),
                           onPressed: () => _handleDelete(context, isDarkMode),
                         ),
+                      ],
                     ],
                   ),
                   const SizedBox(height: 12),
@@ -243,16 +362,14 @@ class _ReviewCardState extends State<ReviewCard> {
                       ),
                     ],
                   ),
-                  if (widget.review.content.isNotEmpty) ...[
-                    const SizedBox(height: 12),
-                    Text(
-                      widget.review.content,
-                      style: TextStyle(
-                        color: isDarkMode ? Colors.grey[300] : Colors.grey[700],
-                        height: 1.5,
-                      ),
+                  const SizedBox(height: 12),
+                  Text(
+                    widget.review.content,
+                    style: TextStyle(
+                      color: isDarkMode ? Colors.grey[300] : Colors.grey[700],
+                      height: 1.5,
                     ),
-                  ],
+                  ),
                 ],
               ),
             ),

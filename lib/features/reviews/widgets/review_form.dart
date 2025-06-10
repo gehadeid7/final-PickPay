@@ -73,8 +73,14 @@ class _ReviewFormState extends State<ReviewForm> {
           _contentController.clear();
           setState(() => _rating = 0);
         } else if (state is ReviewError) {
+          String msg = state.message;
+          if (msg.contains('already reviewed') || msg.contains('duplicate')) {
+            msg = 'You have already reviewed this product. Please edit your existing review.';
+          } else if (msg.contains('productId is missing')) {
+            msg = 'Error: Product ID is missing.';
+          }
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message)),
+            SnackBar(content: Text(msg)),
           );
         }
       },

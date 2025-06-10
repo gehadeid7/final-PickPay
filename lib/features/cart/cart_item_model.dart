@@ -45,47 +45,35 @@ class CartItemModel {
       }
 
       // Ensure product data has required fields
-      if (productData['_id'] == null && productData['id'] == null) {
+      final productId = productData['_id'] ?? productData['id'];
+      // Local mapping for productId to category if missing
+      final Map<String, String> productCategoryMap = {
+        // Example: '68252918a68b49cb06164210': 'appliances',
+        // Add more mappings as needed
+      };
+      String? category = productData['category'];
+      if ((category == null || category == 'unknown') && productId != null) {
+        category = productCategoryMap[productId] ?? 'unknown';
+      }
+      if (productId == null) {
         throw Exception('Product ID is missing');
       }
 
-      // Create product model from the data
-      // Ensure imagePaths is always null if no image is available
-      List<String>? imagePaths;
-      if (productData['images'] != null) {
-        if (productData['images'] is List) {
-          imagePaths = (productData['images'] as List)
-              .where((img) => img != null && img.toString().isNotEmpty)
-              .map((img) => img.toString())
-              .toList();
-        } else if (productData['images'] is String && productData['images'].toString().isNotEmpty) {
-          imagePaths = [productData['images'].toString()];
-        }
-      }
-      if ((imagePaths == null || imagePaths.isEmpty || (imagePaths.length == 1 && imagePaths[0].isEmpty)) && productData['imageCover'] != null && productData['imageCover'].toString().isNotEmpty) {
-        imagePaths = [productData['imageCover'].toString()];
-      }
-      if (imagePaths == null || imagePaths.isEmpty || (imagePaths.length == 1 && imagePaths[0].isEmpty)) {
-        imagePaths = null; // Let the UI handle the placeholder
-      }
+      // Always use local asset path for image, ignore backend category
+      // Example: assets/appliances/product{productId}/1.png
+      // You can change 'appliances' to another default if needed
+      String assetCategory = 'appliances'; // or any default category
+      String assetProductId = productId.toString();
+      String assetPath = 'assets/' + assetCategory + '/product' + assetProductId + '/1.png';
+      List<String> imagePaths = [assetPath];
 
       final product = ProductsViewsModel.fromJson({
         ...productData,
-        'id': productData['_id'] ?? productData['id'],
+        'id': productId,
         'title': productData['title'] ?? productData['name'] ?? 'Unnamed Product',
         'price': productData['price'] ?? 0.0,
         'imagePaths': imagePaths,
-        'category': productData['category'],
-        'subcategory': productData['subcategory'],
-        'brand': productData['brand'],
-        'color': productData['color'],
-        'aboutThisItem': productData['aboutThisItem'],
-        'deliveryDate': productData['deliveryDate'],
-        'deliveryTimeLeft': productData['deliveryTimeLeft'],
-        'deliveryLocation': productData['deliveryLocation'],
-        'inStock': productData['inStock'],
-        'shipsFrom': productData['shipsFrom'],
-        'soldBy': productData['soldBy'],
+        'category': assetCategory,
       });
 
       return CartItemModel(

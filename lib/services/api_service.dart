@@ -14,7 +14,7 @@ import 'package:pickpay/features/categories_pages/widgets/product_card.dart';
 import 'package:http_parser/http_parser.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://192.168.1.2:3000/api/v1/';
+  static const String baseUrl = 'http://192.168.1.4:3000/api/v1/';
 
   Future<Map<String, String>> _buildHeaders({
     Map<String, String>? headers,
@@ -1443,19 +1443,24 @@ class ApiService {
     if (rating != null) body['rating'] = rating;
     if (review != null) body['review'] = review;
 
-    return await put(
-      endpoint: BackendEndpoints.updateReview(reviewId),
-      body: body,
-      authorized: true,
-    );
+  return await put(
+    endpoint: BackendEndpoints.updateReview(reviewId),
+    body: body,
+    authorized: true,
+  );
+}
+Future<http.Response> deleteReview(String reviewId) async {
+  if (reviewId.isEmpty) {
+    throw Exception('Review ID is missing');
   }
+  final url = '$baseUrl${BackendEndpoints.deleteReview(reviewId)}';
+  final headers = await _buildHeaders(authorized: true);
+  final response = await http.delete(Uri.parse(url), headers: headers);
 
-  Future<http.Response> deleteReview(String reviewId) async {
-    final url = '$baseUrl${BackendEndpoints.deleteReview(reviewId)}';
-    final headers = await _buildHeaders(authorized: true);
-    final response = await http.delete(Uri.parse(url), headers: headers);
-
-    if (response.statusCode == 204) return response;
-    throw Exception('Failed to delete review: ${response.body}');
-  }
+  if (response.statusCode == 204) return response;
+  // Log the URL and response for debugging
+  print('❌ DELETE $url');
+  print('❌ Response [${response.statusCode}]: ${response.body}');
+  throw Exception('Failed to delete review: ${response.body}');
+}
 }

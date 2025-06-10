@@ -24,7 +24,6 @@ class Review {
   factory Review.fromJson(Map<String, dynamic> json) {
     final createdAtData = json['createdAt'];
     DateTime createdAt;
-
     if (createdAtData is Timestamp) {
       createdAt = createdAtData.toDate();
     } else if (createdAtData is String) {
@@ -33,17 +32,36 @@ class Review {
       createdAt = DateTime.now(); // Fallback
     }
 
+    // userId extraction
+    String userId = '';
+    if (json['user'] is String) {
+      userId = json['user'];
+    } else if (json['user'] != null && json['user']['_id'] != null) {
+      userId = json['user']['_id'];
+    } else if (json['userId'] != null) {
+      userId = json['userId'];
+    }
+
+    // Robust id and productId extraction
+    String id = json['id'] as String? ?? json['_id'] as String? ?? '';
+    String? productId = json['productId'] as String? ?? json['product'] as String?;
+
+    if (id.isEmpty || (productId == null || productId.isEmpty)) {
+      // ignore: avoid_print
+      print('[Review.fromJson] WARNING: Missing id or productId in review json: ' + json.toString());
+    }
+
     return Review(
-      id: json['id'] as String? ?? '',
-      userId: json['userId'] as String? ?? '',
+      id: id,
+      userId: userId,
       userImage: json['userImage'] as String? ?? '',
       userName: (json['user'] != null && json['user']['name'] != null)
           ? json['user']['name']
           : 'User',
-      content: json['content'] as String? ?? '',
+      content: json['content'] ?? json['review'] ?? json['text'] ?? '',
       rating: (json['ratings'] as num?)?.toDouble() ?? 0.0,
       createdAt: createdAt,
-      productId: json['productId'] as String?,
+      productId: productId,
     );
   }
 

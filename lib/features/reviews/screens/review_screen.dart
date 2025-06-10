@@ -89,7 +89,19 @@ class _ReviewScreenState extends State<ReviewScreen> {
               ),
             ),
           );
-        } else if (state is ReviewsLoaded) {
+        } else if (state is ReviewsLoaded || state is ReviewSubmitted) {
+          // If review was just submitted, close the form
+          if (state is ReviewSubmitted && _showReviewForm) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (mounted) setState(() => _showReviewForm = false);
+            });
+          }
+          final reviews = state is ReviewsLoaded ? state.reviews : (_reviewCubit.state as ReviewsLoaded).reviews;
+          // DEBUG LOG: Print all reviews and their content
+          for (final review in reviews) {
+            // ignore: avoid_print
+            print('[ReviewScreen] Review by: \\${review.userName} | Content: \\${review.content} | Rating: \\${review.rating}');
+          }
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -112,7 +124,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
                     ),
                   ],
                 ),
-                child: RatingDistribution(reviews: state.reviews),
+                child: RatingDistribution(reviews: reviews),
               ),
               // Always show the review button and form as part of the UI
               Container(
@@ -170,7 +182,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
                     ),
                   ),
                 ),
-              if (state.reviews.isNotEmpty) ...[
+              if (reviews.isNotEmpty) ...[
                 Padding(
                   padding: const EdgeInsets.symmetric(
                       horizontal: 16.0, vertical: 16.0),
@@ -195,7 +207,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
                       ),
                       const Spacer(),
                       Text(
-                        '${state.reviews.length} reviews',
+                        '${reviews.length} reviews',
                         style: TextStyle(
                           color:
                               isDarkMode ? Colors.grey[400] : Colors.grey[600],
@@ -208,10 +220,42 @@ class _ReviewScreenState extends State<ReviewScreen> {
               ],
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: ReviewList(
-                  productId: widget.productId!,
-                  reviews: state.reviews,
-                  scrollable: !widget.isEmbedded,
+                child: Column(
+                  children: [
+                    if (reviews.any((r) => r.id.isEmpty || (r.productId ?? '').isEmpty))
+                      Container(
+                        margin: const EdgeInsets.only(bottom: 8),
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.red[50],
+                          border: Border.all(color: Colors.red[200]!),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.warning, color: Colors.red, size: 20),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                'Warning: One or more reviews are missing their ID or product ID. Edit/delete will not work for these.',
+                                style: const TextStyle(color: Colors.red, fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    // Debug print for all reviews
+                    ...reviews.map((r) {
+                      // ignore: avoid_print
+                      print('[DEBUG] ReviewCard: reviewId="${r.id}", productId="${r.productId}"');
+                      return const SizedBox.shrink();
+                    }),
+                    ReviewList(
+                      productId: widget.productId!,
+                      reviews: reviews,
+                      scrollable: !widget.isEmbedded,
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(height: 16),

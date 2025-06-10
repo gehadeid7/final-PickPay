@@ -13,22 +13,34 @@ class ReviewCubit extends Cubit<ReviewState> {
     required double rating,
     required String reviewContent,
   }) async {
+    if (productId.isEmpty) {
+      emit(ReviewError('productId is missing'));
+      return;
+    }
     emit(ReviewLoading());
     try {
       final response = await apiService.createReview(
         productId: productId,
         rating: rating,
-        review: reviewContent, // now this will be sent as 'content' in the POST body
+        review: reviewContent,
       );
 
       if (response.statusCode == 201 || response.statusCode == 200) {
         emit(ReviewSubmitted());
         await fetchReviews(productId: productId);
       } else {
-        emit(ReviewError('Failed to submit review: \\${response.body}'));
+        String msg = response.body;
+        if (msg.contains('already reviewed') || msg.contains('duplicate')) {
+          msg = 'You have already reviewed this product.';
+        }
+        emit(ReviewError('Failed to submit review: $msg'));
       }
     } catch (e) {
-      emit(ReviewError(e.toString()));
+      String msg = e.toString();
+      if (msg.contains('already reviewed') || msg.contains('duplicate')) {
+        msg = 'You have already reviewed this product.';
+      }
+      emit(ReviewError(msg));
     }
   }
 
@@ -49,6 +61,10 @@ class ReviewCubit extends Cubit<ReviewState> {
     String? reviewContent,
     required String productId,
   }) async {
+    if (reviewId.isEmpty || productId.isEmpty) {
+      emit(ReviewError('reviewId or productId is missing'));
+      return;
+    }
     emit(ReviewLoading());
     try {
       final response = await apiService.updateReview(
@@ -72,6 +88,10 @@ class ReviewCubit extends Cubit<ReviewState> {
     required String reviewId,
     required String productId,
   }) async {
+    if (reviewId.isEmpty || productId.isEmpty) {
+      emit(ReviewError('reviewId or productId is missing'));
+      return;
+    }
     emit(ReviewLoading());
     try {
       final response = await apiService.deleteReview(reviewId);
