@@ -30,32 +30,21 @@ class _AppliancesViewBodyState extends State<AppliancesViewBody> {
 
   // Map of product detail pages
   static final Map<String, Widget> detailPages = {
-    '68252918a68b49cb06164204':
-        const AppliancesProduct1(), // Koldair Water Dispenser
-    '68252918a68b49cb06164205':
-        const AppliancesProduct2(), // Fresh Jumbo Stainless Steel
-    '68252918a68b49cb06164206':
-        const AppliancesProduct3(), // Midea Refrigerator
-    '68252918a68b49cb06164207':
-        const AppliancesProduct4(), // Zanussi Washing Machine
-    '68252918a68b49cb06164208': const AppliancesProduct5(), // Midea Dishwasher
-    '68252918a68b49cb06164209': const AppliancesProduct6(), // deime Air Fryer
-    '68252918a68b49cb0616420a':
-        const AppliancesProduct7(), // Black & Decker Coffee Maker
-    '68252918a68b49cb0616420b':
-        const AppliancesProduct8(), // Black & Decker Toaster
-    '68252918a68b49cb0616420c': const AppliancesProduct9(), // Panasonic Iron
-    '68252918a68b49cb0616420d':
-        const AppliancesProduct10(), // Fresh Vacuum Cleaner
-    '68252918a68b49cb0616420e': const AppliancesProduct11(), // Fresh Wall Fan
-    '68252918a68b49cb0616420f':
-        const AppliancesProduct12(), // Tornado Water Heater
-    '68252918a68b49cb06164210':
-        const AppliancesProduct13(), // Black & Decker Blender
-    '68252918a68b49cb06164211':
-        const AppliancesProduct14(), // Black & Decker Kettle
-    '68252918a68b49cb06164212':
-        const AppliancesProduct15(), // Black & Decker Dough Mixer
+    '68252918a68b49cb06164204': const AppliancesProduct1(),
+    '68252918a68b49cb06164205': const AppliancesProduct2(),
+    '68252918a68b49cb06164206': const AppliancesProduct3(),
+    '68252918a68b49cb06164207': const AppliancesProduct4(),
+    '68252918a68b49cb06164208': const AppliancesProduct5(),
+    '68252918a68b49cb06164209': const AppliancesProduct6(),
+    '68252918a68b49cb0616420a': const AppliancesProduct7(),
+    '68252918a68b49cb0616420b': const AppliancesProduct8(),
+    '68252918a68b49cb0616420c': const AppliancesProduct9(),
+    '68252918a68b49cb0616420d': const AppliancesProduct10(),
+    '68252918a68b49cb0616420e': const AppliancesProduct11(),
+    '68252918a68b49cb0616420f': const AppliancesProduct12(),
+    '68252918a68b49cb06164210': const AppliancesProduct13(),
+    '68252918a68b49cb06164211': const AppliancesProduct14(),
+    '68252918a68b49cb06164212': const AppliancesProduct15(),
   };
 
   @override

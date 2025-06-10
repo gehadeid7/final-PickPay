@@ -8,7 +8,7 @@ class BeautyProduct11 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: "68132a95ff7813b3d47f9da11",
+      id: "682b00d16977bd89257c0ea7",
       title: 'L’Oréal Paris Elvive Hyaluron Pure Shampoo 400ML',
       imagePaths: [
         'assets/beauty_products/haircare_1/1.png',

@@ -8,7 +8,7 @@ class BeautyProduct2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: "68132a95ff7813b3d47f9da2",
+      id: "682b00d16977bd89257c0e9e",
       title:
           'L\'Oréal Paris Infaillible 24H Matte Cover Foundation 200 Sable Dore - Oil Control, High Coverage',
       imagePaths: [

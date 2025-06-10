@@ -8,7 +8,7 @@ class BeautyProduct1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: "68132a95ff7813b3d47f9da1",
+      id: "682b00d16977bd89257c0e9d",
       title:
           'L’Oréal Paris Volume Million Lashes Panorama Mascara in Black, 9.9 ml',
       imagePaths: [

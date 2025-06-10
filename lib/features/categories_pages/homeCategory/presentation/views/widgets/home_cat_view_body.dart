@@ -1,6 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:pickpay/features/categories_pages/models/product_model.dart';
+
 import 'package:pickpay/features/categories_pages/products_views/home_products/home_product1.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product2.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product3.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product4.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product5.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product6.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product7.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product8.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product9.dart';
 import 'package:pickpay/features/categories_pages/products_views/home_products/home_product10.dart';
 import 'package:pickpay/features/categories_pages/products_views/home_products/home_product11.dart';
 import 'package:pickpay/features/categories_pages/products_views/home_products/home_product12.dart';
@@ -11,15 +20,7 @@ import 'package:pickpay/features/categories_pages/products_views/home_products/h
 import 'package:pickpay/features/categories_pages/products_views/home_products/home_product17.dart';
 import 'package:pickpay/features/categories_pages/products_views/home_products/home_product18.dart';
 import 'package:pickpay/features/categories_pages/products_views/home_products/home_product19.dart';
-import 'package:pickpay/features/categories_pages/products_views/home_products/home_product2.dart';
 import 'package:pickpay/features/categories_pages/products_views/home_products/home_product20.dart';
-import 'package:pickpay/features/categories_pages/products_views/home_products/home_product3.dart';
-import 'package:pickpay/features/categories_pages/products_views/home_products/home_product4.dart';
-import 'package:pickpay/features/categories_pages/products_views/home_products/home_product5.dart';
-import 'package:pickpay/features/categories_pages/products_views/home_products/home_product6.dart';
-import 'package:pickpay/features/categories_pages/products_views/home_products/home_product7.dart';
-import 'package:pickpay/features/categories_pages/products_views/home_products/home_product8.dart';
-import 'package:pickpay/features/categories_pages/products_views/home_products/home_product9.dart';
 import 'package:pickpay/features/categories_pages/widgets/base_category_view.dart';
 import 'package:pickpay/services/api_service.dart';
 
@@ -33,7 +34,6 @@ class HomeCategoryViewBody extends StatefulWidget {
 class _HomeCategoryViewBodyState extends State<HomeCategoryViewBody> {
   late Future<List<ProductsViewsModel>> _productsFuture;
 
-  // Map product ID to detail page
   static final Map<String, Widget> detailPages = {
     '681dab0df9c9147444b452cd': const HomeProduct1(),
     '681dab0df9c9147444b452ce': const HomeProduct2(),
@@ -66,25 +66,44 @@ class _HomeCategoryViewBodyState extends State<HomeCategoryViewBody> {
   Future<List<ProductsViewsModel>> _loadProducts() async {
     final apiProducts = await ApiService().loadProducts();
 
+    final Map<String, String> productImagePaths = {
+      '681dab0df9c9147444b452cd': 'assets/Home_products/furniture/furniture1/1.png',
+      '681dab0df9c9147444b452ce': 'assets/Home_products/furniture/furniture2/1.png',
+      '681dab0df9c9147444b452cf': 'assets/Home_products/furniture/furniture3/1.png',
+      '681dab0df9c9147444b452d0': 'assets/Home_products/furniture/furniture4/1.png',
+      '681dab0df9c9147444b452d1': 'assets/Home_products/furniture/furniture5/1.png',
+      '681dab0df9c9147444b452d2': 'assets/Home_products/home-decor/home_decor1/1.png',
+      '681dab0df9c9147444b452d3': 'assets/Home_products/home-decor/home_decor2/1.png',
+      '681dab0df9c9147444b452d4': 'assets/Home_products/home-decor/home_decor3/1.png',
+      '681dab0df9c9147444b452d5': 'assets/Home_products/home-decor/home_decor4/1.png',
+      '681dab0df9c9147444b452d6': 'assets/Home_products/home-decor/home_decor5/1.png',
+      '681dab0df9c9147444b452d7': 'assets/Home_products/kitchen/kitchen1/1.png',
+      '681dab0df9c9147444b452d8': 'assets/Home_products/kitchen/kitchen2/1.png',
+      '681dab0df9c9147444b452d9': 'assets/Home_products/kitchen/kitchen3/1.png',
+      '681dab0df9c9147444b452da': 'assets/Home_products/kitchen/kitchen4/1.png',
+      '681dab0df9c9147444b452db': 'assets/Home_products/kitchen/kitchen5/1.png',
+      '681dab0df9c9147444b452dc': 'assets/Home_products/bath_and_bedding/bath1/1.png',
+      '681dab0df9c9147444b452dd': 'assets/Home_products/bath_and_bedding/bath2/1.png',
+      '681dab0df9c9147444b452de': 'assets/Home_products/bath_and_bedding/bath3/1.png',
+      '681dab0df9c9147444b452df': 'assets/Home_products/bath_and_bedding/bath4/1.png',
+      '681dab0df9c9147444b452e0': 'assets/Home_products/bath_and_bedding/bath5/1.png',
+    };
+
     return apiProducts
+        .where((apiProduct) => detailPages.containsKey(apiProduct.id))
         .map((apiProduct) {
-          final productIndex = detailPages.keys.toList().indexOf(apiProduct.id) + 1;
+      final imagePath = productImagePaths[apiProduct.id] ?? '';
 
-          // Home category asset structure
-          final imagePath = 'assets/home_products/home$productIndex/1.png';
-
-          return ProductsViewsModel(
-            id: apiProduct.id,
-            title: apiProduct.name,
-            price: apiProduct.price,
-            originalPrice: apiProduct.originalPrice,
-            rating: apiProduct.rating ?? 4.5,
-            reviewCount: apiProduct.reviewCount ?? 100,
-            imagePaths: [imagePath],
-          );
-        })
-        .where((product) => detailPages.containsKey(product.id))
-        .toList();
+      return ProductsViewsModel(
+        id: apiProduct.id,
+        title: apiProduct.name,
+        price: apiProduct.price,
+        originalPrice: apiProduct.originalPrice,
+        rating: apiProduct.rating ?? 4.5,
+        reviewCount: apiProduct.reviewCount ?? 100,
+        imagePaths: [imagePath],
+      );
+    }).toList();
   }
 
   Widget? _findDetailPageById(String productId) {
@@ -114,7 +133,8 @@ class _HomeCategoryViewBodyState extends State<HomeCategoryViewBody> {
                 ),
                 const SizedBox(height: 16),
                 ElevatedButton(
-                  onPressed: () => setState(() => _productsFuture = _loadProducts()),
+                  onPressed: () =>
+                      setState(() => _productsFuture = _loadProducts()),
                   child: const Text('Retry'),
                 ),
               ],

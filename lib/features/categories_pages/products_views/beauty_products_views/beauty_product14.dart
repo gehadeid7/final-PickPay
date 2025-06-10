@@ -8,7 +8,7 @@ class BeautyProduct14 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: "68132a95ff7813b3d47f9da14",
+      id: "682b00d16977bd89257c0eaa",
       title:
           "L'Oreal Professionnel Absolut Repair 10-In-1 Hair Serum Oil - 90ml",
       imagePaths: [

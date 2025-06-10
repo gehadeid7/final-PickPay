@@ -8,7 +8,7 @@ class BeautyProduct5 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: "68132a95ff7813b3d47f9da5",
+      id: "682b00d16977bd89257c0ea1",
       title: 'Maybelline New York Lifter Lip Gloss, 005 Petal',
       imagePaths: [
         'assets/beauty_products/makeup_5/1.png',

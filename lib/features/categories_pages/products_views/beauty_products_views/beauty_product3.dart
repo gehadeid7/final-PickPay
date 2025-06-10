@@ -8,7 +8,7 @@ class BeautyProduct3 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: "68132a95ff7813b3d47f9da3",
+      id: "682b00d16977bd89257c0e9f",
       title: 'Cybele Smooth N`Wear Powder Blush Corail 17 - 3.7gm',
       imagePaths: [
         'assets/beauty_products/makeup_3/1.png',

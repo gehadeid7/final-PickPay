@@ -8,7 +8,7 @@ class BeautyProduct4 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: "68132a95ff7813b3d47f9da4",
+      id: "682b00d16977bd89257c0ea0",
       title:
           'Eva skin care cleansing & makeup remover facial wipes for normal/dry skin 20%',
       imagePaths: [
