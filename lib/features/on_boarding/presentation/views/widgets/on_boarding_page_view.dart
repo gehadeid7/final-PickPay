@@ -23,13 +23,15 @@ class _OnBoardingPageViewState extends State<OnBoardingPageView> {
           image: Assets.onBoardingImage1,
           backgroundimage: Assets.pageViewItem1BkColor,
           subTitle:
-              'Choose what you love, pay your way, and enjoy the experience—simple as that.',
+              'Choose what you love, pay your way,  and enjoy the experience - simple as that.',
           title: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('pick. ', style: TextStyles.bold23),
-              Text('Pay.', style: TextStyles.bold23),
-              Text(' Enjoy.', style: TextStyles.bold23),
+              Text('pick', style: TextStyles.bold23),
+              Text(' • ', style: TextStyles.bold23),
+              Text('Pay', style: TextStyles.bold23),
+              Text(' • ', style: TextStyles.bold23),
+              Text('Enjoy', style: TextStyles.bold23),
             ],
           ),
         ),
@@ -38,8 +40,16 @@ class _OnBoardingPageViewState extends State<OnBoardingPageView> {
           image: Assets.onBoardingImage2,
           backgroundimage: Assets.pageViewItem2BkColor,
           subTitle:
-              'Track, manage, and pay seamlessly—because convenience should come standard.',
-          title: Text('Your Wallet, Your Way', style: TextStyles.bold23),
+              'Browse thousands of products, find the best deals, and experience shopping like never before.',
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Discover Amazing Deals',
+                style: TextStyles.bold23,
+              ),
+            ],
+          ),
         ),
       ],
     );
