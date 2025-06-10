@@ -20,11 +20,11 @@ class _MobileAndTabletsPageState extends State<MobileAndTabletsPage> {
 
   // Map of product detail pages
   static final Map<String, Widget> detailPages = {
-    '6819e22b123a4faad16613be': const Product1View(), // iPhone 15 Pro Max
-    '6819e22b123a4faad16613bf': const Product2View(), // Redmi Note 13
-    '6819e22b123a4faad16613c0': const Product3View(), // Realme Note 50
-    '6819e22b123a4faad16613c1': const Product4View(), // Galaxy Tab A8
-    '6819e22b123a4faad16613c3': const Product5View(), // Samsung Galaxy Tab A9
+    '6819e22b123a4faad16613be': const Product1View(), // Samsung Galaxy S21
+    '6819e22b123a4faad16613bf': const Product2View(), // Sony Xperia 1 III
+    '6819e22b123a4faad16613c0': const Product3View(), // LG V60 ThinQ
+    '6819e22b123a4faad16613c1': const Product4View(), // Panasonic Toughbook
+    '6819e22b123a4faad16613c3': const Product5View(), // iPhone 13 Pro Max
   };
 
   @override
@@ -36,10 +36,7 @@ class _MobileAndTabletsPageState extends State<MobileAndTabletsPage> {
   Future<List<ProductsViewsModel>> _loadProducts() async {
     final apiProducts = await ApiService().loadProducts();
     return apiProducts
-        .where((product) =>
-            product.name.toLowerCase().contains('mobile') ||
-            product.name.toLowerCase().contains('phone') ||
-            product.name.toLowerCase().contains('tablet'))
+        .where((apiProduct) => detailPages.containsKey(apiProduct.id))
         .map((apiProduct) {
           final productIndex =
               detailPages.keys.toList().indexOf(apiProduct.id) + 1;
@@ -59,9 +56,7 @@ class _MobileAndTabletsPageState extends State<MobileAndTabletsPage> {
             isPickPayFulfilled: true,
             hasFreeDelivery: true,
           );
-        })
-        .where((product) => detailPages.containsKey(product.id))
-        .toList();
+        }).toList();
   }
 
   Widget? _findDetailPageById(String productId) {
