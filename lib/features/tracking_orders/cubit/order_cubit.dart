@@ -42,6 +42,10 @@ class OrderCubit extends Cubit<OrderState> {
 
       final ordersJson = await _apiService.getAllOrders();
       final ordersList = ordersJson.map((json) => OrderModel.fromJson(json)).toList();
+      // Debug print for each order
+      for (final order in ordersList) {
+        print('[DEBUG] Order: id=[32m${order.id}[0m, userId=${order.userId}, status=${order.status}, createdAt=${order.createdAt}');
+      }
 
       emit(state.copyWith(orders: ordersList, isLoading: false));
 

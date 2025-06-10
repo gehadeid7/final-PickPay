@@ -797,7 +797,13 @@ class _OrderDetailsSheet extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Text('Order #${order.id}', style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+                  Expanded(
+                    child: Text(
+                      'Order #${order.id}',
+                      style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
                   const SizedBox(width: 8),
                   _OrderList.buildStatusChip(context, order.status),
                 ],
