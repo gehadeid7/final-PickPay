@@ -118,10 +118,6 @@ class _SplashViewBodyState extends State<SplashViewBody>
       _isSplashVisible = false;
     });
 
-    await Future.delayed(_fadeOutDuration);
-
-    if (!mounted) return;
-
     Navigator.of(context).pushReplacement(
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) {
