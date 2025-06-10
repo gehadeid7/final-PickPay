@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pickpay/constants.dart';
 import 'package:pickpay/core/services/shared_preferences_singletone.dart';
 import 'package:pickpay/core/utils/app_text_styles.dart';
@@ -15,7 +14,7 @@ class PageViewItem extends StatelessWidget {
     required this.isVisible,
   });
 
-  final String image, backgroundimage;
+  final Widget image, backgroundimage;
   final String subTitle;
   final Widget title;
   final bool isVisible;
@@ -34,13 +33,13 @@ class PageViewItem extends StatelessWidget {
           child: Stack(
             children: [
               Positioned.fill(
-                child: SvgPicture.asset(backgroundimage, fit: BoxFit.fill),
+                child: backgroundimage,
               ),
               Positioned(
                 bottom: 0,
                 left: 0,
                 right: 0,
-                child: Image.asset(image, width: 200, height: 200),
+                child: image,
               ),
               Positioned(
                 top: 15,

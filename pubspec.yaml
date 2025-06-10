@@ -137,6 +137,11 @@ flutter:
   - assets/animations/splash2.json
   - assets/animations/splash3.json
   - assets/animations/splashhhh.json
+  - assets/animations/on2.json
+  - assets/animations/on1.json
+  - assets/animations/on11.json
+  - assets/animations/onn.json
+  - assets/animations/on22.json
   - assets/animations/toggle.json
   - assets/Categories/DailyDeals/
   - assets/Categories/Electronics/
