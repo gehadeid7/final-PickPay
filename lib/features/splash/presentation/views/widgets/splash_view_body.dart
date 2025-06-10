@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:lottie/lottie.dart';
 import 'package:pickpay/constants.dart';
 import 'package:pickpay/core/services/firebase_auth_service.dart';
 import 'package:pickpay/core/services/shared_preferences_singletone.dart';
@@ -18,16 +19,15 @@ class SplashViewBody extends StatefulWidget {
 
 class _SplashViewBodyState extends State<SplashViewBody>
     with SingleTickerProviderStateMixin {
-  static const Duration _minSplashDuration = Duration(milliseconds: 5000);
-  static const Duration _fadeOutDuration = Duration(milliseconds: 1000);
-  static const Duration _animationDuration = Duration(milliseconds: 3000);
+  static const Duration _minSplashDuration = Duration(milliseconds: 3000);
+  static const Duration _fadeOutDuration = Duration(milliseconds: 800);
+  static const Duration _animationDuration = Duration(milliseconds: 2000);
 
   late final AnimationController _controller;
   late final Animation<double> _scaleAnimation;
   late final Animation<double> _rotationAnimation;
   late final Animation<double> _fadeTextAnimation;
   late final Animation<Offset> _slideTextAnimation;
-  late final Animation<double> _glowAnimation;
 
   late final AudioPlayer _audioPlayer;
 
@@ -59,7 +59,7 @@ class _SplashViewBodyState extends State<SplashViewBody>
     _fadeTextAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: const Interval(0.3, 1.0, curve: Curves.easeInCubic),
+        curve: Curves.easeInOut,
       ),
     );
 
@@ -67,14 +67,7 @@ class _SplashViewBodyState extends State<SplashViewBody>
         Tween<Offset>(begin: const Offset(0, 0.5), end: Offset.zero).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: const Interval(0.3, 1.0, curve: Curves.elasticOut),
-      ),
-    );
-
-    _glowAnimation = Tween<double>(begin: 0.4, end: 1.2).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: Curves.easeInOutQuad,
+        curve: Curves.easeOutCubic,
       ),
     );
 
@@ -135,7 +128,7 @@ class _SplashViewBodyState extends State<SplashViewBody>
             child: child,
           );
         },
-        transitionDuration: const Duration(milliseconds: 500),
+        transitionDuration: const Duration(milliseconds: 800),
         opaque: false,
       ),
     );
@@ -183,57 +176,49 @@ class _SplashViewBodyState extends State<SplashViewBody>
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      AnimatedBuilder(
-                        animation: _controller,
-                        builder: (context, child) {
-                          return Transform.rotate(
-                            angle: _rotationAnimation.value,
-                            child: Transform.scale(
-                              scale: _scaleAnimation.value,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: (isDark
-                                              ? Colors.deepPurple[300]!
-                                              : Colors.pink[400]!)
-                                          .withOpacity(
-                                              0.7 * _glowAnimation.value),
-                                      blurRadius: 120 * _glowAnimation.value,
-                                      spreadRadius: 50 * _glowAnimation.value,
-                                    ),
-                                    BoxShadow(
-                                      color: (isDark
-                                              ? Colors.blue[400]!
-                                              : Colors.purple[300]!)
-                                          .withOpacity(
-                                              0.5 * _glowAnimation.value),
-                                      blurRadius: 100 * _glowAnimation.value,
-                                      spreadRadius: 40 * _glowAnimation.value,
-                                    ),
-                                    BoxShadow(
-                                      color: (isDark
-                                              ? Colors.purple[200]!
-                                              : Colors.pink[200]!)
-                                          .withOpacity(
-                                              0.3 * _glowAnimation.value),
-                                      blurRadius: 80 * _glowAnimation.value,
-                                      spreadRadius: 30 * _glowAnimation.value,
-                                    ),
-                                  ],
-                                ),
-                                child: child,
+                      // Lottie animation as background for the logo
+                      Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          // Lottie animation (behind the logo)
+                          SizedBox(
+                            child: Lottie.asset(
+                              isDark
+                                  ? 'assets/animations/splashhhh.json'
+                                  : 'assets/animations/splash2.json',
+                              fit: BoxFit.contain,
+                              repeat: true,
+                              animate: true,
+                              frameRate: FrameRate.max,
+                              options: LottieOptions(
+                                enableApplyingOpacityToLayers: true,
                               ),
+                              errorBuilder: (context, error, stackTrace) {
+                                debugPrint('Lottie error: $error');
+                                return Icon(Icons.error, color: Colors.red);
+                              },
                             ),
-                          );
-                        },
-                        child: Image.asset(
-                          Assets.appLogo,
-                          width: size.width * 0.4,
-                          height: size.width * 0.4,
-                          filterQuality: FilterQuality.high,
-                        ),
+                          ),
+                          // Logo on top of the Lottie animation
+                          AnimatedBuilder(
+                            animation: _controller,
+                            builder: (context, child) {
+                              return Transform.rotate(
+                                angle: _rotationAnimation.value,
+                                child: Transform.scale(
+                                  scale: _scaleAnimation.value,
+                                  child: child,
+                                ),
+                              );
+                            },
+                            child: Image.asset(
+                              Assets.appLogo,
+                              width: size.width * 0.4,
+                              height: size.width * 0.4,
+                              filterQuality: FilterQuality.high,
+                            ),
+                          ),
+                        ],
                       ),
                       SizedBox(height: size.height * 0.05),
                       ConstrainedBox(
@@ -256,22 +241,16 @@ class _SplashViewBodyState extends State<SplashViewBody>
                                     colors: [
                                       Theme.of(context).brightness ==
                                               Brightness.dark
-                                          ? const Color(
-                                              0xFFFF6B8B) // Vibrant pink for dark mode
-                                          : const Color(
-                                              0xFFFE117A), // Original pink for light mode
+                                          ? const Color(0xFFFF6B8B)
+                                          : const Color(0xFFFE117A),
                                       Theme.of(context).brightness ==
                                               Brightness.dark
-                                          ? const Color(
-                                              0xFF9D4EDD) // Rich purple for dark mode
-                                          : const Color(
-                                              0xFF9370DB), // Medium purple for light mode
+                                          ? const Color(0xFF9D4EDD)
+                                          : const Color(0xFF9370DB),
                                       Theme.of(context).brightness ==
                                               Brightness.dark
-                                          ? const Color(
-                                              0xFF5E60CE) // Electric blue for dark mode
-                                          : const Color(
-                                              0xFF483BAF), // Deep blue for light mode
+                                          ? const Color(0xFF5E60CE)
+                                          : const Color(0xFF483BAF),
                                     ],
                                     begin: Alignment.topLeft,
                                     end: Alignment.bottomRight,

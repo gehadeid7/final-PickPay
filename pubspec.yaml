@@ -131,7 +131,13 @@ flutter:
   - assets/banners/
   - assets/images/
   - assets/icons/
+  - assets/animations/
   - assets/animations/loading.json
+  - assets/animations/splash.json
+  - assets/animations/splash2.json
+  - assets/animations/splash3.json
+  - assets/animations/splashhhh.json
+  - assets/animations/toggle.json
   - assets/Categories/DailyDeals/
   - assets/Categories/Electronics/
   - assets/Categories/Appliances/
