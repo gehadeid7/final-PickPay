@@ -18,13 +18,16 @@ class SplashViewBody extends StatefulWidget {
 
 class _SplashViewBodyState extends State<SplashViewBody>
     with SingleTickerProviderStateMixin {
-  static const Duration _minSplashDuration = Duration(milliseconds: 2000);
+  static const Duration _minSplashDuration = Duration(milliseconds: 5000);
+  static const Duration _fadeOutDuration = Duration(milliseconds: 1000);
+  static const Duration _animationDuration = Duration(milliseconds: 3000);
 
   late final AnimationController _controller;
   late final Animation<double> _scaleAnimation;
   late final Animation<double> _rotationAnimation;
   late final Animation<double> _fadeTextAnimation;
   late final Animation<Offset> _slideTextAnimation;
+  late final Animation<double> _glowAnimation;
 
   late final AudioPlayer _audioPlayer;
 
@@ -34,27 +37,29 @@ class _SplashViewBodyState extends State<SplashViewBody>
   void initState() {
     super.initState();
 
-    // Animation controller
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1800),
+      duration: _animationDuration,
     );
 
-    // Scale pulse
     _scaleAnimation = TweenSequence<double>([
-      TweenSequenceItem(tween: Tween(begin: 1.0, end: 1.1), weight: 50),
-      TweenSequenceItem(tween: Tween(begin: 1.1, end: 1.0), weight: 50),
-    ]).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+      TweenSequenceItem(tween: Tween(begin: 1.0, end: 1.1), weight: 0.5),
+      TweenSequenceItem(tween: Tween(begin: 1.1, end: 1.0), weight: 0.5),
+    ]).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOut,
+    ));
 
-    // Rotation small angle
-    _rotationAnimation = Tween<double>(begin: -0.03, end: 0.03)
-        .animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+    _rotationAnimation =
+        Tween<double>(begin: -0.05, end: 0.05).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOut,
+    ));
 
-    // Text fade in + slide up
     _fadeTextAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: const Interval(0.4, 1.0, curve: Curves.easeIn),
+        curve: const Interval(0.3, 1.0, curve: Curves.easeInCubic),
       ),
     );
 
@@ -62,15 +67,20 @@ class _SplashViewBodyState extends State<SplashViewBody>
         Tween<Offset>(begin: const Offset(0, 0.5), end: Offset.zero).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: const Interval(0.4, 1.0, curve: Curves.easeOut),
+        curve: const Interval(0.3, 1.0, curve: Curves.elasticOut),
       ),
     );
 
-    _controller.repeat(reverse: true);
+    _glowAnimation = Tween<double>(begin: 0.4, end: 1.2).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeInOutQuad,
+      ),
+    );
 
+    _controller.forward();
     _audioPlayer = AudioPlayer()..setReleaseMode(ReleaseMode.stop);
     _playSplashSound();
-
     _navigateAfterSplash();
   }
 
@@ -84,6 +94,7 @@ class _SplashViewBodyState extends State<SplashViewBody>
   Future<void> _playSplashSound() async {
     try {
       await _audioPlayer.play(AssetSource('sounds/pickpay_jingle.wav'));
+      debugPrint('Playing splash sound...');
     } catch (e) {
       debugPrint('Error playing splash sound: $e');
     }
@@ -97,7 +108,9 @@ class _SplashViewBodyState extends State<SplashViewBody>
 
     stopwatch.stop();
     final remaining = _minSplashDuration - stopwatch.elapsed;
-    if (remaining > Duration.zero) await Future.delayed(remaining);
+    if (remaining > Duration.zero) {
+      await Future.delayed(remaining);
+    }
 
     if (!mounted) return;
 
@@ -105,17 +118,31 @@ class _SplashViewBodyState extends State<SplashViewBody>
       _isSplashVisible = false;
     });
 
-    await Future.delayed(const Duration(milliseconds: 600));
+    await Future.delayed(_fadeOutDuration);
 
     if (!mounted) return;
 
-    if (!isOnBoardingSeen) {
-      Navigator.pushReplacementNamed(context, OnBoardingView.routeName);
-    } else if (isLoggedIn) {
-      Navigator.pushReplacementNamed(context, MainNavigationScreen.routeName);
-    } else {
-      Navigator.pushReplacementNamed(context, SigninView.routeName);
-    }
+    Navigator.of(context).pushReplacement(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) {
+          if (!isOnBoardingSeen) {
+            return const OnBoardingView();
+          } else if (isLoggedIn) {
+            return const MainNavigationScreen();
+          } else {
+            return const SigninView();
+          }
+        },
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(
+            opacity: animation,
+            child: child,
+          );
+        },
+        transitionDuration: const Duration(milliseconds: 500),
+        opaque: false,
+      ),
+    );
   }
 
   void _skipSplash() {
@@ -126,22 +153,35 @@ class _SplashViewBodyState extends State<SplashViewBody>
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final size = MediaQuery.of(context).size;
 
     return GestureDetector(
       onTap: _skipSplash,
-      child: Scaffold(
-        backgroundColor: isDark ? Colors.black : Colors.white,
-        body: AnimatedOpacity(
-          duration: const Duration(milliseconds: 600),
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: isDark
+                ? [
+                    const Color(0xFF0F0F1E),
+                    const Color(0xFF1A1A3E),
+                    const Color(0xFF2D1B69),
+                  ]
+                : [
+                    Colors.white,
+                    const Color(0xFFFFF8FC),
+                    const Color(0xFFF8F8FF),
+                  ],
+          ),
+        ),
+        child: AnimatedOpacity(
+          duration: _fadeOutDuration,
           opacity: _isSplashVisible ? 1.0 : 0.0,
           child: SizedBox.expand(
             child: Stack(
               fit: StackFit.expand,
               children: [
-                // Moving gradient background
-                AnimatedGradientBackground(isDark: isDark),
-
-                // Main content
                 Center(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -154,35 +194,124 @@ class _SplashViewBodyState extends State<SplashViewBody>
                             angle: _rotationAnimation.value,
                             child: Transform.scale(
                               scale: _scaleAnimation.value,
-                              child: child,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: (isDark
+                                              ? Colors.deepPurple[300]!
+                                              : Colors.pink[400]!)
+                                          .withOpacity(
+                                              0.7 * _glowAnimation.value),
+                                      blurRadius: 120 * _glowAnimation.value,
+                                      spreadRadius: 50 * _glowAnimation.value,
+                                    ),
+                                    BoxShadow(
+                                      color: (isDark
+                                              ? Colors.blue[400]!
+                                              : Colors.purple[300]!)
+                                          .withOpacity(
+                                              0.5 * _glowAnimation.value),
+                                      blurRadius: 100 * _glowAnimation.value,
+                                      spreadRadius: 40 * _glowAnimation.value,
+                                    ),
+                                    BoxShadow(
+                                      color: (isDark
+                                              ? Colors.purple[200]!
+                                              : Colors.pink[200]!)
+                                          .withOpacity(
+                                              0.3 * _glowAnimation.value),
+                                      blurRadius: 80 * _glowAnimation.value,
+                                      spreadRadius: 30 * _glowAnimation.value,
+                                    ),
+                                  ],
+                                ),
+                                child: child,
+                              ),
                             ),
                           );
                         },
                         child: Image.asset(
                           Assets.appLogo,
-                          width: 180,
-                          height: 180,
+                          width: size.width * 0.4,
+                          height: size.width * 0.4,
+                          filterQuality: FilterQuality.high,
                         ),
                       ),
-                      const SizedBox(height: 32),
-                      SlideTransition(
-                        position: _slideTextAnimation,
-                        child: FadeTransition(
-                          opacity: _fadeTextAnimation,
-                          child: Text(
-                            'PickPay',
-                            style: GoogleFonts.poppins(
-                              fontSize: 52,
-                              fontWeight: FontWeight.bold,
-                              foreground: Paint()
-                                ..shader = const LinearGradient(
-                                  colors: [
-                                    Color(0xFFFE1679),
-                                    Color(0xFF5440B3),
-                                  ],
-                                ).createShader(
-                                  const Rect.fromLTWH(0, 0, 200, 70),
-                                ),
+                      SizedBox(height: size.height * 0.05),
+                      ConstrainedBox(
+                        constraints: const BoxConstraints(
+                          maxWidth: 300,
+                        ),
+                        child: SlideTransition(
+                          position: _slideTextAnimation,
+                          child: FadeTransition(
+                            opacity: _fadeTextAnimation,
+                            child: Text(
+                              'PickPay',
+                              style: GoogleFonts.poppins(
+                                fontSize: size.width * 0.15,
+                                fontWeight: FontWeight.w800,
+                                height: 0.9,
+                                letterSpacing: -1.5,
+                                foreground: Paint()
+                                  ..shader = LinearGradient(
+                                    colors: [
+                                      Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? const Color(
+                                              0xFFFF6B8B) // Vibrant pink for dark mode
+                                          : const Color(
+                                              0xFFFE117A), // Original pink for light mode
+                                      Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? const Color(
+                                              0xFF9D4EDD) // Rich purple for dark mode
+                                          : const Color(
+                                              0xFF9370DB), // Medium purple for light mode
+                                      Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? const Color(
+                                              0xFF5E60CE) // Electric blue for dark mode
+                                          : const Color(
+                                              0xFF483BAF), // Deep blue for light mode
+                                    ],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    stops: const [0.0, 0.5, 1.0],
+                                    tileMode: TileMode.clamp,
+                                  ).createShader(
+                                    Rect.fromLTWH(
+                                        0, 0, size.width * 0.15 * 4, 100),
+                                  ),
+                                shadows: Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? [
+                                        Shadow(
+                                          color: Colors.black.withOpacity(0.4),
+                                          blurRadius: 12,
+                                          offset: const Offset(0, 3),
+                                        ),
+                                        Shadow(
+                                          color: const Color(0xFF9D4EDD)
+                                              .withOpacity(0.3),
+                                          blurRadius: 8,
+                                          offset: const Offset(0, 2),
+                                        ),
+                                      ]
+                                    : [
+                                        Shadow(
+                                          color: const Color(0xFFFE117A)
+                                              .withOpacity(0.3),
+                                          blurRadius: 8,
+                                          offset: const Offset(0, 2),
+                                        ),
+                                      ],
+                              ),
+                              textAlign: TextAlign.center,
+                              maxLines: 1,
+                              overflow: TextOverflow.visible,
                             ),
                           ),
                         ),
@@ -195,81 +324,6 @@ class _SplashViewBodyState extends State<SplashViewBody>
           ),
         ),
       ),
-    );
-  }
-}
-
-class AnimatedGradientBackground extends StatefulWidget {
-  final bool isDark;
-  const AnimatedGradientBackground({required this.isDark, super.key});
-
-  @override
-  State<AnimatedGradientBackground> createState() =>
-      _AnimatedGradientBackgroundState();
-}
-
-class _AnimatedGradientBackgroundState extends State<AnimatedGradientBackground>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _controller;
-  late Animation<Color?> _colorAnim1;
-  late Animation<Color?> _colorAnim2;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _controller = AnimationController(
-      duration: const Duration(seconds: 5),
-      vsync: this,
-    )..repeat(reverse: true);
-
-    _setupAnimations();
-  }
-
-  void _setupAnimations() {
-    _colorAnim1 = ColorTween(
-      begin: widget.isDark ? Colors.deepPurple[900] : Colors.pink[100],
-      end: widget.isDark ? Colors.deepPurple[700] : Colors.purple[100],
-    ).animate(_controller);
-
-    _colorAnim2 = ColorTween(
-      begin: widget.isDark ? Colors.black : Colors.white,
-      end: widget.isDark ? Colors.deepPurple[900] : Colors.pink[50],
-    ).animate(_controller);
-  }
-
-  @override
-  void didUpdateWidget(covariant AnimatedGradientBackground oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.isDark != widget.isDark) {
-      _setupAnimations();
-    }
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _controller,
-      builder: (context, child) {
-        return Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                _colorAnim1.value ?? Colors.purple,
-                _colorAnim2.value ?? Colors.pink,
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-        );
-      },
     );
   }
 }
