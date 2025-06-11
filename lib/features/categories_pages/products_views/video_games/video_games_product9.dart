@@ -8,7 +8,7 @@ class VideoGamesProduct9 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: 'vid9',
+      id: '682b00a46977bd89257c0e88',
       title:
           'Nintendo 160 2 Nintendo Switch Joy-Con Controllers (Pastel Purple/Pastel Green)',
       imagePaths: [

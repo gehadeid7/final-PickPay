@@ -57,25 +57,54 @@ class _FashionCategoryViewBodyState extends State<FashionCategoryViewBody> {
   Future<List<ProductsViewsModel>> _loadProducts() async {
     final apiProducts = await ApiService().loadProducts();
 
-    return apiProducts
-        .map((apiProduct) {
-          final productIndex =
-              detailPages.keys.toList().indexOf(apiProduct.id) + 1;
-          final imagePath =
-              'assets/fashion_products/fashion$productIndex/1.png';
+    final Map<String, String> productImagePaths = {
+      '682b00c26977bd89257c0e8e':
+          'assets/Fashion_products/Women_Fashion/women_fashion1/1.png',
+      '682b00c26977bd89257c0e8f':
+          'assets/Fashion_products/Women_Fashion/women_fashion2/1.png',
+      '682b00c26977bd89257c0e90':
+          'assets/Fashion_products/Women_Fashion/women_fashion3/1.png',
+      '682b00c26977bd89257c0e91':
+          'assets/Fashion_products/Women_Fashion/women_fashion4/1.png',
+      '682b00c26977bd89257c0e92':
+          'assets/Fashion_products/Women_Fashion/women_fashion5/1.png',
+      '682b00c26977bd89257c0e93':
+          'assets/Fashion_products/Men_Fashion/men_fashion1/navy/1.png',
+      '682b00c26977bd89257c0e94':
+          'assets/Fashion_products/Men_Fashion/men_fashion2/light_blue/1.png',
+      '682b00c26977bd89257c0e95':
+          'assets/Fashion_products/Men_Fashion/men_fashion3/1.png',
+      '682b00c26977bd89257c0e96':
+          'assets/Fashion_products/Men_Fashion/men_fashion4/black/1.png',
+      '682b00c26977bd89257c0e97':
+          'assets/Fashion_products/Men_Fashion/men_fashion5/1.png',
+      '682b00c26977bd89257c0e98':
+          'assets/Fashion_products/Kids_Fashion/kids_fashion1/1.png',
+      '682b00c26977bd89257c0e99':
+          'assets/Fashion_products/Kids_Fashion/kids_fashion2/1.png',
+      '682b00c26977bd89257c0e9a':
+          'assets/Fashion_products/Kids_Fashion/kids_fashion3/1.png',
+      '682b00c26977bd89257c0e9b':
+          'assets/Fashion_products/Kids_Fashion/kids_fashion4/1.png',
+      '682b00c26977bd89257c0e9c':
+          'assets/Fashion_products/Kids_Fashion/kids_fashion5/1.png',
+    };
 
-          return ProductsViewsModel(
-            id: apiProduct.id,
-            title: apiProduct.name,
-            price: apiProduct.price,
-            originalPrice: apiProduct.originalPrice,
-            rating: apiProduct.rating ?? 4.5,
-            reviewCount: apiProduct.reviewCount ?? 100,
-            imagePaths: [imagePath],
-          );
-        })
-        .where((product) => detailPages.containsKey(product.id))
-        .toList();
+    return apiProducts
+        .where((apiProduct) => detailPages.containsKey(apiProduct.id))
+        .map((apiProduct) {
+      final imagePath = productImagePaths[apiProduct.id] ?? '';
+
+      return ProductsViewsModel(
+        id: apiProduct.id,
+        title: apiProduct.name,
+        price: apiProduct.price,
+        originalPrice: apiProduct.originalPrice,
+        rating: apiProduct.rating ?? 4.5,
+        reviewCount: apiProduct.reviewCount ?? 100,
+        imagePaths: [imagePath],
+      );
+    }).toList();
   }
 
   Widget? _findDetailPageById(String productId) {

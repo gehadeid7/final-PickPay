@@ -8,7 +8,7 @@ class BeautyProduct13 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: "68132a95ff7813b3d47f9da13",
+      id: "682b00d16977bd89257c0ea9",
       title:
           'Garnier Color Naturals Permanent Crème Hair Color - 8.1 Light Ash Blonde',
       imagePaths: [

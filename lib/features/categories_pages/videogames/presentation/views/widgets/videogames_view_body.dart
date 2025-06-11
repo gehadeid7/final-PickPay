@@ -2,11 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:pickpay/features/categories_pages/models/product_model.dart';
 
 import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product1.dart';
-import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product10.dart';
-import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product11.dart';
-import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product12.dart';
-import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product13.dart';
-import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product14.dart';
 import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product2.dart';
 import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product3.dart';
 import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product4.dart';
@@ -15,6 +10,11 @@ import 'package:pickpay/features/categories_pages/products_views/video_games/vid
 import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product7.dart';
 import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product8.dart';
 import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product9.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product10.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product11.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product12.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product13.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product14.dart';
 import 'package:pickpay/features/categories_pages/widgets/base_category_view.dart';
 import 'package:pickpay/services/api_service.dart';
 
@@ -22,8 +22,7 @@ class VideogamesViewBody extends StatefulWidget {
   const VideogamesViewBody({super.key});
 
   @override
-  State<VideogamesViewBody> createState() =>
-      _VideogamesViewBodyState();
+  State<VideogamesViewBody> createState() => _VideogamesViewBodyState();
 }
 
 class _VideogamesViewBodyState extends State<VideogamesViewBody> {
@@ -55,12 +54,27 @@ class _VideogamesViewBodyState extends State<VideogamesViewBody> {
   Future<List<ProductsViewsModel>> _loadProducts() async {
     final apiProducts = await ApiService().loadProducts();
 
+    final Map<String, String> productImagePaths = {
+      '682b00a46977bd89257c0e80': 'assets/videogames_products/Consoles/console1/1.png',
+      '682b00a46977bd89257c0e81': 'assets/videogames_products/Consoles/console2/1.png',
+      '682b00a46977bd89257c0e82': 'assets/videogames_products/Consoles/console3/1.png',
+      '682b00a46977bd89257c0e83': 'assets/videogames_products/Consoles/console4/1.png',
+      '682b00a46977bd89257c0e84': 'assets/videogames_products/Controllers/controller1/1.png',
+      '682b00a46977bd89257c0e85': 'assets/videogames_products/Controllers/controller2/1.png',
+      '682b00a46977bd89257c0e86': 'assets/videogames_products/Controllers/controller3/1.png',
+      '682b00a46977bd89257c0e87': 'assets/videogames_products/Controllers/controller4/1.png',
+      '682b00a46977bd89257c0e88': 'assets/videogames_products/Controllers/controller5/1.png',
+      '682b00a46977bd89257c0e89': 'assets/videogames_products/Accessories/accessories1/1.png',
+      '682b00a46977bd89257c0e8a': 'assets/videogames_products/Accessories/accessories2/1.png',
+      '682b00a46977bd89257c0e8b': 'assets/videogames_products/Accessories/accessories3/1.png',
+      '682b00a46977bd89257c0e8c': 'assets/videogames_products/Accessories/accessories4/1.png',
+      '682b00a46977bd89257c0e8d': 'assets/videogames_products/Accessories/accessories5/1.png',
+    };
+
     return apiProducts
+        .where((apiProduct) => detailPages.containsKey(apiProduct.id))
         .map((apiProduct) {
-          final productIndex =
-              detailPages.keys.toList().indexOf(apiProduct.id) + 1;
-          final imagePath =
-              'assets/fashion_products/fashion$productIndex/1.png';
+          final imagePath = productImagePaths[apiProduct.id] ?? '';
 
           return ProductsViewsModel(
             id: apiProduct.id,
@@ -71,9 +85,7 @@ class _VideogamesViewBodyState extends State<VideogamesViewBody> {
             reviewCount: apiProduct.reviewCount ?? 100,
             imagePaths: [imagePath],
           );
-        })
-        .where((product) => detailPages.containsKey(product.id))
-        .toList();
+        }).toList();
   }
 
   Widget? _findDetailPageById(String productId) {
@@ -115,14 +127,14 @@ class _VideogamesViewBodyState extends State<VideogamesViewBody> {
         if (!snapshot.hasData || snapshot.data!.isEmpty) {
           return const Center(
             child: Text(
-              'No Video Games products available at the moment.',
+              'No video games products available at the moment.',
               style: TextStyle(fontSize: 16),
             ),
           );
         }
 
         return BaseCategoryView(
-          categoryName: 'Fashion',
+          categoryName: 'Video Games',
           products: snapshot.data!,
           productDetailBuilder: (productId) {
             final detailPage = _findDetailPageById(productId);

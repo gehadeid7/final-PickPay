@@ -30,21 +30,21 @@ class _ElectronicsViewBodyState extends State<ElectronicsViewBody> {
 
   // Map of product detail pages
   static final Map<String, Widget> detailPages = {
-    '6819e22b123a4faad16613be': const Product1View(), // Samsung Galaxy S21
-    '6819e22b123a4faad16613bf': const Product2View(), // Sony Xperia 1 III
-    '6819e22b123a4faad16613c0': const Product3View(), // LG V60 ThinQ
-    '6819e22b123a4faad16613c1': const Product4View(), // Panasonic Toughbook
-    '6819e22b123a4faad16613c3': const Product5View(), // iPhone 13 Pro Max
-    '6819e22b123a4faad16613c4': const Product6View(), // Samsung QLED TV
-    '6819e22b123a4faad16613c5': const Product7View(), // LG OLED TV
-    '6819e22b123a4faad16613c6': const Product8View(), // Sony Bravia TV
-    '6819e22b123a4faad16613c7': const Product9View(), // TCL Smart TV
-    '6819e22b123a4faad16613c8': const Product10View(), // Hisense ULED TV
-    '6819e22b123a4faad16613c9': const Product11View(), // MacBook Pro
-    '6819e22b123a4faad16613ca': const Product12View(), // Dell XPS
-    '6819e22b123a4faad16613cb': const Product13View(), // HP Spectre
-    '6819e22b123a4faad16613cc': const Product14View(), // HP OfficeJet
-    '6819e22b123a4faad16613cd': const Product15View(), // ASUS ROG
+    '6819e22b123a4faad16613be': const Product1View(),
+    '6819e22b123a4faad16613bf': const Product2View(),
+    '6819e22b123a4faad16613c0': const Product3View(),
+    '6819e22b123a4faad16613c1': const Product4View(),
+    '6819e22b123a4faad16613c3': const Product5View(),
+    '6819e22b123a4faad16613c4': const Product6View(),
+    '6819e22b123a4faad16613c5': const Product7View(),
+    '6819e22b123a4faad16613c6': const Product8View(),
+    '6819e22b123a4faad16613c7': const Product9View(),
+    '6819e22b123a4faad16613c8': const Product10View(),
+    '6819e22b123a4faad16613c9': const Product11View(),
+    '6819e22b123a4faad16613ca': const Product12View(),
+    '6819e22b123a4faad16613cb': const Product13View(),
+    '6819e22b123a4faad16613cc': const Product14View(),
+    '6819e22b123a4faad16613cd': const Product15View(),
   };
 
   @override

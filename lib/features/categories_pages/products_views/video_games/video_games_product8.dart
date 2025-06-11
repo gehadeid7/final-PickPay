@@ -8,7 +8,7 @@ class VideoGamesProduct8 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: 'vid8',
+      id: '682b00a46977bd89257c0e87',
       title: 'PlayStation 5 DualSense Edge Wireless Controller (UAE Version)',
       imagePaths: [
         'assets/videogames_products/Controllers/controller4/1.png',

@@ -8,7 +8,7 @@ class BeautyProduct10 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: "68132a95ff7813b3d47f9da10",
+      id: "682b00d16977bd89257c0ea6",
       title: 'L’Oréal Paris Hyaluron Expert Eye Serum - 20ml',
       imagePaths: [
         'assets/beauty_products/skincare_5/1.png',

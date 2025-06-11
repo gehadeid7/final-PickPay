@@ -8,7 +8,7 @@ class VideoGamesProduct14 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: 'vid14',
+      id: '682b00a46977bd89257c0e8d',
       title: 'EA SPORTS FC 25 Standard Edition PS5 | VideoGame | English',
       imagePaths: [
         'assets/videogames_products/Accessories/accessories5/1.png',

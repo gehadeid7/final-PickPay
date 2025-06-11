@@ -8,7 +8,7 @@ class BeautyProduct15 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: "68132a95ff7813b3d47f9da15",
+      id: "682b00d16977bd89257c0eab",
       title:
           'CORATED Heatless Curling Rod Headband Kit with Clips and Scrunchie',
       imagePaths: [

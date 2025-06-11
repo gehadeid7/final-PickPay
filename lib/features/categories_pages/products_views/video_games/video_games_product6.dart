@@ -8,7 +8,7 @@ class VideoGamesProduct6 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: 'vid6',
+      id: '682b00a46977bd89257c0e85',
       title: 'PlayStation Sony DualSense wireless controller for PS5 White',
       imagePaths: [
         'assets/videogames_products/Controllers/controller2/1.png',

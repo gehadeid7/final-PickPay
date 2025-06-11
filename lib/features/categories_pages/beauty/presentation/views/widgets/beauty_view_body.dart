@@ -23,8 +23,7 @@ class BeautyViewBody extends StatefulWidget {
   const BeautyViewBody({super.key});
 
   @override
-  State<BeautyViewBody> createState() =>
-      _BeautyViewBodyState();
+  State<BeautyViewBody> createState() => _BeautyViewBodyState();
 }
 
 class _BeautyViewBodyState extends State<BeautyViewBody> {
@@ -55,28 +54,52 @@ class _BeautyViewBodyState extends State<BeautyViewBody> {
   }
 
   Future<List<ProductsViewsModel>> _loadProducts() async {
-    final apiProducts = await ApiService().loadProducts();
+  final apiProducts = await ApiService().loadProducts();
 
-    return apiProducts
-        .map((apiProduct) {
-          final productIndex =
-              detailPages.keys.toList().indexOf(apiProduct.id) + 1;
-          final imagePath =
-              'assets/fashion_products/fashion$productIndex/1.png';
+  // Debug: print how many products are coming
+  print('Loaded ${apiProducts.length} products from API');
 
-          return ProductsViewsModel(
-            id: apiProduct.id,
-            title: apiProduct.name,
-            price: apiProduct.price,
-            originalPrice: apiProduct.originalPrice,
-            rating: apiProduct.rating ?? 4.5,
-            reviewCount: apiProduct.reviewCount ?? 100,
-            imagePaths: [imagePath],
-          );
-        })
-        .where((product) => detailPages.containsKey(product.id))
-        .toList();
-  }
+  // Map product ID to image path
+  final Map<String, String> productImagePaths = {
+    '682b00d16977bd89257c0e9d': 'assets/beauty_products/makeup_1/1.png',
+    '682b00d16977bd89257c0e9e': 'assets/beauty_products/makeup_2/1.png',
+    '682b00d16977bd89257c0e9f': 'assets/beauty_products/makeup_3/1.png',
+    '682b00d16977bd89257c0ea0': 'assets/beauty_products/makeup_4/1.png',
+    '682b00d16977bd89257c0ea1': 'assets/beauty_products/makeup_5/1.png',
+    '682b00d16977bd89257c0ea2': 'assets/beauty_products/skincare_1/1.png',
+    '682b00d16977bd89257c0ea3': 'assets/beauty_products/skincare_2/1.png',
+    '682b00d16977bd89257c0ea4': 'assets/beauty_products/skincare_3/1.png',
+    '682b00d16977bd89257c0ea5': 'assets/beauty_products/skincare_4/1.png',
+    '682b00d16977bd89257c0ea6': 'assets/beauty_products/skincare_5/1.png',
+    '682b00d16977bd89257c0ea7': 'assets/beauty_products/haircare_1/1.png',
+    '682b00d16977bd89257c0ea8': 'assets/beauty_products/haircare_2/1.png',
+    '682b00d16977bd89257c0ea9': 'assets/beauty_products/haircare_3/1.png',
+    '682b00d16977bd89257c0eaa': 'assets/beauty_products/haircare_4/1.png',
+    '682b00d16977bd89257c0eab': 'assets/beauty_products/haircare_5/1.png',
+  };
+
+  return apiProducts
+      .where((apiProduct) => detailPages.containsKey(apiProduct.id))
+      .map((apiProduct) {
+        final imagePath = productImagePaths[apiProduct.id] ?? '';
+
+        // Debug: print each product mapping
+        print('Mapping product ${apiProduct.name} (${apiProduct.id}) to image: $imagePath');
+
+        return ProductsViewsModel(
+          id: apiProduct.id,
+          title: apiProduct.name,
+          price: apiProduct.price,
+          originalPrice: apiProduct.originalPrice,
+          rating: apiProduct.rating ?? 4.5,
+          reviewCount: apiProduct.reviewCount ?? 100,
+          imagePaths: [imagePath],
+        );
+      })
+      .toList();
+}
+
+
 
   Widget? _findDetailPageById(String productId) {
     return detailPages[productId];
@@ -124,7 +147,7 @@ class _BeautyViewBodyState extends State<BeautyViewBody> {
         }
 
         return BaseCategoryView(
-          categoryName: 'Fashion',
+          categoryName: 'Beauty',
           products: snapshot.data!,
           productDetailBuilder: (productId) {
             final detailPage = _findDetailPageById(productId);

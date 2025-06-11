@@ -8,7 +8,7 @@ class VideoGamesProduct10 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: 'vid10',
+      id: '682b00a46977bd89257c0e89',
       title:
           'Likorlove PS5 Controller Quick Charger, Dual USB Fast Charging Dock Station Stand for Playstation 5 DualSense Controllers Console with LED Indicator USB Type C Ports, White [2.5-3 Hours]',
       imagePaths: [

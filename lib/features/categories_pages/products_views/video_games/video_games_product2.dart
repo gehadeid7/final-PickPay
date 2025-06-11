@@ -8,7 +8,7 @@ class VideoGamesProduct2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: 'vid2',
+      id: '682b00a46977bd89257c0e81',
       title:
           'Sony Ps4 500Gb Standalone Jet Black With One Dual Shock Controller (Ps4)',
       imagePaths: [
