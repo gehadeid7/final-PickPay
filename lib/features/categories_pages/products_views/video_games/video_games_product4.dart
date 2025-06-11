@@ -8,7 +8,7 @@ class VideoGamesProduct4 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: 'vid4',
+      id: '682b00a46977bd89257c0e83',
       title: 'Nintendo Switch OLED Mario Red Edition Gaming Console',
       imagePaths: [
         'assets/videogames_products/Consoles/console4/1.png',

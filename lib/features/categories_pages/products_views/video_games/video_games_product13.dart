@@ -8,7 +8,7 @@ class VideoGamesProduct13 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: 'vid13',
+      id: '682b00a46977bd89257c0e8c',
       title:
           'Mcbazel PS5 Cooling Station and Charging Station, 3 Speed Fan, Controller Dock with LED Indicator and 11 Storage Discs - White(Not for PS5 Pro)',
       imagePaths: [

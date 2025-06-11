@@ -8,7 +8,7 @@ class VideoGamesProduct1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: 'vid1',
+      id: '682b00a46977bd89257c0e80',
       title:
           'Sony PlayStation 5 SLIM Disc [ NEW 2023 Model ] - International Version',
       imagePaths: [

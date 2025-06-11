@@ -8,7 +8,7 @@ class VideoGamesProduct11 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: 'vid11',
+      id: '682b00a46977bd89257c0e8a',
       title:
           'OIVO PS5 Charging Station, 2H Fast PS5 Controller Charger for Playstation 5 Dualsense Controller, Upgrade PS5 Charging Dock with 2 Types of Cable, PS5 Charger for Dual PS5 Controller',
       imagePaths: [

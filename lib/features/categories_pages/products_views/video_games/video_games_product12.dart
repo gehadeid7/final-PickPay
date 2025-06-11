@@ -8,7 +8,7 @@ class VideoGamesProduct12 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: 'vid12',
+      id: '682b00a46977bd89257c0e8b',
       title:
           'fanxiang S770 4TB NVMe M.2 SSD for PS5 - with Heatsink and DRAM, Up to 7300MB/s, PCIe 4.0, Suitable for Playstation 5 Memory Expansion, Game Enthusiasts, IT Professionals',
       imagePaths: [
