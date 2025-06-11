@@ -327,7 +327,7 @@ class CartViewBody extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                       child: Container(
                         width: 100,
-                        height: 120,
+                        height: 100,
                         decoration: BoxDecoration(
                           color:
                               isDarkMode ? Colors.grey[800] : Colors.grey[100],
