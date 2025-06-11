@@ -11,7 +11,6 @@ import 'package:pickpay/features/categories_pages/products_views/product_detail_
 import 'package:pickpay/features/checkout/presentation/views/checkout_view.dart';
 import 'package:pickpay/features/cart/cart_cubits/cart_cubit.dart';
 import 'package:pickpay/features/cart/cart_item_model.dart';
-import 'package:pickpay/features/categories_pages/models/product_model.dart';
 
 class CartViewBody extends StatelessWidget {
   const CartViewBody({super.key});
