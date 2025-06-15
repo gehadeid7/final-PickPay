@@ -197,12 +197,17 @@ class _CheckoutViewState extends State<CheckoutView> {
                 ),
                 const SizedBox(height: 15),
                 PromoCodeSection(
-                  onApply: (code) {
-                    // Handle the promo code logic here
-                    // For example, show a snackbar for now
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Promo code "$code" applied!')),
-                    );
+                  onApply: (code) async {
+                    try {
+                      await context.read<CartCubit>().applyCoupon(code);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Promo code "$code" applied!')),
+                      );
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Failed to apply promo code: \\${e.toString()}'), backgroundColor: Theme.of(context).colorScheme.error),
+                      );
+                    }
                   },
                 ),
                 const SizedBox(height: 32),
