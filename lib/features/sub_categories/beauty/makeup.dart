@@ -6,89 +6,90 @@ import 'package:pickpay/features/categories_pages/products_views/beauty_products
 import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product3.dart';
 import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product4.dart';
 import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product5.dart';
+import 'package:pickpay/services/api_service.dart';
 
-class Makeup extends StatelessWidget {
-  Makeup({super.key});
+class Makeup extends StatefulWidget {
+  const Makeup({super.key});
 
-  final List<ProductsViewsModel> _products = [
-    ProductsViewsModel(
-      id: '68132a95ff7813b3d47f9da1',
-      title:
-          "L'Oréal Paris Volume Million Lashes Panorama Mascara in Black, 9.9 ml",
-      price: 401.00,
-      originalPrice: 730.00,
-      rating: 5.0,
-      reviewCount: 88,
-      brand: 'L\'Oréal Paris',
-      imagePaths: ['assets/beauty_products/makeup_1/1.png'],
-    ),
-    ProductsViewsModel(
-      id: '68132a95ff7813b3d47f9da2',
-      title:
-          'L\'Oréal Paris Infaillible 24H Matte Cover Foundation 200 Sable Dore - Oil Control, High Coverage',
-      price: 509.00,
-      originalPrice: 575.00,
-      rating: 5.0,
-      reviewCount: 88,
-      brand: 'L\'Oréal Paris',
-      imagePaths: ['assets/beauty_products/makeup_2/1.png'],
-    ),
-    ProductsViewsModel(
-      id: '68132a95ff7813b3d47f9da3',
-      title: 'Cybele Smooth N`Wear Powder Blush Corail 17 - 3.7gm',
-      price: 227.20,
-      originalPrice: 240.00,
-      rating: 5.0,
-      reviewCount: 88,
-      brand: 'Cybele',
-      imagePaths: ['assets/beauty_products/makeup_3/1.png'],
-    ),
-    ProductsViewsModel(
-      id: '68132a95ff7813b3d47f9da4',
-      title:
-          'Eva skin care cleansing & makeup remover facial wipes for normal/dry skin 20%',
-      price: 63.00,
-      originalPrice: 63.00,
-      rating: 5.0,
-      reviewCount: 92,
-      brand: 'Eva',
-      imagePaths: ['assets/beauty_products/makeup_4/1.png'],
-    ),
-    ProductsViewsModel(
-      id: '68132a95ff7813b3d47f9da5',
-      title: 'Maybelline New York Lifter Lip Gloss, 005 Petal',
-      price: 300.00,
-      originalPrice: 310.00,
-      rating: 5.0,
-      reviewCount: 88,
-      brand: 'Maybelline',
-      imagePaths: ['assets/beauty_products/makeup_5/1.png'],
-    ),
-  ];
+  @override
+  State<Makeup> createState() => _MakeupState();
+}
 
-  Widget _buildProductDetail(String productId) {
-    switch (productId) {
-      case '68132a95ff7813b3d47f9da1':
-        return const BeautyProduct1();
-      case '68132a95ff7813b3d47f9da2':
-        return const BeautyProduct2();
-      case '68132a95ff7813b3d47f9da3':
-        return const BeautyProduct3();
-      case '68132a95ff7813b3d47f9da4':
-        return const BeautyProduct4();
-      case '68132a95ff7813b3d47f9da5':
-        return const BeautyProduct5();
-      default:
-        return const BeautyProduct1();
-    }
+class _MakeupState extends State<Makeup> {
+  late Future<List<ProductsViewsModel>> _productsFuture;
+
+  // Map of product detail pages
+  static final Map<String, Widget> detailPages = {
+    '682b00d16977bd89257c0e9d': const BeautyProduct1(),
+    '682b00d16977bd89257c0e9e': const BeautyProduct2(),
+    '682b00d16977bd89257c0e9f': const BeautyProduct3(),
+    '682b00d16977bd89257c0ea0': const BeautyProduct4(),
+    '682b00d16977bd89257c0ea1': const BeautyProduct5(),
+  };
+
+  @override
+  void initState() {
+    super.initState();
+    _productsFuture = _loadProducts();
+  }
+
+  Future<List<ProductsViewsModel>> _loadProducts() async {
+    final apiProducts = await ApiService().loadProducts();
+
+    return apiProducts
+        .where((product) => detailPages.containsKey(product.id))
+        .map((apiProduct) {
+      final imagePath =
+          'assets/beauty_products/makeup_${detailPages.keys.toList().indexOf(apiProduct.id) + 1}/1.png';
+
+      return ProductsViewsModel(
+        id: apiProduct.id,
+        title: apiProduct.name,
+        price: apiProduct.price,
+        originalPrice: apiProduct.originalPrice,
+        rating: apiProduct.rating ?? 4.5,
+        reviewCount: apiProduct.reviewCount ?? 100,
+        imagePaths: [imagePath],
+        soldBy: 'PickPay',
+        isPickPayFulfilled: true,
+        hasFreeDelivery: true,
+      );
+    }).toList();
+  }
+
+  Widget? _findDetailPageById(String productId) {
+    return detailPages[productId];
   }
 
   @override
   Widget build(BuildContext context) {
-    return BaseCategoryView(
-      categoryName: "Makeup",
-      products: _products,
-      productDetailBuilder: _buildProductDetail,
+    return FutureBuilder<List<ProductsViewsModel>>(
+      future: _productsFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        }
+
+        final products = snapshot.data ?? [];
+
+        return BaseCategoryView(
+          categoryName: "Makeup",
+          products: products,
+          productDetailBuilder: (String productId) {
+            final detailPage = _findDetailPageById(productId);
+            if (detailPage != null) {
+              return detailPage;
+            }
+            return const Scaffold(
+              body: Center(child: Text('Product detail view coming soon')),
+            );
+          },
+        );
+      },
     );
   }
 }

@@ -5,75 +5,89 @@ import 'package:pickpay/features/categories_pages/products_views/video_games/vid
 import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product2.dart';
 import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product3.dart';
 import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product4.dart';
+import 'package:pickpay/services/api_service.dart';
 
-class Console extends StatelessWidget {
-  Console({super.key});
+class Console extends StatefulWidget {
+  const Console({super.key});
 
-  final List<ProductsViewsModel> _products = [
-    ProductsViewsModel(
-      id: 'vid1',
-      title:
-          'Sony PlayStation 5 SLIM Disc [ NEW 2023 Model ] - International Version',
-      price: 27750.00,
-      originalPrice: 28999.00,
-      rating: 4.8,
-      reviewCount: 88,
-      brand: 'Sony',
-      imagePaths: ['assets/videogames_products/Consoles/console1/2.png'],
-    ),
-    ProductsViewsModel(
-      id: 'vid2',
-      title: 'PlayStation 5 Digital Console (Slim)',
-      price: 19600.00,
-      originalPrice: 20800.00,
-      rating: 4.7,
-      reviewCount: 3538,
-      brand: 'Sony',
-      imagePaths: ['assets/videogames_products/Consoles/console2/1.png'],
-    ),
-    ProductsViewsModel(
-      id: 'vid3',
-      title: 'PlayStation 5 Digital Edition Slim (Nordic)',
-      price: 28799.00,
-      originalPrice: 20900.00,
-      rating: 4.7,
-      reviewCount: 3538,
-      brand: 'Sony',
-      imagePaths: ['assets/videogames_products/Consoles/console3/1.png'],
-    ),
-    ProductsViewsModel(
-      id: 'vid4',
-      title: 'Nintendo Switch OLED Mario Red Edition Gaming Console',
-      price: 16990.00,
-      originalPrice: 18989.00,
-      rating: 4.9,
-      reviewCount: 814,
-      brand: 'Nintendo',
-      imagePaths: ['assets/videogames_products/Consoles/console4/1.png'],
-    ),
-  ];
+  @override
+  State<Console> createState() => _ConsoleState();
+}
 
-  Widget _buildProductDetail(String productId) {
-    switch (productId) {
-      case 'vid1':
-        return const VideoGamesProduct1();
-      case 'vid2':
-        return const VideoGamesProduct2();
-      case 'vid3':
-        return const VideoGamesProduct3();
-      case 'vid4':
-        return const VideoGamesProduct4();
-      default:
-        return const VideoGamesProduct1();
-    }
+class _ConsoleState extends State<Console> {
+  late Future<List<ProductsViewsModel>> _productsFuture;
+
+  // Map of product detail pages
+  static final Map<String, Widget> detailPages = {
+    '682b00a46977bd89257c0e80': const VideoGamesProduct1(),
+    '682b00a46977bd89257c0e81': const VideoGamesProduct2(),
+    '682b00a46977bd89257c0e82': const VideoGamesProduct3(),
+    '682b00a46977bd89257c0e83': const VideoGamesProduct4(),
+  };
+
+  @override
+  void initState() {
+    super.initState();
+    _productsFuture = _loadProducts();
+  }
+
+  Future<List<ProductsViewsModel>> _loadProducts() async {
+    final apiProducts = await ApiService().loadProducts();
+
+    return apiProducts
+        .where((product) => detailPages.containsKey(product.id))
+        .map((apiProduct) {
+      final imagePath =
+          'assets/videogames_products/Consoles/console${detailPages.keys.toList().indexOf(apiProduct.id) + 1}/1.png';
+
+      return ProductsViewsModel(
+        id: apiProduct.id,
+        title: apiProduct.name,
+        price: apiProduct.price,
+        originalPrice: apiProduct.originalPrice,
+        rating: apiProduct.rating ?? 4.5,
+        reviewCount: apiProduct.reviewCount ?? 100,
+        imagePaths: [imagePath],
+        soldBy: 'PickPay',
+        isPickPayFulfilled: true,
+        hasFreeDelivery: true,
+      );
+    }).toList();
+  }
+
+  Widget? _findDetailPageById(String productId) {
+    return detailPages[productId];
   }
 
   @override
   Widget build(BuildContext context) {
-    return BaseCategoryView(
-      categoryName: 'Console',
-      products: _products,
-      productDetailBuilder: _buildProductDetail,
+    return FutureBuilder<List<ProductsViewsModel>>(
+      future: _productsFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        }
+
+        final products = snapshot.data ?? [];
+
+        return BaseCategoryView(
+          categoryName: 'Console',
+          products: products,
+          productDetailBuilder: (String productId) {
+            final detailPage = _findDetailPageById(productId);
+            if (detailPage != null) {
+              return detailPage;
+            }
+            return const Scaffold(
+              body: Center(child: Text('Product detail view coming soon')),
+            );
+          },
+        );
+      },
     );
   }
 }

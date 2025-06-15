@@ -1,95 +1,95 @@
 import 'package:flutter/material.dart';
 import 'package:pickpay/features/categories_pages/models/product_model.dart';
 import 'package:pickpay/features/categories_pages/widgets/base_category_view.dart';
-import 'package:pickpay/features/categories_pages/products_views/home_products/home_product1.dart';
 import 'package:pickpay/features/categories_pages/products_views/home_products/home_product6.dart';
 import 'package:pickpay/features/categories_pages/products_views/home_products/home_product7.dart';
 import 'package:pickpay/features/categories_pages/products_views/home_products/home_product8.dart';
 import 'package:pickpay/features/categories_pages/products_views/home_products/home_product9.dart';
 import 'package:pickpay/features/categories_pages/products_views/home_products/home_product10.dart';
+import 'package:pickpay/services/api_service.dart';
 
-class HomeDecorview extends StatelessWidget {
-  HomeDecorview({super.key});
+class HomeDecorview extends StatefulWidget {
+  const HomeDecorview({super.key});
 
-  final List<ProductsViewsModel> _products = [
-    ProductsViewsModel(
-      id: 'home6',
-      title: 'Golden Lighting LED Gold Lampshade + 1 Crystal Cylinder Bulb.',
-      price: 1128.00,
-      originalPrice: 0.0,
-      rating: 4.0,
-      reviewCount: 19,
-      brand: 'Golden Lighting',
-      imagePaths: ['assets/Home_products/home-decor/home_decor1/1.png'],
-    ),
-    ProductsViewsModel(
-      id: 'home7',
-      title:
-          'Luxury Bathroom Rug Shaggy Bath Mat 60x40 Cm, Washable Non Slip, Soft Chenille, Gray',
-      price: 355.00,
-      originalPrice: 0.0,
-      rating: 4.0,
-      reviewCount: 19,
-      brand: 'Luxury',
-      imagePaths: ['assets/Home_products/home-decor/home_decor2/1.png'],
-    ),
-    ProductsViewsModel(
-      id: 'home8',
-      title: 'Glass Vase 15cm',
-      price: 250.00,
-      originalPrice: 0.0,
-      rating: 4.0,
-      reviewCount: 19,
-      brand: 'Generic',
-      imagePaths: ['assets/Home_products/home-decor/home_decor3/1.png'],
-    ),
-    ProductsViewsModel(
-      id: 'home9',
-      title:
-          'Amotpo Indoor/Outdoor Wall Clock, 12-Inch Waterproof with Thermometer & Hygrometer',
-      price: 549.00,
-      originalPrice: 0.0,
-      rating: 4.0,
-      reviewCount: 19,
-      brand: 'Amotpo',
-      imagePaths: ['assets/Home_products/home-decor/home_decor4/1.png'],
-    ),
-    ProductsViewsModel(
-      id: 'home10',
-      title:
-          'Oliruim Black Home Decor Accent Art Woman Face Statue - 2 Pieces Set',
-      price: 650.00,
-      originalPrice: 0.0,
-      rating: 5.0,
-      reviewCount: 19,
-      brand: 'Oliruim',
-      imagePaths: ['assets/Home_products/home-decor/home_decor5/1.png'],
-    ),
-  ];
+  @override
+  State<HomeDecorview> createState() => _HomeDecorviewState();
+}
 
-  Widget _buildProductDetail(String productId) {
-    switch (productId) {
-      case 'home6':
-        return const HomeProduct6();
-      case 'home7':
-        return const HomeProduct7();
-      case 'home8':
-        return const HomeProduct8();
-      case 'home9':
-        return const HomeProduct9();
-      case 'home10':
-        return const HomeProduct10();
-      default:
-        return const HomeProduct1();
-    }
+class _HomeDecorviewState extends State<HomeDecorview> {
+  late Future<List<ProductsViewsModel>> _productsFuture;
+
+  // Map of product detail pages
+  static final Map<String, Widget> detailPages = {
+    '681dab0df9c9147444b452d2': const HomeProduct6(),
+    '681dab0df9c9147444b452d3': const HomeProduct7(),
+    '681dab0df9c9147444b452d4': const HomeProduct8(),
+    '681dab0df9c9147444b452d5': const HomeProduct9(),
+    '681dab0df9c9147444b452d6': const HomeProduct10(),
+  };
+
+  @override
+  void initState() {
+    super.initState();
+    _productsFuture = _loadProducts();
+  }
+
+  Future<List<ProductsViewsModel>> _loadProducts() async {
+    final apiProducts = await ApiService().loadProducts();
+
+    return apiProducts
+        .where((product) => detailPages.containsKey(product.id))
+        .map((apiProduct) {
+      final imagePath =
+          'assets/Home_products/home-decor/home_decor${detailPages.keys.toList().indexOf(apiProduct.id) + 1}/1.png';
+
+      return ProductsViewsModel(
+        id: apiProduct.id,
+        title: apiProduct.name,
+        price: apiProduct.price,
+        originalPrice: apiProduct.originalPrice,
+        rating: apiProduct.rating ?? 4.5,
+        reviewCount: apiProduct.reviewCount ?? 100,
+        imagePaths: [imagePath],
+        soldBy: 'PickPay',
+        isPickPayFulfilled: true,
+        hasFreeDelivery: true,
+      );
+    }).toList();
+  }
+
+  Widget? _findDetailPageById(String productId) {
+    return detailPages[productId];
   }
 
   @override
   Widget build(BuildContext context) {
-    return BaseCategoryView(
-      categoryName: 'Home Decor',
-      products: _products,
-      productDetailBuilder: _buildProductDetail,
+    return FutureBuilder<List<ProductsViewsModel>>(
+      future: _productsFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        }
+
+        final products = snapshot.data ?? [];
+
+        return BaseCategoryView(
+          categoryName: 'Home Decor',
+          products: products,
+          productDetailBuilder: (String productId) {
+            final detailPage = _findDetailPageById(productId);
+            if (detailPage != null) {
+              return detailPage;
+            }
+            return const Scaffold(
+              body: Center(child: Text('Product detail view coming soon')),
+            );
+          },
+        );
+      },
     );
   }
 }

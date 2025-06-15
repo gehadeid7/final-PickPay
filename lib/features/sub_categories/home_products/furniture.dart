@@ -6,86 +6,90 @@ import 'package:pickpay/features/categories_pages/products_views/home_products/h
 import 'package:pickpay/features/categories_pages/products_views/home_products/home_product3.dart';
 import 'package:pickpay/features/categories_pages/products_views/home_products/home_product4.dart';
 import 'package:pickpay/features/categories_pages/products_views/home_products/home_product5.dart';
+import 'package:pickpay/services/api_service.dart';
 
-class FurnitureView extends StatelessWidget {
-  FurnitureView({super.key});
+class FurnitureView extends StatefulWidget {
+  const FurnitureView({super.key});
 
-  final List<ProductsViewsModel> _products = [
-    ProductsViewsModel(
-      id: 'home1',
-      title: 'Golden Life Sofa Bed - Size 190 cm - Beige',
-      price: 7850.00,
-      originalPrice: 0,
-      rating: 5.0,
-      reviewCount: 88,
-      brand: 'Golden Life',
-      imagePaths: ['assets/Home_products/furniture/furniture1/1.png'],
-    ),
-    ProductsViewsModel(
-      id: 'home2',
-      title: 'Star Bags Bean Bag Chair - Purple, 95*95*97 cm, Unisex Adults',
-      price: 1699.00,
-      originalPrice: 2499.00,
-      rating: 5.0,
-      reviewCount: 88,
-      brand: 'Star Bags',
-      imagePaths: ['assets/Home_products/furniture/furniture2/1.png'],
-    ),
-    ProductsViewsModel(
-      id: 'home3',
-      title: 'Generic Coffee Table, Round, 71 cm x 45 cm, Black',
-      price: 3600.00,
-      originalPrice: 0,
-      rating: 5.0,
-      reviewCount: 88,
-      brand: 'Generic',
-      imagePaths: ['assets/Home_products/furniture/furniture3/1.png'],
-    ),
-    ProductsViewsModel(
-      id: 'home4',
-      title: 'Gaming Chair, Furgle Gocker Ergonomic Adjustable 3D Swivel Chair',
-      price: 9696.55,
-      originalPrice: 12071.00,
-      rating: 5.0,
-      reviewCount: 92,
-      brand: 'Furgle',
-      imagePaths: ['assets/Home_products/furniture/furniture4/1.png'],
-    ),
-    ProductsViewsModel(
-      id: 'home5',
-      title: 'Janssen Almany Innerspring Mattress Height 25 cm - 120 x 195 cm',
-      price: 5060.03,
-      originalPrice: 0,
-      rating: 5.0,
-      reviewCount: 88,
-      brand: 'Janssen',
-      imagePaths: ['assets/Home_products/furniture/furniture5/1.png'],
-    ),
-  ];
+  @override
+  State<FurnitureView> createState() => _FurnitureViewState();
+}
 
-  Widget _buildProductDetail(String productId) {
-    switch (productId) {
-      case 'home1':
-        return const HomeProduct1();
-      case 'home2':
-        return const HomeProduct2();
-      case 'home3':
-        return const HomeProduct3();
-      case 'home4':
-        return const HomeProduct4();
-      case 'home5':
-        return const HomeProduct5();
-      default:
-        return const HomeProduct1();
-    }
+class _FurnitureViewState extends State<FurnitureView> {
+  late Future<List<ProductsViewsModel>> _productsFuture;
+
+  // Map of product detail pages
+  static final Map<String, Widget> detailPages = {
+    '681dab0df9c9147444b452cd': const HomeProduct1(),
+    '681dab0df9c9147444b452ce': const HomeProduct2(),
+    '681dab0df9c9147444b452cf': const HomeProduct3(),
+    '681dab0df9c9147444b452d0': const HomeProduct4(),
+    '681dab0df9c9147444b452d1': const HomeProduct5(),
+  };
+
+  @override
+  void initState() {
+    super.initState();
+    _productsFuture = _loadProducts();
+  }
+
+  Future<List<ProductsViewsModel>> _loadProducts() async {
+    final apiProducts = await ApiService().loadProducts();
+    
+    return apiProducts
+        .where((product) => detailPages.containsKey(product.id))
+        .map((apiProduct) {
+          final imagePath = 'assets/Home_products/furniture/furniture${detailPages.keys.toList().indexOf(apiProduct.id) + 1}/1.png';
+
+          return ProductsViewsModel(
+            id: apiProduct.id,
+            title: apiProduct.name,
+            price: apiProduct.price,
+            originalPrice: apiProduct.originalPrice,
+            rating: apiProduct.rating ?? 4.5,
+            reviewCount: apiProduct.reviewCount ?? 100,
+            imagePaths: [imagePath],
+            soldBy: 'PickPay',
+            isPickPayFulfilled: true,
+            hasFreeDelivery: true,
+          );
+        })
+        .toList();
+  }
+
+  Widget? _findDetailPageById(String productId) {
+    return detailPages[productId];
   }
 
   @override
   Widget build(BuildContext context) {
-    return BaseCategoryView(
-      categoryName: 'Furniture',
-      products: _products,
-      productDetailBuilder: _buildProductDetail,
+    return FutureBuilder<List<ProductsViewsModel>>(
+      future: _productsFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        }
+
+        final products = snapshot.data ?? [];
+
+        return BaseCategoryView(
+          categoryName: 'Furniture',
+          products: products,
+          productDetailBuilder: (String productId) {
+            final detailPage = _findDetailPageById(productId);
+            if (detailPage != null) {
+              return detailPage;
+            }
+            return const Scaffold(
+              body: Center(child: Text('Product detail view coming soon')),
+            );
+          },
+        );
+      },
     );
   }
 }

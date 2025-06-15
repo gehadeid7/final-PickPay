@@ -78,7 +78,7 @@ Widget? _getCategoryPage(String category) {
     case 'bath & bedding':
       return BathView();
     case 'kitchen & dining':
-      return Kitchenview();
+      return KitchenView();
   }
 
   // Fashion subcategories

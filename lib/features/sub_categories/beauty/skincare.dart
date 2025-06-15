@@ -6,89 +6,90 @@ import 'package:pickpay/features/categories_pages/products_views/beauty_products
 import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product8.dart';
 import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product9.dart';
 import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product10.dart';
+import 'package:pickpay/services/api_service.dart';
 
-class Skincare extends StatelessWidget {
-  Skincare({super.key});
+class Skincare extends StatefulWidget {
+  const Skincare({super.key});
 
-  final List<ProductsViewsModel> _products = [
-    ProductsViewsModel(
-      id: '68132a95ff7813b3d47f9da6',
-      title: 'Care & More Soft Cream With Glycerin Mixed berries 75 ML',
-      price: 31.00,
-      originalPrice: 44.00,
-      rating: 4.0,
-      reviewCount: 19,
-      brand: 'Care & More',
-      imagePaths: ['assets/beauty_products/skincare_1/1.png'],
-    ),
-    ProductsViewsModel(
-      id: '68132a95ff7813b3d47f9da7',
-      title:
-          'La Roche-Posay Anthelios XL Non-perfumed Dry Touch oil control gel cream SPF50+ 50ml',
-      price: 1168.70,
-      originalPrice: 1168.70,
-      rating: 4.0,
-      reviewCount: 19,
-      brand: 'La Roche-Posay',
-      imagePaths: ['assets/beauty_products/skincare_2/1.png'],
-    ),
-    ProductsViewsModel(
-      id: '68132a95ff7813b3d47f9da8',
-      title:
-          'Eva Aloe skin clinic anti-ageing collagen toner for firmed and refined skin - 200ml',
-      price: 138.60,
-      originalPrice: 210.00,
-      rating: 4.0,
-      reviewCount: 19,
-      brand: 'Eva',
-      imagePaths: ['assets/beauty_products/skincare_3/1.png'],
-    ),
-    ProductsViewsModel(
-      id: '68132a95ff7813b3d47f9da9',
-      title:
-          'Eucerin DermoPurifyer Oil Control Skin Renewal Treatment Face Serum, 40ml',
-      price: 658.93,
-      originalPrice: 775.00,
-      rating: 4.0,
-      reviewCount: 19,
-      brand: 'Eucerin',
-      imagePaths: ['assets/beauty_products/skincare_4/1.png'],
-    ),
-    ProductsViewsModel(
-      id: '68132a95ff7813b3d47f9da10',
-      title: 'L\'Oréal Paris Hyaluron Expert Eye Serum - 20ml',
-      price: 429.00,
-      originalPrice: 0.00,
-      rating: 4.8,
-      reviewCount: 19,
-      brand: 'L\'Oréal Paris',
-      imagePaths: ['assets/beauty_products/skincare_5/1.png'],
-    ),
-  ];
+  @override
+  State<Skincare> createState() => _SkincareState();
+}
 
-  Widget _buildProductDetail(String productId) {
-    switch (productId) {
-      case '68132a95ff7813b3d47f9da6':
-        return const BeautyProduct6();
-      case '68132a95ff7813b3d47f9da7':
-        return const BeautyProduct7();
-      case '68132a95ff7813b3d47f9da8':
-        return const BeautyProduct8();
-      case '68132a95ff7813b3d47f9da9':
-        return const BeautyProduct9();
-      case '68132a95ff7813b3d47f9da10':
-        return const BeautyProduct10();
-      default:
-        return const BeautyProduct6();
-    }
+class _SkincareState extends State<Skincare> {
+  late Future<List<ProductsViewsModel>> _productsFuture;
+
+  // Map of product detail pages
+  static final Map<String, Widget> detailPages = {
+    '682b00d16977bd89257c0ea2': const BeautyProduct6(),
+    '682b00d16977bd89257c0ea3': const BeautyProduct7(),
+    '682b00d16977bd89257c0ea4': const BeautyProduct8(),
+    '682b00d16977bd89257c0ea5': const BeautyProduct9(),
+    '682b00d16977bd89257c0ea6': const BeautyProduct10(),
+  };
+
+  @override
+  void initState() {
+    super.initState();
+    _productsFuture = _loadProducts();
+  }
+
+  Future<List<ProductsViewsModel>> _loadProducts() async {
+    final apiProducts = await ApiService().loadProducts();
+
+    return apiProducts
+        .where((product) => detailPages.containsKey(product.id))
+        .map((apiProduct) {
+      final imagePath =
+          'assets/beauty_products/skincare_${detailPages.keys.toList().indexOf(apiProduct.id) + 1}/1.png';
+
+      return ProductsViewsModel(
+        id: apiProduct.id,
+        title: apiProduct.name,
+        price: apiProduct.price,
+        originalPrice: apiProduct.originalPrice,
+        rating: apiProduct.rating ?? 4.5,
+        reviewCount: apiProduct.reviewCount ?? 100,
+        imagePaths: [imagePath],
+        soldBy: 'PickPay',
+        isPickPayFulfilled: true,
+        hasFreeDelivery: true,
+      );
+    }).toList();
+  }
+
+  Widget? _findDetailPageById(String productId) {
+    return detailPages[productId];
   }
 
   @override
   Widget build(BuildContext context) {
-    return BaseCategoryView(
-      categoryName: "Skincare",
-      products: _products,
-      productDetailBuilder: _buildProductDetail,
+    return FutureBuilder<List<ProductsViewsModel>>(
+      future: _productsFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        }
+
+        final products = snapshot.data ?? [];
+
+        return BaseCategoryView(
+          categoryName: "Skincare",
+          products: products,
+          productDetailBuilder: (String productId) {
+            final detailPage = _findDetailPageById(productId);
+            if (detailPage != null) {
+              return detailPage;
+            }
+            return const Scaffold(
+              body: Center(child: Text('Product detail view coming soon')),
+            );
+          },
+        );
+      },
     );
   }
 }
