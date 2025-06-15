@@ -7,10 +7,108 @@ import 'package:pickpay/core/utils/app_colors.dart';
 import 'package:pickpay/core/utils/app_text_styles.dart';
 import 'package:pickpay/core/widgets/build_appbar.dart';
 import 'package:pickpay/core/widgets/custom_button.dart';
-import 'package:pickpay/features/categories_pages/products_views/product_detail_view.dart';
 import 'package:pickpay/features/checkout/presentation/views/checkout_view.dart';
 import 'package:pickpay/features/cart/cart_cubits/cart_cubit.dart';
 import 'package:pickpay/features/cart/cart_item_model.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product1.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product2.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product3.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product4.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product5.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product6.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product7.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product8.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product9.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product10.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product11.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product12.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product13.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product14.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product15.dart';
+import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product1.dart';
+import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product2.dart';
+import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product3.dart';
+import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product4.dart';
+import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product5.dart';
+import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product6.dart';
+import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product7.dart';
+import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product8.dart';
+import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product9.dart';
+import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product10.dart';
+import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product11.dart';
+import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product12.dart';
+import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product13.dart';
+import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product14.dart';
+import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product15.dart';
+import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product16.dart';
+import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product17.dart';
+import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product18.dart';
+import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product19.dart';
+import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product20.dart';
+import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product1.dart';
+import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product2.dart';
+import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product3.dart';
+import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product4.dart';
+import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product5.dart';
+import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product6.dart';
+import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product7.dart';
+import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product8.dart';
+import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product9.dart';
+import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product10.dart';
+import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product11.dart';
+import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product12.dart';
+import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product13.dart';
+import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product14.dart';
+import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product15.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product1.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product2.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product3.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product4.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product5.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product6.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product7.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product8.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product9.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product10.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product11.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product12.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product13.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product14.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product15.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product16.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product17.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product18.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product19.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product20.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product1.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product2.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product3.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product4.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product5.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product6.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product7.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product8.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product9.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product10.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product11.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product12.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product13.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product14.dart';
+import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product15.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product1.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product2.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product3.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product4.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product5.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product6.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product7.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product8.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product9.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product10.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product11.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product12.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product13.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product14.dart';
 
 class CartViewBody extends StatelessWidget {
   const CartViewBody({super.key});
@@ -302,12 +400,327 @@ class CartViewBody extends StatelessWidget {
             borderRadius: BorderRadius.circular(16),
             onTap: () {
               if (item.product.id.isNotEmpty) {
+                // Get the product view based on ID
+                Widget productView;
+                switch (item.product.id) {
+                  // Electronics Products
+                  case '6819e22b123a4faad16613be':
+                    productView = const Product1View();
+                    break;
+                  case '6819e22b123a4faad16613bf':
+                    productView = const Product2View();
+                    break;
+                  case '6819e22b123a4faad16613c0':
+                    productView = const Product3View();
+                    break;
+                  case '6819e22b123a4faad16613c1':
+                    productView = const Product4View();
+                    break;
+                  case '6819e22b123a4faad16613c3':
+                    productView = const Product5View();
+                    break;
+                  case '6819e22b123a4faad16613c4':
+                    productView = const Product6View();
+                    break;
+                  case '6819e22b123a4faad16613c5':
+                    productView = const Product7View();
+                    break;
+                  case '6819e22b123a4faad16613c6':
+                    productView = const Product8View();
+                    break;
+                  case '6819e22b123a4faad16613c7':
+                    productView = const Product9View();
+                    break;
+                  case '6819e22b123a4faad16613c8':
+                    productView = const Product10View();
+                    break;
+                  case '6819e22b123a4faad16613c9':
+                    productView = const Product11View();
+                    break;
+                  case '6819e22b123a4faad16613ca':
+                    productView = const Product12View();
+                    break;
+                  case '6819e22b123a4faad16613cb':
+                    productView = const Product13View();
+                    break;
+                  case '6819e22b123a4faad16613cc':
+                    productView = const Product14View();
+                    break;
+                  case '6819e22b123a4faad16613c2':
+                    productView = const Product15View();
+                    break;
+
+                  // Beauty Products
+                  case '682b00d16977bd89257c0e9d':
+                    productView = const BeautyProduct1();
+                    break;
+                  case '682b00d16977bd89257c0e9e':
+                    productView = const BeautyProduct2();
+                    break;
+                  case '682b00d16977bd89257c0e9f':
+                    productView = const BeautyProduct3();
+                    break;
+                  case '682b00d16977bd89257c0ea0':
+                    productView = const BeautyProduct4();
+                    break;
+                  case '682b00d16977bd89257c0ea1':
+                    productView = const BeautyProduct5();
+                    break;
+                  case '682b00d16977bd89257c0ea2':
+                    productView = const BeautyProduct6();
+                    break;
+                  case '682b00d16977bd89257c0ea3':
+                    productView = const BeautyProduct7();
+                    break;
+                  case '682b00d16977bd89257c0ea4':
+                    productView = const BeautyProduct8();
+                    break;
+                  case '682b00d16977bd89257c0ea5':
+                    productView = const BeautyProduct9();
+                    break;
+                  case '682b00d16977bd89257c0ea6':
+                    productView = const BeautyProduct10();
+                    break;
+                  case '682b00d16977bd89257c0ea7':
+                    productView = const BeautyProduct11();
+                    break;
+                  case '682b00d16977bd89257c0ea8':
+                    productView = const BeautyProduct12();
+                    break;
+                  case '682b00d16977bd89257c0ea9':
+                    productView = const BeautyProduct13();
+                    break;
+                  case '682b00d16977bd89257c0eaa':
+                    productView = const BeautyProduct14();
+                    break;
+                  case '682b00d16977bd89257c0eab':
+                    productView = const BeautyProduct15();
+                    break;
+                  case '682b00d16977bd89257c0eac':
+                    productView = const BeautyProduct16();
+                    break;
+                  case '682b00d16977bd89257c0ead':
+                    productView = const BeautyProduct17();
+                    break;
+                  case '682b00d16977bd89257c0eae':
+                    productView = const BeautyProduct18();
+                    break;
+                  case '682b00d16977bd89257c0eaf':
+                    productView = const BeautyProduct19();
+                    break;
+                  case '682b00d16977bd89257c0eb0':
+                    productView = const BeautyProduct20();
+                    break;
+
+                  // Video Games Products
+                  case '682b00a46977bd89257c0e80':
+                    productView = const VideoGamesProduct1();
+                    break;
+                  case '682b00a46977bd89257c0e81':
+                    productView = const VideoGamesProduct2();
+                    break;
+                  case '682b00a46977bd89257c0e82':
+                    productView = const VideoGamesProduct3();
+                    break;
+                  case '682b00a46977bd89257c0e83':
+                    productView = const VideoGamesProduct4();
+                    break;
+                  case '682b00a46977bd89257c0e84':
+                    productView = const VideoGamesProduct5();
+                    break;
+                  case '682b00a46977bd89257c0e85':
+                    productView = const VideoGamesProduct6();
+                    break;
+                  case '682b00a46977bd89257c0e86':
+                    productView = const VideoGamesProduct7();
+                    break;
+                  case '682b00a46977bd89257c0e87':
+                    productView = const VideoGamesProduct8();
+                    break;
+                  case '682b00a46977bd89257c0e88':
+                    productView = const VideoGamesProduct9();
+                    break;
+                  case '682b00a46977bd89257c0e89':
+                    productView = const VideoGamesProduct10();
+                    break;
+                  case '682b00a46977bd89257c0e8a':
+                    productView = const VideoGamesProduct11();
+                    break;
+                  case '682b00a46977bd89257c0e8b':
+                    productView = const VideoGamesProduct12();
+                    break;
+                  case '682b00a46977bd89257c0e8c':
+                    productView = const VideoGamesProduct13();
+                    break;
+                  case '682b00a46977bd89257c0e8d':
+                    productView = const VideoGamesProduct14();
+                    break;
+
+                  // Fashion Products
+                  case '682b00c26977bd89257c0e8e':
+                    productView = const FashionProduct1();
+                    break;
+                  case '682b00c26977bd89257c0e8f':
+                    productView = const FashionProduct2();
+                    break;
+                  case '682b00c26977bd89257c0e90':
+                    productView = const FashionProduct3();
+                    break;
+                  case '682b00c26977bd89257c0e91':
+                    productView = const FashionProduct4();
+                    break;
+                  case '682b00c26977bd89257c0e92':
+                    productView = const FashionProduct5();
+                    break;
+                  case '682b00c26977bd89257c0e93':
+                    productView = const FashionProduct6();
+                    break;
+                  case '682b00c26977bd89257c0e94':
+                    productView = const FashionProduct7();
+                    break;
+                  case '682b00c26977bd89257c0e95':
+                    productView = const FashionProduct8();
+                    break;
+                  case '682b00c26977bd89257c0e96':
+                    productView = const FashionProduct9();
+                    break;
+                  case '682b00c26977bd89257c0e97':
+                    productView = const FashionProduct10();
+                    break;
+                  case '682b00c26977bd89257c0e98':
+                    productView = const FashionProduct11();
+                    break;
+                  case '682b00c26977bd89257c0e99':
+                    productView = const FashionProduct12();
+                    break;
+                  case '682b00c26977bd89257c0e9a':
+                    productView = const FashionProduct13();
+                    break;
+                  case '682b00c26977bd89257c0e9b':
+                    productView = const FashionProduct14();
+                    break;
+                  case '682b00c26977bd89257c0e9c':
+                    productView = const FashionProduct15();
+                    break;
+
+                  // Home Products
+                  case '681dab0df9c9147444b452cd':
+                    productView = const HomeProduct1();
+                    break;
+                  case '681dab0df9c9147444b452ce':
+                    productView = const HomeProduct2();
+                    break;
+                  case '681dab0df9c9147444b452cf':
+                    productView = const HomeProduct3();
+                    break;
+                  case '681dab0df9c9147444b452d0':
+                    productView = const HomeProduct4();
+                    break;
+                  case '681dab0df9c9147444b452d1':
+                    productView = const HomeProduct5();
+                    break;
+                  case '681dab0df9c9147444b452d2':
+                    productView = const HomeProduct6();
+                    break;
+                  case '681dab0df9c9147444b452d3':
+                    productView = const HomeProduct7();
+                    break;
+                  case '681dab0df9c9147444b452d4':
+                    productView = const HomeProduct8();
+                    break;
+                  case '681dab0df9c9147444b452d5':
+                    productView = const HomeProduct9();
+                    break;
+                  case '681dab0df9c9147444b452d6':
+                    productView = const HomeProduct10();
+                    break;
+                  case '681dab0df9c9147444b452d7':
+                    productView = const HomeProduct11();
+                    break;
+                  case '681dab0df9c9147444b452d8':
+                    productView = const HomeProduct12();
+                    break;
+                  case '681dab0df9c9147444b452d9':
+                    productView = const HomeProduct13();
+                    break;
+                  case '681dab0df9c9147444b452da':
+                    productView = const HomeProduct14();
+                    break;
+                  case '681dab0df9c9147444b452db':
+                    productView = const HomeProduct15();
+                    break;
+                  case '681dab0df9c9147444b452dc':
+                    productView = const HomeProduct16();
+                    break;
+                  case '681dab0df9c9147444b452dd':
+                    productView = const HomeProduct17();
+                    break;
+                  case '681dab0df9c9147444b452de':
+                    productView = const HomeProduct18();
+                    break;
+                  case '681dab0df9c9147444b452df':
+                    productView = const HomeProduct19();
+                    break;
+                  case '681dab0df9c9147444b452e0':
+                    productView = const HomeProduct20();
+                    break;
+
+                  // Appliances Products
+                  case '68252918a68b49cb06164204':
+                    productView = const AppliancesProduct1();
+                    break;
+                  case '68252918a68b49cb06164205':
+                    productView = const AppliancesProduct2();
+                    break;
+                  case '68252918a68b49cb06164206':
+                    productView = const AppliancesProduct3();
+                    break;
+                  case '68252918a68b49cb06164207':
+                    productView = const AppliancesProduct4();
+                    break;
+                  case '68252918a68b49cb06164208':
+                    productView = const AppliancesProduct5();
+                    break;
+                  case '68252918a68b49cb06164209':
+                    productView = const AppliancesProduct6();
+                    break;
+                  case '68252918a68b49cb0616420a':
+                    productView = const AppliancesProduct7();
+                    break;
+                  case '68252918a68b49cb0616420b':
+                    productView = const AppliancesProduct8();
+                    break;
+                  case '68252918a68b49cb0616420c':
+                    productView = const AppliancesProduct9();
+                    break;
+                  case '68252918a68b49cb0616420d':
+                    productView = const AppliancesProduct10();
+                    break;
+                  case '68252918a68b49cb0616420e':
+                    productView = const AppliancesProduct11();
+                    break;
+                  case '68252918a68b49cb0616420f':
+                    productView = const AppliancesProduct12();
+                    break;
+                  case '68252918a68b49cb06164210':
+                    productView = const AppliancesProduct13();
+                    break;
+                  case '68252918a68b49cb06164211':
+                    productView = const AppliancesProduct14();
+                    break;
+                  case '68252918a68b49cb06164212':
+                    productView = const AppliancesProduct15();
+                    break;
+
+                  default:
+                    _showMessage(context, 'Product details not available',
+                        CartAction.error);
+                    return;
+                }
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ProductDetailView(
-                      product: item.product,
-                    ),
+                    builder: (context) => productView,
                   ),
                 );
               } else {
