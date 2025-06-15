@@ -24,11 +24,12 @@ class _OnBoardingPageViewState extends State<OnBoardingPageView> {
         PageViewItem(
           isVisible: true,
           image: Lottie.asset(
-            "assets/animations/on11.json",
+            "assets/animations/onboarding1.json",
           ),
           backgroundimage: SvgPicture.asset(
             Assets.pageViewItem2BkColor,
             fit: BoxFit.fill,
+            color: Color(0xFF83AFE0),
           ),
           subTitle:
               'Choose what you love, pay your way,  and enjoy the experience - simple as that.',

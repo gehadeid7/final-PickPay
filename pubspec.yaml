@@ -141,6 +141,7 @@ flutter:
   - assets/animations/on1.json
   - assets/animations/on11.json
   - assets/animations/onn.json
+  - assets/animations/onboarding1.json
   - assets/animations/on22.json
   - assets/animations/toggle.json
   - assets/Categories/DailyDeals/
