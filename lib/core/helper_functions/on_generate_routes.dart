@@ -6,6 +6,8 @@ import 'package:pickpay/features/categories_pages/appliances/presentation/views/
 import 'package:pickpay/features/categories_pages/beauty/presentation/views/beauty_view.dart';
 import 'package:pickpay/features/categories_pages/fashion/presentation/views/fashion_view.dart';
 import 'package:pickpay/features/categories_pages/homeCategory/presentation/views/home_category_view.dart';
+import 'package:pickpay/features/categories_pages/models/product_model.dart';
+import 'package:pickpay/features/categories_pages/products_views/product_detail_view.dart';
 import 'package:pickpay/features/categories_pages/videogames/presentation/views/videogames_view.dart';
 import 'package:pickpay/features/checkout/presentation/views/checkout_view.dart';
 import 'package:pickpay/features/categories_pages/electronics/presentation/views/electronics_view.dart';
@@ -79,6 +81,11 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
 
     case ProfileChangeView.routeName:
       return MaterialPageRoute(builder: (context) => const ProfileChangeView());
+      
+    case ProductDetailView.routeName:
+  final product = settings.arguments as ProductsViewsModel;
+  return MaterialPageRoute(
+    builder: (context) => ProductDetailView(product: product));
 
     default:
       return MaterialPageRoute(builder: (context) => const Scaffold());

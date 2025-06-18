@@ -20,6 +20,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 
 class ProductDetailView extends StatefulWidget {
+  static const routeName = '/product';
   final ProductsViewsModel product;
 
   const ProductDetailView({super.key, required this.product});

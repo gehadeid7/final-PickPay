@@ -14,7 +14,7 @@ import 'package:pickpay/features/categories_pages/widgets/product_card.dart';
 import 'package:http_parser/http_parser.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://192.168.1.2:3000/api/v1/';
+  static const String baseUrl = 'http://192.168.1.4:3000/api/v1/';
 
   Future<Map<String, String>> _buildHeaders({
     Map<String, String>? headers,
@@ -674,34 +674,168 @@ class ApiService {
     }
   }
 
-  Future<List<Map<String, dynamic>>> searchProducts(String query) async {
-    try {
-      final response = await get(
-        endpoint: BackendEndpoints.aiProductSearch, // 'products/search'
-        queryParameters: {'query': query}, // <-- changed 'q' to 'query'
-        authorized: false,
-      );
-
-      if (response.statusCode == 200) {
-        final result = jsonDecode(response.body);
-
-        // Adjust this depending on your backend's response structure
-        if (result is Map<String, dynamic> && result.containsKey('data')) {
-          final data = result['data'];
-          if (data is List) {
-            return List<Map<String, dynamic>>.from(data);
-          }
-        } else if (result is List) {
-          return List<Map<String, dynamic>>.from(result);
+// 🔍 Unified Product Search Method
+Future<List<ProductsViewsModel>> searchProducts(String query) async {
+  print('🚀 Starting search for: "$query"');
+  
+  try {
+    // Use POST method like your working searchProductsAI
+    final response = await post(
+      endpoint: BackendEndpoints.aiProductSearch, // Should be 'products/search'
+      body: {
+        'query': query,
+        'type': 'search',
+        'context': {
+          'userHistory': [],
+          'popularSearches': []
         }
-        throw Exception('Unexpected search response format');
+      },
+      authorized: false,
+    );
+
+    print('📥 Response status code: ${response.statusCode}');
+    print('📥 Response body: ${response.body}');
+
+    if (response.statusCode == 200) {
+      final result = jsonDecode(response.body);
+      print('📦 Parsed response type: ${result.runtimeType}');
+      print('📦 Response keys: ${result.keys.toList()}');
+      
+      // Handle your backend's response structure: {results: 0, products: []}
+      if (result is Map<String, dynamic>) {
+        if (result.containsKey('products')) {
+          final productsData = result['products'];
+          print('📦 Products field type: ${productsData.runtimeType}');
+          print('📦 Products count: ${result['results'] ?? 'unknown'}');
+          
+          if (productsData is List) {
+            print('✅ Found ${productsData.length} products');
+            
+            // Convert to ProductsViewsModel list
+            List<ProductsViewsModel> products = [];
+            for (var productJson in productsData) {
+              try {
+                if (productJson is Map<String, dynamic>) {
+                  final product = ProductsViewsModel.fromJson(productJson);
+                  products.add(product);
+                  print('✅ Successfully parsed product: ${product.title ?? 'Unknown'}');
+                } else {
+                  print('⚠️ Skipping invalid product data: ${productJson.runtimeType}');
+                }
+              } catch (parseError) {
+                print('❌ Error parsing product: $parseError');
+                print('📦 Product data: $productJson');
+              }
+            }
+            
+            print('🎯 Returning ${products.length} valid products');
+            return products;
+          } else {
+            print('❌ Products field is not a List: ${productsData.runtimeType}');
+            return [];
+          }
+        } else {
+          print('❌ Response missing "products" key');
+          print('📦 Available keys: ${result.keys.toList()}');
+          return [];
+        }
       } else {
-        throw Exception('Search failed: [${response.body}]');
+        print('❌ Response is not a Map: ${result.runtimeType}');
+        return [];
       }
-    } catch (e) {
-      throw Exception('Error during product search: ${e.toString()}');
+    } else {
+      print('❌ Search failed with status: ${response.statusCode}');
+      print('❌ Error response: ${response.body}');
+      return [];
     }
+  } catch (e, stackTrace) {
+    print('❌ Error during product search: $e');
+    print('📋 Stack trace: $stackTrace');
+    return [];
   }
+}
+
+// 🔍 Search Suggestions Method
+Future<List<String>> getSearchSuggestions(String query) async {
+  print('🔍 Getting suggestions for: "$query"');
+  
+  try {
+    final response = await post(
+      endpoint: BackendEndpoints.aiProductSearch,
+      body: {
+        'query': query,
+        'type': 'suggestions', // Different type for suggestions
+        'context': {
+          'userHistory': [],
+          'popularSearches': []
+        }
+      },
+      authorized: false,
+    );
+
+    print('📥 Suggestions response: ${response.statusCode}');
+    
+    if (response.statusCode == 200) {
+      final result = jsonDecode(response.body);
+      
+      if (result is Map<String, dynamic> && result.containsKey('products')) {
+        final productsData = result['products'] as List;
+        
+        // Extract product titles as suggestions
+        List<String> suggestions = [];
+        for (var product in productsData) {
+          if (product is Map<String, dynamic> && product.containsKey('title')) {
+            suggestions.add(product['title'].toString());
+          }
+        }
+        
+        print('✅ Found ${suggestions.length} suggestions');
+        return suggestions;
+      }
+    }
+    
+    return [];
+  } catch (e) {
+    print('❌ Error getting suggestions: $e');
+    return [];
+  }
+}
+
+// 🔍 Test method to debug backend response
+Future<Map<String, dynamic>> testSearchEndpoint(String query) async {
+  print('🧪 Testing search endpoint with query: "$query"');
+  
+  try {
+    final response = await post(
+      endpoint: BackendEndpoints.aiProductSearch,
+      body: {
+        'query': query,
+        'type': 'search',
+        'context': {
+          'userHistory': [],
+          'popularSearches': []
+        }
+      },
+      authorized: false,
+    );
+
+    print('🧪 Test response status: ${response.statusCode}');
+    print('🧪 Test response body: ${response.body}');
+    
+    return {
+      'statusCode': response.statusCode,
+      'body': response.body,
+      'success': response.statusCode == 200,
+    };
+  } catch (e) {
+    print('🧪 Test failed: $e');
+    return {
+      'statusCode': 0,
+      'body': e.toString(),
+      'success': false,
+    };
+  }
+}
 
 // Fetch products by category
   Future<List<ProductsViewsModel>> fetchProducts(String category) async {
@@ -1298,6 +1432,7 @@ class ApiService {
         final result = jsonDecode(response.body);
         print('✅ [GET ALL ORDERS] Success');
         final data = result['data'];
+        print('📊 [GET ALL ORDERS] Data structure: $data');
         if (data is List) {
           return List<Map<String, dynamic>>.from(data);
         }

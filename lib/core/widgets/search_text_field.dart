@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pickpay/core/utils/app_text_styles.dart';
 import 'package:pickpay/core/services/ai_search_service.dart';
 import 'package:pickpay/features/categories_pages/models/product_model.dart';
+import 'package:pickpay/features/categories_pages/products_views/product_detail_view.dart';
 import 'package:pickpay/services/api_service.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -271,7 +272,7 @@ class _SearchTextFieldState extends State<SearchTextField>
       
       if (fullProductJson != null && mounted) {
         final fullProduct = ProductsViewsModel.fromJson(fullProductJson);
-        Navigator.pushNamed(context, '/product', arguments: fullProduct);
+        Navigator.pushNamed(context, ProductDetailView.routeName, arguments: fullProduct);
         setState(() => _showDropdown = false);
         _focusNode.unfocus();
       } else {

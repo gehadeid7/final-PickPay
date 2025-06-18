@@ -32,33 +32,49 @@ class OrderCubit extends Cubit<OrderState> {
 
   String? get _userId => _auth.currentUser?.uid;
 
+  // Added extensive logging to debug the loadOrders method
   Future<void> loadOrders() async {
-    if (_userId == null) return;
+    if (_userId == null) {
+      print('❌ [LOAD ORDERS] User ID is null. Aborting loadOrders.');
+      return;
+    }
 
     print('📦 [LOAD ORDERS] Started for user $_userId');
 
     try {
       emit(state.copyWith(isLoading: true));
+      print('🔄 [LOAD ORDERS] State updated to loading.');
 
       final ordersJson = await _apiService.getAllOrders();
+      print('📥 [LOAD ORDERS] API response received: $ordersJson');
+
       final ordersList = ordersJson.map((json) => OrderModel.fromJson(json)).toList();
+      print('📋 [LOAD ORDERS] Parsed orders list: $ordersList');
+
       // Debug print for each order
       for (final order in ordersList) {
-        print('[DEBUG] Order: id=[32m${order.id}[0m, userId=${order.userId}, status=${order.status}, createdAt=${order.createdAt}');
+        print('[DEBUG] Order: id=${order.id}, userId=${order.userId}, status=${order.status}, createdAt=${order.createdAt}');
       }
 
-      emit(state.copyWith(orders: ordersList, isLoading: false));
+      emit(state.copyWith(
+        orders: ordersList,
+        isLoading: false,
+      ));
+      print('✅ [LOAD ORDERS] State updated with orders.');
 
       await Prefs.saveUserOrders(
           _userId!, ordersList.map((o) => o.toJson()).toList());
+      print('✅ [LOAD ORDERS] Orders saved to preferences.');
 
       print('✅ [LOAD ORDERS] Loaded ${ordersList.length} orders');
+      print('✅ [LOAD ORDERS] Pending: ${state.pendingOrders.length}, Delivered: ${state.deliveredOrders.length}');
     } catch (e) {
       print('❌ [LOAD ORDERS] Failed: $e');
       emit(state.copyWith(
         error: 'Failed to load orders: $e',
         isLoading: false,
       ));
+      print('❌ [LOAD ORDERS] State updated with error.');
     }
   }
 
