@@ -1,23 +1,16 @@
 backend :
 
- 
 facebook login
 order view
-reviews
 fragrance
 
 .......................................................
 
 front :
 
-
 link reviews section with review and rating 
-
-
 color/ size > cart/checkout
-
 update filter and all products details + home view update like web + update colors
-
-cart cubit ui
-
-lottie
+cart cubit ui message
+review ui message
+promo code ui message 
