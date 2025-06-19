@@ -24,6 +24,7 @@ class CheckoutView extends StatefulWidget {
 }
 
 class _CheckoutViewState extends State<CheckoutView> {
+  static const double shippingFee = 30.0; // Shipping fee in EGP
   final _formKey = GlobalKey<FormState>();
   late ShippingInfo _shippingInfo;
   String _paymentMethod = 'Credit Card';
@@ -96,10 +97,11 @@ class _CheckoutViewState extends State<CheckoutView> {
     }
 
     final items = cartState.cartItems;
-    final total = items.fold<double>(
+    final subtotal = items.fold<double>(
       0,
       (sum, item) => sum + item.product.price * item.quantity,
     );
+    final total = subtotal + shippingFee;
     final checkoutCubit = context.read<CheckoutCubit>();
     checkoutCubit.updateTotal(total);
 
@@ -172,11 +174,13 @@ class _CheckoutViewState extends State<CheckoutView> {
                   duration: const Duration(milliseconds: 400),
                   child: _buildSectionTitle('Order Summary', theme),
                 ),
-BlocBuilder<CheckoutCubit, CheckoutState>(
-  builder: (context, state) {
-    return _buildOrderSummary(items, total, theme, state);
-  },
-),                const SizedBox(height: 30),
+                BlocBuilder<CheckoutCubit, CheckoutState>(
+                  builder: (context, state) {
+                    return _buildOrderSummary(
+                        items, subtotal, shippingFee, total, theme, state);
+                  },
+                ),
+                const SizedBox(height: 30),
                 AnimatedSwitcher(
                   duration: const Duration(milliseconds: 400),
                   child: _buildSectionTitle('Shipping Information', theme),
@@ -201,29 +205,31 @@ BlocBuilder<CheckoutCubit, CheckoutState>(
                   },
                 ),
                 const SizedBox(height: 15),
-PromoCodeSection(
-  onApply: (code) async {
-    try {
-      final cartCubit = context.read<CartCubit>();
-      final checkoutCubit = context.read<CheckoutCubit>();
+                PromoCodeSection(
+                  onApply: (code) async {
+                    try {
+                      final cartCubit = context.read<CartCubit>();
+                      final checkoutCubit = context.read<CheckoutCubit>();
 
-      final discount = await cartCubit.applyCoupon(code); // لازم ترجع الخصم من CartCubit
-      checkoutCubit.applyCoupon(discount: discount, couponCode: code);
+                      final discount = await cartCubit
+                          .applyCoupon(code); // لازم ترجع الخصم من CartCubit
+                      checkoutCubit.applyCoupon(
+                          discount: discount, couponCode: code);
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Promo code "$code" applied!')),
-      );
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Failed to apply promo code: ${e.toString()}'),
-          backgroundColor: Theme.of(context).colorScheme.error,
-        ),
-      );
-    }
-  },
-),
-
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Promo code "$code" applied!')),
+                      );
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                              'Failed to apply promo code: ${e.toString()}'),
+                          backgroundColor: Theme.of(context).colorScheme.error,
+                        ),
+                      );
+                    }
+                  },
+                ),
                 const SizedBox(height: 32),
                 BlocBuilder<CheckoutCubit, CheckoutState>(
                   builder: (context, state) {
@@ -253,11 +259,11 @@ PromoCodeSection(
                                     return;
                                   }
                                   _formKey.currentState!.save();
-                                  _processCheckout(context, items, total);
+                                  _processCheckout(context, items, subtotal);
                                 },
                           buttonText: state is CheckoutLoading
                               ? 'Processing...'
-                               : 'Place Order (EGP ${state is CheckoutData ? (state.totalAfterDiscount ?? state.total).toStringAsFixed(2) : total.toStringAsFixed(2)})',
+                              : 'Place Order (EGP ${state is CheckoutData ? (state.totalAfterDiscount ?? state.total).toStringAsFixed(2) : total.toStringAsFixed(2)})',
                         ),
                         if (state is CheckoutLoading)
                           Padding(
@@ -290,120 +296,160 @@ PromoCodeSection(
     );
   }
 
-Widget _buildOrderSummary(
-  List<CartItemModel> items, 
-  double total, 
-  ThemeData theme,
-  CheckoutState state,
-) {
-  double? discount;
-  double? totalAfterDiscount;
+  Widget _buildOrderSummary(
+    List<CartItemModel> items,
+    double subtotal,
+    double shippingFee,
+    double total,
+    ThemeData theme,
+    CheckoutState state,
+  ) {
+    double? discount;
+    double? totalAfterDiscount;
 
-  if (state is CheckoutData) {
-    discount = state.discount;
-    totalAfterDiscount = state.totalAfterDiscount;
-  }
+    if (state is CheckoutData) {
+      discount = state.discount;
+      totalAfterDiscount = state.totalAfterDiscount;
+    }
 
-  return Card(
-    color: theme.cardColor,
-    elevation: 2,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(12),
-    ),
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        children: [
-          ...items.map((item) => Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        '${item.product.title} x ${item.quantity}',
-                        style: TextStyles.regular13.copyWith(
+    return Card(
+      color: theme.cardColor,
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            ...items.map((item) => Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          '${item.product.title} x ${item.quantity}',
+                          style: TextStyles.regular13.copyWith(
+                            color: theme.colorScheme.onSurface,
+                          ),
+                        ),
+                      ),
+                      Text(
+                        'EGP ${(item.product.price * item.quantity).toStringAsFixed(2)}',
+                        style: TextStyles.semiBold11.copyWith(
                           color: theme.colorScheme.onSurface,
                         ),
                       ),
-                    ),
-                    Text(
-                      'EGP ${(item.product.price * item.quantity).toStringAsFixed(2)}',
-                      style: TextStyles.semiBold11.copyWith(
-                        color: theme.colorScheme.onSurface,
-                      ),
-                    ),
-                  ],
-                ),
-              )),
-          const Divider(height: 24),
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  'Total',
-                  style: TextStyles.bold16.copyWith(
-                    color: theme.colorScheme.onBackground,
+                    ],
                   ),
-                ),
-              ),
-              Text(
-                'EGP ${total.toStringAsFixed(2)}',
-                style: TextStyles.bold16.copyWith(
-                  color: theme.colorScheme.primary,
-                ),
-              ),
-            ],
-          ),
-          if (discount != null && discount > 0) ...[
-            const SizedBox(height: 8),
+                )),
+            const Divider(height: 24),
             Row(
               children: [
                 Expanded(
                   child: Text(
-                    'Discount',
-                    style: TextStyles.regular13.copyWith(
-                      color: theme.colorScheme.error,
-                    ),
-                  ),
-                ),
-                Text(
-                  '- EGP ${discount.toStringAsFixed(2)}',
-                  style: TextStyles.regular13.copyWith(
-                    color: theme.colorScheme.error,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    'Total After Discount',
+                    'Subtotal',
                     style: TextStyles.bold16.copyWith(
-                      color: theme.colorScheme.primary,
+                      color: theme.colorScheme.onBackground,
                     ),
                   ),
                 ),
                 Text(
-                  'EGP ${totalAfterDiscount?.toStringAsFixed(2) ?? total.toStringAsFixed(2)}',
+                  'EGP ${subtotal.toStringAsFixed(2)}',
                   style: TextStyles.bold16.copyWith(
                     color: theme.colorScheme.primary,
                   ),
                 ),
               ],
             ),
-          ]
-        ],
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    'Shipping',
+                    style: TextStyles.regular13.copyWith(
+                      color: theme.colorScheme.onSurface,
+                    ),
+                  ),
+                ),
+                Text(
+                  '+ EGP ${shippingFee.toStringAsFixed(2)}',
+                  style: TextStyles.regular13.copyWith(
+                    color: theme.colorScheme.primary,
+                  ),
+                ),
+              ],
+            ),
+            const Divider(height: 24),
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    'Total',
+                    style: TextStyles.bold16.copyWith(
+                      color: theme.colorScheme.onBackground,
+                    ),
+                  ),
+                ),
+                Text(
+                  'EGP ${total.toStringAsFixed(2)}',
+                  style: TextStyles.bold16.copyWith(
+                    color: theme.colorScheme.primary,
+                  ),
+                ),
+              ],
+            ),
+            if (discount != null && discount > 0) ...[
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      'Discount',
+                      style: TextStyles.regular13.copyWith(
+                        color: theme.colorScheme.error,
+                      ),
+                    ),
+                  ),
+                  Text(
+                    '- EGP ${discount.toStringAsFixed(2)}',
+                    style: TextStyles.regular13.copyWith(
+                      color: theme.colorScheme.error,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      'Total After Discount',
+                      style: TextStyles.bold16.copyWith(
+                        color: theme.colorScheme.primary,
+                      ),
+                    ),
+                  ),
+                  Text(
+                    'EGP ${(totalAfterDiscount ?? (total - discount!)).toStringAsFixed(2)}',
+                    style: TextStyles.bold16.copyWith(
+                      color: theme.colorScheme.primary,
+                    ),
+                  ),
+                ],
+              ),
+            ]
+          ],
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   Future<void> _processCheckout(
     BuildContext context,
     List<CartItemModel> items,
-    double total,
+    double subtotal,
   ) async {
     if (!_formKey.currentState!.validate()) return;
     _formKey.currentState!.save();
@@ -419,15 +465,15 @@ Widget _buildOrderSummary(
           : '0000',
       transactionId: 'TXN-${DateTime.now().millisecondsSinceEpoch}',
     );
-final checkoutState = context.read<CheckoutCubit>().state;
-final totalToSend = checkoutState is CheckoutData
-    ? (checkoutState.totalAfterDiscount ?? checkoutState.total)
-    : total;
+    final checkoutState = context.read<CheckoutCubit>().state;
+    final totalToSend = checkoutState is CheckoutData
+        ? (checkoutState.totalAfterDiscount ?? checkoutState.total)
+        : subtotal + shippingFee;
 
     try {
       await checkoutCubit.placeOrder(
         items: items,
-         total: totalToSend,
+        total: totalToSend,
         shippingInfo: _shippingInfo,
         paymentInfo: paymentInfo,
         cartCubit: context.read<CartCubit>(),

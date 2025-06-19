@@ -74,6 +74,7 @@ class OrderConfirmationView extends StatelessWidget {
   Widget _buildOrderInfoCard(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    const double shippingFee = 30.0;
 
     return Card(
       color: colorScheme.surface,
@@ -127,6 +128,23 @@ class OrderConfirmationView extends StatelessWidget {
                   ),
                 )),
             const SizedBox(height: 12),
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    'Shipping',
+                    style: TextStyles.regular13
+                        .copyWith(color: colorScheme.onSurface),
+                  ),
+                ),
+                Text(
+                  '+ EGP ${shippingFee.toStringAsFixed(2)}',
+                  style:
+                      TextStyles.regular13.copyWith(color: colorScheme.primary),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
             // ignore: deprecated_member_use
             Divider(color: colorScheme.outline.withOpacity(0.5)),
             const SizedBox(height: 12),
@@ -140,7 +158,7 @@ class OrderConfirmationView extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  'EGP ${order.total.toStringAsFixed(2)}',
+                  'EGP ${(order.total).toStringAsFixed(2)}',
                   style: TextStyles.bold16.copyWith(color: colorScheme.primary),
                 ),
               ],

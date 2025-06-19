@@ -1154,7 +1154,7 @@ class CartViewBody extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            'Shipping and taxes calculated at checkout',
+            'Shipping calculated at checkout',
             style: TextStyles.regular13.copyWith(
               color: isDarkMode ? Colors.grey[500] : Colors.grey[600],
             ),
