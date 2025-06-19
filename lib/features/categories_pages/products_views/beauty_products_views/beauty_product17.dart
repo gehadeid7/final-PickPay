@@ -8,7 +8,7 @@ class BeautyProduct17 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: "68132a95ff7813b3d47f9da17",
+      id: "682b00d16977bd89257c0ead",
       title:
           'Memwa Coco Memwa Long Lasting Perfume Fragrance Luxury Eau De Parfum EDP Perfume for Women',
       imagePaths: [

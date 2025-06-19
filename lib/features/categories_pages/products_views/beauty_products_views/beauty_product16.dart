@@ -8,7 +8,7 @@ class BeautyProduct16 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: "68132a95ff7813b3d47f9da16",
+      id: "682b00d16977bd89257c0eac",
       title: 'Avon Far Away for Women, Floral Eau de Parfum 50ml',
       imagePaths: [
         'assets/beauty_products/fragrance_1/1.png',
