@@ -18,6 +18,7 @@ import 'package:pickpay/features/reviews/screens/review_screen.dart';
 import 'package:pickpay/services/api_service.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:pickpay/core/widgets/app_flushbar.dart';
 
 class ProductDetailView extends StatefulWidget {
   static const routeName = '/product';
@@ -101,121 +102,141 @@ class _ProductDetailViewState extends State<ProductDetailView>
     final isDarkMode = theme.brightness == Brightness.dark;
     final product = widget.product;
 
-    return Scaffold(
-      backgroundColor: isDarkMode ? Colors.grey.shade900 : Colors.white,
-      appBar: ProductDetailAppBar(
-        product: product,
-        onBackPressed: () => Navigator.of(context).pop(),
-        onHomePressed: () => Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => MainNavigationScreen()),
-          (route) => false,
+    return BlocListener<CartCubit, CartState>(
+      listener: (context, state) {
+        if (state is CartError) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            AppFlushbar.showError(context, state.message);
+          });
+        } else if (state is CartLoaded && state.action == CartAction.added) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            AppFlushbar.showSuccess(
+                context, state.message ?? 'Product added to cart');
+          });
+        } else if (state is CartLoaded && state.action == CartAction.updated) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            AppFlushbar.showSuccess(
+                context, state.message ?? 'Quantity updated');
+          });
+        }
+      },
+      child: Scaffold(
+        backgroundColor: isDarkMode ? Colors.grey.shade900 : Colors.white,
+        appBar: ProductDetailAppBar(
+          product: product,
+          onBackPressed: () => Navigator.of(context).pop(),
+          onHomePressed: () => Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => MainNavigationScreen()),
+            (route) => false,
+          ),
         ),
-      ),
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            controller: _scrollController,
-            padding: const EdgeInsets.all(16),
-            child: AnimationLimiter(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: AnimationConfiguration.toStaggeredList(
-                  duration: const Duration(milliseconds: 500),
-                  childAnimationBuilder: (widget) => SlideAnimation(
-                    horizontalOffset: 50.0,
-                    child: FadeInAnimation(
-                      child: widget,
-                    ),
-                  ),
-                  children: [
-                    _buildImageSlider(product, isDarkMode),
-                    const SizedBox(height: 16),
-                    ScaleTransition(
-                      scale: _fadeAnimation ?? AlwaysStoppedAnimation(1.0),
-                      child: Text(
-                        product.title,
-                        style: TextStyles.bold19.copyWith(
-                          color: isDarkMode ? Colors.white : Colors.black,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w800,
-                        ),
+        body: Stack(
+          children: [
+            SingleChildScrollView(
+              controller: _scrollController,
+              padding: const EdgeInsets.all(16),
+              child: AnimationLimiter(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: AnimationConfiguration.toStaggeredList(
+                    duration: const Duration(milliseconds: 500),
+                    childAnimationBuilder: (widget) => SlideAnimation(
+                      horizontalOffset: 50.0,
+                      child: FadeInAnimation(
+                        child: widget,
                       ),
                     ),
-                    const SizedBox(height: 16),
-                    _buildPriceAndRating(product, isDarkMode),
-                    const SizedBox(height: 16),
-                    InfoSectionWithIcons(),
-                    const SizedBox(height: 16),
-                    _buildOptionsSection(product, isDarkMode),
-                    const SizedBox(height: 10),
-                    _buildSectionTitle("Product Details", isDarkMode),
-                    _buildFeatureBox(
-                        _buildProductDetails(product, isDarkMode), isDarkMode),
-                    const SizedBox(height: 24),
-                    _buildAboutItem(product, isDarkMode),
-                    const SizedBox(height: 24),
-                    _buildReviewSection(product, isDarkMode),
-                    const SizedBox(height: 24),
-                    _buildSectionTitle("Delivery", isDarkMode),
-                    _buildDeliveryInfo(product, isDarkMode),
-                    const SizedBox(height: 24),
-                    _buildSellerInfo(product, isDarkMode),
-                    const SizedBox(height: 24),
-                    RelatedProducts(currentProduct: product),
-                    const SizedBox(height: 80),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          AnimatedPositioned(
-            duration: const Duration(milliseconds: 300),
-            bottom: _showAddToCartButton ? 20 : -100,
-            left: 16,
-            right: 16,
-            child: Material(
-              elevation: 6,
-              borderRadius: BorderRadius.circular(50),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(50),
-                  gradient: LinearGradient(
-                    colors: [
-                      Colors.blueAccent,
-                      Colors.blue.shade700,
+                    children: [
+                      _buildImageSlider(product, isDarkMode),
+                      const SizedBox(height: 16),
+                      ScaleTransition(
+                        scale: _fadeAnimation ?? AlwaysStoppedAnimation(1.0),
+                        child: Text(
+                          product.title,
+                          style: TextStyles.bold19.copyWith(
+                            color: isDarkMode ? Colors.white : Colors.black,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      _buildPriceAndRating(product, isDarkMode),
+                      const SizedBox(height: 16),
+                      InfoSectionWithIcons(),
+                      const SizedBox(height: 16),
+                      _buildOptionsSection(product, isDarkMode),
+                      const SizedBox(height: 10),
+                      _buildSectionTitle("Product Details", isDarkMode),
+                      _buildFeatureBox(
+                          _buildProductDetails(product, isDarkMode),
+                          isDarkMode),
+                      const SizedBox(height: 24),
+                      _buildAboutItem(product, isDarkMode),
+                      const SizedBox(height: 24),
+                      _buildReviewSection(product, isDarkMode),
+                      const SizedBox(height: 24),
+                      _buildSectionTitle("Delivery", isDarkMode),
+                      _buildDeliveryInfo(product, isDarkMode),
+                      const SizedBox(height: 24),
+                      _buildSellerInfo(product, isDarkMode),
+                      const SizedBox(height: 24),
+                      RelatedProducts(currentProduct: product),
+                      const SizedBox(height: 80),
                     ],
                   ),
                 ),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.transparent,
-                    shadowColor: Colors.transparent,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50),
+              ),
+            ),
+            AnimatedPositioned(
+              duration: const Duration(milliseconds: 300),
+              bottom: _showAddToCartButton ? 20 : -100,
+              left: 16,
+              right: 16,
+              child: Material(
+                elevation: 6,
+                borderRadius: BorderRadius.circular(50),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(50),
+                    gradient: LinearGradient(
+                      colors: [
+                        Colors.blueAccent,
+                        Colors.blue.shade700,
+                      ],
                     ),
                   ),
-                  onPressed: () {
-                    Feedback.forTap(context);
-                    context.read<CartCubit>().addToCart(
-                          product.id,
-                          product.color ?? 'default',
-                        );
-                  },
-                  child: const Text(
-                    "Add to Cart",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      shadowColor: Colors.transparent,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                    ),
+                    onPressed: () {
+                      Feedback.forTap(context);
+                      context.read<CartCubit>().addToCart(
+                            product.id,
+                            product.color ?? 'default',
+                          );
+                    },
+                    child: const Text(
+                      "Add to Cart",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
