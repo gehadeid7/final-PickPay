@@ -59,9 +59,12 @@ class CartCubit extends Cubit<CartState> {
       // Only update UI if there are actual changes
       if (state is CartLoaded) {
         final currentState = state as CartLoaded;
-        if (!_areItemsEqual(currentState.cartItems, serverCartItems)) {
-          _updateUIState(serverCartItems);
+        if (!_areItemsEqual(currentState.cartItems, serverCartItems) ||
+            currentState.cartId != cartId) {
+          _updateUIState(serverCartItems, cartId: cartId);
         }
+      } else {
+        _updateUIState(serverCartItems, cartId: cartId);
       }
     } catch (e) {
       dev.log('Error syncing cart: $e', name: 'CartCubit', error: e);
@@ -77,10 +80,8 @@ class CartCubit extends Cubit<CartState> {
       try {
         final response = await _apiService.getCart();
         dev.log('[CartCubit] Cart response: $response', name: 'CartCubit');
-        // Remove null check for response, as it can't be null
         final String? cartId = response['_id'];
         final List<dynamic> items = response['cartItems'] ?? [];
-        // Ensure no duplicate items by using a Map
         final Map<String, CartItemModel> uniqueItems = {};
         for (var item in items) {
           try {
@@ -614,13 +615,13 @@ class CartCubit extends Cubit<CartState> {
   }) {
     try {
       if (items.isEmpty) {
-        emit(CartLoaded([], action: action, message: message));
+        emit(CartLoaded([], action: action, message: message, cartId: cartId));
       } else {
-        // Ensure we're not emitting the same state
         if (state is CartLoaded) {
           final currentState = state as CartLoaded;
-          if (_areItemsEqual(currentState.cartItems, items)) {
-            return; // Don't emit if items haven't changed
+          if (_areItemsEqual(currentState.cartItems, items) &&
+              currentState.cartId == cartId) {
+            return;
           }
         }
         emit(CartLoaded(items,

@@ -51,8 +51,6 @@ class CheckoutCubit extends Cubit<CheckoutState> {
         paymentInfo: paymentInfo,
       );
 
-      await cartCubit.clearCart(force: true);
-
       emit(CheckoutSuccess(order: order));
     } catch (e) {
       emit(CheckoutError(message: 'Failed to place order: ${e.toString()}'));

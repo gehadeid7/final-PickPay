@@ -119,7 +119,6 @@ class _CheckoutViewState extends State<CheckoutView> {
       body: BlocListener<CheckoutCubit, CheckoutState>(
         listener: (context, state) {
           if (state is CheckoutSuccess) {
-            cartCubit.clearCart();
             WidgetsBinding.instance.addPostFrameCallback((_) {
               Navigator.pushReplacement(
                 context,
@@ -238,13 +237,11 @@ class _CheckoutViewState extends State<CheckoutView> {
                       children: [
                         CustomButton(
                           onPressed: state is CheckoutLoading
-                              ? () {}
+                              ? null
                               : () async {
-                                  // Auto-trim all text fields before validation
                                   FocusScope.of(context).unfocus();
                                   _errorSummary = null;
-                                  bool valid =
-                                      _formKey.currentState!.validate();
+                                  bool valid = _formKey.currentState!.validate();
                                   if (!valid) {
                                     setState(() {
                                       _errorSummary =
@@ -471,6 +468,7 @@ class _CheckoutViewState extends State<CheckoutView> {
         : subtotal + shippingFee;
 
     try {
+      print('🚨 Calling placeOrder...');
       await checkoutCubit.placeOrder(
         items: items,
         total: totalToSend,
@@ -478,12 +476,13 @@ class _CheckoutViewState extends State<CheckoutView> {
         paymentInfo: paymentInfo,
         cartCubit: context.read<CartCubit>(),
       );
+      print('🚨 placeOrder finished.');
 
       final cartState = cartCubit.state;
+      print('🚨 cartState: $cartState');
       if (cartState is CartLoaded && cartState.cartId != null) {
         final cartId = cartState.cartId!;
-
-        // تأكيد نجاح الإرسال إلى الباك إند
+        print('🚨 About to call addOrderFromBackend with cartId: $cartId');
         await orderCubit.addOrderFromBackend(
           cartId,
           {
@@ -497,10 +496,9 @@ class _CheckoutViewState extends State<CheckoutView> {
           },
           cartCubit,
         );
-
-        print('✅ Order sent to backend successfully.');
+        print('🚨 addOrderFromBackend finished.');
       } else {
-        // No UI message shown if cart not available for checkout
+        print('❌ cartState is not CartLoaded or cartId is null');
       }
     } catch (e) {
       print('❌ Error during checkout: $e');

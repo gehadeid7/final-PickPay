@@ -463,11 +463,11 @@ class _OrderCardState extends State<_OrderCard> with SingleTickerProviderStateMi
                     style: theme.textTheme.bodySmall?.copyWith(fontWeight: FontWeight.bold),
                   ),
                   ...order.cartItems.take(2).map((item) => Text(
-                        '- ${(item['product']?['title'] ?? item['product']?['name'] ?? '')} x${item['quantity'] ?? 1}',
-                        style: theme.textTheme.bodySmall,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      )),
+                    '- ${getProductDisplayName(item['product'])} x${item['quantity'] ?? 1}',
+                    style: theme.textTheme.bodySmall,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  )),
                   if (order.cartItems.length > 2)
                     Text('+${order.cartItems.length - 2} more', style: theme.textTheme.bodySmall),
                 ],
@@ -583,7 +583,7 @@ class _OrderCardState extends State<_OrderCard> with SingleTickerProviderStateMi
         ),
       ),
     );
-    }
+  }
 }
 
 // --- ADVANCED UI/LOGIC HELPERS ---
@@ -831,7 +831,7 @@ class _OrderDetailsSheet extends StatelessWidget {
                             ),
                           )
                         : Icon(Icons.image, color: Colors.grey[400]),
-                    title: Text(item['product']?['title'] ?? item['product']?['name'] ?? '', maxLines: 1, overflow: TextOverflow.ellipsis),
+                    title: Text(getProductDisplayName(item['product']), maxLines: 1, overflow: TextOverflow.ellipsis),
                     subtitle: Text('x${item['quantity'] ?? 1}'),
                   )),
               const SizedBox(height: 16),
@@ -921,4 +921,13 @@ class _TimelineEvent {
   final DateTime time;
   final IconData icon;
   _TimelineEvent(this.label, this.time, this.icon);
+}
+
+String getProductDisplayName(dynamic product) {
+  if (product is Map) {
+    return product['title'] ?? product['name'] ?? product['id'] ?? '';
+  } else if (product is String) {
+    return product;
+  }
+  return '';
 }
