@@ -44,7 +44,7 @@ class CartCubit extends Cubit<CartState> {
       _isSyncing = true;
       dev.log('Syncing cart with server...', name: 'CartCubit');
       final serverCart = await _apiService.getCart();
-
+      final String? cartId = serverCart['_id'];
       final List<dynamic> serverItems = serverCart['cartItems'] ?? [];
       final serverCartItems =
           serverItems.map((item) => CartItemModel.fromJson(item)).toList();
