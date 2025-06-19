@@ -493,19 +493,33 @@ Future<void> clearCart({bool force = false}) async {
   }
 }
 
-  Future<void> applyCoupon(String couponCode) async {
-    try {
-      emit(CartLoading());
-      await _apiService.applyCoupon(couponCode);
-      await getCart();
-      emit(CartLoaded(_items, message: 'Coupon applied successfully'));
-      _showToast('Coupon applied successfully');
-    } catch (e) {
-      dev.log('Error applying coupon: $e', name: 'CartCubit', error: e);
-      emit(CartError('Failed to apply coupon: ${e.toString()}', action: CartAction.error));
-      _showToast('Failed to apply coupon', isError: true);
-    }
+Future<double> applyCoupon(String couponCode) async {
+  try {
+    emit(CartLoading());
+
+    // نفترض إن هذه الدالة ترجع الخصم مثلاً 50.0
+    final discount = await _apiService.applyCoupon(couponCode);
+
+    await getCart();
+
+emit(CartLoaded(
+  _items,
+  message: 'Coupon applied successfully',
+  discount: discount,
+));
+    _showToast('Coupon applied successfully');
+
+    return discount;
+  } catch (e) {
+    dev.log('Error applying coupon: $e', name: 'CartCubit', error: e);
+    emit(CartError('Failed to apply coupon: ${e.toString()}', action: CartAction.error));
+    _showToast('Failed to apply coupon', isError: true);
+
+    // نرجع 0 في حالة الفشل أو نرمي الخطأ زي ما تحب
+    rethrow;
   }
+}
+
 
   @override
   Future<void> close() {

@@ -31,14 +31,16 @@ class CartLoaded extends CartState {
   final String? cartId;
   final CartItemModel? updatedItem;
   final String? message;
-
+ final double discount;
+ 
   const CartLoaded(
     this.cartItems, {
     this.action,
     this.updatedItem,
     this.message,
     this.cartId,
-  });
+    this.discount = 0.0,
+    });
 
   @override
   List<Object?> get props => [

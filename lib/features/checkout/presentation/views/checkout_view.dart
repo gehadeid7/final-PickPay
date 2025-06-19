@@ -100,6 +100,8 @@ class _CheckoutViewState extends State<CheckoutView> {
       0,
       (sum, item) => sum + item.product.price * item.quantity,
     );
+    final checkoutCubit = context.read<CheckoutCubit>();
+    checkoutCubit.updateTotal(total);
 
     return Scaffold(
       appBar: buildAppBar(
@@ -170,8 +172,11 @@ class _CheckoutViewState extends State<CheckoutView> {
                   duration: const Duration(milliseconds: 400),
                   child: _buildSectionTitle('Order Summary', theme),
                 ),
-                _buildOrderSummary(items, total, theme),
-                const SizedBox(height: 30),
+BlocBuilder<CheckoutCubit, CheckoutState>(
+  builder: (context, state) {
+    return _buildOrderSummary(items, total, theme, state);
+  },
+),                const SizedBox(height: 30),
                 AnimatedSwitcher(
                   duration: const Duration(milliseconds: 400),
                   child: _buildSectionTitle('Shipping Information', theme),
@@ -196,20 +201,29 @@ class _CheckoutViewState extends State<CheckoutView> {
                   },
                 ),
                 const SizedBox(height: 15),
-                PromoCodeSection(
-                  onApply: (code) async {
-                    try {
-                      await context.read<CartCubit>().applyCoupon(code);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Promo code "$code" applied!')),
-                      );
-                    } catch (e) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Failed to apply promo code: \\${e.toString()}'), backgroundColor: Theme.of(context).colorScheme.error),
-                      );
-                    }
-                  },
-                ),
+PromoCodeSection(
+  onApply: (code) async {
+    try {
+      final cartCubit = context.read<CartCubit>();
+      final checkoutCubit = context.read<CheckoutCubit>();
+
+      final discount = await cartCubit.applyCoupon(code); // لازم ترجع الخصم من CartCubit
+      checkoutCubit.applyCoupon(discount: discount, couponCode: code);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Promo code "$code" applied!')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to apply promo code: ${e.toString()}'),
+          backgroundColor: Theme.of(context).colorScheme.error,
+        ),
+      );
+    }
+  },
+),
+
                 const SizedBox(height: 32),
                 BlocBuilder<CheckoutCubit, CheckoutState>(
                   builder: (context, state) {
@@ -243,7 +257,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                                 },
                           buttonText: state is CheckoutLoading
                               ? 'Processing...'
-                              : 'Place Order (EGP ${total.toStringAsFixed(2)})',
+                               : 'Place Order (EGP ${state is CheckoutData ? (state.totalAfterDiscount ?? state.total).toStringAsFixed(2) : total.toStringAsFixed(2)})',
                         ),
                         if (state is CheckoutLoading)
                           Padding(
@@ -276,64 +290,115 @@ class _CheckoutViewState extends State<CheckoutView> {
     );
   }
 
-  Widget _buildOrderSummary(
-      List<CartItemModel> items, double total, ThemeData theme) {
-    return Card(
-      color: theme.cardColor,
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            ...items.map((item) => Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          '${item.product.title} x ${item.quantity}',
-                          style: TextStyles.regular13.copyWith(
-                            color: theme.colorScheme.onSurface,
-                          ),
-                        ),
-                      ),
-                      Text(
-                        'EGP ${(item.product.price * item.quantity).toStringAsFixed(2)}',
-                        style: TextStyles.semiBold11.copyWith(
+Widget _buildOrderSummary(
+  List<CartItemModel> items, 
+  double total, 
+  ThemeData theme,
+  CheckoutState state,
+) {
+  double? discount;
+  double? totalAfterDiscount;
+
+  if (state is CheckoutData) {
+    discount = state.discount;
+    totalAfterDiscount = state.totalAfterDiscount;
+  }
+
+  return Card(
+    color: theme.cardColor,
+    elevation: 2,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(12),
+    ),
+    child: Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          ...items.map((item) => Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        '${item.product.title} x ${item.quantity}',
+                        style: TextStyles.regular13.copyWith(
                           color: theme.colorScheme.onSurface,
                         ),
                       ),
-                    ],
+                    ),
+                    Text(
+                      'EGP ${(item.product.price * item.quantity).toStringAsFixed(2)}',
+                      style: TextStyles.semiBold11.copyWith(
+                        color: theme.colorScheme.onSurface,
+                      ),
+                    ),
+                  ],
+                ),
+              )),
+          const Divider(height: 24),
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  'Total',
+                  style: TextStyles.bold16.copyWith(
+                    color: theme.colorScheme.onBackground,
                   ),
-                )),
-            const Divider(height: 24),
+                ),
+              ),
+              Text(
+                'EGP ${total.toStringAsFixed(2)}',
+                style: TextStyles.bold16.copyWith(
+                  color: theme.colorScheme.primary,
+                ),
+              ),
+            ],
+          ),
+          if (discount != null && discount > 0) ...[
+            const SizedBox(height: 8),
             Row(
               children: [
                 Expanded(
                   child: Text(
-                    'Total',
-                    style: TextStyles.bold16.copyWith(
-                      // ignore: deprecated_member_use
-                      color: theme.colorScheme.onBackground,
+                    'Discount',
+                    style: TextStyles.regular13.copyWith(
+                      color: theme.colorScheme.error,
                     ),
                   ),
                 ),
                 Text(
-                  'EGP ${total.toStringAsFixed(2)}',
+                  '- EGP ${discount.toStringAsFixed(2)}',
+                  style: TextStyles.regular13.copyWith(
+                    color: theme.colorScheme.error,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    'Total After Discount',
+                    style: TextStyles.bold16.copyWith(
+                      color: theme.colorScheme.primary,
+                    ),
+                  ),
+                ),
+                Text(
+                  'EGP ${totalAfterDiscount?.toStringAsFixed(2) ?? total.toStringAsFixed(2)}',
                   style: TextStyles.bold16.copyWith(
                     color: theme.colorScheme.primary,
                   ),
                 ),
               ],
             ),
-          ],
-        ),
+          ]
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
 
   Future<void> _processCheckout(
     BuildContext context,
@@ -354,11 +419,15 @@ class _CheckoutViewState extends State<CheckoutView> {
           : '0000',
       transactionId: 'TXN-${DateTime.now().millisecondsSinceEpoch}',
     );
+final checkoutState = context.read<CheckoutCubit>().state;
+final totalToSend = checkoutState is CheckoutData
+    ? (checkoutState.totalAfterDiscount ?? checkoutState.total)
+    : total;
 
     try {
       await checkoutCubit.placeOrder(
         items: items,
-        total: total,
+         total: totalToSend,
         shippingInfo: _shippingInfo,
         paymentInfo: paymentInfo,
         cartCubit: context.read<CartCubit>(),

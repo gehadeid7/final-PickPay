@@ -1267,21 +1267,39 @@ Future<Map<String, dynamic>> testSearchEndpoint(String query) async {
     }
   }
 
-  Future<void> applyCoupon(String couponCode) async {
-    try {
-      final response = await put(
-        endpoint: BackendEndpoints.applyCoupon,
-        body: {'coupon': couponCode},
-        authorized: true,
-      );
+Future<double> applyCoupon(String couponCode) async {
+  try {
+    final response = await put(
+      endpoint: BackendEndpoints.applyCoupon,
+      body: {'coupon': couponCode},
+      authorized: true,
+    );
 
-      if (response.statusCode != 200) {
-        throw Exception('Failed to apply coupon: ${response.body}');
-      }
-    } catch (e) {
-      throw Exception('Error applying coupon: ${e.toString()}');
+    if (response.statusCode != 200) {
+      throw Exception('Failed to apply coupon: ${response.body}');
     }
+
+    final decoded = jsonDecode(response.body);
+    final data = decoded['data'];
+
+    if (data == null) {
+      throw Exception('No data in response');
+    }
+
+    final totalCartPrice = (data['totalCartPrice'] as num).toDouble();
+    final totalPriceAfterDiscount = (data['totalPriceAfterDiscount'] as num?)?.toDouble();
+
+    if (totalPriceAfterDiscount == null) {
+      return 0.0; // لا يوجد خصم
+    }
+
+    final discount = totalCartPrice - totalPriceAfterDiscount;
+    return discount;
+  } catch (e) {
+    throw Exception('Error applying coupon: ${e.toString()}');
   }
+}
+
 
   Future<Map<String, dynamic>?> getProductById(String id) async {
     try {
