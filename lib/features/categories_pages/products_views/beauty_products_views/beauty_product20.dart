@@ -8,7 +8,7 @@ class BeautyProduct20 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
-      id: "68132a95ff7813b3d47f9da20",
+      id: "682b00d16977bd89257c0eb0",
       title: 'Jacques Bogart One Man Show for Men, Eau de Toilette - 100ml',
       imagePaths: [
         'assets/beauty_products/fragrance_5/1.png',
