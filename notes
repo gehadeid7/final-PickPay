@@ -4,6 +4,7 @@ backend :
 facebook login
 order view
 reviews
+fragrance
 
 .......................................................
 
@@ -12,7 +13,6 @@ front :
 
 link reviews section with review and rating 
 
-fragrance
 
 color/ size > cart/checkout
 
