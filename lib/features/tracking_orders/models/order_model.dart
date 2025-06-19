@@ -57,7 +57,15 @@ class OrderModel {
     return OrderModel(
       id: json['_id'] ?? json['id'],
       userId: json['user']?['_id'] ?? '', 
-      cartItems: List<Map<String, dynamic>>.from(json['cartItems'] ?? []),
+      cartItems: (json['cartItems'] as List<dynamic>? ?? [])
+          .map((item) {
+            final map = Map<String, dynamic>.from(item as Map);
+            if (map['product'] is String) {
+              map['product'] = {'id': map['product']};
+            }
+            return map;
+          })
+          .toList(),
       shippingAddress: Map<String, dynamic>.from(json['shippingAddress'] ?? {}),
       totalAmount: (json['totalOrderPrice'] ?? 0).toDouble(),
       status: _parseStatus(
@@ -76,7 +84,13 @@ class OrderModel {
     return {
       'id': id,
       'userId': userId,
-      'cartItems': cartItems,
+      'cartItems': cartItems.map((item) {
+        final product = item['product'];
+        return {
+          ...item,
+          'product': product is Map ? product : {'id': product.toString()},
+        };
+      }).toList(),
       'shippingAddress': shippingAddress,
       'totalOrderPrice': totalAmount,
       'status': status.toString(),

@@ -23,7 +23,6 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
   final _cardNumberController = TextEditingController();
   final _expiryController = TextEditingController();
   final _cvvController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
   String? _cardBrand;
   bool _showSuccess = false;
 
@@ -96,6 +95,7 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final FocusScopeNode focusScope = FocusScope.of(context);
 
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 400),
@@ -162,174 +162,152 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
                     ),
                     if (_selectedMethod == 'Credit Card') ...[
                       const SizedBox(height: 16),
-                      Form(
-                        key: _formKey,
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: TextFormField(
-                                    controller: _cardNumberController,
-                                    style: TextStyle(color: colorScheme.onSurface),
-                                    decoration: InputDecoration(
-                                      labelText: 'Card Number',
-                                      labelStyle: TextStyle(
-                                          color: colorScheme.onSurface.withOpacity(0.7)),
-                                      prefixIcon: Icon(Icons.credit_card,
-                                          color: colorScheme.onSurface.withOpacity(0.7)),
-                                      suffixIcon: _buildCardBrandIcon(),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: colorScheme.outline.withOpacity(0.5)),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: colorScheme.primary),
-                                      ),
-                                    ),
-                                    keyboardType: TextInputType.number,
-                                    maxLength: 19,
-                                    inputFormatters: [
-                                      FilteringTextInputFormatter.digitsOnly,
-                                      _CardNumberInputFormatter(),
-                                    ],
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Please enter card number';
-                                      }
-                                      final digits = value.replaceAll(' ', '');
-                                      if (!RegExp(r'^\d{16} $').hasMatch(digits)) {
-                                        return 'Card number must be 16 digits';
-                                      }
-                                      if (!_luhnCheck(digits)) {
-                                        return 'Invalid card number';
-                                      }
-                                      return null;
-                                    },
-                                  ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextFormField(
+                              controller: _cardNumberController,
+                              style: TextStyle(color: colorScheme.onSurface),
+                              decoration: InputDecoration(
+                                labelText: 'Card Number',
+                                labelStyle: TextStyle(
+                                    color: colorScheme.onSurface.withOpacity(0.7)),
+                                prefixIcon: Icon(Icons.credit_card,
+                                    color: colorScheme.onSurface.withOpacity(0.7)),
+                                suffixIcon: _buildCardBrandIcon(),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: colorScheme.outline.withOpacity(0.5)),
                                 ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: colorScheme.primary),
+                                ),
+                                helperText: '16 digits, numbers only',
+                              ),
+                              autofillHints: const [AutofillHints.creditCardNumber],
+                              textInputAction: TextInputAction.next,
+                              onFieldSubmitted: (_) => focusScope.nextFocus(),
+                              keyboardType: TextInputType.number,
+                              maxLength: 19,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                                _CardNumberInputFormatter(),
                               ],
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter card number';
+                                }
+                                final digits = value.replaceAll(' ', '');
+                                if (!RegExp(r'^\d{16}$').hasMatch(digits)) {
+                                  return 'Card number must be 16 digits';
+                                }
+                                if (!_luhnCheck(digits)) {
+                                  return 'Invalid card number';
+                                }
+                                return null;
+                              },
                             ),
-                            const SizedBox(height: 12),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: TextFormField(
-                                    controller: _expiryController,
-                                    style: TextStyle(color: colorScheme.onSurface),
-                                    decoration: InputDecoration(
-                                      labelText: 'Expiry (MM/YY)',
-                                      labelStyle: TextStyle(
-                                          color: colorScheme.onSurface.withOpacity(0.7)),
-                                      prefixIcon: Icon(Icons.calendar_today,
-                                          color: colorScheme.onSurface.withOpacity(0.7)),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: colorScheme.outline.withOpacity(0.5)),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: colorScheme.primary),
-                                      ),
-                                    ),
-                                    keyboardType: TextInputType.number,
-                                    maxLength: 5,
-                                    inputFormatters: [
-                                      FilteringTextInputFormatter.digitsOnly,
-                                      _ExpiryDateInputFormatter(),
-                                    ],
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Please enter expiry date';
-                                      }
-                                      if (!RegExp(r'^(0[1-9]|1[0-2])\/([0-9]{2})$').hasMatch(value)) {
-                                        return 'Invalid format (MM/YY)';
-                                      }
-                                      if (!_isFutureDate(value)) {
-                                        return 'Expiry must be in the future';
-                                      }
-                                      return null;
-                                    },
-                                  ),
-                                ),
-                                const SizedBox(width: 16),
-                                Expanded(
-                                  child: TextFormField(
-                                    controller: _cvvController,
-                                    style: TextStyle(color: colorScheme.onSurface),
-                                    decoration: InputDecoration(
-                                      labelText: 'CVV',
-                                      labelStyle: TextStyle(
-                                          color: colorScheme.onSurface.withOpacity(0.7)),
-                                      prefixIcon: Icon(Icons.lock,
-                                          color: colorScheme.onSurface.withOpacity(0.7)),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: colorScheme.outline.withOpacity(0.5)),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: colorScheme.primary),
-                                      ),
-                                    ),
-                                    keyboardType: TextInputType.number,
-                                    maxLength: 4,
-                                    inputFormatters: [
-                                      FilteringTextInputFormatter.digitsOnly,
-                                    ],
-                                    obscureText: true,
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Please enter CVV';
-                                      }
-                                      if (!RegExp(r'^\d{3,4}$').hasMatch(value)) {
-                                        return 'CVV must be 3-4 digits';
-                                      }
-                                      return null;
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 12),
-                            AnimatedSwitcher(
-                              duration: const Duration(milliseconds: 300),
-                              child: _showSuccess
-                                  ? Icon(Icons.check_circle, color: colorScheme.primary, size: 32)
-                                  : ElevatedButton(
-                                      key: const ValueKey('saveBtn'),
-                                      onPressed: () async {
-                                        if (_formKey.currentState!.validate()) {
-                                          Prefs.setString('last_card_details', jsonEncode({
-                                            'number': _cardNumberController.text,
-                                            'expiry': _expiryController.text,
-                                            'cvv': _cvvController.text,
-                                          }));
-                                          widget.onCardDetailsSaved(
-                                            _cardNumberController.text,
-                                            _expiryController.text,
-                                            _cvvController.text,
-                                          );
-                                          setState(() => _showSuccess = true);
-                                          await Future.delayed(const Duration(seconds: 1));
-                                          setState(() => _showSuccess = false);
-                                          ScaffoldMessenger.of(context).showSnackBar(
-                                            SnackBar(
-                                              content: Text('Payment information saved successfully!'),
-                                              backgroundColor: Theme.of(context).colorScheme.primary,
-                                            ),
-                                          );
-                                        }
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: colorScheme.primary,
-                                        foregroundColor: colorScheme.onPrimary,
-                                        minimumSize: const Size(double.infinity, 48),
-                                      ),
-                                      child: const Text('Save Card Details'),
-                                    ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextFormField(
+                              controller: _expiryController,
+                              style: TextStyle(color: colorScheme.onSurface),
+                              decoration: InputDecoration(
+                                labelText: 'Expiry Date (MM/YY)',
+                                labelStyle: TextStyle(
+                                    color: colorScheme.onSurface.withOpacity(0.7)),
+                                prefixIcon: Icon(Icons.date_range,
+                                    color: colorScheme.onSurface.withOpacity(0.7)),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: colorScheme.outline.withOpacity(0.5)),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: colorScheme.primary),
+                                ),
+                                helperText: 'MM/YY',
+                              ),
+                              autofillHints: const [AutofillHints.creditCardExpirationDate],
+                              textInputAction: TextInputAction.next,
+                              onFieldSubmitted: (_) => focusScope.nextFocus(),
+                              keyboardType: TextInputType.number,
+                              maxLength: 5,
+                              inputFormatters: [
+                                _ExpiryDateInputFormatter(),
+                              ],
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter expiry date';
+                                }
+                                if (!RegExp(r'^(0[1-9]|1[0-2])\/\d{2}$').hasMatch(value)) {
+                                  return 'Invalid expiry date';
+                                }
+                                // Check if expiry is in the future
+                                final parts = value.split('/');
+                                if (parts.length == 2) {
+                                  final month = int.tryParse(parts[0]);
+                                  final year = int.tryParse(parts[1]);
+                                  if (month != null && year != null) {
+                                    final now = DateTime.now();
+                                    final fourDigitYear = 2000 + year;
+                                    final expiry = DateTime(fourDigitYear, month + 1, 0);
+                                    if (!expiry.isAfter(now)) {
+                                      return 'Expiry must be in the future';
+                                    }
+                                  }
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: TextFormField(
+                              controller: _cvvController,
+                              style: TextStyle(color: colorScheme.onSurface),
+                              decoration: InputDecoration(
+                                labelText: 'CVV',
+                                labelStyle: TextStyle(
+                                    color: colorScheme.onSurface.withOpacity(0.7)),
+                                prefixIcon: Icon(Icons.lock,
+                                    color: colorScheme.onSurface.withOpacity(0.7)),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: colorScheme.outline.withOpacity(0.5)),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: colorScheme.primary),
+                                ),
+                                helperText: '3 or 4 digits',
+                              ),
+                              autofillHints: const [AutofillHints.creditCardSecurityCode],
+                              textInputAction: TextInputAction.done,
+                              onFieldSubmitted: (_) => focusScope.unfocus(),
+                              keyboardType: TextInputType.number,
+                              maxLength: 4,
+                              obscureText: true,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                              ],
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter CVV';
+                                }
+                                if (!RegExp(r'^\d{3,4}$').hasMatch(value)) {
+                                  return 'Invalid CVV';
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
                     ],
                   ],
                 ),
@@ -351,18 +329,6 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
       alternate = !alternate;
     }
     return sum % 10 == 0;
-  }
-
-  bool _isFutureDate(String value) {
-    final parts = value.split('/');
-    if (parts.length != 2) return false;
-    final month = int.tryParse(parts[0]);
-    final year = int.tryParse(parts[1]);
-    if (month == null || year == null) return false;
-    final now = DateTime.now();
-    final fourDigitYear = 2000 + year;
-    final expiry = DateTime(fourDigitYear, month + 1, 0);
-    return expiry.isAfter(now);
   }
 }
 

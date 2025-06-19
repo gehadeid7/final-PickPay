@@ -47,6 +47,7 @@ class CartCubit extends Cubit<CartState> {
       
       final List<dynamic> serverItems = serverCart['cartItems'] ?? [];
       final serverCartItems = serverItems.map((item) => CartItemModel.fromJson(item)).toList();
+      final String? cartId = serverCart['_id'];
       
       // Update cache
       _cartItemCache.clear();
@@ -58,9 +59,11 @@ class CartCubit extends Cubit<CartState> {
       // Only update UI if there are actual changes
       if (state is CartLoaded) {
         final currentState = state as CartLoaded;
-        if (!_areItemsEqual(currentState.cartItems, serverCartItems)) {
-          _updateUIState(serverCartItems);
+        if (!_areItemsEqual(currentState.cartItems, serverCartItems) || currentState.cartId != cartId) {
+          _updateUIState(serverCartItems, cartId: cartId);
         }
+      } else {
+        _updateUIState(serverCartItems, cartId: cartId);
       }
     } catch (e) {
       dev.log('Error syncing cart: $e', name: 'CartCubit', error: e);
@@ -76,14 +79,11 @@ class CartCubit extends Cubit<CartState> {
       try {
         final response = await _apiService.getCart();
         dev.log('[CartCubit] Cart response: $response', name: 'CartCubit');
-        // Remove null check for response, as it can't be null
         final String? cartId = response['_id'];
         final List<dynamic> items = response['cartItems'] ?? [];
-        // Ensure no duplicate items by using a Map
         final Map<String, CartItemModel> uniqueItems = {};
         for (var item in items) {
           try {
-            // Always fetch the latest product details by ID
             final productId = item['product']?['_id'] ?? item['product']?['id'] ?? item['productId'];
             if (productId == null) continue;
             final fullProduct = await _getProductDetails(productId);
@@ -100,13 +100,12 @@ class CartCubit extends Cubit<CartState> {
           }
         }
         final cartItems = uniqueItems.values.toList();
-        dev.log('Processed cart items: [32m${cartItems.length}[0m', name: 'CartCubit');
+        dev.log('Processed cart items: \u001b[32m${cartItems.length}\u001b[0m', name: 'CartCubit');
         _updateUIState(cartItems, cartId: cartId);
       } catch (e) {
-        // Handle 404 as a valid empty cart state
         if (e.toString().contains('404') || e.toString().contains('no cart for this user')) {
           dev.log('No cart exists for user, initializing empty cart', name: 'CartCubit');
-          _updateUIState([]);
+          _updateUIState([], cartId: null);
           _productCache.clear();
           return;
         }
@@ -480,7 +479,7 @@ Future<void> clearCart({bool force = false}) async {
     _productCache.clear();
     dev.log('[CartCubit] clearCart: Cleared in-memory cart cache', name: 'CartCubit');
 
-    emit(CartLoaded([], action: CartAction.removed, message: 'Cart cleared'));
+    emit(CartLoaded([], action: CartAction.removed, message: 'Cart cleared', cartId: null));
     dev.log('[CartCubit] clearCart: Emitted CartLoaded([]) after clear', name: 'CartCubit');
     _showToast('Cart cleared');
   } catch (e, stackTrace) {
@@ -578,20 +577,19 @@ void _updateUIState(
   List<CartItemModel> items, {
   CartAction? action,
   String? message,
-  String? cartId, // ✅ new param
+  String? cartId,
 }) {
     try {
       if (items.isEmpty) {
-        emit(CartLoaded([], action: action, message: message));
+        emit(CartLoaded([], action: action, message: message, cartId: cartId));
       } else {
-        // Ensure we're not emitting the same state
         if (state is CartLoaded) {
           final currentState = state as CartLoaded;
-          if (_areItemsEqual(currentState.cartItems, items)) {
-            return; // Don't emit if items haven't changed
+          if (_areItemsEqual(currentState.cartItems, items) && currentState.cartId == cartId) {
+            return;
           }
         }
-emit(CartLoaded(items, action: action, message: message, cartId: cartId));
+        emit(CartLoaded(items, action: action, message: message, cartId: cartId));
       }
     } catch (e) {
       dev.log('Error updating UI state: $e', name: 'CartCubit', error: e);

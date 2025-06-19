@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pickpay/core/services/shared_preferences_singletone.dart';
 import 'package:pickpay/core/utils/app_text_styles.dart';
 import 'package:pickpay/features/checkout/domain/models/checkout_model.dart';
@@ -15,7 +16,6 @@ class ShippingInfoForm extends StatefulWidget {
 }
 
 class _ShippingInfoFormState extends State<ShippingInfoForm> {
-  final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _addressController = TextEditingController();
   final _cityController = TextEditingController();
@@ -94,6 +94,7 @@ class _ShippingInfoFormState extends State<ShippingInfoForm> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final FocusScopeNode focusScope = FocusScope.of(context);
 
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 400),
@@ -122,210 +123,237 @@ class _ShippingInfoFormState extends State<ShippingInfoForm> {
               ),
               child: Padding(
                 padding: const EdgeInsets.all(16),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      TextFormField(
-                        controller: _nameController,
-                        style: TextStyle(color: colorScheme.onSurface),
-                        decoration: InputDecoration(
-                          labelText: 'Full Name',
-                          labelStyle: TextStyle(color: colorScheme.onSurface.withOpacity(0.7)),
-                          prefixIcon: Icon(Icons.person, color: colorScheme.onSurface.withOpacity(0.7)),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: colorScheme.outline.withOpacity(0.5)),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: colorScheme.primary),
-                          ),
+                child: Column(
+                  children: [
+                    TextFormField(
+                      controller: _nameController,
+                      style: TextStyle(color: colorScheme.onSurface),
+                      decoration: InputDecoration(
+                        labelText: 'Full Name',
+                        labelStyle: TextStyle(color: colorScheme.onSurface.withOpacity(0.7)),
+                        prefixIcon: Icon(Icons.person, color: colorScheme.onSurface.withOpacity(0.7)),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: colorScheme.outline.withOpacity(0.5)),
                         ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your name';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 12),
-                      TextFormField(
-                        controller: _addressController,
-                        style: TextStyle(color: colorScheme.onSurface),
-                        decoration: InputDecoration(
-                          labelText: 'Address',
-                          labelStyle: TextStyle(color: colorScheme.onSurface.withOpacity(0.7)),
-                          prefixIcon: Icon(Icons.home, color: colorScheme.onSurface.withOpacity(0.7)),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: colorScheme.outline.withOpacity(0.5)),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: colorScheme.primary),
-                          ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: colorScheme.primary),
                         ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your address';
-                          }
-                          return null;
-                        },
+                        helperText: 'Enter your full legal name',
                       ),
-                      const SizedBox(height: 12),
-                      Row(
-                        children: [
-                          Expanded(
-                            flex: 3,
-                            child: TextFormField(
-                              controller: _cityController,
-                              style: TextStyle(color: colorScheme.onSurface),
-                              decoration: InputDecoration(
-                                labelText: 'City',
-                                labelStyle: TextStyle(color: colorScheme.onSurface.withOpacity(0.7)),
-                                prefixIcon: Icon(Icons.location_city, color: colorScheme.onSurface.withOpacity(0.7)),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: colorScheme.outline.withOpacity(0.5)),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: colorScheme.primary),
-                                ),
+                      autofillHints: const [AutofillHints.name],
+                      textInputAction: TextInputAction.next,
+                      onFieldSubmitted: (_) => focusScope.nextFocus(),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your name';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 12),
+                    TextFormField(
+                      controller: _addressController,
+                      style: TextStyle(color: colorScheme.onSurface),
+                      decoration: InputDecoration(
+                        labelText: 'Address',
+                        labelStyle: TextStyle(color: colorScheme.onSurface.withOpacity(0.7)),
+                        prefixIcon: Icon(Icons.home, color: colorScheme.onSurface.withOpacity(0.7)),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: colorScheme.outline.withOpacity(0.5)),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: colorScheme.primary),
+                        ),
+                        helperText: 'Street address, P.O. box, company name, c/o',
+                      ),
+                      autofillHints: const [AutofillHints.fullStreetAddress],
+                      textInputAction: TextInputAction.next,
+                      onFieldSubmitted: (_) => focusScope.nextFocus(),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your address';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 3,
+                          child: TextFormField(
+                            controller: _cityController,
+                            style: TextStyle(color: colorScheme.onSurface),
+                            decoration: InputDecoration(
+                              labelText: 'City',
+                              labelStyle: TextStyle(color: colorScheme.onSurface.withOpacity(0.7)),
+                              prefixIcon: Icon(Icons.location_city, color: colorScheme.onSurface.withOpacity(0.7)),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: colorScheme.outline.withOpacity(0.5)),
                               ),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter your city';
-                                }
-                                return null;
-                              },
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: colorScheme.primary),
+                              ),
+                              helperText: 'City or locality',
                             ),
+                            autofillHints: const [AutofillHints.addressCity],
+                            textInputAction: TextInputAction.next,
+                            onFieldSubmitted: (_) => focusScope.nextFocus(),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your city';
+                              }
+                              return null;
+                            },
                           ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            flex: 2,
-                            child: TextFormField(
-                              controller: _stateController,
-                              style: TextStyle(color: colorScheme.onSurface),
-                              decoration: InputDecoration(
-                                labelText: 'State',
-                                labelStyle: TextStyle(color: colorScheme.onSurface.withOpacity(0.7)),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: colorScheme.outline.withOpacity(0.5)),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: colorScheme.primary),
-                                ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          flex: 2,
+                          child: TextFormField(
+                            controller: _stateController,
+                            style: TextStyle(color: colorScheme.onSurface),
+                            decoration: InputDecoration(
+                              labelText: 'State',
+                              labelStyle: TextStyle(color: colorScheme.onSurface.withOpacity(0.7)),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: colorScheme.outline.withOpacity(0.5)),
                               ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: colorScheme.primary),
+                              ),
+                              helperText: 'State, province, or region',
                             ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      TextFormField(
-                        controller: _zipController,
-                        style: TextStyle(color: colorScheme.onSurface),
-                        decoration: InputDecoration(
-                          labelText: 'ZIP Code',
-                          labelStyle: TextStyle(color: colorScheme.onSurface.withOpacity(0.7)),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: colorScheme.outline.withOpacity(0.5)),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: colorScheme.primary),
+                            autofillHints: const [AutofillHints.addressState],
+                            textInputAction: TextInputAction.next,
+                            onFieldSubmitted: (_) => focusScope.nextFocus(),
                           ),
                         ),
-                      ),
-                      const SizedBox(height: 12),
-                      TextFormField(
-                        controller: _phoneController,
-                        style: TextStyle(color: colorScheme.onSurface),
-                        decoration: InputDecoration(
-                          labelText: 'Phone Number',
-                          labelStyle: TextStyle(color: colorScheme.onSurface.withOpacity(0.7)),
-                          prefixIcon: Icon(Icons.phone, color: colorScheme.onSurface.withOpacity(0.7)),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: colorScheme.outline.withOpacity(0.5)),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: colorScheme.primary),
-                          ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    TextFormField(
+                      controller: _zipController,
+                      style: TextStyle(color: colorScheme.onSurface),
+                      decoration: InputDecoration(
+                        labelText: 'ZIP Code',
+                        labelStyle: TextStyle(color: colorScheme.onSurface.withOpacity(0.7)),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: colorScheme.outline.withOpacity(0.5)),
                         ),
-                        keyboardType: TextInputType.phone,
-                        maxLength: 11,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your phone number';
-                          }
-                          final trimmed = value.trim();
-                          if (!RegExp(r'^01[0-9]{9} ?$').hasMatch(trimmed)) {
-                            return 'Phone must be 11 digits and start with 01';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 12),
-                      TextFormField(
-                        controller: _emailController,
-                        style: TextStyle(color: colorScheme.onSurface),
-                        decoration: InputDecoration(
-                          labelText: 'Email',
-                          labelStyle: TextStyle(color: colorScheme.onSurface.withOpacity(0.7)),
-                          prefixIcon: Icon(Icons.email, color: colorScheme.onSurface.withOpacity(0.7)),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: colorScheme.outline.withOpacity(0.5)),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: colorScheme.primary),
-                          ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: colorScheme.primary),
                         ),
-                        keyboardType: TextInputType.emailAddress,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your email';
-                          }
-                          final trimmed = value.trim();
-                          if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4} ?$').hasMatch(trimmed)) {
-                            return 'Please enter a valid email';
-                          }
-                          return null;
-                        },
+                        helperText: 'Postal or ZIP code',
                       ),
-                      const SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
-                            final info = ShippingInfo(
-                              name: _nameController.text,
-                              address: _addressController.text,
-                              city: _cityController.text,
-                              state: _stateController.text,
-                              zipCode: _zipController.text,
-                              phone: _phoneController.text,
-                              email: _emailController.text,
-                            );
-                            Prefs.setString('last_shipping_info', jsonEncode(info.toJson()));
-                            widget.onSaved(info);
-                            setState(() => _showSuccess = true);
-                            await Future.delayed(const Duration(seconds: 1));
-                            setState(() => _showSuccess = false);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Shipping information saved successfully!'),
-                                backgroundColor: Theme.of(context).colorScheme.primary,
-                              ),
-                            );
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: colorScheme.primary,
-                          foregroundColor: colorScheme.onPrimary,
-                          minimumSize: const Size(double.infinity, 48),
+                      autofillHints: const [AutofillHints.postalCode],
+                      textInputAction: TextInputAction.next,
+                      onFieldSubmitted: (_) => focusScope.nextFocus(),
+                    ),
+                    const SizedBox(height: 12),
+                    TextFormField(
+                      controller: _phoneController,
+                      style: TextStyle(color: colorScheme.onSurface),
+                      decoration: InputDecoration(
+                        labelText: 'Phone Number',
+                        labelStyle: TextStyle(color: colorScheme.onSurface.withOpacity(0.7)),
+                        prefixIcon: Icon(Icons.phone, color: colorScheme.onSurface.withOpacity(0.7)),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: colorScheme.outline.withOpacity(0.5)),
                         ),
-                        child: Text(
-                          'Save Shipping Info',
-                          style: TextStyles.semiBold13.copyWith(
-                            color: colorScheme.onPrimary,
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: colorScheme.primary),
+                        ),
+                        helperText: '11 digits, starts with 01',
+                      ),
+                      autofillHints: const [AutofillHints.telephoneNumber],
+                      textInputAction: TextInputAction.next,
+                      onFieldSubmitted: (_) => focusScope.nextFocus(),
+                      keyboardType: TextInputType.phone,
+                      maxLength: 11,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        LengthLimitingTextInputFormatter(11),
+                      ],
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your phone number';
+                        }
+                        final trimmed = value.trim();
+                        if (!RegExp(r'^01[0-9]{9} ?$').hasMatch(trimmed)) {
+                          return 'Phone must be 11 digits and start with 01';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 12),
+                    TextFormField(
+                      controller: _emailController,
+                      style: TextStyle(color: colorScheme.onSurface),
+                      decoration: InputDecoration(
+                        labelText: 'Email',
+                        labelStyle: TextStyle(color: colorScheme.onSurface.withOpacity(0.7)),
+                        prefixIcon: Icon(Icons.email, color: colorScheme.onSurface.withOpacity(0.7)),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: colorScheme.outline.withOpacity(0.5)),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: colorScheme.primary),
+                        ),
+                        helperText: 'Enter a valid email address',
+                      ),
+                      autofillHints: const [AutofillHints.email],
+                      textInputAction: TextInputAction.done,
+                      onFieldSubmitted: (_) => focusScope.unfocus(),
+                      keyboardType: TextInputType.emailAddress,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your email';
+                        }
+                        final trimmed = value.trim();
+                        if (!RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,} ?$').hasMatch(trimmed)) {
+                          return 'Please enter a valid email';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () async {
+                        final info = ShippingInfo(
+                          name: _nameController.text,
+                          address: _addressController.text,
+                          city: _cityController.text,
+                          state: _stateController.text,
+                          zipCode: _zipController.text,
+                          phone: _phoneController.text,
+                          email: _emailController.text,
+                        );
+                        Prefs.setString('last_shipping_info', jsonEncode(info.toJson()));
+                        widget.onSaved(info);
+                        setState(() => _showSuccess = true);
+                        await Future.delayed(const Duration(seconds: 1));
+                        setState(() => _showSuccess = false);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Shipping information saved successfully!'),
+                            backgroundColor: Theme.of(context).colorScheme.primary,
                           ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: colorScheme.primary,
+                        foregroundColor: colorScheme.onPrimary,
+                        minimumSize: const Size(double.infinity, 48),
+                      ),
+                      child: Text(
+                        'Save Shipping Info',
+                        style: TextStyles.semiBold13.copyWith(
+                          color: colorScheme.onPrimary,
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),

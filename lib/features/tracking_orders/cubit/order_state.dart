@@ -25,7 +25,7 @@ class OrderState extends Equatable {
   }
 
   List<OrderModel> get pendingOrders =>
-      orders.where((order) => order.status == OrderStatus.pending).toList();
+      orders.where((order) => order.status == OrderStatus.pending || order.status == OrderStatus.paid).toList();
   List<OrderModel> get deliveredOrders =>
       orders.where((order) => order.status == OrderStatus.delivered).toList();
 

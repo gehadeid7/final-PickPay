@@ -181,6 +181,25 @@ class _SearchTextFieldState extends State<SearchTextField>
   // Add dummy usage to ensure the import is used
   final _dummyGestureRecognizer = TapGestureRecognizer();
 
+  // 1. Add new fields for spelling correction, filters, sorting, and trending/favorite searches
+  List<String> _didYouMean = [];
+  List<String> _trendingSearches = [];
+  List<String> _favoriteSearches = [];
+  String _selectedSort = 'Relevance';
+  List<String> _sortOptions = ['Relevance', 'Price: Low to High', 'Price: High to Low', 'Rating'];
+  List<String> _activeFilters = [];
+  List<String> _availableFilters = ['Electronics', 'Beauty', 'Fashion', 'Home', 'Appliances', 'Video Games']; // Example categories
+
+  // 1. Add state for error and skeleton loading
+  bool _hasError = false;
+  String _errorMessage = '';
+
+  // 1. Add advanced filter state
+  bool _showAdvancedFilters = false;
+  RangeValues _priceRange = const RangeValues(0, 1000);
+  double _minRating = 0;
+  String? _selectedBrand;
+
   @override
   void initState() {
     super.initState();
@@ -716,39 +735,48 @@ class _SearchTextFieldState extends State<SearchTextField>
     }
   }
 
-  // Enhanced search with better performance and error handling
-  Future<void> _searchProducts(String query,
-      {bool fromSuggestion = false}) async {
-    final trimmedQuery = query.trim();
+  // 2. Add analytics hooks (as comments)
+  void _logSearchEvent(String query) {
+    // TODO: Integrate analytics: log search event
+    // Example: AnalyticsService.logSearch(query);
+  }
+  void _logClickEvent(String type, String value) {
+    // TODO: Integrate analytics: log click event (type: suggestion, product, etc.)
+    // Example: AnalyticsService.logClick(type, value);
+  }
+  void _logErrorEvent(String error) {
+    // TODO: Integrate analytics: log error event
+    // Example: AnalyticsService.logError(error);
+  }
 
+  // 3. Update _searchProducts to handle error and log events
+  Future<void> _searchProducts(String query, {bool fromSuggestion = false}) async {
+    final trimmedQuery = query.trim();
     if (trimmedQuery.isEmpty) {
       _clearSearchState();
       return;
     }
-
-    // Prevent duplicate searches
     if (trimmedQuery == _lastSearchQuery && !fromSuggestion) {
       return;
     }
     _lastSearchQuery = trimmedQuery;
-
-    // Cancel previous debounce
     _debounce?.cancel();
-
-    // Immediate UI feedback for better UX
     if (!_isLoading) {
       setState(() {
         _isLoading = true;
         _showDropdown = true;
+        _hasError = false;
+        _errorMessage = '';
       });
     }
-
     _debounce = Timer(_debounceDelay, () async {
       if (!mounted) return;
-
       try {
         await _addRecentSearch(trimmedQuery);
-
+        await _fetchDidYouMean(trimmedQuery);
+        await _fetchTrendingAndFavorites();
+        _logSearchEvent(trimmedQuery);
+        // ... existing code ...
         // Check cache first for instant results
         final cacheKey = trimmedQuery.toLowerCase();
         if (_searchCache.containsKey(cacheKey)) {
@@ -789,10 +817,14 @@ class _SearchTextFieldState extends State<SearchTextField>
         }
       } catch (e) {
         print('❌ Search error: $e');
+        _logErrorEvent(e.toString());
         if (mounted) {
-          setState(() => _isLoading = false);
-          _showSnackBar('Search failed. Please check your connection.',
-              isError: true);
+          setState(() {
+            _isLoading = false;
+            _hasError = true;
+            _errorMessage = 'Search failed. Please check your connection.';
+          });
+          _showSnackBar('Search failed. Please check your connection.', isError: true);
         }
       }
     });
@@ -981,7 +1013,7 @@ class _SearchTextFieldState extends State<SearchTextField>
     _focusNode.unfocus();
   }
 
-// In your search_text_field.dart file, update the _listenVoice method:
+  // In your search_text_field.dart file, update the _listenVoice method:
 
   Future<void> _listenVoice() async {
     if (!_speechAvailable) {
@@ -1029,7 +1061,7 @@ class _SearchTextFieldState extends State<SearchTextField>
     }
   }
 
-// Add this new method to process voice search through backend
+  // Add this new method to process voice search through backend
   Future<void> _processVoiceSearch(String voiceText) async {
     if (voiceText.trim().isEmpty) return;
 
@@ -1074,7 +1106,7 @@ class _SearchTextFieldState extends State<SearchTextField>
     }
   }
 
-// Helper method to process voice search results from backend
+  // Helper method to process voice search results from backend
   List<Map<String, dynamic>> _processVoiceSearchResults(List<dynamic> results) {
     return results.map((result) {
       if (result is Map<String, dynamic>) {
@@ -1119,7 +1151,7 @@ class _SearchTextFieldState extends State<SearchTextField>
     }).toList();
   }
 
-// Helper method to extract keywords from product title
+  // Helper method to extract keywords from product title
   String _extractKeywords(String title) {
     if (title.isEmpty) return '';
 
@@ -1133,7 +1165,7 @@ class _SearchTextFieldState extends State<SearchTextField>
     return meaningfulWords;
   }
 
-// Helper method to identify stop words
+  // Helper method to identify stop words
   bool _isStopWord(String word) {
     const stopWords = {'the', 'and', 'for', 'with', 'pro', 'max', 'mini'};
     return stopWords.contains(word);
@@ -1270,6 +1302,465 @@ class _SearchTextFieldState extends State<SearchTextField>
     );
   }
 
+  // 2. Add a method to fetch spelling corrections and trending/favorite searches (simulate for now)
+  Future<void> _fetchDidYouMean(String query) async {
+    // Simulate spelling correction (replace with backend call)
+    if (query.toLowerCase() == 'iphon') {
+      setState(() => _didYouMean = ['iPhone', 'iPhone 14', 'iPhone 13']);
+    } else {
+      setState(() => _didYouMean = []);
+    }
+  }
+  Future<void> _fetchTrendingAndFavorites() async {
+    // Simulate trending/favorite searches (replace with backend call)
+    setState(() {
+      _trendingSearches = ['PlayStation 5', 'AirPods Pro', 'Dyson Vacuum'];
+      _favoriteSearches = ['Samsung Galaxy Tab', 'Golden Life Sofa Bed'];
+    });
+  }
+
+  // 4. Add filter chip and sort dropdown widgets
+  Widget _buildFilterChips() {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: _availableFilters.map((filter) {
+          final isActive = _activeFilters.contains(filter);
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: FilterChip(
+              label: Text(filter),
+              selected: isActive,
+              onSelected: (selected) {
+                setState(() {
+                  if (selected) {
+                    _activeFilters.add(filter);
+                  } else {
+                    _activeFilters.remove(filter);
+                  }
+                });
+                // Optionally, trigger a filtered search
+              },
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+  Widget _buildSortDropdown() {
+    return DropdownButton<String>(
+      value: _selectedSort,
+      items: _sortOptions.map((option) {
+        return DropdownMenuItem<String>(
+          value: option,
+          child: Text(option),
+        );
+      }).toList(),
+      onChanged: (value) {
+        if (value != null) {
+          setState(() => _selectedSort = value);
+          // Optionally, trigger a sorted search
+        }
+      },
+      underline: SizedBox(),
+      style: TextStyle(fontSize: 14, color: Colors.grey[800]),
+      icon: Icon(Icons.sort, size: 18, color: Colors.grey[600]),
+    );
+  }
+
+  // 5. Modularize dropdown content: extract sections as widgets
+  Widget _buildDidYouMeanSection() {
+    if (_didYouMean.isEmpty) return SizedBox.shrink();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildSectionHeader('Did you mean?', icon: Icons.spellcheck),
+        ..._didYouMean.map((suggestion) => _buildListItem(
+              leading: Icon(Icons.spellcheck, color: Colors.orange[400], size: 20),
+              title: suggestion,
+              onTap: () {
+                widget.controller.text = suggestion;
+                _searchProducts(suggestion, fromSuggestion: true);
+              },
+            )),
+        const Divider(height: 1),
+      ],
+    );
+  }
+  Widget _buildTrendingSection() {
+    if (_trendingSearches.isEmpty) return SizedBox.shrink();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildSectionHeader('Trending', icon: Icons.trending_up),
+        ..._trendingSearches.map((search) => _buildListItem(
+              leading: Icon(Icons.trending_up, color: Colors.purple[400], size: 20),
+              title: search,
+              onTap: () {
+                widget.controller.text = search;
+                _searchProducts(search);
+              },
+            )),
+        const Divider(height: 1),
+      ],
+    );
+  }
+  Widget _buildFavoritesSection() {
+    if (_favoriteSearches.isEmpty) return SizedBox.shrink();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildSectionHeader('Favorites', icon: Icons.favorite),
+        ..._favoriteSearches.map((search) => _buildListItem(
+              leading: Icon(Icons.favorite, color: Colors.red[400], size: 20),
+              title: search,
+              onTap: () {
+                widget.controller.text = search;
+                _searchProducts(search);
+              },
+            )),
+        const Divider(height: 1),
+      ],
+    );
+  }
+
+  // 6. Update _buildDropdownContent to include new sections and controls
+  Widget _buildDropdownContent(
+      bool isDark, Color primaryColor, Color? surfaceColor, Color textColor) {
+    final showRecent = _isFocused &&
+        widget.controller.text.isEmpty &&
+        _recentSearches.isNotEmpty;
+    if (_isLoading) {
+      return _buildSkeletonLoader();
+    }
+    if (_hasError) {
+      return _buildErrorWidget();
+    }
+    if (!showRecent &&
+        _suggestions.isEmpty &&
+        _searchResults.isEmpty &&
+        !_isLoading) {
+      if (widget.controller.text.isNotEmpty) {
+        return _buildNoResultsWidget(textColor);
+      }
+      return _buildPopularSearches(primaryColor, textColor);
+    }
+    return Container(
+      constraints: const BoxConstraints(maxHeight: 500),
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      decoration: BoxDecoration(
+        color: surfaceColor,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(isDark ? 0.4 : 0.1),
+            blurRadius: 16,
+            offset: const Offset(0, 8),
+            spreadRadius: 0,
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: Material(
+          color: Colors.transparent,
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // New: Filter chips and sort dropdown
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          IconButton(
+                            icon: Icon(_showAdvancedFilters ? Icons.filter_alt : Icons.filter_alt_outlined,
+                                color: _showAdvancedFilters ? Colors.blue : Colors.grey[600]),
+                            tooltip: 'Advanced Filters',
+                            onPressed: () {
+                              setState(() => _showAdvancedFilters = !_showAdvancedFilters);
+                            },
+                          ),
+                          Expanded(child: _buildFilterChips()),
+                        ],
+                      ),
+                      _buildSortDropdown(),
+                    ],
+                  ),
+                ),
+                // New: Did you mean section
+                _buildDidYouMeanSection(),
+                // New: Trending and favorites
+                _buildTrendingSection(),
+                _buildFavoritesSection(),
+                // ... existing code for recent, suggestions, results, loading ...
+                if (showRecent) ...[
+                  _buildSectionHeader(
+                    'Recent Searches',
+                    icon: Icons.history,
+                    action: IconButton(
+                      icon: Icon(Icons.clear_all,
+                          size: 18, color: Colors.grey[600]),
+                      onPressed: _clearRecentSearches,
+                      splashRadius: 16,
+                      tooltip: 'Clear all',
+                    ),
+                  ),
+                  ..._recentSearches.asMap().entries.map((entry) {
+                    final index = entry.key;
+                    final search = entry.value;
+                    final globalIndex = index;
+                    return _buildListItem(
+                      leading: Icon(Icons.history,
+                          color: Colors.grey[500], size: 20),
+                      title: search,
+                      onTap: () {
+                        widget.controller.text = search;
+                        _searchProducts(search);
+                      },
+                      isHighlighted: _highlightedIndex == globalIndex,
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.north_west,
+                                size: 16, color: Colors.grey[500]),
+                            onPressed: () => widget.controller.text = search,
+                            splashRadius: 12,
+                            tooltip: 'Fill search',
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.delete_outline,
+                                size: 18, color: Colors.red[400]),
+                            onPressed: () => _removeRecentSearch(search),
+                            splashRadius: 14,
+                            tooltip: 'Remove from history',
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                  const Divider(height: 1),
+                ],
+                if (_suggestions.isNotEmpty) ...[
+                  _buildSectionHeader('Suggestions', icon: Icons.auto_awesome),
+                  ..._suggestions.asMap().entries.map((entry) {
+                    final index = entry.key;
+                    final suggestion = entry.value;
+                    final globalIndex =
+                        (showRecent ? _recentSearches.length : 0) + index;
+                    return _buildListItem(
+                      leading:
+                          Icon(Icons.search, color: Colors.blue[400], size: 20),
+                      title: suggestion,
+                      subtitle: 'Search suggestion',
+                      onTap: () {
+                        widget.controller.text = suggestion;
+                        _searchProducts(suggestion, fromSuggestion: true);
+                      },
+                      isHighlighted: _highlightedIndex == globalIndex,
+                      trailing: IconButton(
+                        icon: Icon(Icons.north_west,
+                            size: 16, color: Colors.grey[500]),
+                        onPressed: () => widget.controller.text = suggestion,
+                        splashRadius: 12,
+                        tooltip: 'Fill search',
+                      ),
+                    );
+                  }).toList(),
+                  if (_searchResults.isNotEmpty) const Divider(height: 1),
+                ],
+                if (_searchResults.isNotEmpty) ...[
+                  _buildSectionHeader('Products', icon: Icons.shopping_bag),
+                  ..._searchResults.asMap().entries.map((entry) {
+                    final index = entry.key;
+                    final product = entry.value;
+                    final globalIndex =
+                        (showRecent ? _recentSearches.length : 0) +
+                            _suggestions.length +
+                            index;
+                    return _buildProductItem(
+                      product: product,
+                      query: widget.controller.text,
+                      isHighlighted: _highlightedIndex == globalIndex,
+                    );
+                  }).toList(),
+                ],
+                if (_isLoading) ...[
+                  Container(
+                    padding: const EdgeInsets.all(32),
+                    child: Center(
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(primaryColor),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            'Searching...',
+                            style: TextStyles.regular13.copyWith(
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+                // 3. Add advanced filter section
+                if (_showAdvancedFilters)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Price Range
+                        Row(
+                          children: [
+                            Text('Price Range: ', style: TextStyles.regular13),
+                            Expanded(
+                              child: RangeSlider(
+                                values: _priceRange,
+                                min: 0,
+                                max: 1000,
+                                divisions: 20,
+                                labels: RangeLabels(
+                                  '${_priceRange.start.round()}',
+                                  '${_priceRange.end.round()}',
+                                ),
+                                onChanged: (values) {
+                                  setState(() => _priceRange = values);
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                        // Minimum Rating
+                        Row(
+                          children: [
+                            Text('Min Rating: ${_minRating.toStringAsFixed(1)}', style: TextStyles.regular13),
+                            Expanded(
+                              child: Slider(
+                                value: _minRating,
+                                min: 0,
+                                max: 5,
+                                divisions: 10,
+                                label: _minRating.toStringAsFixed(1),
+                                onChanged: (value) {
+                                  setState(() => _minRating = value);
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                        // Brand Dropdown
+                        DropdownButton<String>(
+                          value: _selectedBrand,
+                          hint: const Text('Select Brand'),
+                          isExpanded: true,
+                          items: [
+                            const DropdownMenuItem(
+                              value: null,
+                              child: Text('All Brands'),
+                            ),
+                            ..._searchResults
+                                .map((product) => product['brand'] as String?)
+                                .where((brand) => brand != null && brand.isNotEmpty)
+                                .toSet()
+                                .map((brand) => DropdownMenuItem(
+                                      value: brand,
+                                      child: Text(brand!),
+                                    )),
+                          ],
+                          onChanged: (value) {
+                            setState(() => _selectedBrand = value);
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // 5. Add skeleton loader and retry for loading/error states
+  Widget _buildSkeletonLoader() {
+    return Container(
+      padding: const EdgeInsets.all(32),
+      child: Column(
+        children: [
+          SizedBox(
+            width: 24,
+            height: 24,
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.grey[400]!),
+            ),
+          ),
+          const SizedBox(height: 12),
+          Container(
+            width: 120,
+            height: 16,
+            color: Colors.grey[300],
+            margin: const EdgeInsets.symmetric(vertical: 4),
+          ),
+          Container(
+            width: 180,
+            height: 16,
+            color: Colors.grey[200],
+            margin: const EdgeInsets.symmetric(vertical: 4),
+          ),
+          Container(
+            width: 100,
+            height: 16,
+            color: Colors.grey[300],
+            margin: const EdgeInsets.symmetric(vertical: 4),
+          ),
+        ],
+      ),
+    );
+  }
+  Widget _buildErrorWidget() {
+    return Container(
+      padding: const EdgeInsets.all(32),
+      child: Column(
+        children: [
+          Icon(Icons.error_outline, size: 48, color: Colors.red[400]),
+          const SizedBox(height: 16),
+          Text(
+            _errorMessage,
+            style: TextStyles.bold16.copyWith(color: Colors.red[700]),
+          ),
+          const SizedBox(height: 8),
+          ElevatedButton.icon(
+            icon: Icon(Icons.refresh),
+            label: Text('Retry'),
+            onPressed: () {
+              _searchProducts(widget.controller.text);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  // 7. Accessibility: Add ARIA labels, screen reader support, and improved keyboard navigation
+  // Example: Add semantics to main widgets
+  // In build(), wrap main Column with Semantics
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -1279,144 +1770,147 @@ class _SearchTextFieldState extends State<SearchTextField>
     final borderColor = isDark ? Colors.grey[600] : Colors.grey[300];
     final textColor = isDark ? Colors.white : Colors.black87;
 
-    return RawKeyboardListener(
-      focusNode: _keyboardFocusNode,
-      onKey: _handleKey,
-      child: Column(
-        children: [
-          // Search Input Field
-          AnimatedBuilder(
-            animation: _scaleAnimation,
-            builder: (context, child) => Transform.scale(
-              scale: _scaleAnimation.value,
-              child: Container(
-                margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(isDark ? 0.3 : 0.1),
-                      blurRadius: 12,
-                      offset: const Offset(0, 4),
-                      spreadRadius: 0,
+    return Semantics(
+      label: 'Search bar with suggestions and results',
+      child: RawKeyboardListener(
+        focusNode: _keyboardFocusNode,
+        onKey: _handleKey,
+        child: Column(
+          children: [
+            // Search Input Field
+            AnimatedBuilder(
+              animation: _scaleAnimation,
+              builder: (context, child) => Transform.scale(
+                scale: _scaleAnimation.value,
+                child: Container(
+                  margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(isDark ? 0.3 : 0.1),
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
+                        spreadRadius: 0,
+                      ),
+                    ],
+                  ),
+                  child: TextField(
+                    focusNode: _focusNode,
+                    controller: widget.controller,
+                    onChanged: (value) => _searchProducts(value),
+                    onSubmitted: (value) {
+                      widget.onSearch(value);
+                      _searchProducts(value);
+                    },
+                    onTap: () => setState(() => _showDropdown = true),
+                    style: TextStyles.regular16.copyWith(color: textColor),
+                    decoration: InputDecoration(
+                      hintText: 'Search for anything...',
+                      hintStyle: TextStyles.regular16.copyWith(
+                        color: Colors.grey[500],
+                      ),
+                      prefixIcon: Container(
+                        padding: const EdgeInsets.all(14),
+                        child: Icon(
+                          Icons.search,
+                          size: 22,
+                          color: _isFocused ? primaryColor : Colors.grey[600],
+                        ),
+                      ),
+                      suffixIcon: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (_isLoading)
+                            Container(
+                              padding: const EdgeInsets.all(12),
+                              child: SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  valueColor:
+                                      AlwaysStoppedAnimation<Color>(primaryColor),
+                                ),
+                              ),
+                            )
+                          else
+                            _buildVoiceButton(),
+                          if (widget.controller.text.isNotEmpty)
+                            IconButton(
+                              icon: Icon(Icons.clear, color: Colors.grey[600]),
+                              onPressed: () {
+                                widget.controller.clear();
+                                _clearSearchState();
+                              },
+                              splashRadius: 20,
+                            ),
+                        ],
+                      ),
+                      filled: true,
+                      fillColor: surfaceColor,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: BorderSide(color: borderColor!, width: 1),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: BorderSide(color: borderColor, width: 1),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: BorderSide(color: primaryColor, width: 2),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 16,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+            // Voice Search Status
+            if (_isListening) _buildVoiceSearchStatus(),
+
+            // Product Loading Indicator
+            if (_isProductLoading)
+              Container(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(
+                      'Loading product...',
+                      style:
+                          TextStyles.regular13.copyWith(color: Colors.grey[600]),
                     ),
                   ],
                 ),
-                child: TextField(
-                  focusNode: _focusNode,
-                  controller: widget.controller,
-                  onChanged: (value) => _searchProducts(value),
-                  onSubmitted: (value) {
-                    widget.onSearch(value);
-                    _searchProducts(value);
-                  },
-                  onTap: () => setState(() => _showDropdown = true),
-                  style: TextStyles.regular16.copyWith(color: textColor),
-                  decoration: InputDecoration(
-                    hintText: 'Search for anything...',
-                    hintStyle: TextStyles.regular16.copyWith(
-                      color: Colors.grey[500],
-                    ),
-                    prefixIcon: Container(
-                      padding: const EdgeInsets.all(14),
-                      child: Icon(
-                        Icons.search,
-                        size: 22,
-                        color: _isFocused ? primaryColor : Colors.grey[600],
-                      ),
-                    ),
-                    suffixIcon: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (_isLoading)
-                          Container(
-                            padding: const EdgeInsets.all(12),
-                            child: SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                valueColor:
-                                    AlwaysStoppedAnimation<Color>(primaryColor),
-                              ),
-                            ),
-                          )
-                        else
-                          _buildVoiceButton(),
-                        if (widget.controller.text.isNotEmpty)
-                          IconButton(
-                            icon: Icon(Icons.clear, color: Colors.grey[600]),
-                            onPressed: () {
-                              widget.controller.clear();
-                              _clearSearchState();
-                            },
-                            splashRadius: 20,
-                          ),
-                      ],
-                    ),
-                    filled: true,
-                    fillColor: surfaceColor,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      borderSide: BorderSide(color: borderColor!, width: 1),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      borderSide: BorderSide(color: borderColor, width: 1),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      borderSide: BorderSide(color: primaryColor, width: 2),
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 16,
-                    ),
-                  ),
+              ),
+
+            // Dropdown Results
+            if (_showDropdown && !_isProductLoading)
+              SlideTransition(
+                position: _slideAnimation,
+                child: FadeTransition(
+                  opacity: _opacityAnimation,
+                  child: _buildDropdownContent(
+                      isDark, primaryColor, surfaceColor, textColor),
                 ),
               ),
-            ),
-          ),
-
-          // Voice Search Status
-          if (_isListening) _buildVoiceSearchStatus(),
-
-          // Product Loading Indicator
-          if (_isProductLoading)
-            Container(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Text(
-                    'Loading product...',
-                    style:
-                        TextStyles.regular13.copyWith(color: Colors.grey[600]),
-                  ),
-                ],
-              ),
-            ),
-
-          // Dropdown Results
-          if (_showDropdown && !_isProductLoading)
-            SlideTransition(
-              position: _slideAnimation,
-              child: FadeTransition(
-                opacity: _opacityAnimation,
-                child: _buildDropdownContent(
-                    isDark, primaryColor, surfaceColor, textColor),
-              ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -1444,9 +1938,48 @@ class _SearchTextFieldState extends State<SearchTextField>
             ),
           ),
           const SizedBox(width: 12),
-          Text(
-            'Listening...',
-            style: TextStyles.medium15.copyWith(color: Colors.red[700]),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Listening...',
+                  style: TextStyles.medium15.copyWith(color: Colors.red[700]),
+                ),
+                if (_voiceInput.isNotEmpty)
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: TextEditingController(text: _voiceInput),
+                          onChanged: (val) {
+                            setState(() => _voiceInput = val);
+                          },
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: 'Edit voice input',
+                          ),
+                          style: TextStyles.regular13,
+                          autofocus: false,
+                          // Accessibility
+                          textInputAction: TextInputAction.done,
+                          enableSuggestions: true,
+                          autocorrect: true,
+                        ),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.search, color: Colors.blue[600]),
+                        onPressed: () {
+                          widget.controller.text = _voiceInput;
+                          _searchProducts(_voiceInput);
+                          setState(() => _isListening = false);
+                        },
+                        tooltip: 'Search with voice input',
+                      ),
+                    ],
+                  ),
+              ],
+            ),
           ),
           const Spacer(),
           TextButton(
@@ -1977,180 +2510,18 @@ class _SearchTextFieldState extends State<SearchTextField>
     );
   }
 
-  Widget _buildDropdownContent(
-      bool isDark, Color primaryColor, Color? surfaceColor, Color textColor) {
-    final showRecent = _isFocused &&
-        widget.controller.text.isEmpty &&
-        _recentSearches.isNotEmpty;
-
-    if (!showRecent &&
-        _suggestions.isEmpty &&
-        _searchResults.isEmpty &&
-        !_isLoading) {
-      if (widget.controller.text.isNotEmpty) {
-        return _buildNoResultsWidget(textColor);
-      }
-      return _buildPopularSearches(primaryColor, textColor);
-    }
-
-    return Container(
-      constraints: const BoxConstraints(maxHeight: 450),
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(
-        color: surfaceColor,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(isDark ? 0.4 : 0.1),
-            blurRadius: 16,
-            offset: const Offset(0, 8),
-            spreadRadius: 0,
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: Material(
-          color: Colors.transparent,
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Recent Searches Section
-                if (showRecent) ...[
-                  _buildSectionHeader(
-                    'Recent Searches',
-                    icon: Icons.history,
-                    action: IconButton(
-                      icon: Icon(Icons.clear_all,
-                          size: 18, color: Colors.grey[600]),
-                      onPressed: _clearRecentSearches,
-                      splashRadius: 16,
-                      tooltip: 'Clear all',
-                    ),
-                  ),
-                  ..._recentSearches.asMap().entries.map((entry) {
-                    final index = entry.key;
-                    final search = entry.value;
-                    final globalIndex = index;
-
-                    return _buildListItem(
-                      leading: Icon(Icons.history,
-                          color: Colors.grey[500], size: 20),
-                      title: search,
-                      onTap: () {
-                        widget.controller.text = search;
-                        _searchProducts(search);
-                      },
-                      isHighlighted: _highlightedIndex == globalIndex,
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            icon: Icon(Icons.north_west,
-                                size: 16, color: Colors.grey[500]),
-                            onPressed: () => widget.controller.text = search,
-                            splashRadius: 12,
-                            tooltip: 'Fill search',
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.delete_outline,
-                                size: 18, color: Colors.red[400]),
-                            onPressed: () => _removeRecentSearch(search),
-                            splashRadius: 14,
-                            tooltip: 'Remove from history',
-                          ),
-                        ],
-                      ),
-                    );
-                  }).toList(),
-                  const Divider(height: 1),
-                ],
-
-                // Suggestions Section
-                if (_suggestions.isNotEmpty) ...[
-                  _buildSectionHeader('Suggestions', icon: Icons.auto_awesome),
-                  ..._suggestions.asMap().entries.map((entry) {
-                    final index = entry.key;
-                    final suggestion = entry.value;
-                    final globalIndex =
-                        (showRecent ? _recentSearches.length : 0) + index;
-
-                    return _buildListItem(
-                      leading:
-                          Icon(Icons.search, color: Colors.blue[400], size: 20),
-                      title: suggestion,
-                      subtitle: 'Search suggestion',
-                      onTap: () {
-                        widget.controller.text = suggestion;
-                        _searchProducts(suggestion, fromSuggestion: true);
-                      },
-                      isHighlighted: _highlightedIndex == globalIndex,
-                      trailing: IconButton(
-                        icon: Icon(Icons.north_west,
-                            size: 16, color: Colors.grey[500]),
-                        onPressed: () => widget.controller.text = suggestion,
-                        splashRadius: 12,
-                        tooltip: 'Fill search',
-                      ),
-                    );
-                  }).toList(),
-                  if (_searchResults.isNotEmpty) const Divider(height: 1),
-                ],
-
-                // Search Results Section
-                if (_searchResults.isNotEmpty) ...[
-                  _buildSectionHeader('Products', icon: Icons.shopping_bag),
-                  ..._searchResults.asMap().entries.map((entry) {
-                    final index = entry.key;
-                    final product = entry.value;
-                    final globalIndex =
-                        (showRecent ? _recentSearches.length : 0) +
-                            _suggestions.length +
-                            index;
-
-                    return _buildProductItem(
-                      product: product,
-                      query: widget.controller.text,
-                      isHighlighted: _highlightedIndex == globalIndex,
-                    );
-                  }).toList(),
-                ],
-
-                // Loading indicator
-                if (_isLoading) ...[
-                  Container(
-                    padding: const EdgeInsets.all(32),
-                    child: Center(
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            width: 24,
-                            height: 24,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(primaryColor),
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                          Text(
-                            'Searching...',
-                            style: TextStyles.regular13.copyWith(
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+  // 4. Filter _searchResults before displaying
+  List<Map<String, dynamic>> _applyAdvancedFilters(List<Map<String, dynamic>> results) {
+    return results.where((product) {
+      final price = product['price'] as num? ?? 0;
+      final rating = product['rating'] as num? ?? 0;
+      final brand = product['brand'] as String? ?? '';
+      final category = product['category'] as String? ?? '';
+      final categoryMatch = _activeFilters.isEmpty || _activeFilters.contains(category);
+      final priceMatch = price >= _priceRange.start && price <= _priceRange.end;
+      final ratingMatch = rating >= _minRating;
+      final brandMatch = _selectedBrand == null || brand == _selectedBrand;
+      return categoryMatch && priceMatch && ratingMatch && brandMatch;
+    }).toList();
   }
 }
