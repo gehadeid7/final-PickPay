@@ -109,6 +109,7 @@ import 'package:pickpay/features/categories_pages/products_views/video_games/vid
 import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product12.dart';
 import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product13.dart';
 import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product14.dart';
+import 'package:pickpay/core/widgets/app_flushbar.dart';
 
 class CartViewBody extends StatelessWidget {
   const CartViewBody({super.key});
@@ -1165,17 +1166,6 @@ class CartViewBody extends StatelessWidget {
   }
 
   void _showMessage(BuildContext context, String message, CartAction action) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: action == CartAction.error ? Colors.red : Colors.green,
-        duration: const Duration(seconds: 2),
-        behavior: SnackBarBehavior.floating,
-        margin: const EdgeInsets.all(16),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-      ),
-    );
+    // Intentionally left blank to prevent duplicate notifications.
   }
 }
