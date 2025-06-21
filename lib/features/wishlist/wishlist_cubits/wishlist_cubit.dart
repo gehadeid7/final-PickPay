@@ -105,17 +105,38 @@ class WishlistCubit extends Cubit<WishlistState> {
 
     final newList = List<ProductsViewsModel>.from(_wishlistItems);
     if (!newList.any((item) => item.id == product.id)) {
-      final response = await _apiService.addProductToWishlist(product.id);
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        newList.add(product);
+      // Optimistic update - immediately update UI
+      newList.add(product);
+      _wishlistItems = newList;
+      emit(WishlistLoaded(
+        items: List.from(_wishlistItems),
+        action: WishlistAction.added,
+      ));
+
+      // API call in background
+      try {
+        final response = await _apiService.addProductToWishlist(product.id);
+        if (response.statusCode == 200 || response.statusCode == 201) {
+          await _saveWishlistData();
+        } else {
+          // Revert on failure
+          print('Failed to add product to wishlist: ${response.statusCode}');
+          newList.removeWhere((item) => item.id == product.id);
+          _wishlistItems = newList;
+          emit(WishlistLoaded(
+            items: List.from(_wishlistItems),
+            action: WishlistAction.removed,
+          ));
+        }
+      } catch (e) {
+        // Revert on error
+        print('Error adding product to wishlist: $e');
+        newList.removeWhere((item) => item.id == product.id);
         _wishlistItems = newList;
         emit(WishlistLoaded(
           items: List.from(_wishlistItems),
-          action: WishlistAction.added,
+          action: WishlistAction.removed,
         ));
-        await _saveWishlistData();
-      } else {
-        print('Failed to add product to wishlist: ${response.statusCode}');
       }
     }
   }
@@ -123,18 +144,41 @@ class WishlistCubit extends Cubit<WishlistState> {
   Future<void> removeFromWishlist(String productId) async {
     if (_wishlistKey.isEmpty) return;
 
-    final response = await _apiService.removeProductFromWishlist(productId);
-    if (response.statusCode == 200 || response.statusCode == 204) {
-      final newList = List<ProductsViewsModel>.from(_wishlistItems);
-      newList.removeWhere((item) => item.id == productId);
+    final newList = List<ProductsViewsModel>.from(_wishlistItems);
+    final removedProduct = newList.firstWhere((item) => item.id == productId);
+
+    // Optimistic update - immediately update UI
+    newList.removeWhere((item) => item.id == productId);
+    _wishlistItems = newList;
+    emit(WishlistLoaded(
+      items: List.from(_wishlistItems),
+      action: WishlistAction.removed,
+    ));
+
+    // API call in background
+    try {
+      final response = await _apiService.removeProductFromWishlist(productId);
+      if (response.statusCode == 200 || response.statusCode == 204) {
+        await _saveWishlistData();
+      } else {
+        // Revert on failure
+        print('Failed to remove product from wishlist: ${response.statusCode}');
+        newList.add(removedProduct);
+        _wishlistItems = newList;
+        emit(WishlistLoaded(
+          items: List.from(_wishlistItems),
+          action: WishlistAction.added,
+        ));
+      }
+    } catch (e) {
+      // Revert on error
+      print('Error removing product from wishlist: $e');
+      newList.add(removedProduct);
       _wishlistItems = newList;
       emit(WishlistLoaded(
         items: List.from(_wishlistItems),
-        action: WishlistAction.removed,
+        action: WishlistAction.added,
       ));
-      await _saveWishlistData();
-    } else {
-      print('Failed to remove product from wishlist: ${response.statusCode}');
     }
   }
 
