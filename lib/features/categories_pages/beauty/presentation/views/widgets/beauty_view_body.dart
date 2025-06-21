@@ -66,6 +66,35 @@ class _BeautyViewBodyState extends State<BeautyViewBody> {
   Future<List<ProductsViewsModel>> _loadProducts() async {
     final apiProducts = await ApiService().loadProducts();
 
+    // Define actual brands for Beauty products
+    final Map<String, String> productBrands = {
+      '682b00d16977bd89257c0e9d':
+          'L\'Oréal Paris', // BeautyProduct1 - Makeup (Mascara)
+      '682b00d16977bd89257c0e9e':
+          'L\'Oréal Paris', // BeautyProduct2 - Makeup (Foundation)
+      '682b00d16977bd89257c0e9f': 'Cybele', // BeautyProduct3 - Makeup (Blush)
+      '682b00d16977bd89257c0ea0': 'Eva', // BeautyProduct4 - Makeup (Wipes)
+      '682b00d16977bd89257c0ea1':
+          'MAYBELLINE', // BeautyProduct5 - Makeup (Lip Gloss)
+      '682b00d16977bd89257c0ea2': 'La Roche-Posay', // BeautyProduct6 - Skincare
+      '682b00d16977bd89257c0ea3': 'Eucerin', // BeautyProduct7 - Skincare
+      '682b00d16977bd89257c0ea4': 'Care & More', // BeautyProduct8 - Skincare
+      '682b00d16977bd89257c0ea5': 'NIVEA', // BeautyProduct9 - Skincare
+      '682b00d16977bd89257c0ea6': 'Garnier', // BeautyProduct10 - Skincare
+      '682b00d16977bd89257c0ea7':
+          'L\'Oréal Paris', // BeautyProduct11 - Haircare
+      '682b00d16977bd89257c0ea8': 'Garnier', // BeautyProduct12 - Haircare
+      '682b00d16977bd89257c0ea9': 'NIVEA', // BeautyProduct13 - Haircare
+      '682b00d16977bd89257c0eaa': 'Raw African', // BeautyProduct14 - Haircare
+      '682b00d16977bd89257c0eab': 'Gulf Orchid', // BeautyProduct15 - Haircare
+      '682b00d16977bd89257c0eac': 'Avon', // BeautyProduct16 - Fragrance
+      '682b00d16977bd89257c0ead': 'Gulf Orchid', // BeautyProduct17 - Fragrance
+      '682b00d16977bd89257c0eae':
+          '9Street Corner', // BeautyProduct18 - Fragrance
+      '682b00d16977bd89257c0eaf': 'NIVEA', // BeautyProduct19 - Fragrance
+      '682b00d16977bd89257c0eb0':
+          'Jacques Bogart', // BeautyProduct20 - Fragrance
+    };
 
     // Map product ID to image path
     final Map<String, String> productImagePaths = {
@@ -91,10 +120,15 @@ class _BeautyViewBodyState extends State<BeautyViewBody> {
       '682b00d16977bd89257c0eb0': 'assets/beauty_products/fragrance_5/1.png',
     };
 
-    return apiProducts
+    final filteredProducts = apiProducts
         .where((apiProduct) => detailPages.containsKey(apiProduct.id))
         .map((apiProduct) {
       final imagePath = productImagePaths[apiProduct.id] ?? '';
+      final assignedBrand = productBrands[apiProduct.id] ?? 'Generic';
+
+      // Debug logging
+      print(
+          'Beauty - Product ID: ${apiProduct.id}, Assigned Brand: $assignedBrand');
 
       return ProductsViewsModel(
         id: apiProduct.id,
@@ -103,9 +137,16 @@ class _BeautyViewBodyState extends State<BeautyViewBody> {
         originalPrice: apiProduct.originalPrice,
         rating: apiProduct.rating ?? 4.5,
         reviewCount: apiProduct.reviewCount ?? 100,
+        brand: assignedBrand, // Use actual brand
         imagePaths: [imagePath],
       );
     }).toList();
+
+    // Debug logging for final brands
+    final finalBrands = filteredProducts.map((p) => p.brand).toSet();
+    print('Beauty - Final brands in products: $finalBrands');
+
+    return filteredProducts;
   }
 
   Widget? _findDetailPageById(String productId) {

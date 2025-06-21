@@ -66,33 +66,85 @@ class _HomeCategoryViewBodyState extends State<HomeCategoryViewBody> {
   Future<List<ProductsViewsModel>> _loadProducts() async {
     final apiProducts = await ApiService().loadProducts();
 
+    // Define actual brands for Home products
+    final Map<String, String> productBrands = {
+      '681dab0df9c9147444b452cd':
+          'Generic', // HomeProduct1 - Furniture (Sofa Bed)
+      '681dab0df9c9147444b452ce':
+          'Generic', // HomeProduct2 - Furniture (Bean Bag)
+      '681dab0df9c9147444b452cf':
+          'Generic', // HomeProduct3 - Furniture (Coffee Table)
+      '681dab0df9c9147444b452d0': 'Generic', // HomeProduct4 - Furniture
+      '681dab0df9c9147444b452d1': 'Generic', // HomeProduct5 - Furniture
+      '681dab0df9c9147444b452d2':
+          'Golden Lighting', // HomeProduct6 - Home Decor (Lamp)
+      '681dab0df9c9147444b452d3':
+          'Generic', // HomeProduct7 - Home Decor (Bath Mat)
+      '681dab0df9c9147444b452d4': 'Generic', // HomeProduct8 - Home Decor
+      '681dab0df9c9147444b452d5': 'Generic', // HomeProduct9 - Home Decor
+      '681dab0df9c9147444b452d6': 'Generic', // HomeProduct10 - Home Decor
+      '681dab0df9c9147444b452d7':
+          'Neoflam', // HomeProduct11 - Kitchen (Cookware)
+      '681dab0df9c9147444b452d8': 'Pasabahce', // HomeProduct12 - Kitchen (Mugs)
+      '681dab0df9c9147444b452d9': 'Generic', // HomeProduct13 - Kitchen
+      '681dab0df9c9147444b452da': 'Generic', // HomeProduct14 - Kitchen
+      '681dab0df9c9147444b452db': 'Generic', // HomeProduct15 - Kitchen
+      '681dab0df9c9147444b452dc':
+          'Banotex', // HomeProduct16 - Bath & Bedding (Towel)
+      '681dab0df9c9147444b452dd':
+          'Generic', // HomeProduct17 - Bath & Bedding (Pillow)
+      '681dab0df9c9147444b452de': 'Generic', // HomeProduct18 - Bath & Bedding
+      '681dab0df9c9147444b452df': 'Generic', // HomeProduct19 - Bath & Bedding
+      '681dab0df9c9147444b452e0': 'Generic', // HomeProduct20 - Bath & Bedding
+    };
+
     final Map<String, String> productImagePaths = {
-      '681dab0df9c9147444b452cd': 'assets/Home_products/furniture/furniture1/1.png',
-      '681dab0df9c9147444b452ce': 'assets/Home_products/furniture/furniture2/1.png',
-      '681dab0df9c9147444b452cf': 'assets/Home_products/furniture/furniture3/1.png',
-      '681dab0df9c9147444b452d0': 'assets/Home_products/furniture/furniture4/1.png',
-      '681dab0df9c9147444b452d1': 'assets/Home_products/furniture/furniture5/1.png',
-      '681dab0df9c9147444b452d2': 'assets/Home_products/home-decor/home_decor1/1.png',
-      '681dab0df9c9147444b452d3': 'assets/Home_products/home-decor/home_decor2/1.png',
-      '681dab0df9c9147444b452d4': 'assets/Home_products/home-decor/home_decor3/1.png',
-      '681dab0df9c9147444b452d5': 'assets/Home_products/home-decor/home_decor4/1.png',
-      '681dab0df9c9147444b452d6': 'assets/Home_products/home-decor/home_decor5/1.png',
+      '681dab0df9c9147444b452cd':
+          'assets/Home_products/furniture/furniture1/1.png',
+      '681dab0df9c9147444b452ce':
+          'assets/Home_products/furniture/furniture2/1.png',
+      '681dab0df9c9147444b452cf':
+          'assets/Home_products/furniture/furniture3/1.png',
+      '681dab0df9c9147444b452d0':
+          'assets/Home_products/furniture/furniture4/1.png',
+      '681dab0df9c9147444b452d1':
+          'assets/Home_products/furniture/furniture5/1.png',
+      '681dab0df9c9147444b452d2':
+          'assets/Home_products/home-decor/home_decor1/1.png',
+      '681dab0df9c9147444b452d3':
+          'assets/Home_products/home-decor/home_decor2/1.png',
+      '681dab0df9c9147444b452d4':
+          'assets/Home_products/home-decor/home_decor3/1.png',
+      '681dab0df9c9147444b452d5':
+          'assets/Home_products/home-decor/home_decor4/1.png',
+      '681dab0df9c9147444b452d6':
+          'assets/Home_products/home-decor/home_decor5/1.png',
       '681dab0df9c9147444b452d7': 'assets/Home_products/kitchen/kitchen1/1.png',
       '681dab0df9c9147444b452d8': 'assets/Home_products/kitchen/kitchen2/1.png',
       '681dab0df9c9147444b452d9': 'assets/Home_products/kitchen/kitchen3/1.png',
       '681dab0df9c9147444b452da': 'assets/Home_products/kitchen/kitchen4/1.png',
       '681dab0df9c9147444b452db': 'assets/Home_products/kitchen/kitchen5/1.png',
-      '681dab0df9c9147444b452dc': 'assets/Home_products/bath_and_bedding/bath1/1.png',
-      '681dab0df9c9147444b452dd': 'assets/Home_products/bath_and_bedding/bath2/1.png',
-      '681dab0df9c9147444b452de': 'assets/Home_products/bath_and_bedding/bath3/1.png',
-      '681dab0df9c9147444b452df': 'assets/Home_products/bath_and_bedding/bath4/1.png',
-      '681dab0df9c9147444b452e0': 'assets/Home_products/bath_and_bedding/bath5/1.png',
+      '681dab0df9c9147444b452dc':
+          'assets/Home_products/bath_and_bedding/bath1/1.png',
+      '681dab0df9c9147444b452dd':
+          'assets/Home_products/bath_and_bedding/bath2/1.png',
+      '681dab0df9c9147444b452de':
+          'assets/Home_products/bath_and_bedding/bath3/1.png',
+      '681dab0df9c9147444b452df':
+          'assets/Home_products/bath_and_bedding/bath4/1.png',
+      '681dab0df9c9147444b452e0':
+          'assets/Home_products/bath_and_bedding/bath5/1.png',
     };
 
-    return apiProducts
+    final filteredProducts = apiProducts
         .where((apiProduct) => detailPages.containsKey(apiProduct.id))
         .map((apiProduct) {
       final imagePath = productImagePaths[apiProduct.id] ?? '';
+      final assignedBrand = productBrands[apiProduct.id] ?? 'Generic';
+
+      // Debug logging
+      print(
+          'Home - Product ID: ${apiProduct.id}, Assigned Brand: $assignedBrand');
 
       return ProductsViewsModel(
         id: apiProduct.id,
@@ -101,9 +153,16 @@ class _HomeCategoryViewBodyState extends State<HomeCategoryViewBody> {
         originalPrice: apiProduct.originalPrice,
         rating: apiProduct.rating ?? 4.5,
         reviewCount: apiProduct.reviewCount ?? 100,
+        brand: assignedBrand, // Use actual brand
         imagePaths: [imagePath],
       );
     }).toList();
+
+    // Debug logging for final brands
+    final finalBrands = filteredProducts.map((p) => p.brand).toSet();
+    print('Home - Final brands in products: $finalBrands');
+
+    return filteredProducts;
   }
 
   Widget? _findDetailPageById(String productId) {
