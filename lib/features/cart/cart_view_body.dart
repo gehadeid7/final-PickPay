@@ -947,6 +947,11 @@ class CartViewBody extends StatelessWidget {
         '682b00d16977bd89257c0ea9': 'assets/beauty_products/haircare_3/1.png',
         '682b00d16977bd89257c0eaa': 'assets/beauty_products/haircare_4/1.png',
         '682b00d16977bd89257c0eab': 'assets/beauty_products/haircare_5/1.png',
+        '682b00d16977bd89257c0eac': 'assets/beauty_products/fragrance_1/1.png',
+        '682b00d16977bd89257c0ead': 'assets/beauty_products/fragrance_2/1.png',
+        '682b00d16977bd89257c0eae': 'assets/beauty_products/fragrance_3/1.png',
+        '682b00d16977bd89257c0eaf': 'assets/beauty_products/fragrance_4/1.png',
+        '682b00d16977bd89257c0eb0': 'assets/beauty_products/fragrance_5/1.png',
       },
       'home': {
         '681dab0df9c9147444b452cd':
