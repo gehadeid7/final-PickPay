@@ -49,9 +49,7 @@ class AISearchService {
         _loadSearchSuggestions(),
       ]);
       _isInitialized = true;
-    } catch (e) {
-      print('Error initializing AI search service: $e');
-    }
+    } catch (e) {}
   }
 
   Future<void> _preloadPopularSearches() async {
@@ -73,9 +71,7 @@ class AISearchService {
           }
         }
       }
-    } catch (e) {
-      print('Error preloading searches: $e');
-    }
+    } catch (e) {}
   }
 
   Future<void> _loadSearchSuggestions() async {
@@ -97,9 +93,7 @@ class AISearchService {
           }
         }
       }
-    } catch (e) {
-      print('Error loading search suggestions: $e');
-    }
+    } catch (e) {}
   }
 
   List<String> getSuggestions(String query) {
@@ -116,74 +110,51 @@ class AISearchService {
     if (query.isEmpty) return [];
 
     try {
-      print('🔍 Fetching suggestions for: $query');
-      
       final response = await _apiService.post(
         endpoint: BackendEndpoints.aiProductSearch,
         body: {
           'query': query,
           'type': 'suggestions',
           'context': {
-            'userHistory': (await _getUserSearchHistory()).take(5).toList(), // Limit history to 5 items
-            'popularSearches': _searchSuggestions.take(5).toList(), // Limit suggestions to 5 items
+            'userHistory': (await _getUserSearchHistory()).take(5).toList(),
+            'popularSearches': _searchSuggestions.take(5).toList(),
           },
         },
       );
 
-      print('📥 Received suggestions response: ${response.statusCode}');
-      
       if (response.statusCode == 200) {
         try {
           final data = jsonDecode(response.body);
-          print('📦 Parsed suggestions data type: ${data.runtimeType}');
-          
           List<String> suggestions = [];
 
           if (data is Map) {
-            print('📦 Suggestions response keys: ${data.keys.toList()}');
-            
             if (data.containsKey('products') && data['products'] is List) {
               final products = data['products'] as List;
-              print('📦 Found ${products.length} products for suggestions');
-              
               suggestions = products.where((product) {
                 if (product is! Map) {
-                  print('❌ Invalid product format in suggestions: $product');
                   return false;
                 }
                 
                 final title = product['title']?.toString();
                 if (title == null || title.isEmpty) {
-                  print('❌ Product missing title in suggestions: $product');
                   return false;
                 }
                 
                 return true;
-              }).map((product) => product['title'].toString()).take(5).toList(); // Limit to 5 suggestions
-              
-              print('✅ Filtered to ${suggestions.length} valid suggestions');
+              }).map((product) => product['title'].toString()).take(5).toList();
             } else if (data.containsKey('suggestions') && data['suggestions'] is List) {
-              suggestions = List<String>.from(data['suggestions']).take(5).toList(); // Limit to 5 suggestions
+              suggestions = List<String>.from(data['suggestions']).take(5).toList();
             }
           } else if (data is List) {
-            suggestions = List<String>.from(data.map((e) => e.toString())).take(5).toList(); // Limit to 5 suggestions
+            suggestions = List<String>.from(data.map((e) => e.toString())).take(5).toList();
           }
 
           return suggestions;
-        } catch (e, stackTrace) {
-          print('❌ Error parsing suggestions response: $e');
-          print('❌ Stack trace: $stackTrace');
-          print('❌ Raw suggestions response body: ${response.body}');
-        }
-      } else {
-        print('❌ Suggestions failed with status: ${response.statusCode}');
-        print('❌ Error response: ${response.body}');
+        } catch (e, stackTrace) {}
       }
       
       return [];
     } catch (e, stackTrace) {
-      print('❌ Error fetching suggestions: $e');
-      print('❌ Stack trace: $stackTrace');
       return [];
     }
   }
@@ -193,7 +164,6 @@ class AISearchService {
       final prefs = await SharedPreferences.getInstance();
       return prefs.getStringList('search_history') ?? [];
     } catch (e) {
-      print('Error getting search history: $e');
       return [];
     }
   }
@@ -220,67 +190,44 @@ class AISearchService {
       }
       _lastQuery = normalizedQuery;
       _isSearching = true;
-
       try {
-        print('🔍 Searching for: $query');
-        
-        // Check memory cache first
         final cacheKey = normalizedQuery.replaceAll(RegExp(r'[^a-z0-9]'), '_');
         if (_memoryCache.containsKey(cacheKey)) {
           final cachedResults = _memoryCache[cacheKey]!;
           final timestamp = _memoryCacheTimestamps[cacheKey]!;
           if (DateTime.now().difference(timestamp) <= _memoryCacheDuration) {
-            print('📦 Using cached results for: $query');
             _isSearching = false;
             return _scoreAndSortResults(cachedResults, query);
           }
         }
-
-        // Get AI-powered search results
-        print('🌐 Making API request for: $query');
         final response = await _apiService.post(
           endpoint: BackendEndpoints.aiProductSearch,
           body: {
             'query': query,
             'type': 'search',
             'context': {
-              'userHistory': (await _getUserSearchHistory()).take(5).toList(), // Limit history to 5 items
-              'popularSearches': _searchSuggestions.take(5).toList(), // Limit suggestions to 5 items
+              'userHistory': (await _getUserSearchHistory()).take(5).toList(),
+              'popularSearches': _searchSuggestions.take(5).toList(),
             },
           },
         );
-
-        print('📥 Received response: ${response.statusCode}');
-        
         if (response.statusCode == 200) {
           try {
             final data = jsonDecode(response.body);
-            print('📦 Parsed response data type: ${data.runtimeType}');
-            
             List<Map<String, dynamic>> results = [];
-
             if (data is Map) {
-              print('📦 Response keys: ${data.keys.toList()}');
-              
               if (data.containsKey('products') && data['products'] is List) {
                 final products = data['products'] as List;
-                print('📦 Found ${products.length} products in response');
-                
                 results = products.where((product) {
                   if (product is! Map) {
-                    print('❌ Invalid product format: $product');
                     return false;
                   }
-                  
                   final title = product['title']?.toString();
                   if (title == null || title.isEmpty) {
-                    print('❌ Product missing title: $product');
                     return false;
                   }
-                  
                   return true;
                 }).map((product) {
-                  // Only keep essential fields to reduce data size
                   return {
                     'id': product['_id'],
                     'title': product['title'],
@@ -290,49 +237,32 @@ class AISearchService {
                     'reviewCount': product['ratingsQuantity'] ?? 0,
                   };
                 }).toList();
-                
-                print('✅ Filtered to ${results.length} valid products');
               } else if (data.containsKey('results') && data['results'] is List) {
                 results = List<Map<String, dynamic>>.from(data['results']);
               }
             } else if (data is List) {
               results = List<Map<String, dynamic>>.from(data);
             }
-
-            // Cache results
             _addToMemoryCache(cacheKey, results);
             await _cacheResults(cacheKey, results);
-
             _isSearching = false;
             return _scoreAndSortResults(results, query);
-          } catch (e, stackTrace) {
-            print('❌ Error parsing response: $e');
-            print('❌ Stack trace: $stackTrace');
-            print('❌ Raw response body: ${response.body}');
-          }
+          } catch (e, stackTrace) {}
         } else {
-          print('❌ Search failed with status: ${response.statusCode}');
-          print('❌ Error response: ${response.body}');
+          _isSearching = false;
+          return [];
         }
-
-        _isSearching = false;
-        return [];
       } catch (e, stackTrace) {
-        print('❌ Error searching products: $e');
-        print('❌ Stack trace: $stackTrace');
-        
-        // Try to get cached results
         final cachedResults = await _getCachedResults(normalizedQuery.replaceAll(RegExp(r'[^a-z0-9]'), '_'));
         if (cachedResults.isNotEmpty) {
-          print('📦 Using cached results after error');
           _addToMemoryCache(normalizedQuery.replaceAll(RegExp(r'[^a-z0-9]'), '_'), cachedResults);
           _isSearching = false;
           return _scoreAndSortResults(cachedResults, query);
         }
-        
         _isSearching = false;
         return [];
       }
+      return [];
     });
   }
 
@@ -432,9 +362,7 @@ class AISearchService {
       };
       
       await prefs.setString('search_cache', jsonEncode(cacheMap));
-    } catch (e) {
-      print('Error caching results: $e');
-    }
+    } catch (e) {}
   }
 
   Future<List<Map<String, dynamic>>> _getCachedResults(String query) async {
@@ -453,7 +381,6 @@ class AISearchService {
       }
       return [];
     } catch (e) {
-      print('Error getting cached results: $e');
       return [];
     }
   }

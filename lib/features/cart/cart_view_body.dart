@@ -146,16 +146,13 @@ class CartViewBody extends StatelessWidget {
           try {
             if (state is CartError) {
               _showMessage(context, state.message, CartAction.error);
-              dev.log('Cart Error: ${state.message}', name: 'CartView');
             } else if (state is CartLoaded && state.message != null) {
               _showMessage(
                   context, state.message!, state.action ?? CartAction.updated);
-              dev.log('Cart Action: ${state.action} - ${state.message}',
-                  name: 'CartView');
             }
           } catch (e, stackTrace) {
-            dev.log('Error in cart listener: $e\n$stackTrace',
-                name: 'CartView', error: e);
+            // dev.log('Error in cart listener: $e\n$stackTrace',
+            //     name: 'CartView', error: e);
           }
         },
         builder: (context, state) {
@@ -323,10 +320,10 @@ class CartViewBody extends StatelessWidget {
                                     ),
                                   );
                                 } catch (e, stackTrace) {
-                                  dev.log(
-                                      'Error navigating to checkout: $e\n$stackTrace',
-                                      name: 'CartView',
-                                      error: e);
+                                  // dev.log(
+                                  //     'Error navigating to checkout: $e\n$stackTrace',
+                                  //     name: 'CartView',
+                                  //     error: e);
                                   _showMessage(
                                       context,
                                       'Failed to navigate to checkout',
@@ -343,8 +340,8 @@ class CartViewBody extends StatelessWidget {
               ],
             );
           } catch (e, stackTrace) {
-            dev.log('Error building cart view: $e\n$stackTrace',
-                name: 'CartView', error: e);
+            // dev.log('Error building cart view: $e\n$stackTrace',
+            //     name: 'CartView', error: e);
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -861,8 +858,8 @@ class CartViewBody extends StatelessWidget {
         ),
       );
     } catch (e, stackTrace) {
-      dev.log('Error building cart item: $e\n$stackTrace',
-          name: 'CartView', error: e);
+      // dev.log('Error building cart item: $e\n$stackTrace',
+      //     name: 'CartView', error: e);
       return const SizedBox.shrink();
     }
   }

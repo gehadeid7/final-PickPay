@@ -67,7 +67,6 @@ class SearchHistoryService {
     try {
       return Map<String, dynamic>.from(jsonDecode(cacheJson));
     } catch (e) {
-      print('Error parsing cache: $e');
       return {};
     }
   }

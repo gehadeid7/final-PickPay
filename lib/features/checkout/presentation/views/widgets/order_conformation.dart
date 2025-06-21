@@ -5,8 +5,10 @@ import 'package:pickpay/features/checkout/domain/models/checkout_model.dart';
 
 class OrderConfirmationView extends StatelessWidget {
   final OrderModel order;
+  final double? discount;
+  final double? totalAfterDiscount;
 
-  const OrderConfirmationView({super.key, required this.order});
+  const OrderConfirmationView({super.key, required this.order, this.discount, this.totalAfterDiscount});
 
   @override
   Widget build(BuildContext context) {
@@ -163,6 +165,46 @@ class OrderConfirmationView extends StatelessWidget {
                 ),
               ],
             ),
+            if (discount != null && discount! > 0) ...[
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      'Discount',
+                      style: TextStyles.regular13.copyWith(
+                        color: colorScheme.error,
+                      ),
+                    ),
+                  ),
+                  Text(
+                    '- EGP ${discount!.toStringAsFixed(2)}',
+                    style: TextStyles.regular13.copyWith(
+                      color: colorScheme.error,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      'Total After Discount',
+                      style: TextStyles.bold16.copyWith(
+                        color: colorScheme.primary,
+                      ),
+                    ),
+                  ),
+                  Text(
+                    'EGP ${(totalAfterDiscount ?? (order.total - discount!)).toStringAsFixed(2)}',
+                    style: TextStyles.bold16.copyWith(
+                      color: colorScheme.primary,
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ],
         ),
       ),

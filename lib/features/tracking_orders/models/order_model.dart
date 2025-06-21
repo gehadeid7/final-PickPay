@@ -56,17 +56,36 @@ class OrderModel {
   factory OrderModel.fromJson(Map<String, dynamic> json) {
     return OrderModel(
       id: json['_id'] ?? json['id'],
-      userId: json['user']?['_id'] ?? '', 
+userId: json['user'] is Map
+    ? json['user']['_id'] ?? ''
+    : json['user'] ?? '',
       cartItems: (json['cartItems'] as List<dynamic>? ?? [])
           .map((item) {
-            final map = Map<String, dynamic>.from(item as Map);
-            if (map['product'] is String) {
-              map['product'] = {'id': map['product']};
+            if (item is String) {
+              return {
+                'product': {'id': item},
+                'quantity': 1,
+              };
             }
-            return map;
+            if (item is Map<String, dynamic>) {
+              final map = Map<String, dynamic>.from(item);
+              if (map['product'] is String) {
+                map['product'] = {'id': map['product']};
+              }
+              if (map['product'] == null) {
+                map['product'] = {};
+              }
+              return map;
+            }
+            return {
+              'product': {'id': 'unknown'},
+              'quantity': 1,
+            };
           })
           .toList(),
-      shippingAddress: Map<String, dynamic>.from(json['shippingAddress'] ?? {}),
+shippingAddress: (json['shippingAddress'] is Map)
+    ? Map<String, dynamic>.from(json['shippingAddress'])
+    : {},
       totalAmount: (json['totalOrderPrice'] ?? 0).toDouble(),
       status: _parseStatus(
         isPaid: json['isPaid'] == true,

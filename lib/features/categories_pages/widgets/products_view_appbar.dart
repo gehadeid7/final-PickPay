@@ -104,7 +104,6 @@ class ProductDetailAppBar extends StatelessWidget
           duration: const Duration(seconds: 2),
         ),
       );
-      debugPrint('Sharing error: $e');
     }
   }
 

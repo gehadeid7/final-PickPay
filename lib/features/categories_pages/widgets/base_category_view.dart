@@ -136,7 +136,6 @@ class _BaseCategoryViewState extends State<BaseCategoryView>
           });
         }
       } catch (e) {
-        print('Error searching products: $e');
         if (mounted) {
           setState(() {
             _isSearchLoading = false;

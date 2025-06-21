@@ -1,5 +1,4 @@
 import 'package:pickpay/features/categories_pages/models/product_model.dart';
-import 'dart:developer' as dev;
 
 class CartItemModel {
   final ProductsViewsModel product;
@@ -32,10 +31,12 @@ class CartItemModel {
         throw Exception('Cart item data is null');
       }
 
-      // Handle both cart item and product formats
-      final productData = json['product'] ?? json;
-      if (productData == null) {
-        throw Exception('Product data is null');
+      // If product is a String, wrap it as a Map
+      dynamic productData = json['product'];
+      if (productData is String) {
+        productData = {'id': productData};
+      } else if (productData == null) {
+        productData = {};
       }
 
       // Get quantity from cart item or default to 1
@@ -373,9 +374,7 @@ class CartItemModel {
         product: product,
         quantity: quantity is int ? quantity : int.parse(quantity.toString()),
       );
-    } catch (e, stackTrace) {
-      dev.log('Error creating CartItemModel: $e\n$stackTrace',
-          name: 'CartItemModel', error: e);
+    } catch (e) {
       rethrow;
     }
   }

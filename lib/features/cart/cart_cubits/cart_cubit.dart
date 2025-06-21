@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer' as dev;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -42,7 +41,6 @@ class CartCubit extends Cubit<CartState> {
 
     try {
       _isSyncing = true;
-      dev.log('Syncing cart with server...', name: 'CartCubit');
       final serverCart = await _apiService.getCart();
       final String? cartId = serverCart['_id'];
       final List<dynamic> serverItems = serverCart['cartItems'] ?? [];
@@ -67,7 +65,14 @@ class CartCubit extends Cubit<CartState> {
         _updateUIState(serverCartItems, cartId: cartId);
       }
     } catch (e) {
-      dev.log('Error syncing cart: $e', name: 'CartCubit', error: e);
+      // Handle 404 as a valid empty cart state
+      if (e.toString().contains('404') ||
+          e.toString().contains('no cart for this user')) {
+        _updateUIState([]);
+        _productCache.clear();
+        return;
+      }
+      rethrow;
     } finally {
       _isSyncing = false;
     }
@@ -75,11 +80,9 @@ class CartCubit extends Cubit<CartState> {
 
   Future<void> getCart() async {
     try {
-      dev.log('[CartCubit] Getting cart data...', name: 'CartCubit');
       emit(CartLoading());
       try {
         final response = await _apiService.getCart();
-        dev.log('[CartCubit] Cart response: $response', name: 'CartCubit');
         final String? cartId = response['_id'];
         final List<dynamic> items = response['cartItems'] ?? [];
         final Map<String, CartItemModel> uniqueItems = {};
@@ -100,21 +103,15 @@ class CartCubit extends Cubit<CartState> {
             uniqueItems[productId] = cartItem;
             _productCache[productId] = fullProduct;
           } catch (e) {
-            dev.log('Error processing cart item: $e',
-                name: 'CartCubit', error: e);
             continue;
           }
         }
         final cartItems = uniqueItems.values.toList();
-        dev.log('Processed cart items: [32m${cartItems.length}[0m',
-            name: 'CartCubit');
         _updateUIState(cartItems, cartId: cartId);
       } catch (e) {
         // Handle 404 as a valid empty cart state
         if (e.toString().contains('404') ||
             e.toString().contains('no cart for this user')) {
-          dev.log('No cart exists for user, initializing empty cart',
-              name: 'CartCubit');
           _updateUIState([]);
           _productCache.clear();
           return;
@@ -122,8 +119,6 @@ class CartCubit extends Cubit<CartState> {
         rethrow;
       }
     } catch (e, stackTrace) {
-      dev.log('Error getting cart: $e\n$stackTrace',
-          name: 'CartCubit', error: e);
       emit(CartError('Failed to load cart: $e'));
     }
   }
@@ -157,8 +152,6 @@ class CartCubit extends Cubit<CartState> {
     }
     try {
       _isOperationInProgress = true;
-      dev.log('Adding product $productId to cart with color $color',
-          name: 'CartCubit');
 
       // Validate product ID
       if (productId.isEmpty) {
@@ -208,13 +201,10 @@ class CartCubit extends Cubit<CartState> {
             await _syncCartWithServer();
             _showToast('Product added to cart');
           } catch (e) {
-            dev.log('Error adding to server: $e', name: 'CartCubit', error: e);
             _updateUIState(previousItems);
             _showToast('Failed to add item to cart', isError: true);
           }
         } catch (e) {
-          dev.log('Error getting product details: $e',
-              name: 'CartCubit', error: e);
           _showToast('Failed to get product details', isError: true);
           return;
         }
@@ -223,8 +213,6 @@ class CartCubit extends Cubit<CartState> {
         await addToCart(productId, color);
       }
     } catch (e, stackTrace) {
-      dev.log('Error in addToCart: $e\n$stackTrace',
-          name: 'CartCubit', error: e);
       emit(CartError('Failed to add item to cart: ${e.toString()}'));
       _showToast('Failed to add item to cart', isError: true);
     } finally {
@@ -242,13 +230,11 @@ class CartCubit extends Cubit<CartState> {
 
     try {
       _isOperationInProgress = true;
-      dev.log('Removing product $productId from cart', name: 'CartCubit');
 
       // Show confirmation dialog if not skipped
       if (!skipConfirmation) {
         final shouldRemove = await _showConfirmationDialog();
         if (!shouldRemove) {
-          dev.log('User cancelled removal', name: 'CartCubit');
           return;
         }
       }
@@ -269,7 +255,6 @@ class CartCubit extends Cubit<CartState> {
         );
 
         if (itemToRemove.product.id == '') {
-          dev.log('Item not found in cart: $productId', name: 'CartCubit');
           _showToast('Item not found in cart', isError: true);
           return;
         }
@@ -288,15 +273,11 @@ class CartCubit extends Cubit<CartState> {
           _productCache.remove(productId);
           _showToast('Product removed from cart');
         } catch (e) {
-          dev.log('Error removing from server: $e',
-              name: 'CartCubit', error: e);
           _updateUIState(previousItems);
           _showToast('Failed to remove item', isError: true);
         }
       }
     } catch (e, stackTrace) {
-      dev.log('Error in removeFromCart: $e\n$stackTrace',
-          name: 'CartCubit', error: e);
       emit(CartError('Failed to remove item from cart: ${e.toString()}'));
       _showToast('Failed to remove item from cart', isError: true);
     } finally {
@@ -313,8 +294,6 @@ class CartCubit extends Cubit<CartState> {
 
     try {
       _isOperationInProgress = true;
-      dev.log('Updating quantity for product $productId to $quantity',
-          name: 'CartCubit');
 
       // If quantity is 0 or less, remove the item instead
       if (quantity <= 0) {
@@ -338,7 +317,6 @@ class CartCubit extends Cubit<CartState> {
         );
 
         if (itemToUpdate.product.id == '') {
-          dev.log('Item not found in cart: $productId', name: 'CartCubit');
           _showToast('Item not found in cart', isError: true);
           return;
         }
@@ -363,16 +341,11 @@ class CartCubit extends Cubit<CartState> {
           await _syncCartWithServer();
           _showToast('Quantity updated');
         } catch (e) {
-          dev.log('Error updating cart item on server: $e',
-              name: 'CartCubit', error: e);
           _updateUIState(previousItems);
           _showToast('Failed to update quantity', isError: true);
         }
       }
     } catch (e, stackTrace) {
-      dev.log('Error updating cart item quantity: $e\n$stackTrace',
-          name: 'CartCubit', error: e);
-      emit(CartError('Failed to update item quantity: ${e.toString()}'));
       _showMessage('Failed to update item quantity');
     } finally {
       _isOperationInProgress = false;
@@ -403,8 +376,6 @@ class CartCubit extends Cubit<CartState> {
       );
       return result ?? false;
     } catch (e) {
-      dev.log('Error showing confirmation dialog: $e',
-          name: 'CartCubit', error: e);
       return false;
     }
   }
@@ -433,8 +404,6 @@ class CartCubit extends Cubit<CartState> {
       );
       return result ?? false;
     } catch (e) {
-      dev.log('Error showing clear cart confirmation dialog: $e',
-          name: 'CartCubit', error: e);
       return false;
     }
   }
@@ -449,76 +418,45 @@ class CartCubit extends Cubit<CartState> {
 
   Future<void> clearCart({bool force = false}) async {
     if (_isOperationInProgress) {
-      dev.log('[CartCubit] clearCart: Operation already in progress, skipping.',
-          name: 'CartCubit');
       return;
     }
 
     try {
       _isOperationInProgress = true;
-      dev.log('[CartCubit] clearCart: Start (force: $force)',
-          name: 'CartCubit');
 
       if (!force) {
-        dev.log('[CartCubit] clearCart: Showing confirmation dialog',
-            name: 'CartCubit');
         final shouldClear = await _showClearCartConfirmationDialog();
-        dev.log(
-            '[CartCubit] clearCart: Confirmation dialog result: $shouldClear',
-            name: 'CartCubit');
         if (!shouldClear) {
-          dev.log('[CartCubit] clearCart: User cancelled cart clearing',
-              name: 'CartCubit');
           return;
         }
       }
 
       emit(CartLoading());
-      dev.log('[CartCubit] clearCart: Emitted CartLoading()',
-          name: 'CartCubit');
 
       try {
-        dev.log('[CartCubit] clearCart: Calling _apiService.clearCart()',
-            name: 'CartCubit');
         await _apiService.clearCart();
-        dev.log('[CartCubit] clearCart: Successfully cleared cart on backend',
-            name: 'CartCubit');
       } catch (e, st) {
         final errorString = e.toString();
         if (errorString.contains('There is no cart for this user')) {
-          dev.log(
-              '[CartCubit] clearCart: Cart already empty on backend. Treating as success.',
-              name: 'CartCubit');
-        } else {
-          dev.log('[CartCubit] clearCart: Error clearing server: $e',
-              name: 'CartCubit', error: e, stackTrace: st);
-          emit(CartError('Failed to clear cart: ${e.toString()}',
-              action: CartAction.error));
-          _showToast('Failed to clear cart', isError: true);
           return;
         }
+        emit(CartError('Failed to clear cart: ${e.toString()}',
+            action: CartAction.error));
+        _showToast('Failed to clear cart', isError: true);
+        return;
       }
 
       _cartItemCache.clear();
       _productCache.clear();
-      dev.log('[CartCubit] clearCart: Cleared in-memory cart cache',
-          name: 'CartCubit');
 
       emit(CartLoaded([], action: CartAction.removed, message: 'Cart cleared'));
-      dev.log('[CartCubit] clearCart: Emitted CartLoaded([]) after clear',
-          name: 'CartCubit');
-      _showToast('Cart cleared');
+      await getCart(); // Force refresh from backend to update UI
     } catch (e, stackTrace) {
-      dev.log('[CartCubit] clearCart: Unexpected error: $e',
-          name: 'CartCubit', error: e, stackTrace: stackTrace);
       emit(CartError('Failed to clear cart: ${e.toString()}',
           action: CartAction.error));
       _showToast('Failed to clear cart', isError: true);
     } finally {
       _isOperationInProgress = false;
-      dev.log(
-          '[CartCubit] clearCart: Finished. _isOperationInProgress set to false.',
-          name: 'CartCubit');
     }
   }
 
@@ -531,16 +469,22 @@ class CartCubit extends Cubit<CartState> {
 
       await getCart();
 
+      // Get the current cartId if available
+      String? currentCartId;
+      if (state is CartLoaded) {
+        currentCartId = (state as CartLoaded).cartId;
+      }
+
       emit(CartLoaded(
         _items,
         message: 'Coupon applied successfully',
         discount: discount,
+        cartId: currentCartId,
       ));
       _showToast('Coupon applied successfully');
 
       return discount;
     } catch (e) {
-      dev.log('Error applying coupon: $e', name: 'CartCubit', error: e);
       emit(CartError('Failed to apply coupon: ${e.toString()}',
           action: CartAction.error));
       _showToast('Failed to apply coupon', isError: true);
@@ -561,8 +505,6 @@ class CartCubit extends Cubit<CartState> {
     try {
       // Check cache first
       if (_productCache.containsKey(productId)) {
-        dev.log('Using cached product details for $productId',
-            name: 'CartCubit');
         return _productCache[productId]!;
       }
 
@@ -583,8 +525,6 @@ class CartCubit extends Cubit<CartState> {
           return product;
         } catch (e) {
           retryCount++;
-          dev.log('Attempt $retryCount failed: $e',
-              name: 'CartCubit', error: e);
 
           if (retryCount == maxRetries) {
             if (e.toString().contains('404') ||
@@ -601,7 +541,6 @@ class CartCubit extends Cubit<CartState> {
       throw Exception(
           'Failed to get product details after $maxRetries attempts');
     } catch (e) {
-      dev.log('Error getting product details: $e', name: 'CartCubit', error: e);
       throw Exception('Failed to get product details: $e');
     }
   }
@@ -628,7 +567,14 @@ class CartCubit extends Cubit<CartState> {
             action: action, message: message, cartId: cartId));
       }
     } catch (e) {
-      dev.log('Error updating UI state: $e', name: 'CartCubit', error: e);
+      // Handle 404 as a valid empty cart state
+      if (e.toString().contains('404') ||
+          e.toString().contains('no cart for this user')) {
+        emit(CartLoaded([], action: action, message: message, cartId: cartId));
+        _productCache.clear();
+        return;
+      }
+      rethrow;
     }
   }
 }

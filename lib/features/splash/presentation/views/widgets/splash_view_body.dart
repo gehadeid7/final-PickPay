@@ -100,9 +100,7 @@ class _SplashViewBodyState extends State<SplashViewBody>
   Future<void> _playSplashSound() async {
     try {
       await _audioPlayer.play(AssetSource('sounds/pickpay_jingle.wav'));
-      debugPrint('Playing splash sound...');
     } catch (e) {
-      debugPrint('Error playing splash sound: $e');
     }
   }
 
@@ -207,7 +205,6 @@ class _SplashViewBodyState extends State<SplashViewBody>
                                 enableApplyingOpacityToLayers: true,
                               ),
                               errorBuilder: (context, error, stackTrace) {
-                                debugPrint('Lottie error: $error');
                                 return Icon(Icons.error, color: Colors.red);
                               },
                             ),

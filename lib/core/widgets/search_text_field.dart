@@ -109,6 +109,7 @@ import 'package:pickpay/features/categories_pages/products_views/video_games/vid
 import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product12.dart';
 import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product13.dart';
 import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product14.dart';
+import 'package:shimmer/shimmer.dart';
 
 class SearchTextField extends StatefulWidget {
   final TextEditingController controller;
@@ -214,10 +215,8 @@ class _SearchTextFieldState extends State<SearchTextField>
     try {
       _aiService = AISearchService(apiService: ApiService());
       _aiService.initialize().catchError((error) {
-        print('❌ Failed to initialize AI service: $error');
       });
     } catch (e) {
-      print('❌ Error initializing AI service: $e');
     }
   }
 
@@ -278,22 +277,18 @@ class _SearchTextFieldState extends State<SearchTextField>
         onStatus: _onSpeechStatus,
         onError: _onSpeechError,
       );
-      print('🎤 Speech recognition available: $_speechAvailable');
     } catch (e) {
-      print('❌ Speech initialization error: $e');
       _speechAvailable = false;
     }
   }
 
   void _onSpeechStatus(String status) {
-    print('🎤 Speech status: $status');
     if (status == 'done' || status == 'notListening') {
       setState(() => _isListening = false);
     }
   }
 
   void _onSpeechError(dynamic error) {
-    print('❌ Speech error: $error');
     setState(() => _isListening = false);
     if (mounted) {
       _showSnackBar('Voice search error. Please try again.', isError: true);
@@ -320,7 +315,35 @@ class _SearchTextFieldState extends State<SearchTextField>
         setState(() => _recentSearches = searches);
       }
     } catch (e) {
-      print('❌ Error loading recent searches: $e');
+      //
+    }
+  }
+
+  // Show confirmation dialog before clearing all recent searches
+  Future<void> _confirmAndClearRecentSearches() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Clear Search History'),
+        content: const Text('Are you sure you want to clear all recent search history? This action cannot be undone.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Clear All'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+            ),
+          ),
+        ],
+      ),
+    );
+    if (confirmed == true) {
+      await _clearRecentSearches();
     }
   }
 
@@ -341,7 +364,6 @@ class _SearchTextFieldState extends State<SearchTextField>
 
       await prefs.setStringList(_recentSearchesKey, _recentSearches);
     } catch (e) {
-      print('❌ Error adding recent search: $e');
     }
   }
 
@@ -351,7 +373,6 @@ class _SearchTextFieldState extends State<SearchTextField>
       setState(() => _recentSearches.clear());
       await prefs.remove(_recentSearchesKey);
     } catch (e) {
-      print('❌ Error clearing recent searches: $e');
     }
   }
 
@@ -364,7 +385,6 @@ class _SearchTextFieldState extends State<SearchTextField>
       });
       await prefs.setStringList(_recentSearchesKey, _recentSearches);
     } catch (e) {
-      print('❌ Error removing recent search: $e');
       _showSnackBar('Failed to remove search history item', isError: true);
     }
   }
@@ -711,7 +731,6 @@ class _SearchTextFieldState extends State<SearchTextField>
         _showSnackBar('Product details not found', isError: true);
       }
     } catch (e) {
-      print('❌ Error loading product: $e');
       _showSnackBar('Failed to load product details', isError: true);
     } finally {
       if (mounted) {
@@ -816,8 +835,6 @@ class _SearchTextFieldState extends State<SearchTextField>
           });
         }
       } catch (e) {
-        print('❌ Search error: $e');
-        _logErrorEvent(e.toString());
         if (mounted) {
           setState(() {
             _isLoading = false;
@@ -1055,7 +1072,6 @@ class _SearchTextFieldState extends State<SearchTextField>
         );
       }
     } catch (e) {
-      print('❌ Voice search error: $e');
       setState(() => _isListening = false);
       _showSnackBar('Voice search failed', isError: true);
     }
@@ -1100,8 +1116,7 @@ class _SearchTextFieldState extends State<SearchTextField>
         _searchProducts(voiceText);
       }
     } catch (e) {
-      print('❌ Voice search processing error: $e');
-      // Fallback to regular search on error
+                 // Fallback to regular search on error
       _searchProducts(voiceText);
     }
   }
@@ -1406,24 +1421,6 @@ class _SearchTextFieldState extends State<SearchTextField>
       ],
     );
   }
-  Widget _buildFavoritesSection() {
-    if (_favoriteSearches.isEmpty) return SizedBox.shrink();
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildSectionHeader('Favorites', icon: Icons.favorite),
-        ..._favoriteSearches.map((search) => _buildListItem(
-              leading: Icon(Icons.favorite, color: Colors.red[400], size: 20),
-              title: search,
-              onTap: () {
-                widget.controller.text = search;
-                _searchProducts(search);
-              },
-            )),
-        const Divider(height: 1),
-      ],
-    );
-  }
 
   // 6. Update _buildDropdownContent to include new sections and controls
   Widget _buildDropdownContent(
@@ -1447,7 +1444,11 @@ class _SearchTextFieldState extends State<SearchTextField>
       return _buildPopularSearches(primaryColor, textColor);
     }
     return Container(
-      constraints: const BoxConstraints(maxHeight: 500),
+      constraints: BoxConstraints(
+        maxHeight: (_suggestions.isNotEmpty || _searchResults.isNotEmpty || showRecent)
+            ? 500
+            : double.infinity,
+      ),
       margin: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
         color: surfaceColor,
@@ -1472,9 +1473,8 @@ class _SearchTextFieldState extends State<SearchTextField>
               children: [
                 // New: Did you mean section
                 _buildDidYouMeanSection(),
-                // New: Trending and favorites
+                // New: Trending (Favorites section removed)
                 _buildTrendingSection(),
-                _buildFavoritesSection(),
                 // ... existing code for recent, suggestions, results, loading ...
                 if (showRecent) ...[
                   _buildSectionHeader(
@@ -1483,7 +1483,7 @@ class _SearchTextFieldState extends State<SearchTextField>
                     action: IconButton(
                       icon: Icon(Icons.clear_all,
                           size: 18, color: Colors.grey[600]),
-                      onPressed: _clearRecentSearches,
+                      onPressed: _confirmAndClearRecentSearches,
                       splashRadius: 16,
                       tooltip: 'Clear all',
                     ),
@@ -1531,14 +1531,25 @@ class _SearchTextFieldState extends State<SearchTextField>
                     final suggestion = entry.value;
                     final globalIndex =
                         (showRecent ? _recentSearches.length : 0) + index;
+                    // Instead of just searching, navigate to product page directly
                     return _buildListItem(
                       leading:
                           Icon(Icons.search, color: Colors.blue[400], size: 20),
                       title: suggestion,
                       subtitle: 'Search suggestion',
                       onTap: () {
-                        widget.controller.text = suggestion;
-                        _searchProducts(suggestion, fromSuggestion: true);
+                        // Try to find a product in _searchResults that matches the suggestion
+                        final matchedProduct = _searchResults.firstWhere(
+                          (product) => (product['title'] ?? '').toLowerCase() == suggestion.toLowerCase(),
+                          orElse: () => <String, dynamic>{},
+                        );
+                        if (matchedProduct.isNotEmpty) {
+                          _handleProductSelection(matchedProduct);
+                        } else {
+                          // If not found, fallback to search and then try to navigate after results load
+                          widget.controller.text = suggestion;
+                          _searchProducts(suggestion, fromSuggestion: true);
+                        }
                       },
                       isHighlighted: _highlightedIndex == globalIndex,
                       trailing: IconButton(
@@ -1631,7 +1642,7 @@ class _SearchTextFieldState extends State<SearchTextField>
                           width: double.infinity,
                           child: Row(
                             children: [
-                              Text('Min Rating: ${_minRating.toStringAsFixed(1)}', style: TextStyles.regular13),
+                              Text('Min Rating: \\${_minRating.toStringAsFixed(1)}', style: TextStyles.regular13),
                               Expanded(
                                 child: Slider(
                                   value: _minRating,
@@ -1683,38 +1694,77 @@ class _SearchTextFieldState extends State<SearchTextField>
 
   // 5. Add skeleton loader and retry for loading/error states
   Widget _buildSkeletonLoader() {
-    return Container(
-      padding: const EdgeInsets.all(32),
-      child: Column(
-        children: [
-          SizedBox(
-            width: 24,
-            height: 24,
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.grey[400]!),
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey[100]!,
+      child: Container(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: List.generate(3, (index) => Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 56,
+                  height: 56,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: double.infinity,
+                        height: 14,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Container(
+                        width: 120 + (index * 20),
+                        height: 12,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Container(
+                            width: 60,
+                            height: 10,
+                            decoration: BoxDecoration(
+                              color: Colors.grey[200],
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Container(
+                            width: 40,
+                            height: 10,
+                            decoration: BoxDecoration(
+                              color: Colors.grey[300],
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ),
-          const SizedBox(height: 12),
-          Container(
-            width: 120,
-            height: 16,
-            color: Colors.grey[300],
-            margin: const EdgeInsets.symmetric(vertical: 4),
-          ),
-          Container(
-            width: 180,
-            height: 16,
-            color: Colors.grey[200],
-            margin: const EdgeInsets.symmetric(vertical: 4),
-          ),
-          Container(
-            width: 100,
-            height: 16,
-            color: Colors.grey[300],
-            margin: const EdgeInsets.symmetric(vertical: 4),
-          ),
-        ],
+          )),
+        ),
       ),
     );
   }
@@ -1754,152 +1804,178 @@ class _SearchTextFieldState extends State<SearchTextField>
     final borderColor = isDark ? Colors.grey[600] : Colors.grey[300];
     final textColor = isDark ? Colors.white : Colors.black87;
 
+    // Helper to close dropdown if open
+    void _closeDropdownIfOpen() {
+      if (_showDropdown) {
+        setState(() {
+          _showDropdown = false;
+          _highlightedIndex = -1;
+        });
+        _focusNode.unfocus();
+      }
+    }
+
     return Semantics(
       label: 'Search bar with suggestions and results',
-      child: RawKeyboardListener(
-        focusNode: _keyboardFocusNode,
-        onKey: _handleKey,
-        child: Column(
-          children: [
-            // Search Input Field
-            AnimatedBuilder(
-              animation: _scaleAnimation,
-              builder: (context, child) => Transform.scale(
-                scale: _scaleAnimation.value,
-                child: Container(
-                  margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(isDark ? 0.3 : 0.1),
-                        blurRadius: 12,
-                        offset: const Offset(0, 4),
-                        spreadRadius: 0,
-                      ),
-                    ],
-                  ),
-                  child: TextField(
-                    focusNode: _focusNode,
-                    controller: widget.controller,
-                    onChanged: (value) => _searchProducts(value),
-                    onSubmitted: (value) {
-                      widget.onSearch(value);
-                      _searchProducts(value);
-                    },
-                    onTap: () => setState(() => _showDropdown = true),
-                    style: TextStyles.regular16.copyWith(color: textColor),
-                    decoration: InputDecoration(
-                      hintText: 'Search for anything...',
-                      hintStyle: TextStyles.regular16.copyWith(
-                        color: Colors.grey[500],
-                      ),
-                      prefixIcon: Container(
-                        padding: const EdgeInsets.all(14),
-                        child: Icon(
-                          Icons.search,
-                          size: 22,
-                          color: _isFocused ? primaryColor : Colors.grey[600],
-                        ),
-                      ),
-                      suffixIcon: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          if (_isLoading)
-                            Container(
-                              padding: const EdgeInsets.all(12),
-                              child: SizedBox(
-                                width: 20,
-                                height: 20,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  valueColor:
-                                      AlwaysStoppedAnimation<Color>(primaryColor),
-                                ),
-                              ),
-                            )
-                          else
-                            _buildVoiceButton(),
-                          if (widget.controller.text.isNotEmpty)
-                            IconButton(
-                              icon: Icon(Icons.clear, color: Colors.grey[600]),
-                              onPressed: () {
-                                widget.controller.clear();
-                                _clearSearchState();
-                              },
-                              splashRadius: 20,
-                            ),
+      child: WillPopScope(
+        onWillPop: () async {
+          if (_showDropdown) {
+            _closeDropdownIfOpen();
+            return false;
+          }
+          return true;
+        },
+        child: GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onTap: () {
+            _closeDropdownIfOpen();
+          },
+          child: RawKeyboardListener(
+            focusNode: _keyboardFocusNode,
+            onKey: _handleKey,
+            child: Column(
+              children: [
+                // Search Input Field
+                AnimatedBuilder(
+                  animation: _scaleAnimation,
+                  builder: (context, child) => Transform.scale(
+                    scale: _scaleAnimation.value,
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(isDark ? 0.3 : 0.1),
+                            blurRadius: 12,
+                            offset: const Offset(0, 4),
+                            spreadRadius: 0,
+                          ),
                         ],
                       ),
-                      filled: true,
-                      fillColor: surfaceColor,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
-                        borderSide: BorderSide(color: borderColor!, width: 1),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
-                        borderSide: BorderSide(color: borderColor, width: 1),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
-                        borderSide: BorderSide(color: primaryColor, width: 2),
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 24,
-                        vertical: 16,
+                      child: TextField(
+                        focusNode: _focusNode,
+                        controller: widget.controller,
+                        onChanged: (value) => _searchProducts(value),
+                        onSubmitted: (value) {
+                          widget.onSearch(value);
+                          _searchProducts(value);
+                        },
+                        onTap: () => setState(() => _showDropdown = true),
+                        style: TextStyles.regular16.copyWith(color: textColor),
+                        decoration: InputDecoration(
+                          hintText: 'Search for anything...',
+                          hintStyle: TextStyles.regular16.copyWith(
+                            color: Colors.grey[500],
+                          ),
+                          prefixIcon: Container(
+                            padding: const EdgeInsets.all(14),
+                            child: Icon(
+                              Icons.search,
+                              size: 22,
+                              color: _isFocused ? primaryColor : Colors.grey[600],
+                            ),
+                          ),
+                          suffixIcon: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              if (_isLoading)
+                                Container(
+                                  padding: const EdgeInsets.all(12),
+                                  child: SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      valueColor:
+                                          AlwaysStoppedAnimation<Color>(primaryColor),
+                                    ),
+                                  ),
+                                )
+                              else
+                                _buildVoiceButton(),
+                              if (widget.controller.text.isNotEmpty)
+                                IconButton(
+                                  icon: Icon(Icons.clear, color: Colors.grey[600]),
+                                  onPressed: () {
+                                    widget.controller.clear();
+                                    _clearSearchState();
+                                  },
+                                  splashRadius: 20,
+                                ),
+                            ],
+                          ),
+                          filled: true,
+                          fillColor: surfaceColor,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(color: borderColor!, width: 1),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(color: borderColor, width: 1),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(color: primaryColor, width: 2),
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 16,
+                          ),
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
+
+                // Voice Search Status
+                if (_isListening) _buildVoiceSearchStatus(),
+
+                // Product Loading Indicator
+                if (_isProductLoading)
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Text(
+                          'Loading product...',
+                          style:
+                              TextStyles.regular13.copyWith(color: Colors.grey[600]),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                // Dropdown Results
+                if (_showDropdown && !_isProductLoading)
+                  Container(
+                    constraints: BoxConstraints(
+                      maxHeight: 500, // Ensures bounded height for dropdown
+                      minWidth: double.infinity,
+                    ),
+                    child: SlideTransition(
+                      position: _slideAnimation,
+                      child: FadeTransition(
+                        opacity: _opacityAnimation,
+                        child: _buildDropdownContent(
+                            isDark, primaryColor, surfaceColor, textColor),
+                      ),
+                    ),
+                  ),
+              ],
             ),
-
-            // Voice Search Status
-            if (_isListening) _buildVoiceSearchStatus(),
-
-            // Product Loading Indicator
-            if (_isProductLoading)
-              Container(
-                padding: const EdgeInsets.all(16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Text(
-                      'Loading product...',
-                      style:
-                          TextStyles.regular13.copyWith(color: Colors.grey[600]),
-                    ),
-                  ],
-                ),
-              ),
-
-            // Dropdown Results
-            if (_showDropdown && !_isProductLoading)
-              Container(
-                constraints: BoxConstraints(
-                  maxHeight: 500, // Ensures bounded height for dropdown
-                  minWidth: double.infinity,
-                ),
-                child: SlideTransition(
-                  position: _slideAnimation,
-                  child: FadeTransition(
-                    opacity: _opacityAnimation,
-                    child: _buildDropdownContent(
-                        isDark, primaryColor, surfaceColor, textColor),
-                  ),
-                ),
-              ),
-          ],
+          ),
         ),
       ),
     );
@@ -2029,6 +2105,7 @@ class _SearchTextFieldState extends State<SearchTextField>
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
         child: Column(
+          mainAxisSize: MainAxisSize.min, // Shrink-wrap content
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildSectionHeader('Popular Searches', icon: Icons.trending_up),

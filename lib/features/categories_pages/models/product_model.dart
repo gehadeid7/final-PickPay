@@ -380,11 +380,9 @@ class ProductsViewsModel {
       if (json == null) {
         throw Exception('Product data is null');
       }
-      print('🔍 Parsing product JSON: $json');
 
       // Handle both product and cart item formats
       final productData = json['product'] ?? json;
-          print('🔍 productData extracted: $productData');  // طباعة productData بالكامل
 
       if (productData == null) {
         throw Exception('Product data is null');
@@ -393,7 +391,6 @@ class ProductsViewsModel {
       // Get required fields with type checking
       final id =
           productData['_id']?.toString() ?? productData['id']?.toString();
-      print('🆔 Parsed id: $id');
 
       if (id == null) {
         throw Exception('Product ID is missing');
@@ -402,7 +399,6 @@ class ProductsViewsModel {
       // Handle title field which might be under 'title' or 'name'
       final title =
           productData['title']?.toString() ?? productData['name']?.toString();
-      print('📝 Parsed title: $title');
 
       if (title == null) {
         throw Exception('Product title is missing');
@@ -410,7 +406,6 @@ class ProductsViewsModel {
 
       // Handle price which could be int or double
       final price = productData['price'];
-      print('💰 Parsed raw price: $price (type: ${price.runtimeType})');
 
       if (price == null) {
         throw Exception('Product price is missing');
@@ -418,12 +413,9 @@ class ProductsViewsModel {
       final priceValue = price is int
           ? price.toDouble()
           : (price is double ? price : double.parse(price.toString()));
-      print('💰 Converted price: $priceValue');
 
       // Handle optional fields with null safety
       final originalPrice = productData['originalPrice'];
-      print(
-          '💵 Parsed originalPrice: $originalPrice (type: ${originalPrice?.runtimeType})');
 
       final originalPriceValue = originalPrice == null
           ? null
@@ -432,9 +424,6 @@ class ProductsViewsModel {
               : (originalPrice is double
                   ? originalPrice
                   : double.parse(originalPrice.toString())));
- 
-    print('🖼️ Raw images field: ${productData['images']} (type: ${productData['images']?.runtimeType})');
-    print('🖼️ Raw imageCover field: ${productData['imageCover']}');
 
       // Handle image paths
       List<String>? imagePaths;
@@ -454,7 +443,6 @@ class ProductsViewsModel {
       if (imagePaths == null || imagePaths.isEmpty) {
         imagePaths = null;
       }
-      print('🖼️ Parsed imagePaths: $imagePaths');
 
       // Handle color images
       Map<String, List<String>>? colorImages;
@@ -470,7 +458,6 @@ class ProductsViewsModel {
           );
         }
       }
-      print('🖼️ Parsed colorImages: $colorImages');
 
       // Handle boolean fields
       bool? parseInStock(dynamic value) {
@@ -503,8 +490,6 @@ class ProductsViewsModel {
         // Add other fields as needed
       );
     } catch (e, stackTrace) {
-      dev.log('Error creating ProductsViewsModel: $e\n$stackTrace',
-          name: 'ProductsViewsModel', error: e);
       rethrow;
     }
   }

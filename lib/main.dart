@@ -80,8 +80,6 @@ Future<void> requestPermissions() async {
     // المستخدم اختار "Don't ask again"
     await openAppSettings();
   } else if (result.isDenied) {
-    // ignore: avoid_print
-    print('❌ Permission denied.');
   }
 
   // Request microphone permission for voice search

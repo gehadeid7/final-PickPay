@@ -14,7 +14,7 @@ import 'package:pickpay/features/categories_pages/widgets/product_card.dart';
 import 'package:http_parser/http_parser.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://192.168.1.8:3000/api/v1/';
+  static const String baseUrl = 'http://192.168.1.4:3000/api/v1/';
 
   Future<Map<String, String>> _buildHeaders({
     Map<String, String>? headers,
@@ -29,9 +29,6 @@ class ApiService {
       String token = await _getFirebaseToken();
       if (token.isNotEmpty) {
         requestHeaders['Authorization'] = 'Bearer $token';
-        log('🔐 Sending token in header: Bearer $token');
-      } else {
-        log('⚠️ No Firebase token found to send!');
       }
     }
 
@@ -49,9 +46,6 @@ class ApiService {
       String token = await _getFirebaseToken();
       if (token.isNotEmpty) {
         requestHeaders['Authorization'] = 'Bearer $token';
-        log('🔐 Sending token in header: Bearer $token');
-      } else {
-        log('⚠️ No Firebase token found to send!');
       }
     }
 
@@ -68,16 +62,13 @@ class ApiService {
         token = await user.getIdToken(true) ?? '';
         if (token.isNotEmpty) {
           await Prefs.setString('jwt_token', token);
-          log('🔐 Token refreshed and saved automatically');
         }
       } catch (e) {
-        log('❌ Failed to refresh Firebase token: $e');
       }
     }
 
     if (token.isEmpty) {
       token = Prefs.getString('jwt_token');
-      log('🔐 Using cached token from prefs');
     }
 
     return token;
@@ -94,8 +85,6 @@ class ApiService {
     final url = '$baseUrl$endpoint';
     final requestHeaders =
         await _buildHeaders(headers: headers, authorized: authorized);
-    log('📡 GET $url');
-    log('📤 Headers: $requestHeaders');
 
     int retryCount = 0;
     while (retryCount <= maxRetries) {
@@ -110,7 +99,6 @@ class ApiService {
           throw Exception(
               'Error performing GET request after $maxRetries retries: ${e.toString()}');
         }
-        log('⚠️ Request failed, retrying (${retryCount}/$maxRetries)...');
         await Future.delayed(
             Duration(seconds: 2 * retryCount)); // Exponential backoff
       }
@@ -126,14 +114,10 @@ class ApiService {
     bool authorized = false,
     int maxRetries = 2,
   }) async {
-    log('🔍 Endpoint raw value: "$endpoint"'); // <-- أضف هذا السطر لفحص endpoint
 
     final url = '$baseUrl$endpoint';
     final requestHeaders =
         await _buildHeaders(headers: headers, authorized: authorized);
-    log('📡 POST $url');
-    log('📤 Headers: $requestHeaders');
-    log('📤 Body: ${jsonEncode(body)}');
 
     int retryCount = 0;
     while (retryCount <= maxRetries) {
@@ -152,7 +136,6 @@ class ApiService {
           throw Exception(
               'Network request failed after $maxRetries retries: ${e.toString()}');
         }
-        log('⚠️ Request failed, retrying (${retryCount}/$maxRetries)...');
         await Future.delayed(
             Duration(seconds: 2 * retryCount)); // Exponential backoff
       }
@@ -171,9 +154,6 @@ class ApiService {
     final url = '$baseUrl$endpoint';
     final requestHeaders =
         await _buildHeaders(headers: headers, authorized: authorized);
-    log('📡 PUT $url');
-    log('📤 Headers: $requestHeaders');
-    log('📤 Body: ${jsonEncode(body)}');
 
     int retryCount = 0;
     while (retryCount <= maxRetries) {
@@ -185,16 +165,13 @@ class ApiService {
               body: jsonEncode(body),
             )
             .timeout(const Duration(seconds: 30)); // Increased timeout
-        log('✅ Response [${response.statusCode}]: ${response.body}');
         return response;
       } catch (e) {
         retryCount++;
         if (retryCount > maxRetries) {
-          log('❌ Network error after $maxRetries retries: ${e.toString()}');
           throw Exception(
               'Network PUT request failed after $maxRetries retries: ${e.toString()}');
         }
-        log('⚠️ Request failed, retrying (${retryCount}/$maxRetries)...');
         await Future.delayed(
             Duration(seconds: 2 * retryCount)); // Exponential backoff
       }
@@ -302,9 +279,6 @@ class ApiService {
         body: jsonEncode(body),
       );
 
-      log('🔄 syncFirebaseUserToBackend response status: ${response.statusCode}');
-      log('🔄 syncFirebaseUserToBackend response body: ${response.body}');
-
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body)['data'];
         return UserModel.fromJson(data);
@@ -312,7 +286,6 @@ class ApiService {
         throw Exception('Failed to sync Firebase user: ${response.body}');
       }
     } catch (e) {
-      log('❌ Error syncing Firebase user: $e');
       throw Exception('Error syncing Firebase user: ${e.toString()}');
     }
   }
@@ -416,7 +389,6 @@ class ApiService {
 
       return right(exists);
     } catch (e) {
-      log('Check user exists error: $e');
       return left(
           ServerFailure('فشل التحقق من وجود المستخدم: ${e.toString()}'));
     }
@@ -430,16 +402,10 @@ class ApiService {
     bool authorized = false,
   }) async {
     final url = Uri.parse('$baseUrl$endpoint');
-    print('\n=== 📤 UPLOAD IMAGE REQUEST START ===');
-    print('⬆️ uploadImage: Starting upload to $url');
-    print('⬆️ uploadImage: File path: ${imageFile.path}');
-    print('⬆️ uploadImage: File exists: ${await imageFile.exists()}');
-    print('⬆️ uploadImage: File size: ${await imageFile.length()} bytes');
 
     // Get file extension and mime type
     final ext = imageFile.path.split('.').last.toLowerCase();
     final mimeType = _getMimeType(ext);
-    print('⬆️ uploadImage: File extension: $ext, MIME type: $mimeType');
 
     try {
       final request = http.MultipartRequest('POST', url);
@@ -452,10 +418,6 @@ class ApiService {
           token = await user.getIdToken(true);
           if (token != null && token.isNotEmpty) {
             request.headers['Authorization'] = 'Bearer $token';
-            print(
-                '🔐 Added authorization token: Bearer ${token.substring(0, 10)}...');
-          } else {
-            print('⚠️ No valid token available');
           }
         }
       }
@@ -463,12 +425,10 @@ class ApiService {
       // Add fields if any
       if (fields != null) {
         request.fields.addAll(fields);
-        print('📝 Added fields: $fields');
       }
 
       // Read file bytes
       final bytes = await imageFile.readAsBytes();
-      print('📦 Read ${bytes.length} bytes from file');
 
       // Create multipart file with bytes
       final multipartFile = http.MultipartFile.fromBytes(
@@ -478,22 +438,11 @@ class ApiService {
         contentType: MediaType.parse(mimeType),
       );
       request.files.add(multipartFile);
-      print('📎 Added multipart file with field name "profileImg"');
-
-      // Log request details
-      print('\n=== 📤 REQUEST DETAILS ===');
-      print('📤 Request URL: ${request.url}');
-      print('📤 Request headers: ${request.headers}');
-      print('📤 Request fields: ${request.fields}');
-      print(
-          '📤 Request files: ${request.files.map((f) => '${f.filename} (${f.contentType})').toList()}');
 
       // Send request with timeout
-      print('\n=== 📤 SENDING REQUEST ===');
       final streamedResponse = await request.send().timeout(
         const Duration(seconds: 30),
         onTimeout: () {
-          print('⚠️ Request timed out after 30 seconds');
           throw TimeoutException('Request timed out after 30 seconds');
         },
       );
@@ -501,22 +450,13 @@ class ApiService {
       // Get response body
       final responseBody = await streamedResponse.stream.bytesToString();
 
-      print('\n=== 📥 RESPONSE DETAILS ===');
-      print('📥 Response status code: ${streamedResponse.statusCode}');
-      print('📥 Response headers: ${streamedResponse.headers}');
-      print('📥 Raw response body: $responseBody');
-
       if (streamedResponse.statusCode != 200) {
         final errorData = jsonDecode(responseBody);
         final errorMessage = errorData['message'] ?? 'Unknown error';
         final errorDetails = errorData['error']?['stack'] ?? '';
-        print('\n=== ❌ UPLOAD FAILED ===');
-        print('❌ Error message: $errorMessage');
-        print('❌ Error details: $errorDetails');
         throw Exception('Upload failed: $errorMessage');
       }
 
-      print('\n=== ✅ UPLOAD SUCCESSFUL ===');
       // Create new response with reset stream
       return http.StreamedResponse(
         Stream.value(responseBody.codeUnits),
@@ -529,9 +469,6 @@ class ApiService {
         reasonPhrase: streamedResponse.reasonPhrase,
       );
     } catch (e, stackTrace) {
-      print('\n=== ⛔ UPLOAD EXCEPTION ===');
-      print('⛔ Error: ${e.toString()}');
-      print('⛔ Stack trace: $stackTrace');
       throw Exception('Error uploading image: ${e.toString()}');
     }
   }
@@ -551,7 +488,6 @@ class ApiService {
 
   // Pick image, upload it, then update user profile
   Future<String> uploadProfileImageAndUpdate(File imageFile) async {
-    print('\n=== 💾 PROFILE IMAGE UPDATE START ===');
     try {
       // First check if the file exists and is readable
       if (!await imageFile.exists()) {
@@ -563,31 +499,21 @@ class ApiService {
         throw Exception('Image file is empty: ${imageFile.path}');
       }
 
-      print('💾 Image file size: $fileSize bytes');
-
       final uploadResponse = await uploadImage(
         endpoint: BackendEndpoints.uploadUserPhoto,
         imageFile: imageFile,
         authorized: true,
       );
 
-      print('\n=== 💾 PROCESSING UPLOAD RESPONSE ===');
-      print('💾 Upload response status code: ${uploadResponse.statusCode}');
-
       final responseString = await uploadResponse.stream.bytesToString();
-      print('💾 Raw response string: $responseString');
 
       // Try to parse the response even if status code is not 200
       final responseData = jsonDecode(responseString);
-      print('💾 Parsed response data: $responseData');
 
       // Get the profileImg from response (backend sends both profileImg and profileImgUrl)
       final uploadedFilename = responseData['profileImg'];
-      print('💾 Extracted filename: $uploadedFilename');
 
       if (uploadedFilename == null) {
-        print('\n=== ❌ NO FILENAME IN RESPONSE ===');
-        print('❌ Full response data: $responseData');
         throw Exception(
             'Image uploaded but no filename returned. Response: $responseData');
       }
@@ -597,9 +523,7 @@ class ApiService {
       if (profileImageUrl == null || profileImageUrl.isEmpty) {
         throw Exception('Backend did not return profileImgUrl');
       }
-      print('💾 Using URL from backend: $profileImageUrl');
 
-      print('\n=== 💾 UPDATING USER PROFILE ===');
       // Update profile with the filename only, not the full URL
       final updateResponse = await put(
         endpoint: BackendEndpoints.updateMe,
@@ -609,26 +533,14 @@ class ApiService {
         authorized: true,
       );
 
-      print('💾 Update profile response status: ${updateResponse.statusCode}');
-      print('💾 Update profile response body: ${updateResponse.body}');
-
       if (updateResponse.statusCode != 200) {
-        print('\n=== ❌ PROFILE UPDATE FAILED ===');
-        print('❌ Status: ${updateResponse.statusCode}');
-        print('❌ Error response: ${updateResponse.body}');
         throw Exception(
             'Failed to update user profile image: ${updateResponse.body}');
       }
 
-      print('\n=== ✅ PROFILE UPDATE SUCCESSFUL ===');
       return profileImageUrl;
     } catch (e, stackTrace) {
-      print('\n=== ⛔ PROFILE UPDATE EXCEPTION ===');
-      print('⛔ Error: ${e.toString()}');
-      print('⛔ Stack trace: $stackTrace');
       throw Exception('uploadProfileImageAndUpdate error: ${e.toString()}');
-    } finally {
-      print('\n=== 💾 PROFILE IMAGE UPDATE END ===\n');
     }
   }
 
@@ -641,43 +553,29 @@ class ApiService {
         authorized: false,
       );
 
-      print('📥 Response status code: ${response.statusCode}');
-      print('📥 Response body: ${response.body}');
-
       if (response.statusCode == 200) {
         final result = jsonDecode(response.body);
-        print('📦 Parsed response type: ${result.runtimeType}');
         if (result is Map<String, dynamic>) {
-          print('📦 Response keys: ${result.keys.toList()}');
           if (result.containsKey('products')) {
-            print('📦 products field type: ${result['products'].runtimeType}');
             if (result['products'] is List) {
-              print(
-                  '📦 Number of products: ${(result['products'] as List).length}');
             }
             return result['products']; // ✅ Return the actual list
           } else {
-            print('⚠️ Warning: "products" key not found in response.');
             throw Exception('Unexpected AI response format');
           }
         } else {
           throw Exception('Unexpected AI response format: not a JSON object');
         }
       } else {
-        print('❌ AI Search failed with status: ${response.statusCode}');
         throw Exception('AI Search failed: ${response.body}');
       }
     } catch (e, stackTrace) {
-      print('❌ Error during AI product search: $e');
-      print('Stack trace: $stackTrace');
       rethrow;
     }
   }
 
 // 🔍 Unified Product Search Method
   Future<List<ProductsViewsModel>> searchProducts(String query) async {
-    print('🚀 Starting search for: "$query"');
-
     try {
       // Use POST method like your working searchProductsAI
       final response = await post(
@@ -691,75 +589,44 @@ class ApiService {
         authorized: false,
       );
 
-      print('📥 Response status code: ${response.statusCode}');
-      print('📥 Response body: ${response.body}');
-
       if (response.statusCode == 200) {
         final result = jsonDecode(response.body);
-        print('📦 Parsed response type: ${result.runtimeType}');
-        print('📦 Response keys: ${result.keys.toList()}');
-
-        // Handle your backend's response structure: {results: 0, products: []}
         if (result is Map<String, dynamic>) {
           if (result.containsKey('products')) {
             final productsData = result['products'];
-            print('📦 Products field type: ${productsData.runtimeType}');
-            print('📦 Products count: ${result['results'] ?? 'unknown'}');
 
             if (productsData is List) {
-              print('✅ Found ${productsData.length} products');
-
-              // Convert to ProductsViewsModel list
               List<ProductsViewsModel> products = [];
               for (var productJson in productsData) {
                 try {
                   if (productJson is Map<String, dynamic>) {
                     final product = ProductsViewsModel.fromJson(productJson);
                     products.add(product);
-                    print(
-                        '✅ Successfully parsed product: ${product.title ?? 'Unknown'}');
-                  } else {
-                    print(
-                        '⚠️ Skipping invalid product data: ${productJson.runtimeType}');
                   }
                 } catch (parseError) {
-                  print('❌ Error parsing product: $parseError');
-                  print('📦 Product data: $productJson');
                 }
               }
 
-              print('🎯 Returning ${products.length} valid products');
               return products;
             } else {
-              print(
-                  '❌ Products field is not a List: ${productsData.runtimeType}');
               return [];
             }
           } else {
-            print('❌ Response missing "products" key');
-            print('📦 Available keys: ${result.keys.toList()}');
             return [];
           }
         } else {
-          print('❌ Response is not a Map: ${result.runtimeType}');
           return [];
         }
       } else {
-        print('❌ Search failed with status: ${response.statusCode}');
-        print('❌ Error response: ${response.body}');
         return [];
       }
     } catch (e, stackTrace) {
-      print('❌ Error during product search: $e');
-      print('📋 Stack trace: $stackTrace');
       return [];
     }
   }
 
 // 🔍 Search Suggestions Method
   Future<List<String>> getSearchSuggestions(String query) async {
-    print('🔍 Getting suggestions for: "$query"');
-
     try {
       final response = await post(
         endpoint: BackendEndpoints.aiProductSearch,
@@ -770,8 +637,6 @@ class ApiService {
         },
         authorized: false,
       );
-
-      print('📥 Suggestions response: ${response.statusCode}');
 
       if (response.statusCode == 200) {
         final result = jsonDecode(response.body);
@@ -788,22 +653,18 @@ class ApiService {
             }
           }
 
-          print('✅ Found ${suggestions.length} suggestions');
           return suggestions;
         }
       }
 
       return [];
     } catch (e) {
-      print('❌ Error getting suggestions: $e');
       return [];
     }
   }
 
 // 🔍 Test method to debug backend response
   Future<Map<String, dynamic>> testSearchEndpoint(String query) async {
-    print('🧪 Testing search endpoint with query: "$query"');
-
     try {
       final response = await post(
         endpoint: BackendEndpoints.aiProductSearch,
@@ -815,16 +676,12 @@ class ApiService {
         authorized: false,
       );
 
-      print('🧪 Test response status: ${response.statusCode}');
-      print('🧪 Test response body: ${response.body}');
-
       return {
         'statusCode': response.statusCode,
         'body': response.body,
         'success': response.statusCode == 200,
       };
     } catch (e) {
-      print('🧪 Test failed: $e');
       return {
         'statusCode': 0,
         'body': e.toString(),
@@ -837,25 +694,18 @@ class ApiService {
   Future<List<ProductsViewsModel>> fetchProducts(String category) async {
     final url = Uri.parse('$baseUrl/products?category=$category');
 
-    print('Fetching products from $url');
-
     try {
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
         final List<dynamic> jsonList = json.decode(response.body);
-        print('Fetched ${jsonList.length} products');
-
-        // Convert JSON list to List<Product>
         return jsonList
             .map((jsonItem) => ProductsViewsModel.fromJson(jsonItem))
             .toList();
       } else {
-        print('Failed to fetch products. Status code: ${response.statusCode}');
         return [];
       }
     } catch (e) {
-      print('Error fetching products: $e');
       return [];
     }
   }
@@ -940,7 +790,6 @@ class ApiService {
         throw Exception('Failed to fetch wishlist: ${response.statusCode}');
       }
     } catch (e) {
-      log('Error loading wishlist data: $e', name: 'ApiService', error: e);
       throw Exception('Error loading wishlist data: $e');
     }
   }
@@ -948,20 +797,13 @@ class ApiService {
   // 🛒 Cart API Functions
   Future<Map<String, dynamic>> getCart() async {
     try {
-      log('🛒 Getting cart data...', name: 'ApiService');
       final response = await get(
         endpoint: BackendEndpoints.cart,
         authorized: true,
       );
 
-      log('🛒 Cart response status: ${response.statusCode}',
-          name: 'ApiService');
-      log('🛒 Cart response body: ${response.body}', name: 'ApiService');
-
       // Handle 404 as a valid empty cart state
       if (response.statusCode == 404) {
-        log('ℹ️ No cart exists for user, returning empty cart',
-            name: 'ApiService');
         return {
           'cartItems': [],
           'totalCartPrice': 0,
@@ -972,8 +814,6 @@ class ApiService {
       if (response.statusCode == 200) {
         // Handle empty response
         if (response.body.isEmpty || response.body == '-') {
-          log('ℹ️ Empty cart response, returning empty cart',
-              name: 'ApiService');
           return {
             'cartItems': [],
             'totalCartPrice': 0,
@@ -983,13 +823,11 @@ class ApiService {
 
         final responseData = jsonDecode(response.body);
         if (responseData == null) {
-          log('❌ Invalid response format: null response', name: 'ApiService');
           throw Exception('Invalid response format: null response');
         }
 
         // Handle direct cart items array
         if (responseData is List) {
-          log('ℹ️ Response is a list of cart items', name: 'ApiService');
           return {
             'cartItems': responseData,
             'totalCartPrice': 0,
@@ -1002,40 +840,27 @@ class ApiService {
           if (responseData.containsKey('data')) {
             final cartData = responseData['data'];
             if (cartData == null) {
-              log('❌ Invalid response format: null cart data',
-                  name: 'ApiService');
               throw Exception('Invalid response format: null cart data');
             }
 
             if (!cartData.containsKey('cartItems')) {
-              log('❌ Invalid response format: missing cartItems field',
-                  name: 'ApiService');
               throw Exception(
                   'Invalid response format: missing cartItems field');
             }
 
             final cartItems = cartData['cartItems'];
-            log('🛒 Found ${cartItems.length} items in cart',
-                name: 'ApiService');
-            log('🛒 Cart items: $cartItems', name: 'ApiService');
 
             return cartData;
           } else if (responseData.containsKey('cartItems')) {
-            log('ℹ️ Response contains direct cartItems field',
-                name: 'ApiService');
             return responseData;
           }
         }
 
-        log('❌ Unexpected response format: $responseData', name: 'ApiService');
         throw Exception('Unexpected response format');
       } else {
-        log('❌ Failed to get cart: ${response.body}', name: 'ApiService');
         throw Exception('Failed to get cart: ${response.body}');
       }
     } catch (e, stackTrace) {
-      log('❌ Error getting cart: $e\n$stackTrace',
-          name: 'ApiService', error: e);
       // If it's a 404 error, return empty cart
       if (e.toString().contains('404')) {
         return {
@@ -1050,15 +875,10 @@ class ApiService {
 
   Future<void> addToCart(String productId, String color) async {
     try {
-      log('🛒 Adding product to cart: productId=$productId, color=$color',
-          name: 'ApiService');
-
       final body = {
         'productId': productId,
         'color': color,
       };
-
-      log('🛒 Add to cart request body: $body', name: 'ApiService');
 
       final response = await post(
         endpoint: BackendEndpoints.cart,
@@ -1066,13 +886,7 @@ class ApiService {
         authorized: true,
       );
 
-      log('🛒 Add to cart response status: ${response.statusCode}',
-          name: 'ApiService');
-      log('🛒 Add to cart response body: ${response.body}', name: 'ApiService');
-
       if (response.statusCode != 200) {
-        log('❌ Failed to add item to cart: ${response.body}',
-            name: 'ApiService');
         throw Exception('Failed to add item to cart: ${response.body}');
       }
 
@@ -1084,22 +898,15 @@ class ApiService {
           item['productId'] == productId);
 
       if (!itemAdded) {
-        log('⚠️ Item was not found in cart after adding', name: 'ApiService');
         throw Exception('Item was not added to cart successfully');
       }
-
-      log('✅ Successfully added product to cart', name: 'ApiService');
     } catch (e, stackTrace) {
-      log('❌ Error adding to cart: $e\n$stackTrace',
-          name: 'ApiService', error: e);
       throw Exception('Error adding to cart: ${e.toString()}');
     }
   }
 
   Future<void> removeFromCart(String itemId) async {
     try {
-      log('🛒 Removing item from cart: $itemId', name: 'ApiService');
-
       // First check if item exists in cart
       final cartData = await getCart();
       final cartItems = cartData['cartItems'] as List;
@@ -1117,8 +924,6 @@ class ApiService {
       }
 
       if (actualItemId == null) {
-        log('ℹ️ Item not found in cart, treating as success',
-            name: 'ApiService');
         return;
       }
 
@@ -1126,11 +931,6 @@ class ApiService {
         Uri.parse('$baseUrl${BackendEndpoints.removeCartItem(actualItemId)}'),
         headers: await _buildHeaders(authorized: true),
       );
-
-      log('🛒 Remove from cart response status: ${response.statusCode}',
-          name: 'ApiService');
-      log('🛒 Remove from cart response body: ${response.body}',
-          name: 'ApiService');
 
       // Handle both 200 and 204 as success
       if (response.statusCode == 200 || response.statusCode == 204) {
@@ -1146,18 +946,14 @@ class ApiService {
             item['productId'] == itemId);
 
         if (itemStillExists) {
-          log('⚠️ Item still exists in cart after removal attempt',
-              name: 'ApiService');
           throw Exception('Item was not removed from cart successfully');
         }
 
-        log('✅ Successfully removed item from cart', name: 'ApiService');
         return;
       }
 
       // Handle 404 as success (item already removed)
       if (response.statusCode == 404) {
-        log('ℹ️ Item not found in cart (already removed)', name: 'ApiService');
         return;
       }
 
@@ -1166,16 +962,12 @@ class ApiService {
           'Failed to remove item from cart';
       throw Exception(errorMessage);
     } catch (e) {
-      log('❌ Error removing from cart: $e', name: 'ApiService', error: e);
       throw Exception('Error removing from cart: ${e.toString()}');
     }
   }
 
   Future<void> updateCartItemQuantity(String productId, int quantity) async {
     try {
-      log('🛒 Updating cart item quantity: productId=$productId, quantity=$quantity',
-          name: 'ApiService');
-
       // First get the cart to find the actual cart item ID
       final cartData = await getCart();
       final cartItems = cartData['cartItems'] as List;
@@ -1191,8 +983,6 @@ class ApiService {
       }
 
       if (cartItemId == null) {
-        log('⚠️ Cart item not found for product: $productId',
-            name: 'ApiService');
         throw Exception('Cart item not found');
       }
 
@@ -1201,11 +991,6 @@ class ApiService {
         body: {'quantity': quantity},
         authorized: true,
       );
-
-      log('🛒 Update quantity response status: ${response.statusCode}',
-          name: 'ApiService');
-      log('🛒 Update quantity response body: ${response.body}',
-          name: 'ApiService');
 
       if (response.statusCode != 200) {
         final errorMessage = jsonDecode(response.body)['message'] ??
@@ -1224,41 +1009,26 @@ class ApiService {
       if (updatedItem == null || updatedItem['quantity'] != quantity) {
         throw Exception('Failed to verify quantity update');
       }
-
-      log('✅ Successfully updated cart item quantity', name: 'ApiService');
     } catch (e) {
-      log('❌ Error updating cart item quantity: $e',
-          name: 'ApiService', error: e);
       throw Exception('Error updating cart item quantity: ${e.toString()}');
     }
   }
 
   Future<void> clearCart() async {
     try {
-      print('clearCart: Starting DELETE request to clear cart.');
-
       final url = Uri.parse('$baseUrl${BackendEndpoints.cart}');
-      print('clearCart: URL = $url');
 
       final headers = await _buildHeaders(authorized: true);
-      print('clearCart: Headers = $headers');
 
       final response = await http.delete(url, headers: headers);
 
-      print('clearCart: Response status code = ${response.statusCode}');
-      print('clearCart: Response body = ${response.body}');
-
       if (response.statusCode == 204) {
-        print('clearCart: Cart cleared successfully.');
         return;
       } else {
-        print('clearCart: Failed to clear cart. Throwing exception.');
         throw Exception(
             'Failed to clear cart: ${response.statusCode} ${response.body}');
       }
     } catch (e, stackTrace) {
-      print('clearCart: Exception caught - ${e.toString()}');
-      print('clearCart: Stack trace:\n$stackTrace');
       throw Exception('Error clearing cart: ${e.toString()}');
     }
   }
@@ -1311,15 +1081,11 @@ class ApiService {
         }
         return data;
       } else if (response.statusCode == 404) {
-        log('Product not found: $id', name: 'ApiService');
         return null;
       } else {
-        log('Error getting product: ${response.statusCode} - ${response.body}',
-            name: 'ApiService');
         throw Exception('Failed to get product: ${response.body}');
       }
     } catch (e) {
-      log('Error in getProductById: $e', name: 'ApiService', error: e);
       rethrow;
     }
   }
@@ -1346,12 +1112,8 @@ class ApiService {
         if (results is List) {
           return results.whereType<Map<String, dynamic>>().toList();
         }
-      } else {
-        print('Voice search API error: ${response.statusCode}');
-        print('Response body: ${response.body}');
       }
     } catch (e) {
-      print('Voice search network error: $e');
     }
     return [];
   }
@@ -1367,30 +1129,19 @@ class ApiService {
     try {
       final headers = await _buildHeaders(authorized: true);
 
-      print('\n🟡 [CREATE ORDER] Sending request...');
-      print('➡️ POST $url');
-      print('🧾 Headers: $headers');
-      print('📦 Body: ${jsonEncode({'shippingAddress': shippingAddress})}');
-
       final response = await http.post(
         url,
         headers: headers,
         body: jsonEncode({'shippingAddress': shippingAddress}),
       );
 
-      print('📬 Status Code: ${response.statusCode}');
-      print('📨 Response: ${response.body}');
-
       if (response.statusCode == 201) {
         final result = jsonDecode(response.body);
-        print('✅ [CREATE ORDER] Success: ${result['data']}');
         return result['data'] ?? {};
       } else {
-        print('❌ [CREATE ORDER] Failed: ${response.body}');
         throw Exception('Create cash order failed: ${response.body}');
       }
     } catch (e) {
-      print('🔥 [CREATE ORDER] Error: $e');
       throw Exception('Error creating cash order: ${e.toString()}');
     }
   }
@@ -1403,25 +1154,15 @@ class ApiService {
     try {
       final headers = await _buildHeaders(authorized: true);
 
-      print('\n🟡 [CHECKOUT SESSION] Getting session...');
-      print('➡️ GET $url');
-      print('🧾 Headers: $headers');
-
       final response = await http.get(url, headers: headers);
-
-      print('📬 Status Code: ${response.statusCode}');
-      print('📨 Response: ${response.body}');
 
       if (response.statusCode == 200) {
         final result = jsonDecode(response.body);
-        print('✅ [CHECKOUT SESSION] Success');
         return result['session'] ?? {};
       } else {
-        print('❌ [CHECKOUT SESSION] Failed: ${response.body}');
         throw Exception('Checkout session failed: ${response.body}');
       }
     } catch (e) {
-      print('🔥 [CHECKOUT SESSION] Error: $e');
       throw Exception('Error retrieving checkout session: ${e.toString()}');
     }
   }
@@ -1433,30 +1174,19 @@ class ApiService {
     try {
       final headers = await _buildHeaders(authorized: true);
 
-      print('\n🟡 [GET ALL ORDERS] Fetching...');
-      print('➡️ GET $url');
-      print('🧾 Headers: $headers');
-
       final response = await http.get(url, headers: headers);
-
-      print('📬 Status Code: ${response.statusCode}');
-      print('📨 Response: ${response.body}');
 
       if (response.statusCode == 200) {
         final result = jsonDecode(response.body);
-        print('✅ [GET ALL ORDERS] Success');
         final data = result['data'];
-        print('📊 [GET ALL ORDERS] Data structure: $data');
         if (data is List) {
           return List<Map<String, dynamic>>.from(data);
         }
         throw Exception('Unexpected order list format');
       } else {
-        print('❌ [GET ALL ORDERS] Failed: ${response.body}');
         throw Exception('Failed to fetch orders: ${response.body}');
       }
     } catch (e) {
-      print('🔥 [GET ALL ORDERS] Error: $e');
       throw Exception('Error fetching orders: ${e.toString()}');
     }
   }
@@ -1469,25 +1199,15 @@ class ApiService {
     try {
       final headers = await _buildHeaders(authorized: true);
 
-      print('\n🟡 [ORDER DETAILS] Fetching...');
-      print('➡️ GET $url');
-      print('🧾 Headers: $headers');
-
       final response = await http.get(url, headers: headers);
-
-      print('📬 Status Code: ${response.statusCode}');
-      print('📨 Response: ${response.body}');
 
       if (response.statusCode == 200) {
         final result = jsonDecode(response.body);
-        print('✅ [ORDER DETAILS] Success');
         return result['data'] ?? {};
       } else {
-        print('❌ [ORDER DETAILS] Failed: ${response.body}');
         throw Exception('Failed to fetch order: ${response.body}');
       }
     } catch (e) {
-      print('🔥 [ORDER DETAILS] Error: $e');
       throw Exception('Error fetching order details: ${e.toString()}');
     }
   }
@@ -1500,24 +1220,14 @@ class ApiService {
     try {
       final headers = await _buildHeaders(authorized: true);
 
-      print('\n🟡 [MARK AS PAID] Updating...');
-      print('➡️ PUT $url');
-      print('🧾 Headers: $headers');
-
       final response = await http.put(url, headers: headers);
 
-      print('📬 Status Code: ${response.statusCode}');
-      print('📨 Response: ${response.body}');
-
       if (response.statusCode == 200) {
-        print('✅ [MARK AS PAID] Success');
         return true;
       }
 
-      print('❌ [MARK AS PAID] Failed: ${response.body}');
       throw Exception('Mark as paid failed: ${response.body}');
     } catch (e) {
-      print('🔥 [MARK AS PAID] Error: $e');
       throw Exception('Error marking order as paid: ${e.toString()}');
     }
   }
@@ -1530,24 +1240,14 @@ class ApiService {
     try {
       final headers = await _buildHeaders(authorized: true);
 
-      print('\n🟡 [MARK AS DELIVERED] Updating...');
-      print('➡️ PUT $url');
-      print('🧾 Headers: $headers');
-
       final response = await http.put(url, headers: headers);
 
-      print('📬 Status Code: ${response.statusCode}');
-      print('📨 Response: ${response.body}');
-
       if (response.statusCode == 200) {
-        print('✅ [MARK AS DELIVERED] Success');
         return true;
       }
 
-      print('❌ [MARK AS DELIVERED] Failed: ${response.body}');
       throw Exception('Mark as delivered failed: ${response.body}');
     } catch (e) {
-      print('🔥 [MARK AS DELIVERED] Error: $e');
       throw Exception('Error marking order as delivered: ${e.toString()}');
     }
   }
@@ -1608,9 +1308,6 @@ class ApiService {
     final response = await http.delete(Uri.parse(url), headers: headers);
 
     if (response.statusCode == 204) return response;
-    // Log the URL and response for debugging
-    print('❌ DELETE $url');
-    print('❌ Response [${response.statusCode}]: ${response.body}');
     throw Exception('Failed to delete review: ${response.body}');
   }
 }

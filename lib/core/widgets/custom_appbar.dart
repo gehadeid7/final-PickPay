@@ -101,7 +101,6 @@ class _CustomHomeAppbarState extends State<CustomHomeAppbar> {
         _isLoading = false;
       });
     } catch (e) {
-      print('Error searching products: $e');
       setState(() => _isLoading = false);
     }
   }

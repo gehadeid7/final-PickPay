@@ -175,7 +175,7 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent>
   }
 
   void _initializeState() {
-    _logInfo('🔄 Initializing state variables');
+    // _logInfo('🔄 Initializing state variables');
 
     // Initialize controllers
     _nameController = TextEditingController();
@@ -197,20 +197,20 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent>
   }
 
   void _handleFieldChange(String value, String fieldName) {
-    _logInfo('📝 Field changed: $fieldName = $value');
-    _logInfo('Current state value: ${getCurrentValue(fieldName)}');
-    _logInfo('Current field changes before update: $_fieldChanges');
+    // _logInfo('📝 Field changed: $fieldName = $value');
+    // _logInfo('Current state value: \\${getCurrentValue(fieldName)}');
+    // _logInfo('Current field changes before update: $_fieldChanges');
 
     // Only track changes if the value is different from current state
     if (value != getCurrentValue(fieldName)) {
       setState(() {
         _fieldChanges[fieldName] = value;
-        _logInfo('Updated field changes: $_fieldChanges');
+        // _logInfo('Updated field changes: $_fieldChanges');
       });
 
       // Update the cubit state immediately
       final cubit = context.read<ProfileCubit>();
-      _logInfo('Current cubit state before update: ${cubit.state.toMap()}');
+      // _logInfo('Current cubit state before update: \\${cubit.state.toMap()}');
 
       switch (fieldName) {
         case 'name':
@@ -220,27 +220,27 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent>
           cubit.updatePhone(value);
           break;
         case 'address':
-          _logInfo('Updating address to: $value');
+          // _logInfo('Updating address to: $value');
           cubit.updateAddress(value);
           break;
         case 'gender':
-          _logInfo('Updating gender to: $value');
+          // _logInfo('Updating gender to: $value');
           // Map the gender value if needed
           final mappedGender = genderMap[value] ?? value;
-          _logInfo('Mapped gender value: $mappedGender');
+          // _logInfo('Mapped gender value: $mappedGender');
           cubit.updateGender(mappedGender);
           break;
         case 'dob':
-          _logInfo('Updating DOB to: $value with age: ${_ageController.text}');
+          // _logInfo('Updating DOB to: $value with age: \\${_ageController.text}');
           cubit.updateDob(value, _ageController.text);
           break;
       }
 
-      _logInfo('Cubit state after update: ${cubit.state.toMap()}');
+      // _logInfo('Cubit state after update: \\${cubit.state.toMap()}');
     } else {
       setState(() {
         _fieldChanges.remove(fieldName);
-        _logInfo('Removed field from changes: $fieldName');
+        // _logInfo('Removed field from changes: $fieldName');
       });
     }
   }
@@ -311,7 +311,7 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent>
   @override
   void initState() {
     super.initState();
-    _logInfo('🔄 Initializing ProfileChangeView');
+    // _logInfo('🔄 Initializing ProfileChangeView');
     WidgetsBinding.instance.addObserver(this);
     _initializeState();
     _setupStateListener();
@@ -327,7 +327,7 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent>
 
   @override
   void dispose() {
-    _logInfo('🧹 Disposing ProfileChangeView');
+    // _logInfo('🧹 Disposing ProfileChangeView');
     WidgetsBinding.instance.removeObserver(this);
     _stateSubscription?.cancel();
     _nameController.dispose();
@@ -352,7 +352,7 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      _logInfo('🔄 App resumed, reloading profile data');
+      // _logInfo('🔄 App resumed, reloading profile data');
       _loadInitialData();
     }
   }
@@ -361,20 +361,20 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent>
   void didChangeDependencies() {
     super.didChangeDependencies();
     // Reload data when dependencies change (e.g., when returning to this screen)
-    _logInfo('🔄 Dependencies changed, reloading profile data');
+    // _logInfo('🔄 Dependencies changed, reloading profile data');
     _loadInitialData();
   }
 
   void _setupStateListener() {
-    _logInfo('🔄 Setting up state listener');
+    // _logInfo('🔄 Setting up state listener');
     _stateSubscription = context.read<ProfileCubit>().stream.listen((state) {
-      _logInfo('📱 Received state update: ${state.status}');
+      // _logInfo('📱 Received state update: \\${state.status}');
 
       if (!mounted) return;
 
       if (state.status == ProfileStatus.loadSuccess ||
           state.status == ProfileStatus.saveSuccess) {
-        _logInfo('✅ Updating UI with new data');
+        // _logInfo('✅ Updating UI with new data');
 
         // Always update with the latest data from state
         setState(() {
@@ -418,19 +418,19 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent>
         });
 
         // Log the current state for debugging
-        _logInfo('Current state after update:');
-        _logInfo('Name: ${state.name}');
-        _logInfo('Email: ${state.email}');
-        _logInfo('Phone: ${state.phone}');
-        _logInfo('Gender: ${state.gender}');
-        _logInfo('DOB: ${state.dob}');
-        _logInfo('Age: ${state.age}');
-        _logInfo('Address: ${state.address}');
+        // _logInfo('Current state after update:');
+        // _logInfo('Name: \\${state.name}');
+        // _logInfo('Email: \\${state.email}');
+        // _logInfo('Phone: \\${state.phone}');
+        // _logInfo('Gender: \\${state.gender}');
+        // _logInfo('DOB: \\${state.dob}');
+        // _logInfo('Age: \\${state.age}');
+        // _logInfo('Address: \\${state.address}');
       } else if (state.status == ProfileStatus.loading) {
-        _logInfo('⏳ Loading state detected');
+        // _logInfo('⏳ Loading state detected');
         setState(() => _isLoading = true);
       } else if (state.status == ProfileStatus.error) {
-        _logInfo('❌ Error state detected: ${state.errorMessage}');
+        // _logInfo('❌ Error state detected: \\${state.errorMessage}');
         setState(() {
           _isLoading = false;
           _isSaving = false;
@@ -444,7 +444,7 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent>
   }
 
   Future<void> _loadInitialData() async {
-    _logInfo('🔄 Loading initial data (hybrid strategy)');
+    // _logInfo('🔄 Loading initial data (hybrid strategy)');
     if (!mounted) return;
 
     setState(() {
@@ -457,11 +457,11 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent>
       final cubit = context.read<ProfileCubit>();
 
       // First, try to load from cache immediately
-      _logInfo('📱 Attempting to load from cache first');
+      // _logInfo('📱 Attempting to load from cache first');
       await cubit.loadCachedUserProfile();
 
       // Then, in parallel, try to load from backend
-      _logInfo('🌐 Loading from backend in parallel');
+      // _logInfo('🌐 Loading from backend in parallel');
       final backendFuture = cubit.loadUserProfile();
 
       // Wait for backend load to complete
@@ -469,15 +469,15 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent>
 
       // Log the current state after loading
       final currentState = cubit.state;
-      _logInfo('Current state after hybrid loading:');
-      _logInfo('Status: ${currentState.status}');
-      _logInfo('Name: ${currentState.name}');
-      _logInfo('Email: ${currentState.email}');
-      _logInfo('Phone: ${currentState.phone}');
-      _logInfo('Gender: ${currentState.gender}');
-      _logInfo('DOB: ${currentState.dob}');
-      _logInfo('Age: ${currentState.age}');
-      _logInfo('Address: ${currentState.address}');
+      // _logInfo('Current state after hybrid loading:');
+      // _logInfo('Status: \\${currentState.status}');
+      // _logInfo('Name: \\${currentState.name}');
+      // _logInfo('Email: \\${currentState.email}');
+      // _logInfo('Phone: \\${currentState.phone}');
+      // _logInfo('Gender: \\${currentState.gender}');
+      // _logInfo('DOB: \\${currentState.dob}');
+      // _logInfo('Age: \\${currentState.age}');
+      // _logInfo('Address: \\${currentState.address}');
 
       // Update UI with the latest data
       if (mounted) {
@@ -510,7 +510,7 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent>
         });
       }
     } catch (e) {
-      _logError('Failed to load initial data', e);
+      // _logError('Failed to load initial data', e);
       if (mounted) {
         _showMessage('فشل تحميل البيانات');
       }
@@ -523,8 +523,8 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent>
 
   // Update the handle save method to prevent duplicate image saves
   void _handleSave() async {
-    _logInfo('🔄 Handling save action');
-    _logInfo('Current field changes: $_fieldChanges');
+    // _logInfo('🔄 Handling save action');
+    // _logInfo('Current field changes: $_fieldChanges');
     if (!mounted || _isSaving) return;
 
     setState(() => _isSaving = true);
@@ -532,18 +532,18 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent>
     try {
       // Validate form before saving
       if (!_formKey.currentState!.validate()) {
-        _logInfo('❌ Form validation failed');
+        // _logInfo('❌ Form validation failed');
         setState(() => _isSaving = false);
         return;
       }
 
       // Update all changed fields in the cubit
       final cubit = context.read<ProfileCubit>();
-      _logInfo('Current cubit state before save: ${cubit.state.toMap()}');
+      // _logInfo('Current cubit state before save: \\${cubit.state.toMap()}');
 
       // Sync all field changes with cubit state before saving
       for (final entry in _fieldChanges.entries) {
-        _logInfo('Processing field change: ${entry.key} = ${entry.value}');
+        // _logInfo('Processing field change: \\${entry.key} = \\${entry.value}');
         switch (entry.key) {
           case 'name':
             cubit.updateName(entry.value);
@@ -554,38 +554,38 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent>
           case 'gender':
             // Map the gender value if needed
             final mappedGender = genderMap[entry.value] ?? entry.value;
-            _logInfo('Saving mapped gender value: $mappedGender');
+            // _logInfo('Saving mapped gender value: $mappedGender');
             cubit.updateGender(mappedGender);
             break;
           case 'dob':
-            _logInfo(
-                'Saving DOB: ${entry.value} with age: ${_ageController.text}');
+            // _logInfo(
+            //     'Saving DOB: \\${entry.value} with age: \\${_ageController.text}');
             cubit.updateDob(entry.value, _ageController.text);
             break;
           case 'address':
-            _logInfo('Saving address: ${entry.value}');
+            // _logInfo('Saving address: \\${entry.value}');
             cubit.updateAddress(entry.value);
             break;
         }
-        _logInfo(
-            'Cubit state after updating ${entry.key}: ${cubit.state.toMap()}');
+        // _logInfo(
+        //     'Cubit state after updating \\${entry.key}: \\${cubit.state.toMap()}');
       }
 
       // Save all changes except image
-      _logInfo('Final cubit state before save: ${cubit.state.toMap()}');
+      // _logInfo('Final cubit state before save: \\${cubit.state.toMap()}');
       await cubit.saveProfileWithoutImage();
 
       // Log the current state after save
       final currentState = cubit.state;
-      _logInfo('Current state after save:');
-      _logInfo('Status: ${currentState.status}');
-      _logInfo('Name: ${currentState.name}');
-      _logInfo('Email: ${currentState.email}');
-      _logInfo('Phone: ${currentState.phone}');
-      _logInfo('Gender: ${currentState.gender}');
-      _logInfo('DOB: ${currentState.dob}');
-      _logInfo('Age: ${currentState.age}');
-      _logInfo('Address: ${currentState.address}');
+      // _logInfo('Current state after save:');
+      // _logInfo('Status: \\${currentState.status}');
+      // _logInfo('Name: \\${currentState.name}');
+      // _logInfo('Email: \\${currentState.email}');
+      // _logInfo('Phone: \\${currentState.phone}');
+      // _logInfo('Gender: \\${currentState.gender}');
+      // _logInfo('DOB: \\${currentState.dob}');
+      // _logInfo('Age: \\${currentState.age}');
+      // _logInfo('Address: \\${currentState.address}');
 
       // Clear field changes after successful save
       setState(() {
@@ -593,7 +593,7 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent>
         _isSaving = false;
       });
     } catch (e) {
-      _logError('Failed to save profile', e);
+      // _logError('Failed to save profile', e);
       if (mounted) {
         _showMessage('Failed to save profile', isError: true);
       }
@@ -626,8 +626,8 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent>
 
         // Get file size
         final fileSize = await file.length();
-        developer
-            .log('ProfileChangeView: Selected image size: ${fileSize} bytes');
+        // developer
+        //     .log('ProfileChangeView: Selected image size: \\${fileSize} bytes');
 
         // If file is too large, show warning
         if (fileSize > 5 * 1024 * 1024) {
@@ -653,9 +653,9 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent>
         });
       }
     } catch (e) {
-      developer.log('ProfileChangeView: Error picking image', error: e);
+      // developer.log('ProfileChangeView: Error picking image', error: e);
       if (!mounted) return;
-      _showMessage('Failed to pick image: ${e.toString()}', isError: true);
+      _showMessage('Failed to pick image: \\${e.toString()}', isError: true);
     } finally {
       if (mounted) {
         setState(() => _isImageLoading = false);
@@ -680,7 +680,7 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent>
         _showMessage('Profile image updated successfully', isSaveMessage: true);
       }
     } catch (e) {
-      _logError('Failed to save profile image', e);
+      // _logError('Failed to save profile image', e);
       if (mounted) {
         _showMessage('Failed to save profile image', isError: true);
       }
@@ -695,12 +695,12 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent>
   }
 
   Widget _buildProfileImage(ProfileState state) {
-    developer.log('ProfileChangeView: Building profile image widget');
-    developer.log('ProfileChangeView: Current state status: ${state.status}');
-    developer
-        .log('ProfileChangeView: Current image URL: ${state.profileImageUrl}');
-    developer.log(
-        'ProfileChangeView: Has local image: ${state.profileImage != null}');
+    // developer.log('ProfileChangeView: Building profile image widget');
+    // developer.log('ProfileChangeView: Current state status: \\${state.status}');
+    // developer
+    //     .log('ProfileChangeView: Current image URL: \\${state.profileImageUrl}');
+    // developer.log(
+    //     'ProfileChangeView: Has local image: \\${state.profileImage != null}');
 
     return _ProfileImageWidget(
       imageUrl: state.profileImageUrl,
@@ -708,15 +708,15 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent>
       isLoading: _isImageLoading || state.status == ProfileStatus.loading,
       onTap: () {
         if (!_isImageLoading) {
-          developer
-              .log('ProfileChangeView: Image tapped, starting pick process');
+          // developer
+          //     .log('ProfileChangeView: Image tapped, starting pick process');
           _pickImage();
         }
       },
       onSave: state.profileImage != null
           ? () {
               if (!_isImageLoading) {
-                developer.log('ProfileChangeView: Save button tapped');
+                // developer.log('ProfileChangeView: Save button tapped');
                 _saveImage(); // Use the dedicated save method
               }
             }
@@ -758,7 +758,7 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent>
   }
 
   Future<void> _onRefresh() async {
-    _logInfo('🔄 Manual refresh triggered');
+    // _logInfo('🔄 Manual refresh triggered');
     try {
       await _loadInitialData();
     } catch (e) {
@@ -1088,10 +1088,6 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent>
                                 state.fieldBeingEdited == 'save';
                         final isLoading = state.status == ProfileStatus.loading;
 
-                        print('Name controller: ${_nameController.text}');
-                        print('Phone controller: ${_phoneController.text}');
-                        print('Address controller: ${_addressController.text}');
-
                         return Stack(
                           children: [
                             RefreshIndicator(
@@ -1408,10 +1404,6 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent>
                     state.fieldBeingEdited == 'save';
                 final isLoading = state.status == ProfileStatus.loading;
 
-                print('Name controller: ${_nameController.text}');
-                print('Phone controller: ${_phoneController.text}');
-                print('Address controller: ${_addressController.text}');
-
                 return Stack(
                   children: [
                     RefreshIndicator(
@@ -1703,7 +1695,7 @@ class _ProfileChangeViewContentState extends State<_ProfileChangeViewContent>
           return '';
       }
     } catch (e) {
-      developer.log('Error in getCurrentValue: $e');
+      // developer.log('Error in getCurrentValue: $e');
       return '';
     }
   }

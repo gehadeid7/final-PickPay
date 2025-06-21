@@ -26,6 +26,7 @@ class CheckoutView extends StatefulWidget {
 class _CheckoutViewState extends State<CheckoutView> {
   static const double shippingFee = 30.0; // Shipping fee in EGP
   final _formKey = GlobalKey<FormState>();
+  final _shippingFormKey = GlobalKey<ShippingInfoFormState>();
   late ShippingInfo _shippingInfo;
   String _paymentMethod = 'Credit Card';
   String _cardNumber = '';
@@ -119,12 +120,19 @@ class _CheckoutViewState extends State<CheckoutView> {
       body: BlocListener<CheckoutCubit, CheckoutState>(
         listener: (context, state) {
           if (state is CheckoutSuccess) {
+            final checkoutState = context.read<CheckoutCubit>().state;
+            double? discount;
+            double? totalAfterDiscount;
+            if (checkoutState is CheckoutData) {
+              discount = checkoutState.discount;
+              totalAfterDiscount = checkoutState.totalAfterDiscount;
+            }
             WidgetsBinding.instance.addPostFrameCallback((_) {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                   builder: (context) =>
-                      OrderConfirmationView(order: state.order),
+                      OrderConfirmationView(order: state.order, discount: discount, totalAfterDiscount: totalAfterDiscount),
                 ),
               );
             });
@@ -175,8 +183,18 @@ class _CheckoutViewState extends State<CheckoutView> {
                 ),
                 BlocBuilder<CheckoutCubit, CheckoutState>(
                   builder: (context, state) {
+                    double? discount;
+                    double? totalAfterDiscount;
+                    double totalToShow = subtotal + shippingFee;
+                    if (state is CheckoutData) {
+                      discount = state.discount;
+                      totalAfterDiscount = state.totalAfterDiscount;
+                      if (totalAfterDiscount != null) {
+                        totalToShow = totalAfterDiscount;
+                      }
+                    }
                     return _buildOrderSummary(
-                        items, subtotal, shippingFee, total, theme, state);
+                        items, subtotal, shippingFee, totalToShow, theme, state);
                   },
                 ),
                 const SizedBox(height: 30),
@@ -185,8 +203,23 @@ class _CheckoutViewState extends State<CheckoutView> {
                   child: _buildSectionTitle('Shipping Information', theme),
                 ),
                 ShippingInfoForm(
-                  onSaved: (info) => _shippingInfo = info,
+                  key: _shippingFormKey,
+                  onSaved: (info) {
+                    setState(() {
+                      _shippingInfo = info;
+                    });
+                  },
                 ),
+                if (_shippingInfo.name.isNotEmpty || _shippingInfo.address.isNotEmpty)
+                  Card(
+                    margin: const EdgeInsets.only(top: 16),
+                    child: ListTile(
+                      title: Text('Shipping To: \\${_shippingInfo.name}'),
+                      subtitle: Text(
+                        '\\${_shippingInfo.address}, \\${_shippingInfo.city}, \\${_shippingInfo.state}, \\${_shippingInfo.zipCode}\nPhone: \\${_shippingInfo.phone}\nEmail: \\${_shippingInfo.email}',
+                      ),
+                    ),
+                  ),
                 const SizedBox(height: 24),
                 Divider(
                     thickness: 1, color: theme.dividerColor.withOpacity(0.15)),
@@ -256,6 +289,10 @@ class _CheckoutViewState extends State<CheckoutView> {
                                     return;
                                   }
                                   _formKey.currentState!.save();
+                                  // Always get the latest shipping info from the form
+                                  setState(() {
+                                    _shippingInfo = _shippingFormKey.currentState?.getCurrentInfo() ?? _shippingInfo;
+                                  });
                                   _processCheckout(context, items, subtotal);
                                 },
                           buttonText: state is CheckoutLoading
@@ -468,7 +505,6 @@ class _CheckoutViewState extends State<CheckoutView> {
         : subtotal + shippingFee;
 
     try {
-      print('🚨 Calling placeOrder...');
       await checkoutCubit.placeOrder(
         items: items,
         total: totalToSend,
@@ -476,13 +512,10 @@ class _CheckoutViewState extends State<CheckoutView> {
         paymentInfo: paymentInfo,
         cartCubit: context.read<CartCubit>(),
       );
-      print('🚨 placeOrder finished.');
 
       final cartState = cartCubit.state;
-      print('🚨 cartState: $cartState');
       if (cartState is CartLoaded && cartState.cartId != null) {
         final cartId = cartState.cartId!;
-        print('🚨 About to call addOrderFromBackend with cartId: $cartId');
         await orderCubit.addOrderFromBackend(
           cartId,
           {
@@ -496,12 +529,9 @@ class _CheckoutViewState extends State<CheckoutView> {
           },
           cartCubit,
         );
-        print('🚨 addOrderFromBackend finished.');
-      } else {
-        print('❌ cartState is not CartLoaded or cartId is null');
+        await orderCubit.loadOrders();
       }
     } catch (e) {
-      print('❌ Error during checkout: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Checkout failed: $e')),
       );
