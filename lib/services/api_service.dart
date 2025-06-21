@@ -14,7 +14,7 @@ import 'package:pickpay/features/categories_pages/widgets/product_card.dart';
 import 'package:http_parser/http_parser.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://192.168.1.4:3000/api/v1/';
+  static const String baseUrl = 'http://192.168.1.8:3000/api/v1/';
 
   Future<Map<String, String>> _buildHeaders({
     Map<String, String>? headers,
@@ -63,8 +63,7 @@ class ApiService {
         if (token.isNotEmpty) {
           await Prefs.setString('jwt_token', token);
         }
-      } catch (e) {
-      }
+      } catch (e) {}
     }
 
     if (token.isEmpty) {
@@ -114,7 +113,6 @@ class ApiService {
     bool authorized = false,
     int maxRetries = 2,
   }) async {
-
     final url = '$baseUrl$endpoint';
     final requestHeaders =
         await _buildHeaders(headers: headers, authorized: authorized);
@@ -557,8 +555,7 @@ class ApiService {
         final result = jsonDecode(response.body);
         if (result is Map<String, dynamic>) {
           if (result.containsKey('products')) {
-            if (result['products'] is List) {
-            }
+            if (result['products'] is List) {}
             return result['products']; // ✅ Return the actual list
           } else {
             throw Exception('Unexpected AI response format');
@@ -603,8 +600,7 @@ class ApiService {
                     final product = ProductsViewsModel.fromJson(productJson);
                     products.add(product);
                   }
-                } catch (parseError) {
-                }
+                } catch (parseError) {}
               }
 
               return products;
@@ -1113,8 +1109,7 @@ class ApiService {
           return results.whereType<Map<String, dynamic>>().toList();
         }
       }
-    } catch (e) {
-    }
+    } catch (e) {}
     return [];
   }
 

@@ -647,6 +647,7 @@ class _BaseCategoryViewState extends State<BaseCategoryView>
                                     BrandFilterWidget(
                                       products: widget.products,
                                       selectedBrand: _selectedBrand,
+                                      currentCategory: widget.categoryName,
                                       onBrandChanged: (brand) {
                                         setState(() => _selectedBrand = brand);
                                         Navigator.pop(context);
