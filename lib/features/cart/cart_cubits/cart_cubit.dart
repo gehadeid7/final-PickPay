@@ -508,6 +508,9 @@ class CartCubit extends Cubit<CartState> {
       dev.log('[CartCubit] clearCart: Emitted CartLoaded([]) after clear',
           name: 'CartCubit');
       _showToast('Cart cleared');
+      dev.log('[CartCubit] clearCart: Calling getCart() to refresh UI', name: 'CartCubit');
+      await getCart(); // Force refresh from backend to update UI
+      dev.log('[CartCubit] clearCart: getCart() finished. Current state: \n  \u001b[32m"+state.toString()+"\u001b[0m', name: 'CartCubit');
     } catch (e, stackTrace) {
       dev.log('[CartCubit] clearCart: Unexpected error: $e',
           name: 'CartCubit', error: e, stackTrace: stackTrace);
@@ -531,10 +534,17 @@ class CartCubit extends Cubit<CartState> {
 
       await getCart();
 
+      // Get the current cartId if available
+      String? currentCartId;
+      if (state is CartLoaded) {
+        currentCartId = (state as CartLoaded).cartId;
+      }
+
       emit(CartLoaded(
         _items,
         message: 'Coupon applied successfully',
         discount: discount,
+        cartId: currentCartId,
       ));
       _showToast('Coupon applied successfully');
 

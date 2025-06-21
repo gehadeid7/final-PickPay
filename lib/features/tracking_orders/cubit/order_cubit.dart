@@ -48,7 +48,18 @@ class OrderCubit extends Cubit<OrderState> {
       final ordersJson = await _apiService.getAllOrders();
       print('📥 [LOAD ORDERS] API response received: $ordersJson');
 
-      final ordersList = ordersJson.map((json) => OrderModel.fromJson(json)).toList();
+      final ordersList = ordersJson
+          .where((json) => json != null)
+          .map((json) {
+            try {
+              return OrderModel.fromJson(json);
+            } catch (e) {
+              print('❌ [LOAD ORDERS] Failed to parse order: $e');
+              return null;
+            }
+          })
+          .whereType<OrderModel>()
+          .toList();
       print('📋 [LOAD ORDERS] Parsed orders list: $ordersList');
 
       // Debug print for each order
@@ -93,8 +104,12 @@ Future<void> addOrderFromBackend(
 
   try {
     final orderJson = await _apiService.createCashOrder(cartId, shippingAddress);
+    if (orderJson == null) {
+      print('❌ [ADD ORDER] Backend returned null order data');
+      emit(state.copyWith(error: 'Failed to add order: Backend returned null order data'));
+      return;
+    }
     final newOrder = OrderModel.fromJson(orderJson);
-
     final updatedOrders = List<OrderModel>.from(state.orders)..add(newOrder);
     await Prefs.saveUserOrders(_userId!, updatedOrders.map((o) => o.toJson()).toList());
 

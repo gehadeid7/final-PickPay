@@ -12,10 +12,10 @@ class ShippingInfoForm extends StatefulWidget {
   const ShippingInfoForm({super.key, required this.onSaved});
 
   @override
-  State<ShippingInfoForm> createState() => _ShippingInfoFormState();
+  ShippingInfoFormState createState() => ShippingInfoFormState();
 }
 
-class _ShippingInfoFormState extends State<ShippingInfoForm> {
+class ShippingInfoFormState extends State<ShippingInfoForm> {
   final _nameController = TextEditingController();
   final _addressController = TextEditingController();
   final _cityController = TextEditingController();
@@ -357,6 +357,18 @@ class _ShippingInfoFormState extends State<ShippingInfoForm> {
                 ),
               ),
             ),
+    );
+  }
+
+  ShippingInfo getCurrentInfo() {
+    return ShippingInfo(
+      name: _nameController.text,
+      address: _addressController.text,
+      city: _cityController.text,
+      state: _stateController.text,
+      zipCode: _zipController.text,
+      phone: _phoneController.text,
+      email: _emailController.text,
     );
   }
 }

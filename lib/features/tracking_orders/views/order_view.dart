@@ -229,18 +229,18 @@ class _OrderList extends StatelessWidget {
     String label;
     switch (status) {
       case OrderStatus.pending:
-        backgroundColor = isDarkMode ? Colors.orange[900]! : Colors.orange[100]!;
-        textColor = isDarkMode ? Colors.orange[100]! : Colors.orange[900]!;
+        backgroundColor = isDarkMode ? Colors.orange[900]! : const Color(0xFFFFF3E0); // soft orange
+        textColor = isDarkMode ? Colors.orange[100]! : const Color(0xFFEF6C00); // deep orange
         label = 'Pending';
         break;
       case OrderStatus.paid:
-        backgroundColor = isDarkMode ? Colors.blue[900]! : Colors.blue[100]!;
-        textColor = isDarkMode ? Colors.blue[100]! : Colors.blue[900]!;
+        backgroundColor = isDarkMode ? Colors.blue[900]! : const Color(0xFFE3F2FD); // soft blue
+        textColor = isDarkMode ? Colors.blue[100]! : const Color(0xFF1976D2); // deep blue
         label = 'Paid';
         break;
       case OrderStatus.delivered:
-        backgroundColor = isDarkMode ? Colors.green[900]! : Colors.green[100]!;
-        textColor = isDarkMode ? Colors.green[100]! : Colors.green[900]!;
+        backgroundColor = isDarkMode ? Colors.green[900]! : const Color(0xFFE8F5E9); // soft green
+        textColor = isDarkMode ? Colors.green[100]! : const Color(0xFF388E3C); // deep green
         label = 'Delivered';
         break;
     }
@@ -249,6 +249,7 @@ class _OrderList extends StatelessWidget {
       decoration: BoxDecoration(
         color: backgroundColor,
         borderRadius: BorderRadius.circular(20),
+        border: isDarkMode ? null : Border.all(color: Colors.grey[200]!),
       ),
       child: Text(
         label,
@@ -352,11 +353,10 @@ class _OrderCardState extends State<_OrderCard> with SingleTickerProviderStateMi
     final order = widget.order;
     final orderCubit = context.read<OrderCubit>();
     // Product carousel
-    final productImages = order.cartItems
-        .map<String?>((item) => (item['product']?['imagePaths'] as List?)?.isNotEmpty == true ? (item['product']?['imagePaths'] as List).first as String : null)
-        .whereType<String>()
-        .toList();
-    final productName = order.cartItems.isNotEmpty ? (order.cartItems.first['product']?['title'] ?? order.cartItems.first['product']?['name'] ?? '') : '';
+    final productImages = <String>[]; // No longer used, but keep for compatibility
+    final productName = order.cartItems.isNotEmpty
+        ? getProductDisplayName(order.cartItems.first['product'])
+        : '';
     return GestureDetector(
       onTapDown: _onTapDown,
       onTapUp: _onTapUp,
@@ -365,7 +365,9 @@ class _OrderCardState extends State<_OrderCard> with SingleTickerProviderStateMi
         showModalBottomSheet(
           context: context,
           isScrollControlled: true,
-          backgroundColor: Colors.grey[900],
+          backgroundColor: Theme.of(context).brightness == Brightness.dark
+              ? Colors.grey[900]
+              : Theme.of(context).scaffoldBackgroundColor,
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
           ),
@@ -376,9 +378,10 @@ class _OrderCardState extends State<_OrderCard> with SingleTickerProviderStateMi
         scale: _scale,
         child: Card(
           margin: const EdgeInsets.only(bottom: 16),
-          elevation: 2,
+          elevation: 3,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          color: Colors.grey[800],
+          color: Theme.of(context).brightness == Brightness.dark ? Colors.grey[800] : Colors.white,
+          shadowColor: Theme.of(context).brightness == Brightness.dark ? Colors.black54 : Colors.grey.withOpacity(0.15),
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -566,7 +569,9 @@ class _OrderCardState extends State<_OrderCard> with SingleTickerProviderStateMi
                         showModalBottomSheet(
                           context: context,
                           isScrollControlled: true,
-                          backgroundColor: Colors.grey[900],
+                          backgroundColor: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.grey[900]
+                              : Theme.of(context).scaffoldBackgroundColor,
                           shape: const RoundedRectangleBorder(
                             borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
                           ),
@@ -601,10 +606,12 @@ Widget buildOrderStepper(OrderStatus status, {bool isDark = false}) {
           children: [
             CircleAvatar(
               radius: 14,
-              backgroundColor: active ? (isDark ? Colors.green[400] : Colors.green) : Colors.grey[300],
+              backgroundColor: active
+                  ? (isDark ? Colors.green[400] : const Color(0xFF43A047))
+                  : (isDark ? Colors.grey[700] : Colors.grey[200]),
               child: Icon(
                 i == 0 ? Icons.hourglass_empty : i == 1 ? Icons.payment : Icons.check,
-                color: active ? Colors.white : Colors.grey[500],
+                color: active ? Colors.white : (isDark ? Colors.grey[400] : Colors.grey[500]),
                 size: 18,
               ),
             ),
@@ -613,7 +620,9 @@ Widget buildOrderStepper(OrderStatus status, {bool isDark = false}) {
               steps[i],
               style: TextStyle(
                 fontSize: 12,
-                color: active ? (isDark ? Colors.green[200] : Colors.green[800]) : Colors.grey[500],
+                color: active
+                    ? (isDark ? Colors.green[200] : const Color(0xFF388E3C))
+                    : (isDark ? Colors.grey[400] : Colors.grey[500]),
                 fontWeight: active ? FontWeight.bold : FontWeight.normal,
               ),
             ),
@@ -622,7 +631,9 @@ Widget buildOrderStepper(OrderStatus status, {bool isDark = false}) {
                 margin: const EdgeInsets.symmetric(vertical: 4),
                 height: 2,
                 width: 32,
-                color: active && i < current ? (isDark ? Colors.green[400] : Colors.green) : Colors.grey[300],
+                color: active && i < current
+                    ? (isDark ? Colors.green[400] : const Color(0xFF43A047))
+                    : (isDark ? Colors.grey[700] : Colors.grey[200]),
               ),
           ],
         ),
@@ -790,83 +801,80 @@ class _OrderDetailsSheet extends StatelessWidget {
       maxChildSize: 0.95,
       builder: (context, scrollController) => SingleChildScrollView(
         controller: scrollController,
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      'Order #${order.id}',
-                      style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  _OrderList.buildStatusChip(context, order.status),
-                ],
-              ),
-              const SizedBox(height: 12),
-              // _OrderProgressBar(status: order.status),
-              const SizedBox(height: 12),
-              _OrderList.buildInfoRow('Amount', 'EGP ${order.totalAmount.toStringAsFixed(2)}'),
-              _OrderList.buildInfoRow('Created', _OrderList.formatDate(order.createdAt)),
-              if (order.deliveredAt != null)
-                _OrderList.buildInfoRow('Delivered', _OrderList.formatDate(order.deliveredAt!)),
-              const Divider(height: 32),
-              Text('Products:', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
-              const SizedBox(height: 8),
-              ...order.cartItems.map((item) => ListTile(
-                    leading: item['product']?['imagePaths'] != null && (item['product']?['imagePaths'] as List).isNotEmpty
-                        ? ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: Image.asset(
-                              (item['product']?['imagePaths'] as List).first,
-                              width: 40,
-                              height: 40,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) => Icon(Icons.image_not_supported, color: Colors.grey[400]),
-                            ),
-                          )
-                        : Icon(Icons.image, color: Colors.grey[400]),
-                    title: Text(getProductDisplayName(item['product']), maxLines: 1, overflow: TextOverflow.ellipsis),
-                    subtitle: Text('x${item['quantity'] ?? 1}'),
-                  )),
-              const SizedBox(height: 16),
-              if (order.shippingAddress.isNotEmpty)
+        child: Container(
+          color: Theme.of(context).brightness == Brightness.dark
+              ? Colors.grey[900]
+              : Theme.of(context).scaffoldBackgroundColor,
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
                 Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(child: _OrderList.buildInfoRow('Delivery Address', _formatAddress(order.shippingAddress))),
-                    IconButton(
-                      icon: const Icon(Icons.copy, size: 18),
-                      tooltip: 'Copy Address',
-                      onPressed: () {
-                        Clipboard.setData(ClipboardData(text: _formatAddress(order.shippingAddress)));
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: const Text('Address copied!'),
-                            duration: const Duration(seconds: 1),
-                          ),
-                        );
-                        HapticFeedback.lightImpact();
-                      },
+                    Expanded(
+                      child: Text(
+                        'Order #${order.id}',
+                        style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
+                    const SizedBox(width: 8),
+                    _OrderList.buildStatusChip(context, order.status),
                   ],
                 ),
-              const SizedBox(height: 16),
-              _OrderStatusTimeline(order: order),
-              const SizedBox(height: 16),
-              Align(
-                alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('Close'),
+                const SizedBox(height: 12),
+                // _OrderProgressBar(status: order.status),
+                const SizedBox(height: 12),
+                _OrderList.buildInfoRow('Amount', 'EGP ${order.totalAmount.toStringAsFixed(2)}'),
+                _OrderList.buildInfoRow('Created', _OrderList.formatDate(order.createdAt)),
+                if (order.deliveredAt != null)
+                  _OrderList.buildInfoRow('Delivered', _OrderList.formatDate(order.deliveredAt!)),
+                const Divider(height: 32),
+                Text('Products:', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+                const SizedBox(height: 8),
+                ...order.cartItems.map((item) {
+                  // Remove all backend image logic, use a local asset or icon
+                  return ListTile(
+                    leading: Icon(Icons.image, color: Colors.grey[400]),
+                    title: Text(getProductDisplayName(item['product']), maxLines: 1, overflow: TextOverflow.ellipsis),
+                    subtitle: Text('x${item['quantity'] ?? 1}'),
+                  );
+                }).toList(),
+                const SizedBox(height: 16),
+                if (order.shippingAddress.isNotEmpty)
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(child: _OrderList.buildInfoRow('Delivery Address', _formatAddress(order.shippingAddress))),
+                      IconButton(
+                        icon: const Icon(Icons.copy, size: 18),
+                        tooltip: 'Copy Address',
+                        onPressed: () {
+                          Clipboard.setData(ClipboardData(text: _formatAddress(order.shippingAddress)));
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: const Text('Address copied!'),
+                              duration: const Duration(seconds: 1),
+                            ),
+                          );
+                          HapticFeedback.lightImpact();
+                        },
+                      ),
+                    ],
+                  ),
+                const SizedBox(height: 16),
+                _OrderStatusTimeline(order: order),
+                const SizedBox(height: 16),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: const Text('Close'),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -925,7 +933,7 @@ class _TimelineEvent {
 
 String getProductDisplayName(dynamic product) {
   if (product is Map) {
-    return product['title'] ?? product['name'] ?? product['id'] ?? '';
+    return product['title']?.toString() ?? product['name']?.toString() ?? product['id']?.toString() ?? '';
   } else if (product is String) {
     return product;
   }
