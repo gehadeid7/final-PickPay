@@ -17,7 +17,7 @@ class BrandFilterWidget extends StatelessWidget {
 
   // Static brand lists organized by category
   static const Map<String, List<String>> categoryBrands = {
-    'Electronics': [
+    'Electronics': <String>[
       'SAMSUNG',
       'LG',
       'Xiaomi',
@@ -28,7 +28,7 @@ class BrandFilterWidget extends StatelessWidget {
       'CANSHN',
       'Generic',
     ],
-    'Appliances': [
+    'Appliances': <String>[
       'Koldair',
       'Fresh',
       'Midea',
@@ -38,7 +38,7 @@ class BrandFilterWidget extends StatelessWidget {
       'Tornado',
       'deime',
     ],
-    'Beauty': [
+    'Beauty': <String>[
       'L\'Oréal Paris',
       'MAYBELLINE',
       'La Roche-Posay',
@@ -55,7 +55,7 @@ class BrandFilterWidget extends StatelessWidget {
       'Jacques Bogart',
       'Avon',
     ],
-    'Home': [
+    'Home': <String>[
       'oliruim',
       'Pasabahce',
       'P&P CHEF',
@@ -71,14 +71,14 @@ class BrandFilterWidget extends StatelessWidget {
       'Amotpo',
       'Generic',
     ],
-    'VideoGames': [
+    'VideoGames': <String>[
       'Likorlove',
       'fanxiang',
       'Mcbazel',
       'PlayStation',
       'Nintendo',
     ],
-    'Fashion': [
+    'Fashion': <String>[
       // Fashion products don't have brands in the current data
       // Add any fashion brands if they exist in the future
     ],
