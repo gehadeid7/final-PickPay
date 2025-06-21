@@ -77,14 +77,19 @@ class WishlistButton extends StatelessWidget {
       SnackBar(
         content: Row(
           children: [
-            Icon(
-              message.contains('Added')
-                  ? Icons.favorite
-                  : Icons.favorite_border,
-              color: message.contains('Added')
-                  ? Colors.pinkAccent
-                  : Colors.redAccent,
-              size: 24,
+            Container(
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(
+                message.contains('Added')
+                    ? Icons.favorite
+                    : Icons.favorite_border,
+                color: Colors.white,
+                size: 20,
+              ),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -104,8 +109,8 @@ class WishlistButton extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
         margin: const EdgeInsets.only(bottom: 80, left: 24, right: 24),
         backgroundColor: message.contains('Added')
-            ? Colors.red
-            : Colors.red.shade400,
+            ? const Color(0xFFE91E63) // Pink shade for added
+            : const Color(0xFFF44336), // Red shade for removed
         elevation: 8,
       ),
     );
