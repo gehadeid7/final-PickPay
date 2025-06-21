@@ -20,8 +20,18 @@ class WishlistButton extends StatelessWidget {
     return BlocConsumer<WishlistCubit, WishlistState>(
       listener: (context, state) {},
       builder: (context, state) {
-        final isInWishlist =
-            context.read<WishlistCubit>().isInWishlist(product.id);
+        bool isInWishlist = false;
+        if (state is WishlistLoaded) {
+          isInWishlist = state.items.any((item) => item.id == product.id);
+        }
+        // fallback for initial state
+        else if (state is WishlistInitial) {
+          isInWishlist = false;
+        }
+        // fallback for error state
+        else if (state is WishlistError) {
+          isInWishlist = false;
+        }
 
         return Container(
           margin: const EdgeInsets.symmetric(horizontal: 6.0),
@@ -65,12 +75,38 @@ class WishlistButton extends StatelessWidget {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(message, style: const TextStyle(color: Colors.white)),
-        duration: const Duration(seconds: 1),
+        content: Row(
+          children: [
+            Icon(
+              message.contains('Added')
+                  ? Icons.favorite
+                  : Icons.favorite_border,
+              color: message.contains('Added')
+                  ? Colors.pinkAccent
+                  : Colors.redAccent,
+              size: 24,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                message,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ],
+        ),
+        duration: const Duration(seconds: 2),
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        margin: const EdgeInsets.only(bottom: 70, left: 20, right: 20),
-        backgroundColor: Colors.black87,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        margin: const EdgeInsets.only(bottom: 80, left: 24, right: 24),
+        backgroundColor: message.contains('Added')
+            ? Colors.red
+            : Colors.red.shade400,
+        elevation: 8,
       ),
     );
   }
