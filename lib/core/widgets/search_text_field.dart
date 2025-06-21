@@ -1406,24 +1406,6 @@ class _SearchTextFieldState extends State<SearchTextField>
       ],
     );
   }
-  Widget _buildFavoritesSection() {
-    if (_favoriteSearches.isEmpty) return SizedBox.shrink();
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildSectionHeader('Favorites', icon: Icons.favorite),
-        ..._favoriteSearches.map((search) => _buildListItem(
-              leading: Icon(Icons.favorite, color: Colors.red[400], size: 20),
-              title: search,
-              onTap: () {
-                widget.controller.text = search;
-                _searchProducts(search);
-              },
-            )),
-        const Divider(height: 1),
-      ],
-    );
-  }
 
   // 6. Update _buildDropdownContent to include new sections and controls
   Widget _buildDropdownContent(
@@ -1447,7 +1429,11 @@ class _SearchTextFieldState extends State<SearchTextField>
       return _buildPopularSearches(primaryColor, textColor);
     }
     return Container(
-      constraints: const BoxConstraints(maxHeight: 500),
+      constraints: BoxConstraints(
+        maxHeight: (_suggestions.isNotEmpty || _searchResults.isNotEmpty || showRecent)
+            ? 500
+            : double.infinity,
+      ),
       margin: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
         color: surfaceColor,
@@ -1472,9 +1458,8 @@ class _SearchTextFieldState extends State<SearchTextField>
               children: [
                 // New: Did you mean section
                 _buildDidYouMeanSection(),
-                // New: Trending and favorites
+                // New: Trending (Favorites section removed)
                 _buildTrendingSection(),
-                _buildFavoritesSection(),
                 // ... existing code for recent, suggestions, results, loading ...
                 if (showRecent) ...[
                   _buildSectionHeader(
@@ -1531,14 +1516,25 @@ class _SearchTextFieldState extends State<SearchTextField>
                     final suggestion = entry.value;
                     final globalIndex =
                         (showRecent ? _recentSearches.length : 0) + index;
+                    // Instead of just searching, navigate to product page directly
                     return _buildListItem(
                       leading:
                           Icon(Icons.search, color: Colors.blue[400], size: 20),
                       title: suggestion,
                       subtitle: 'Search suggestion',
                       onTap: () {
-                        widget.controller.text = suggestion;
-                        _searchProducts(suggestion, fromSuggestion: true);
+                        // Try to find a product in _searchResults that matches the suggestion
+                        final matchedProduct = _searchResults.firstWhere(
+                          (product) => (product['title'] ?? '').toLowerCase() == suggestion.toLowerCase(),
+                          orElse: () => <String, dynamic>{},
+                        );
+                        if (matchedProduct.isNotEmpty) {
+                          _handleProductSelection(matchedProduct);
+                        } else {
+                          // If not found, fallback to search and then try to navigate after results load
+                          widget.controller.text = suggestion;
+                          _searchProducts(suggestion, fromSuggestion: true);
+                        }
                       },
                       isHighlighted: _highlightedIndex == globalIndex,
                       trailing: IconButton(
@@ -1631,7 +1627,7 @@ class _SearchTextFieldState extends State<SearchTextField>
                           width: double.infinity,
                           child: Row(
                             children: [
-                              Text('Min Rating: ${_minRating.toStringAsFixed(1)}', style: TextStyles.regular13),
+                              Text('Min Rating: \\${_minRating.toStringAsFixed(1)}', style: TextStyles.regular13),
                               Expanded(
                                 child: Slider(
                                   value: _minRating,
@@ -1683,38 +1679,76 @@ class _SearchTextFieldState extends State<SearchTextField>
 
   // 5. Add skeleton loader and retry for loading/error states
   Widget _buildSkeletonLoader() {
+    // Modern, card-like skeleton loader for product search
     return Container(
-      padding: const EdgeInsets.all(32),
+      padding: const EdgeInsets.all(24),
       child: Column(
-        children: [
-          SizedBox(
-            width: 24,
-            height: 24,
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.grey[400]!),
-            ),
+        mainAxisSize: MainAxisSize.min,
+        children: List.generate(3, (index) => Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Image placeholder
+              Container(
+                width: 56,
+                height: 56,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              const SizedBox(width: 16),
+              // Text placeholders
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      height: 14,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Container(
+                      width: 120,
+                      height: 12,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[200],
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Container(
+                          width: 60,
+                          height: 10,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[200],
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Container(
+                          width: 40,
+                          height: 10,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 12),
-          Container(
-            width: 120,
-            height: 16,
-            color: Colors.grey[300],
-            margin: const EdgeInsets.symmetric(vertical: 4),
-          ),
-          Container(
-            width: 180,
-            height: 16,
-            color: Colors.grey[200],
-            margin: const EdgeInsets.symmetric(vertical: 4),
-          ),
-          Container(
-            width: 100,
-            height: 16,
-            color: Colors.grey[300],
-            margin: const EdgeInsets.symmetric(vertical: 4),
-          ),
-        ],
+        )),
       ),
     );
   }
@@ -2029,6 +2063,7 @@ class _SearchTextFieldState extends State<SearchTextField>
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
         child: Column(
+          mainAxisSize: MainAxisSize.min, // Shrink-wrap content
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildSectionHeader('Popular Searches', icon: Icons.trending_up),
