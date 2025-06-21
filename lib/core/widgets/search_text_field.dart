@@ -185,8 +185,8 @@ class _SearchTextFieldState extends State<SearchTextField>
   List<String> _didYouMean = [];
   List<String> _trendingSearches = [];
   List<String> _favoriteSearches = [];
-  String _selectedSort = 'Relevance';
-  List<String> _sortOptions = ['Relevance', 'Price: Low to High', 'Price: High to Low', 'Rating'];
+  String _selectedSort = 'Price: Low to High';
+  List<String> _sortOptions = ['Price: Low to High', 'Price: High to Low', 'Rating'];
   List<String> _activeFilters = [];
   List<String> _availableFilters = ['Electronics', 'Beauty', 'Fashion', 'Home', 'Appliances', 'Video Games']; // Example categories
 
@@ -1348,6 +1348,7 @@ class _SearchTextFieldState extends State<SearchTextField>
     );
   }
   Widget _buildSortDropdown() {
+    if (_sortOptions.isEmpty) return SizedBox.shrink();
     return DropdownButton<String>(
       value: _selectedSort,
       items: _sortOptions.map((option) {
@@ -1469,29 +1470,6 @@ class _SearchTextFieldState extends State<SearchTextField>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // New: Filter chips and sort dropdown
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          IconButton(
-                            icon: Icon(_showAdvancedFilters ? Icons.filter_alt : Icons.filter_alt_outlined,
-                                color: _showAdvancedFilters ? Colors.blue : Colors.grey[600]),
-                            tooltip: 'Advanced Filters',
-                            onPressed: () {
-                              setState(() => _showAdvancedFilters = !_showAdvancedFilters);
-                            },
-                          ),
-                          Expanded(child: _buildFilterChips()),
-                        ],
-                      ),
-                      _buildSortDropdown(),
-                    ],
-                  ),
-                ),
                 // New: Did you mean section
                 _buildDidYouMeanSection(),
                 // New: Trending and favorites
@@ -1625,43 +1603,49 @@ class _SearchTextFieldState extends State<SearchTextField>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // Price Range
-                        Row(
-                          children: [
-                            Text('Price Range: ', style: TextStyles.regular13),
-                            Expanded(
-                              child: RangeSlider(
-                                values: _priceRange,
-                                min: 0,
-                                max: 1000,
-                                divisions: 20,
-                                labels: RangeLabels(
-                                  '${_priceRange.start.round()}',
-                                  '${_priceRange.end.round()}',
+                        Container(
+                          width: double.infinity,
+                          child: Row(
+                            children: [
+                              Text('Price Range: ', style: TextStyles.regular13),
+                              Expanded(
+                                child: RangeSlider(
+                                  values: _priceRange,
+                                  min: 0,
+                                  max: 1000,
+                                  divisions: 20,
+                                  labels: RangeLabels(
+                                    '${_priceRange.start.round()}',
+                                    '${_priceRange.end.round()}',
+                                  ),
+                                  onChanged: (values) {
+                                    setState(() => _priceRange = values);
+                                  },
                                 ),
-                                onChanged: (values) {
-                                  setState(() => _priceRange = values);
-                                },
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                         // Minimum Rating
-                        Row(
-                          children: [
-                            Text('Min Rating: ${_minRating.toStringAsFixed(1)}', style: TextStyles.regular13),
-                            Expanded(
-                              child: Slider(
-                                value: _minRating,
-                                min: 0,
-                                max: 5,
-                                divisions: 10,
-                                label: _minRating.toStringAsFixed(1),
-                                onChanged: (value) {
-                                  setState(() => _minRating = value);
-                                },
+                        Container(
+                          width: double.infinity,
+                          child: Row(
+                            children: [
+                              Text('Min Rating: ${_minRating.toStringAsFixed(1)}', style: TextStyles.regular13),
+                              Expanded(
+                                child: Slider(
+                                  value: _minRating,
+                                  min: 0,
+                                  max: 5,
+                                  divisions: 10,
+                                  label: _minRating.toStringAsFixed(1),
+                                  onChanged: (value) {
+                                    setState(() => _minRating = value);
+                                  },
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                         // Brand Dropdown
                         DropdownButton<String>(
@@ -1901,12 +1885,18 @@ class _SearchTextFieldState extends State<SearchTextField>
 
             // Dropdown Results
             if (_showDropdown && !_isProductLoading)
-              SlideTransition(
-                position: _slideAnimation,
-                child: FadeTransition(
-                  opacity: _opacityAnimation,
-                  child: _buildDropdownContent(
-                      isDark, primaryColor, surfaceColor, textColor),
+              Container(
+                constraints: BoxConstraints(
+                  maxHeight: 500, // Ensures bounded height for dropdown
+                  minWidth: double.infinity,
+                ),
+                child: SlideTransition(
+                  position: _slideAnimation,
+                  child: FadeTransition(
+                    opacity: _opacityAnimation,
+                    child: _buildDropdownContent(
+                        isDark, primaryColor, surfaceColor, textColor),
+                  ),
                 ),
               ),
           ],
@@ -2077,37 +2067,40 @@ class _SearchTextFieldState extends State<SearchTextField>
         onTap: onTap,
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          child: Row(
-            children: [
-              leading,
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _highlightText(
-                      title,
-                      widget.controller.text,
-                      baseStyle: TextStyles.medium15.copyWith(
-                        color: isHighlighted
-                            ? Theme.of(context).colorScheme.primary
-                            : null,
-                      ),
-                    ),
-                    if (subtitle != null) ...[
-                      const SizedBox(height: 2),
-                      Text(
-                        subtitle,
-                        style: TextStyles.regular13.copyWith(
-                          color: Colors.grey[600],
+          child: Container(
+            width: double.infinity,
+            child: Row(
+              children: [
+                leading,
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _highlightText(
+                        title,
+                        widget.controller.text,
+                        baseStyle: TextStyles.medium15.copyWith(
+                          color: isHighlighted
+                              ? Theme.of(context).colorScheme.primary
+                              : null,
                         ),
                       ),
+                      if (subtitle != null) ...[
+                        const SizedBox(height: 2),
+                        Text(
+                          subtitle,
+                          style: TextStyles.regular13.copyWith(
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      ],
                     ],
-                  ],
+                  ),
                 ),
-              ),
-              if (trailing != null) trailing,
-            ],
+                if (trailing != null) trailing,
+              ],
+            ),
           ),
         ),
       ),
@@ -2342,168 +2335,171 @@ class _SearchTextFieldState extends State<SearchTextField>
         onTap: () => _handleProductSelection(product),
         child: Container(
           padding: const EdgeInsets.all(16),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Product Image
-              Container(
-                width: 60,
-                height: 60,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  color: Colors.grey[100],
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: staticAssetPath != null
-                      ? Image.asset(
-                          staticAssetPath,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) => Icon(
-                            Icons.image_not_supported,
-                            color: Colors.grey[400],
-                            size: 24,
-                          ),
-                        )
-                      : images.isNotEmpty
-                          ? Image.network(
-                              images.first,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) =>
-                                  Icon(
-                                Icons.image_not_supported,
-                                color: Colors.grey[400],
-                                size: 24,
-                              ),
-                            )
-                          : Icon(
-                              Icons.shopping_bag,
+          child: Container(
+            width: double.infinity,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Product Image
+                Container(
+                  width: 60,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: Colors.grey[100],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: staticAssetPath != null
+                        ? Image.asset(
+                            staticAssetPath,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) => Icon(
+                              Icons.image_not_supported,
                               color: Colors.grey[400],
                               size: 24,
                             ),
+                          )
+                        : images.isNotEmpty
+                            ? Image.network(
+                                images.first,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) =>
+                                    Icon(
+                                  Icons.image_not_supported,
+                                  color: Colors.grey[400],
+                                  size: 24,
+                                ),
+                              )
+                            : Icon(
+                                Icons.shopping_bag,
+                                color: Colors.grey[400],
+                                size: 24,
+                              ),
+                  ),
                 ),
-              ),
-              const SizedBox(width: 12),
+                const SizedBox(width: 12),
 
-              // Product Details
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Title with highlighting
-                    _highlightText(
-                      title,
-                      query,
-                      baseStyle: TextStyles.medium15.copyWith(
-                        color: isHighlighted
-                            ? theme.colorScheme.primary
-                            : textColor,
-                      ),
-                    ),
-                    if (brand.isNotEmpty) ...[
-                      const SizedBox(height: 2),
-                      Text(
-                        brand,
-                        style: TextStyles.regular13.copyWith(
-                          color: isDark ? Colors.grey[300] : Colors.grey[600],
+                // Product Details
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Title with highlighting
+                      _highlightText(
+                        title,
+                        query,
+                        baseStyle: TextStyles.medium15.copyWith(
+                          color: isHighlighted
+                              ? theme.colorScheme.primary
+                              : textColor,
                         ),
                       ),
-                    ],
-                    const SizedBox(height: 4),
-
-                    // Price and discount
-                    Row(
-                      children: [
+                      if (brand.isNotEmpty) ...[
+                        const SizedBox(height: 2),
                         Text(
-                          '\$${price.toStringAsFixed(2)}',
-                          style: TextStyles.bold16.copyWith(
-                            color: theme.colorScheme.primary,
+                          brand,
+                          style: TextStyles.regular13.copyWith(
+                            color: isDark ? Colors.grey[300] : Colors.grey[600],
                           ),
                         ),
-                        if (discount > 0) ...[
-                          const SizedBox(width: 8),
+                      ],
+                      const SizedBox(height: 4),
+
+                      // Price and discount
+                      Row(
+                        children: [
+                          Text(
+                            '\$${price.toStringAsFixed(2)}',
+                            style: TextStyles.bold16.copyWith(
+                              color: theme.colorScheme.primary,
+                            ),
+                          ),
+                          if (discount > 0) ...[
+                            const SizedBox(width: 8),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 6,
+                                vertical: 2,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.red[100],
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: Text(
+                                '${discount.toInt()}% OFF',
+                                style: TextStyles.bold13.copyWith(
+                                  color: Colors.red[700],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+
+                      const SizedBox(height: 4),
+
+                      // Rating and stock status
+                      Row(
+                        children: [
+                          if (rating > 0) ...[
+                            Icon(
+                              Icons.star,
+                              size: 14,
+                              color: Colors.amber[600],
+                            ),
+                            const SizedBox(width: 2),
+                            Text(
+                              rating.toStringAsFixed(1),
+                              style: TextStyles.regular13.copyWith(
+                                color:
+                                    isDark ? Colors.grey[200] : Colors.grey[700],
+                              ),
+                            ),
+                            if (reviewCount > 0) ...[
+                              Text(
+                                ' (${reviewCount})',
+                                style: TextStyles.regular13.copyWith(
+                                  color: isDark
+                                      ? Colors.grey[400]
+                                      : Colors.grey[600],
+                                ),
+                              ),
+                            ],
+                            const SizedBox(width: 12),
+                          ],
                           Container(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 6,
                               vertical: 2,
                             ),
                             decoration: BoxDecoration(
-                              color: Colors.red[100],
+                              color:
+                                  inStock ? Colors.green[100] : Colors.red[100],
                               borderRadius: BorderRadius.circular(4),
                             ),
                             child: Text(
-                              '${discount.toInt()}% OFF',
+                              inStock ? 'In Stock' : 'Out of Stock',
                               style: TextStyles.bold13.copyWith(
-                                color: Colors.red[700],
+                                color:
+                                    inStock ? Colors.green[700] : Colors.red[700],
                               ),
                             ),
                           ),
                         ],
-                      ],
-                    ),
-
-                    const SizedBox(height: 4),
-
-                    // Rating and stock status
-                    Row(
-                      children: [
-                        if (rating > 0) ...[
-                          Icon(
-                            Icons.star,
-                            size: 14,
-                            color: Colors.amber[600],
-                          ),
-                          const SizedBox(width: 2),
-                          Text(
-                            rating.toStringAsFixed(1),
-                            style: TextStyles.regular13.copyWith(
-                              color:
-                                  isDark ? Colors.grey[200] : Colors.grey[700],
-                            ),
-                          ),
-                          if (reviewCount > 0) ...[
-                            Text(
-                              ' (${reviewCount})',
-                              style: TextStyles.regular13.copyWith(
-                                color: isDark
-                                    ? Colors.grey[400]
-                                    : Colors.grey[600],
-                              ),
-                            ),
-                          ],
-                          const SizedBox(width: 12),
-                        ],
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 6,
-                            vertical: 2,
-                          ),
-                          decoration: BoxDecoration(
-                            color:
-                                inStock ? Colors.green[100] : Colors.red[100],
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: Text(
-                            inStock ? 'In Stock' : 'Out of Stock',
-                            style: TextStyles.bold13.copyWith(
-                              color:
-                                  inStock ? Colors.green[700] : Colors.red[700],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
 
-              // Arrow icon
-              Icon(
-                Icons.arrow_forward_ios,
-                size: 16,
-                color: isDark ? Colors.grey[600] : Colors.grey[400],
-              ),
-            ],
+                // Arrow icon
+                Icon(
+                  Icons.arrow_forward_ios,
+                  size: 16,
+                  color: isDark ? Colors.grey[600] : Colors.grey[400],
+                ),
+              ],
+            ),
           ),
         ),
       ),

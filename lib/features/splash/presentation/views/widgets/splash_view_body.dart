@@ -73,6 +73,19 @@ class _SplashViewBodyState extends State<SplashViewBody>
 
     _controller.forward();
     _audioPlayer = AudioPlayer()..setReleaseMode(ReleaseMode.stop);
+    _audioPlayer.setAudioContext(AudioContext(
+      android: const AudioContextAndroid(
+        isSpeakerphoneOn: false,
+        stayAwake: false,
+        contentType: AndroidContentType.music,
+        usageType: AndroidUsageType.media,
+        audioFocus: AndroidAudioFocus.none,
+      ),
+      iOS: AudioContextIOS(
+        category: AVAudioSessionCategory.playback,
+        options: {AVAudioSessionOptions.mixWithOthers},
+      ),
+    ));
     _playSplashSound();
     _navigateAfterSplash();
   }
