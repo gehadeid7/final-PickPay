@@ -36,11 +36,30 @@ class _KidsState extends State<Kids> {
   Future<List<ProductsViewsModel>> _loadProducts() async {
     final apiProducts = await ApiService().loadProducts();
 
-    return apiProducts
+    // Define actual brands for Kids' Fashion products
+    final Map<String, String> productBrands = {
+      '682b00c26977bd89257c0e98':
+          'Carter\'s', // FashionProduct11 - Kids' Fashion
+      '682b00c26977bd89257c0e99': 'OshKosh', // FashionProduct12 - Kids' Fashion
+      '682b00c26977bd89257c0e9a':
+          'Gap Kids', // FashionProduct13 - Kids' Fashion
+      '682b00c26977bd89257c0e9b':
+          'Old Navy Kids', // FashionProduct14 - Kids' Fashion
+      '682b00c26977bd89257c0e9c':
+          'Children\'s Place', // FashionProduct15 - Kids' Fashion
+    };
+
+    final filteredProducts = apiProducts
         .where((product) => detailPages.containsKey(product.id))
         .map((apiProduct) {
       final imagePath =
           'assets/Fashion_products/Kids_Fashion/kids_fashion${detailPages.keys.toList().indexOf(apiProduct.id) + 1}/1.png';
+
+      final assignedBrand = productBrands[apiProduct.id] ?? 'Generic';
+
+      // Debug logging
+      print(
+          'Kids\' Fashion - Product ID: ${apiProduct.id}, Assigned Brand: $assignedBrand');
 
       return ProductsViewsModel(
         id: apiProduct.id,
@@ -49,12 +68,19 @@ class _KidsState extends State<Kids> {
         originalPrice: apiProduct.originalPrice,
         rating: apiProduct.rating ?? 4.5,
         reviewCount: apiProduct.reviewCount ?? 100,
+        brand: assignedBrand, // Use actual brand
         imagePaths: [imagePath],
         soldBy: 'PickPay',
         isPickPayFulfilled: true,
         hasFreeDelivery: true,
       );
     }).toList();
+
+    // Debug logging for final brands
+    final finalBrands = filteredProducts.map((p) => p.brand).toSet();
+    print('Kids\' Fashion - Final brands in products: $finalBrands');
+
+    return filteredProducts;
   }
 
   Widget? _findDetailPageById(String productId) {

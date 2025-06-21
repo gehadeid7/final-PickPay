@@ -38,33 +38,47 @@ class _FragranceState extends State<Fragrance> {
 
     // Define actual brands for Fragrance products
     final Map<String, String> productBrands = {
-      '682b00d16977bd89257c0e8e': 'L\'Oréal Paris', // BeautyProduct1
-      '682b00d16977bd89257c0e8f': 'L\'Oréal Paris', // BeautyProduct2
-      '682b00d16977bd89257c0e90': 'Cybele', // BeautyProduct3
-      '682b00d16977bd89257c0e91': 'Eva', // BeautyProduct4
-      '682b00d16977bd89257c0e92': 'MAYBELLINE', // BeautyProduct5
+      '682b00d16977bd89257c0eac': 'Avon', // BeautyProduct16 - Fragrance
+      '682b00d16977bd89257c0ead': 'Gulf Orchid', // BeautyProduct17 - Fragrance
+      '682b00d16977bd89257c0eae':
+          '9Street Corner', // BeautyProduct18 - Fragrance
+      '682b00d16977bd89257c0eaf': 'NIVEA', // BeautyProduct19 - Fragrance
+      '682b00d16977bd89257c0eb0':
+          'Jacques Bogart', // BeautyProduct20 - Fragrance
     };
 
-    return apiProducts
-        .where((apiProduct) => detailPages.containsKey(apiProduct.id))
+    final filteredProducts = apiProducts
+        .where((product) => detailPages.containsKey(product.id))
         .map((apiProduct) {
-      final productIndex = detailPages.keys.toList().indexOf(apiProduct.id) + 1;
-      final imagePath = 'assets/beauty_products/fragrance_$productIndex/1.png';
+      final imagePath =
+          'assets/beauty_products/fragrance_${detailPages.keys.toList().indexOf(apiProduct.id) + 1}/1.png';
+
+      final assignedBrand = productBrands[apiProduct.id] ?? 'Generic';
+
+      // Debug logging
+      print(
+          'Fragrance - Product ID: ${apiProduct.id}, Assigned Brand: $assignedBrand');
 
       return ProductsViewsModel(
         id: apiProduct.id,
         title: apiProduct.name,
         price: apiProduct.price,
         originalPrice: apiProduct.originalPrice,
-        rating: 4.5,
-        reviewCount: 100,
-        brand: productBrands[apiProduct.id] ?? 'Generic', // Use actual brand
+        rating: apiProduct.rating ?? 4.5,
+        reviewCount: apiProduct.reviewCount ?? 100,
+        brand: assignedBrand, // Use actual brand
         imagePaths: [imagePath],
         soldBy: 'PickPay',
         isPickPayFulfilled: true,
         hasFreeDelivery: true,
       );
     }).toList();
+
+    // Debug logging for final brands
+    final finalBrands = filteredProducts.map((p) => p.brand).toSet();
+    print('Fragrance - Final brands in products: $finalBrands');
+
+    return filteredProducts;
   }
 
   Widget? _findDetailPageById(String productId) {

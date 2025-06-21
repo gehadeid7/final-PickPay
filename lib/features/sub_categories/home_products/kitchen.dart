@@ -27,6 +27,15 @@ class _KitchenViewState extends State<KitchenView> {
     '681dab0df9c9147444b452db': const HomeProduct15(),
   };
 
+  // Define actual brands for Kitchen & Dining products
+  final Map<String, String> productBrands = {
+    '681dab0df9c9147444b452d7': 'P&P CHEF', // HomeProduct11 - Kitchen
+    '681dab0df9c9147444b452d8': 'S2C', // HomeProduct12 - Kitchen
+    '681dab0df9c9147444b452d9': 'LIANYU', // HomeProduct13 - Kitchen
+    '681dab0df9c9147444b452da': 'Neoflam', // HomeProduct14 - Kitchen
+    '681dab0df9c9147444b452db': 'Generic', // HomeProduct15 - Kitchen
+  };
+
   @override
   void initState() {
     super.initState();
@@ -49,6 +58,7 @@ class _KitchenViewState extends State<KitchenView> {
         originalPrice: apiProduct.originalPrice,
         rating: apiProduct.rating ?? 4.5,
         reviewCount: apiProduct.reviewCount ?? 100,
+        brand: productBrands[apiProduct.id] ?? 'Generic', // Use actual brand
         imagePaths: [imagePath],
         soldBy: 'PickPay',
         isPickPayFulfilled: true,

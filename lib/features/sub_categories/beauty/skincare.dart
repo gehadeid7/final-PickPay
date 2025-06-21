@@ -36,11 +36,26 @@ class _SkincareState extends State<Skincare> {
   Future<List<ProductsViewsModel>> _loadProducts() async {
     final apiProducts = await ApiService().loadProducts();
 
-    return apiProducts
+    // Define actual brands for Skincare products
+    final Map<String, String> productBrands = {
+      '682b00d16977bd89257c0ea2': 'La Roche-Posay', // BeautyProduct6 - Skincare
+      '682b00d16977bd89257c0ea3': 'Eucerin', // BeautyProduct7 - Skincare
+      '682b00d16977bd89257c0ea4': 'Care & More', // BeautyProduct8 - Skincare
+      '682b00d16977bd89257c0ea5': 'NIVEA', // BeautyProduct9 - Skincare
+      '682b00d16977bd89257c0ea6': 'Garnier', // BeautyProduct10 - Skincare
+    };
+
+    final filteredProducts = apiProducts
         .where((product) => detailPages.containsKey(product.id))
         .map((apiProduct) {
       final imagePath =
           'assets/beauty_products/skincare_${detailPages.keys.toList().indexOf(apiProduct.id) + 1}/1.png';
+
+      final assignedBrand = productBrands[apiProduct.id] ?? 'Generic';
+
+      // Debug logging
+      print(
+          'Skincare - Product ID: ${apiProduct.id}, Assigned Brand: $assignedBrand');
 
       return ProductsViewsModel(
         id: apiProduct.id,
@@ -49,12 +64,19 @@ class _SkincareState extends State<Skincare> {
         originalPrice: apiProduct.originalPrice,
         rating: apiProduct.rating ?? 4.5,
         reviewCount: apiProduct.reviewCount ?? 100,
+        brand: assignedBrand, // Use actual brand
         imagePaths: [imagePath],
         soldBy: 'PickPay',
         isPickPayFulfilled: true,
         hasFreeDelivery: true,
       );
     }).toList();
+
+    // Debug logging for final brands
+    final finalBrands = filteredProducts.map((p) => p.brand).toSet();
+    print('Skincare - Final brands in products: $finalBrands');
+
+    return filteredProducts;
   }
 
   Widget? _findDetailPageById(String productId) {

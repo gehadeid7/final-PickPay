@@ -36,11 +36,27 @@ class _WomenState extends State<Women> {
   Future<List<ProductsViewsModel>> _loadProducts() async {
     final apiProducts = await ApiService().loadProducts();
 
-    return apiProducts
+    // Define actual brands for Women's Fashion products
+    final Map<String, String> productBrands = {
+      '682b00c26977bd89257c0e8e': 'Zara', // FashionProduct1 - Women's Fashion
+      '682b00c26977bd89257c0e8f': 'H&M', // FashionProduct2 - Women's Fashion
+      '682b00c26977bd89257c0e90':
+          'Forever 21', // FashionProduct3 - Women's Fashion
+      '682b00c26977bd89257c0e91': 'Mango', // FashionProduct4 - Women's Fashion
+      '682b00c26977bd89257c0e92': 'Uniqlo', // FashionProduct5 - Women's Fashion
+    };
+
+    final filteredProducts = apiProducts
         .where((product) => detailPages.containsKey(product.id))
         .map((apiProduct) {
       final imagePath =
           'assets/Fashion_products/Women_Fashion/women_fashion${detailPages.keys.toList().indexOf(apiProduct.id) + 1}/1.png';
+
+      final assignedBrand = productBrands[apiProduct.id] ?? 'Generic';
+
+      // Debug logging
+      print(
+          'Women\'s Fashion - Product ID: ${apiProduct.id}, Assigned Brand: $assignedBrand');
 
       return ProductsViewsModel(
         id: apiProduct.id,
@@ -49,12 +65,19 @@ class _WomenState extends State<Women> {
         originalPrice: apiProduct.originalPrice,
         rating: apiProduct.rating ?? 4.5,
         reviewCount: apiProduct.reviewCount ?? 100,
+        brand: assignedBrand, // Use actual brand
         imagePaths: [imagePath],
         soldBy: 'PickPay',
         isPickPayFulfilled: true,
         hasFreeDelivery: true,
       );
     }).toList();
+
+    // Debug logging for final brands
+    final finalBrands = filteredProducts.map((p) => p.brand).toSet();
+    print('Women\'s Fashion - Final brands in products: $finalBrands');
+
+    return filteredProducts;
   }
 
   Widget? _findDetailPageById(String productId) {

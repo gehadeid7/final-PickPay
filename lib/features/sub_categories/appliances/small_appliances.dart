@@ -59,18 +59,16 @@ class _SmallAppliancesState extends State<SmallAppliances> {
 
     // Define actual brands for Small Appliances products
     final Map<String, String> productBrands = {
-      '68252918a68b49cb06164209':
-          'deime', // AppliancesProduct6 - Small Appliance
+      '68252918a68b49cb06164209': 'deime', // AppliancesProduct6 - Air Fryer
       '68252918a68b49cb0616420a':
-          'Black & Decker', // AppliancesProduct7 - Small Appliance
+          'Black & Decker', // AppliancesProduct7 - Coffee Maker
       '68252918a68b49cb0616420b':
-          'Black & Decker', // AppliancesProduct8 - Small Appliance
+          'Black & Decker', // AppliancesProduct8 - Toaster
       '68252918a68b49cb0616420c': 'Panasonic', // AppliancesProduct9 - Iron
       '68252918a68b49cb0616420d':
           'Fresh', // AppliancesProduct10 - Vacuum Cleaner
-      '68252918a68b49cb0616420e': 'Fresh', // AppliancesProduct11 - Fan
       '68252918a68b49cb0616420f':
-          'Tornado', // AppliancesProduct12 - Small Appliance
+          'Tornado', // AppliancesProduct12 - Water Heater
       '68252918a68b49cb06164210':
           'Black & Decker', // AppliancesProduct13 - Blender
       '68252918a68b49cb06164211':
@@ -79,11 +77,17 @@ class _SmallAppliancesState extends State<SmallAppliances> {
           'Black & Decker', // AppliancesProduct15 - Dough Mixer
     };
 
-    return apiProducts
+    final filteredProducts = apiProducts
         .where((apiProduct) => detailPages.containsKey(apiProduct.id))
         .map((apiProduct) {
       final productIndex = detailPages.keys.toList().indexOf(apiProduct.id) + 1;
       final imagePath = 'assets/appliances/product$productIndex/1.png';
+
+      final assignedBrand = productBrands[apiProduct.id] ?? 'Generic';
+
+      // Debug logging
+      print(
+          'Small Appliances - Product ID: ${apiProduct.id}, Assigned Brand: $assignedBrand');
 
       return ProductsViewsModel(
         id: apiProduct.id,
@@ -92,13 +96,19 @@ class _SmallAppliancesState extends State<SmallAppliances> {
         originalPrice: apiProduct.originalPrice,
         rating: 4.5,
         reviewCount: 100,
-        brand: productBrands[apiProduct.id] ?? 'Generic', // Use actual brand
+        brand: assignedBrand, // Use actual brand
         imagePaths: [imagePath],
         soldBy: 'PickPay',
         isPickPayFulfilled: true,
         hasFreeDelivery: true,
       );
     }).toList();
+
+    // Debug logging for final brands
+    final finalBrands = filteredProducts.map((p) => p.brand).toSet();
+    print('Small Appliances - Final brands in products: $finalBrands');
+
+    return filteredProducts;
   }
 
   Widget? _findDetailPageById(String productId) {
@@ -119,6 +129,12 @@ class _SmallAppliancesState extends State<SmallAppliances> {
         }
 
         final products = snapshot.data ?? [];
+
+        // Debug logging for products passed to BaseCategoryView
+        print(
+            'Small Appliances - Products passed to BaseCategoryView: ${products.length}');
+        print(
+            'Small Appliances - Brands in products: ${products.map((p) => p.brand).toSet()}');
 
         return BaseCategoryView(
           categoryName: 'Small Appliances',

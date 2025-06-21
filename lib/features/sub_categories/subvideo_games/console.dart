@@ -34,11 +34,25 @@ class _ConsoleState extends State<Console> {
   Future<List<ProductsViewsModel>> _loadProducts() async {
     final apiProducts = await ApiService().loadProducts();
 
-    return apiProducts
+    // Define actual brands for Video Game Console products
+    final Map<String, String> productBrands = {
+      '682b00a46977bd89257c0e80': 'PlayStation', // VideoGamesProduct1 - Console
+      '682b00a46977bd89257c0e81': 'Nintendo', // VideoGamesProduct2 - Console
+      '682b00a46977bd89257c0e82': 'Generic', // VideoGamesProduct3 - Console
+      '682b00a46977bd89257c0e83': 'Generic', // VideoGamesProduct4 - Console
+    };
+
+    final filteredProducts = apiProducts
         .where((product) => detailPages.containsKey(product.id))
         .map((apiProduct) {
       final imagePath =
           'assets/videogames_products/Consoles/console${detailPages.keys.toList().indexOf(apiProduct.id) + 1}/1.png';
+
+      final assignedBrand = productBrands[apiProduct.id] ?? 'Generic';
+
+      // Debug logging
+      print(
+          'Video Game Console - Product ID: ${apiProduct.id}, Assigned Brand: $assignedBrand');
 
       return ProductsViewsModel(
         id: apiProduct.id,
@@ -47,12 +61,19 @@ class _ConsoleState extends State<Console> {
         originalPrice: apiProduct.originalPrice,
         rating: apiProduct.rating ?? 4.5,
         reviewCount: apiProduct.reviewCount ?? 100,
+        brand: assignedBrand, // Use actual brand
         imagePaths: [imagePath],
         soldBy: 'PickPay',
         isPickPayFulfilled: true,
         hasFreeDelivery: true,
       );
     }).toList();
+
+    // Debug logging for final brands
+    final finalBrands = filteredProducts.map((p) => p.brand).toSet();
+    print('Video Game Console - Final brands in products: $finalBrands');
+
+    return filteredProducts;
   }
 
   Widget? _findDetailPageById(String productId) {

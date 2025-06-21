@@ -48,11 +48,17 @@ class _LargeAppliancesState extends State<LargeAppliances> {
       '68252918a68b49cb06164208': 'Midea', // AppliancesProduct5 - Dishwasher
     };
 
-    return apiProducts
+    final filteredProducts = apiProducts
         .where((apiProduct) => detailPages.containsKey(apiProduct.id))
         .map((apiProduct) {
       final productIndex = detailPages.keys.toList().indexOf(apiProduct.id) + 1;
       final imagePath = 'assets/appliances/product$productIndex/1.png';
+
+      final assignedBrand = productBrands[apiProduct.id] ?? 'Generic';
+
+      // Debug logging
+      print(
+          'Large Appliances - Product ID: ${apiProduct.id}, Assigned Brand: $assignedBrand');
 
       return ProductsViewsModel(
         id: apiProduct.id,
@@ -61,13 +67,19 @@ class _LargeAppliancesState extends State<LargeAppliances> {
         originalPrice: apiProduct.originalPrice,
         rating: 4.5,
         reviewCount: 100,
-        brand: productBrands[apiProduct.id] ?? 'Generic', // Use actual brand
+        brand: assignedBrand, // Use actual brand
         imagePaths: [imagePath],
         soldBy: 'PickPay',
         isPickPayFulfilled: true,
         hasFreeDelivery: true,
       );
     }).toList();
+
+    // Debug logging for final brands
+    final finalBrands = filteredProducts.map((p) => p.brand).toSet();
+    print('Large Appliances - Final brands in products: $finalBrands');
+
+    return filteredProducts;
   }
 
   Widget? _findDetailPageById(String productId) {
@@ -88,6 +100,12 @@ class _LargeAppliancesState extends State<LargeAppliances> {
         }
 
         final products = snapshot.data ?? [];
+
+        // Debug logging for products passed to BaseCategoryView
+        print(
+            'Large Appliances - Products passed to BaseCategoryView: ${products.length}');
+        print(
+            'Large Appliances - Brands in products: ${products.map((p) => p.brand).toSet()}');
 
         return BaseCategoryView(
           categoryName: 'Large Appliances',

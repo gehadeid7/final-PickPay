@@ -36,6 +36,15 @@ class _BathViewState extends State<BathView> {
   Future<List<ProductsViewsModel>> _loadProducts() async {
     final apiProducts = await ApiService().loadProducts();
 
+    // Define actual brands for Bath & Bedding products
+    final Map<String, String> productBrands = {
+      '681dab0df9c9147444b452dc': 'Bedsure', // HomeProduct16 - Bath
+      '681dab0df9c9147444b452dd': 'Home of Linen', // HomeProduct17 - Bath
+      '681dab0df9c9147444b452de': 'Banotex', // HomeProduct18 - Bath
+      '681dab0df9c9147444b452df': 'Generic', // HomeProduct19 - Bath
+      '681dab0df9c9147444b452e0': 'Generic', // HomeProduct20 - Bath
+    };
+
     return apiProducts
         .where((product) => detailPages.containsKey(product.id))
         .map((apiProduct) {
@@ -49,6 +58,7 @@ class _BathViewState extends State<BathView> {
         originalPrice: apiProduct.originalPrice,
         rating: apiProduct.rating ?? 4.5,
         reviewCount: apiProduct.reviewCount ?? 100,
+        brand: productBrands[apiProduct.id] ?? 'Generic', // Use actual brand
         imagePaths: [imagePath],
         soldBy: 'PickPay',
         isPickPayFulfilled: true,

@@ -36,6 +36,16 @@ class _HomeDecorviewState extends State<HomeDecorview> {
   Future<List<ProductsViewsModel>> _loadProducts() async {
     final apiProducts = await ApiService().loadProducts();
 
+    // Define actual brands for Home Decor products
+    final Map<String, String> productBrands = {
+      '681dab0df9c9147444b452d2': 'oliruim', // HomeProduct6 - Home Decor
+      '681dab0df9c9147444b452d3': 'Pasabahce', // HomeProduct7 - Home Decor
+      '681dab0df9c9147444b452d4':
+          'Golden Lighting', // HomeProduct8 - Home Decor
+      '681dab0df9c9147444b452d5': 'Amotpo', // HomeProduct9 - Home Decor
+      '681dab0df9c9147444b452d6': 'Generic', // HomeProduct10 - Home Decor
+    };
+
     return apiProducts
         .where((product) => detailPages.containsKey(product.id))
         .map((apiProduct) {
@@ -49,6 +59,7 @@ class _HomeDecorviewState extends State<HomeDecorview> {
         originalPrice: apiProduct.originalPrice,
         rating: apiProduct.rating ?? 4.5,
         reviewCount: apiProduct.reviewCount ?? 100,
+        brand: productBrands[apiProduct.id] ?? 'Generic', // Use actual brand
         imagePaths: [imagePath],
         soldBy: 'PickPay',
         isPickPayFulfilled: true,

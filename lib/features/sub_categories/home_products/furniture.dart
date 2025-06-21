@@ -38,19 +38,25 @@ class _FurnitureViewState extends State<FurnitureView> {
 
     // Define actual brands for Furniture products
     final Map<String, String> productBrands = {
-      '682b00c26977bd89257c0e8e': 'Generic', // HomeProduct1 - Furniture
-      '682b00c26977bd89257c0e8f': 'Generic', // HomeProduct2 - Furniture
-      '682b00c26977bd89257c0e90': 'Generic', // HomeProduct3 - Furniture
-      '682b00c26977bd89257c0e91': 'Furgle', // HomeProduct4 - Furniture
-      '682b00c26977bd89257c0e92': 'Janssen', // HomeProduct5 - Furniture
+      '681dab0df9c9147444b452cd': 'Generic', // HomeProduct1 - Furniture
+      '681dab0df9c9147444b452ce': 'Generic', // HomeProduct2 - Furniture
+      '681dab0df9c9147444b452cf': 'Generic', // HomeProduct3 - Furniture
+      '681dab0df9c9147444b452d0': 'Furgle', // HomeProduct4 - Furniture
+      '681dab0df9c9147444b452d1': 'Janssen', // HomeProduct5 - Furniture
     };
 
-    return apiProducts
+    final filteredProducts = apiProducts
         .where((apiProduct) => detailPages.containsKey(apiProduct.id))
         .map((apiProduct) {
       final productIndex = detailPages.keys.toList().indexOf(apiProduct.id) + 1;
       final imagePath =
           'assets/Home_products/furniture/furniture$productIndex/1.png';
+
+      final assignedBrand = productBrands[apiProduct.id] ?? 'Generic';
+
+      // Debug logging
+      print(
+          'Furniture - Product ID: ${apiProduct.id}, Assigned Brand: $assignedBrand');
 
       return ProductsViewsModel(
         id: apiProduct.id,
@@ -59,13 +65,19 @@ class _FurnitureViewState extends State<FurnitureView> {
         originalPrice: apiProduct.originalPrice,
         rating: 4.5,
         reviewCount: 100,
-        brand: productBrands[apiProduct.id] ?? 'Generic', // Use actual brand
+        brand: assignedBrand, // Use actual brand
         imagePaths: [imagePath],
         soldBy: 'PickPay',
         isPickPayFulfilled: true,
         hasFreeDelivery: true,
       );
     }).toList();
+
+    // Debug logging for final brands
+    final finalBrands = filteredProducts.map((p) => p.brand).toSet();
+    print('Furniture - Final brands in products: $finalBrands');
+
+    return filteredProducts;
   }
 
   Widget? _findDetailPageById(String productId) {
@@ -86,6 +98,12 @@ class _FurnitureViewState extends State<FurnitureView> {
         }
 
         final products = snapshot.data ?? [];
+
+        // Debug logging for products passed to BaseCategoryView
+        print(
+            'Furniture - Products passed to BaseCategoryView: ${products.length}');
+        print(
+            'Furniture - Brands in products: ${products.map((p) => p.brand).toSet()}');
 
         return BaseCategoryView(
           categoryName: 'Furniture',

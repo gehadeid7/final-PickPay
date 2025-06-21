@@ -36,7 +36,18 @@ class _MenState extends State<Men> {
   Future<List<ProductsViewsModel>> _loadProducts() async {
     final apiProducts = await ApiService().loadProducts();
 
-    return apiProducts
+    // Define actual brands for Men's Fashion products
+    final Map<String, String> productBrands = {
+      '682b00c26977bd89257c0e93': 'Nike', // FashionProduct6 - Men's Fashion
+      '682b00c26977bd89257c0e94': 'Adidas', // FashionProduct7 - Men's Fashion
+      '682b00c26977bd89257c0e95': 'Levi\'s', // FashionProduct8 - Men's Fashion
+      '682b00c26977bd89257c0e96':
+          'Tommy Hilfiger', // FashionProduct9 - Men's Fashion
+      '682b00c26977bd89257c0e97':
+          'Calvin Klein', // FashionProduct10 - Men's Fashion
+    };
+
+    final filteredProducts = apiProducts
         .where((product) => detailPages.containsKey(product.id))
         .map((apiProduct) {
       final index = detailPages.keys.toList().indexOf(apiProduct.id) + 1;
@@ -61,6 +72,12 @@ class _MenState extends State<Men> {
               'assets/Fashion_products/Men_Fashion/men_fashion$index/1.png';
       }
 
+      final assignedBrand = productBrands[apiProduct.id] ?? 'Generic';
+
+      // Debug logging
+      print(
+          'Men\'s Fashion - Product ID: ${apiProduct.id}, Assigned Brand: $assignedBrand');
+
       return ProductsViewsModel(
         id: apiProduct.id,
         title: apiProduct.name,
@@ -68,12 +85,19 @@ class _MenState extends State<Men> {
         originalPrice: apiProduct.originalPrice,
         rating: apiProduct.rating ?? 4.5,
         reviewCount: apiProduct.reviewCount ?? 100,
+        brand: assignedBrand, // Use actual brand
         imagePaths: [imagePath],
         soldBy: 'PickPay',
         isPickPayFulfilled: true,
         hasFreeDelivery: true,
       );
     }).toList();
+
+    // Debug logging for final brands
+    final finalBrands = filteredProducts.map((p) => p.brand).toSet();
+    print('Men\'s Fashion - Final brands in products: $finalBrands');
+
+    return filteredProducts;
   }
 
   Widget? _findDetailPageById(String productId) {
