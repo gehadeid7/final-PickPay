@@ -325,6 +325,34 @@ class _SearchTextFieldState extends State<SearchTextField>
     }
   }
 
+  // Show confirmation dialog before clearing all recent searches
+  Future<void> _confirmAndClearRecentSearches() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Clear Search History'),
+        content: const Text('Are you sure you want to clear all recent search history? This action cannot be undone.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Clear All'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+            ),
+          ),
+        ],
+      ),
+    );
+    if (confirmed == true) {
+      await _clearRecentSearches();
+    }
+  }
+
   Future<void> _addRecentSearch(String query) async {
     if (query.trim().isEmpty) return;
 
@@ -1469,7 +1497,7 @@ class _SearchTextFieldState extends State<SearchTextField>
                     action: IconButton(
                       icon: Icon(Icons.clear_all,
                           size: 18, color: Colors.grey[600]),
-                      onPressed: _clearRecentSearches,
+                      onPressed: _confirmAndClearRecentSearches,
                       splashRadius: 16,
                       tooltip: 'Clear all',
                     ),
@@ -1790,152 +1818,178 @@ class _SearchTextFieldState extends State<SearchTextField>
     final borderColor = isDark ? Colors.grey[600] : Colors.grey[300];
     final textColor = isDark ? Colors.white : Colors.black87;
 
+    // Helper to close dropdown if open
+    void _closeDropdownIfOpen() {
+      if (_showDropdown) {
+        setState(() {
+          _showDropdown = false;
+          _highlightedIndex = -1;
+        });
+        _focusNode.unfocus();
+      }
+    }
+
     return Semantics(
       label: 'Search bar with suggestions and results',
-      child: RawKeyboardListener(
-        focusNode: _keyboardFocusNode,
-        onKey: _handleKey,
-        child: Column(
-          children: [
-            // Search Input Field
-            AnimatedBuilder(
-              animation: _scaleAnimation,
-              builder: (context, child) => Transform.scale(
-                scale: _scaleAnimation.value,
-                child: Container(
-                  margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(isDark ? 0.3 : 0.1),
-                        blurRadius: 12,
-                        offset: const Offset(0, 4),
-                        spreadRadius: 0,
-                      ),
-                    ],
-                  ),
-                  child: TextField(
-                    focusNode: _focusNode,
-                    controller: widget.controller,
-                    onChanged: (value) => _searchProducts(value),
-                    onSubmitted: (value) {
-                      widget.onSearch(value);
-                      _searchProducts(value);
-                    },
-                    onTap: () => setState(() => _showDropdown = true),
-                    style: TextStyles.regular16.copyWith(color: textColor),
-                    decoration: InputDecoration(
-                      hintText: 'Search for anything...',
-                      hintStyle: TextStyles.regular16.copyWith(
-                        color: Colors.grey[500],
-                      ),
-                      prefixIcon: Container(
-                        padding: const EdgeInsets.all(14),
-                        child: Icon(
-                          Icons.search,
-                          size: 22,
-                          color: _isFocused ? primaryColor : Colors.grey[600],
-                        ),
-                      ),
-                      suffixIcon: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          if (_isLoading)
-                            Container(
-                              padding: const EdgeInsets.all(12),
-                              child: SizedBox(
-                                width: 20,
-                                height: 20,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  valueColor:
-                                      AlwaysStoppedAnimation<Color>(primaryColor),
-                                ),
-                              ),
-                            )
-                          else
-                            _buildVoiceButton(),
-                          if (widget.controller.text.isNotEmpty)
-                            IconButton(
-                              icon: Icon(Icons.clear, color: Colors.grey[600]),
-                              onPressed: () {
-                                widget.controller.clear();
-                                _clearSearchState();
-                              },
-                              splashRadius: 20,
-                            ),
+      child: WillPopScope(
+        onWillPop: () async {
+          if (_showDropdown) {
+            _closeDropdownIfOpen();
+            return false;
+          }
+          return true;
+        },
+        child: GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onTap: () {
+            _closeDropdownIfOpen();
+          },
+          child: RawKeyboardListener(
+            focusNode: _keyboardFocusNode,
+            onKey: _handleKey,
+            child: Column(
+              children: [
+                // Search Input Field
+                AnimatedBuilder(
+                  animation: _scaleAnimation,
+                  builder: (context, child) => Transform.scale(
+                    scale: _scaleAnimation.value,
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(isDark ? 0.3 : 0.1),
+                            blurRadius: 12,
+                            offset: const Offset(0, 4),
+                            spreadRadius: 0,
+                          ),
                         ],
                       ),
-                      filled: true,
-                      fillColor: surfaceColor,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
-                        borderSide: BorderSide(color: borderColor!, width: 1),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
-                        borderSide: BorderSide(color: borderColor, width: 1),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
-                        borderSide: BorderSide(color: primaryColor, width: 2),
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 24,
-                        vertical: 16,
+                      child: TextField(
+                        focusNode: _focusNode,
+                        controller: widget.controller,
+                        onChanged: (value) => _searchProducts(value),
+                        onSubmitted: (value) {
+                          widget.onSearch(value);
+                          _searchProducts(value);
+                        },
+                        onTap: () => setState(() => _showDropdown = true),
+                        style: TextStyles.regular16.copyWith(color: textColor),
+                        decoration: InputDecoration(
+                          hintText: 'Search for anything...',
+                          hintStyle: TextStyles.regular16.copyWith(
+                            color: Colors.grey[500],
+                          ),
+                          prefixIcon: Container(
+                            padding: const EdgeInsets.all(14),
+                            child: Icon(
+                              Icons.search,
+                              size: 22,
+                              color: _isFocused ? primaryColor : Colors.grey[600],
+                            ),
+                          ),
+                          suffixIcon: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              if (_isLoading)
+                                Container(
+                                  padding: const EdgeInsets.all(12),
+                                  child: SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      valueColor:
+                                          AlwaysStoppedAnimation<Color>(primaryColor),
+                                    ),
+                                  ),
+                                )
+                              else
+                                _buildVoiceButton(),
+                              if (widget.controller.text.isNotEmpty)
+                                IconButton(
+                                  icon: Icon(Icons.clear, color: Colors.grey[600]),
+                                  onPressed: () {
+                                    widget.controller.clear();
+                                    _clearSearchState();
+                                  },
+                                  splashRadius: 20,
+                                ),
+                            ],
+                          ),
+                          filled: true,
+                          fillColor: surfaceColor,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(color: borderColor!, width: 1),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(color: borderColor, width: 1),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide(color: primaryColor, width: 2),
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 16,
+                          ),
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
+
+                // Voice Search Status
+                if (_isListening) _buildVoiceSearchStatus(),
+
+                // Product Loading Indicator
+                if (_isProductLoading)
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Text(
+                          'Loading product...',
+                          style:
+                              TextStyles.regular13.copyWith(color: Colors.grey[600]),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                // Dropdown Results
+                if (_showDropdown && !_isProductLoading)
+                  Container(
+                    constraints: BoxConstraints(
+                      maxHeight: 500, // Ensures bounded height for dropdown
+                      minWidth: double.infinity,
+                    ),
+                    child: SlideTransition(
+                      position: _slideAnimation,
+                      child: FadeTransition(
+                        opacity: _opacityAnimation,
+                        child: _buildDropdownContent(
+                            isDark, primaryColor, surfaceColor, textColor),
+                      ),
+                    ),
+                  ),
+              ],
             ),
-
-            // Voice Search Status
-            if (_isListening) _buildVoiceSearchStatus(),
-
-            // Product Loading Indicator
-            if (_isProductLoading)
-              Container(
-                padding: const EdgeInsets.all(16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Text(
-                      'Loading product...',
-                      style:
-                          TextStyles.regular13.copyWith(color: Colors.grey[600]),
-                    ),
-                  ],
-                ),
-              ),
-
-            // Dropdown Results
-            if (_showDropdown && !_isProductLoading)
-              Container(
-                constraints: BoxConstraints(
-                  maxHeight: 500, // Ensures bounded height for dropdown
-                  minWidth: double.infinity,
-                ),
-                child: SlideTransition(
-                  position: _slideAnimation,
-                  child: FadeTransition(
-                    opacity: _opacityAnimation,
-                    child: _buildDropdownContent(
-                        isDark, primaryColor, surfaceColor, textColor),
-                  ),
-                ),
-              ),
-          ],
+          ),
         ),
       ),
     );
