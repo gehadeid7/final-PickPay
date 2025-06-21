@@ -1,4 +1,4 @@
-import 'dart:ui'; // ضروري لـ Blur
+import 'dart:ui'; // Required for Blur
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pickpay/features/auth/presentation/cubits/verify_email_state.dart/verify_email_cubit.dart';
@@ -23,7 +23,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView>
   void initState() {
     super.initState();
 
-    // إعداد تأثير التوهج Glow للأيقونة
+    // Setup Glow effect animation for the icon
     _iconGlowController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 2),
@@ -63,7 +63,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView>
             if (state is VerifyEmailSuccess) {
               AppFlushbar.showSuccess(
                 context,
-                'تم إرسال رابط التحقق بنجاح',
+                'Verification link sent successfully',
               );
             } else if (state is VerifyEmailFailure) {
               AppFlushbar.showError(
@@ -79,7 +79,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView>
 
             return Stack(
               children: [
-                // خلفية ملونة بسيطة
+                // Simple colored background
                 Container(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
@@ -95,7 +95,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView>
                   ),
                 ),
 
-                // تأثير Blur وزجاجي على محتوى الصفحة
+                // Blur and glass effect on page content
                 Center(
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(24),
@@ -128,7 +128,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView>
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            // أيقونة مع توهج متحرك Glow
+                            // Icon with animated Glow effect
                             AnimatedBuilder(
                               animation: _glowAnimation,
                               builder: (context, child) {
@@ -156,7 +156,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView>
                             ),
                             const SizedBox(height: 24),
                             Text(
-                              'يرجى التحقق من بريدك الإلكتروني',
+                              'Please check your email',
                               style: theme.textTheme.headlineSmall?.copyWith(
                                 fontWeight: FontWeight.bold,
                                 shadows: [
@@ -174,7 +174,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView>
                             ),
                             const SizedBox(height: 16),
                             Text(
-                              'لقد أرسلنا رابط التحقق إلى بريدك. الرجاء التحقق من صندوق الوارد والنقر على الرابط لتفعيل حسابك.',
+                              'We have sent a verification link to your email. Please check your inbox and click on the link to activate your account.',
                               style: theme.textTheme.bodyMedium?.copyWith(
                                 // ignore: deprecated_member_use
                                 color: theme.colorScheme.onSurface
@@ -199,7 +199,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView>
                                         padding: const EdgeInsets.symmetric(
                                             vertical: 16),
                                         child: Text(
-                                          'يمكنك إعادة إرسال الرابط بعد $countdown ثانية',
+                                          'You can resend the link after $countdown seconds',
                                           style: theme.textTheme.bodyMedium
                                               ?.copyWith(
                                             color: theme.colorScheme.onSurface
@@ -237,7 +237,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView>
                                   elevation: 4,
                                 ),
                                 child: const Text(
-                                  'إعادة إرسال رابط التحقق',
+                                  'Resend Verification Link',
                                   style: TextStyle(fontSize: 16),
                                 ),
                               ),
@@ -265,7 +265,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView>
                                   foregroundColor: theme.colorScheme.primary,
                                 ),
                                 child: const Text(
-                                  'العودة إلى تسجيل الدخول',
+                                  'Back to Sign In',
                                   style: TextStyle(fontSize: 16),
                                 ),
                               ),
