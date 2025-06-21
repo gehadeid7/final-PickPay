@@ -56,31 +56,49 @@ class _SmallAppliancesState extends State<SmallAppliances> {
 
   Future<List<ProductsViewsModel>> _loadProducts() async {
     final apiProducts = await ApiService().loadProducts();
+
+    // Define actual brands for Small Appliances products
+    final Map<String, String> productBrands = {
+      '68252918a68b49cb06164209':
+          'deime', // AppliancesProduct6 - Small Appliance
+      '68252918a68b49cb0616420a':
+          'Black & Decker', // AppliancesProduct7 - Small Appliance
+      '68252918a68b49cb0616420b':
+          'Black & Decker', // AppliancesProduct8 - Small Appliance
+      '68252918a68b49cb0616420c': 'Panasonic', // AppliancesProduct9 - Iron
+      '68252918a68b49cb0616420d':
+          'Fresh', // AppliancesProduct10 - Vacuum Cleaner
+      '68252918a68b49cb0616420e': 'Fresh', // AppliancesProduct11 - Fan
+      '68252918a68b49cb0616420f':
+          'Tornado', // AppliancesProduct12 - Small Appliance
+      '68252918a68b49cb06164210':
+          'Black & Decker', // AppliancesProduct13 - Blender
+      '68252918a68b49cb06164211':
+          'Black & Decker', // AppliancesProduct14 - Kettle
+      '68252918a68b49cb06164212':
+          'Black & Decker', // AppliancesProduct15 - Dough Mixer
+    };
+
     return apiProducts
-        .where((product) => detailPages.containsKey(product.id))
+        .where((apiProduct) => detailPages.containsKey(apiProduct.id))
         .map((apiProduct) {
-          final productNumber = productImageNumbers[apiProduct.id];
-          if (productNumber == null) return null;
+      final productIndex = detailPages.keys.toList().indexOf(apiProduct.id) + 1;
+      final imagePath = 'assets/appliances/product$productIndex/1.png';
 
-          final imagePath = 'assets/appliances/product$productNumber/1.png';
-
-          return ProductsViewsModel(
-            id: apiProduct.id,
-            title: apiProduct.name,
-            price: apiProduct.price,
-            originalPrice: apiProduct.originalPrice,
-            rating: 4.5,
-            reviewCount: 100,
-            brand: 'Generic',
-            imagePaths: [imagePath],
-            soldBy: 'PickPay',
-            isPickPayFulfilled: true,
-            hasFreeDelivery: true,
-          );
-        })
-        .where((product) => product != null)
-        .cast<ProductsViewsModel>()
-        .toList();
+      return ProductsViewsModel(
+        id: apiProduct.id,
+        title: apiProduct.name,
+        price: apiProduct.price,
+        originalPrice: apiProduct.originalPrice,
+        rating: 4.5,
+        reviewCount: 100,
+        brand: productBrands[apiProduct.id] ?? 'Generic', // Use actual brand
+        imagePaths: [imagePath],
+        soldBy: 'PickPay',
+        isPickPayFulfilled: true,
+        hasFreeDelivery: true,
+      );
+    }).toList();
   }
 
   Widget? _findDetailPageById(String productId) {

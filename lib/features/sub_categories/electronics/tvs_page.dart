@@ -35,32 +35,37 @@ class _TvsPageState extends State<TvsPage> {
 
   Future<List<ProductsViewsModel>> _loadProducts() async {
     final apiProducts = await ApiService().loadProducts();
-    return apiProducts
-        .where((product) =>
-            product.name.toLowerCase().contains('tv') ||
-            product.name.toLowerCase().contains('television'))
-        .map((apiProduct) {
-          final productIndex =
-              detailPages.keys.toList().indexOf(apiProduct.id) + 1;
-          final imagePath =
-              'assets/electronics_products/tvscreens/tv$productIndex/1.png';
 
-          return ProductsViewsModel(
-            id: apiProduct.id,
-            title: apiProduct.name,
-            price: apiProduct.price,
-            originalPrice: apiProduct.originalPrice,
-            rating: 4.5,
-            reviewCount: 100,
-            brand: 'Generic',
-            imagePaths: [imagePath],
-            soldBy: 'PickPay',
-            isPickPayFulfilled: true,
-            hasFreeDelivery: true,
-          );
-        })
-        .where((product) => detailPages.containsKey(product.id))
-        .toList();
+    // Define actual brands for TVs products
+    final Map<String, String> productBrands = {
+      '6819e22b123a4faad16613c4': 'SAMSUNG', // TV1
+      '6819e22b123a4faad16613c5': 'SAMSUNG', // TV2
+      '6819e22b123a4faad16613c6': 'SAMSUNG', // TV3
+      '6819e22b123a4faad16613c7': 'SAMSUNG', // TV4
+      '6819e22b123a4faad16613c8': 'LG', // TV5 - LG UHD 4K TV
+    };
+
+    return apiProducts
+        .where((apiProduct) => detailPages.containsKey(apiProduct.id))
+        .map((apiProduct) {
+      final productIndex = detailPages.keys.toList().indexOf(apiProduct.id) + 1;
+      final imagePath =
+          'assets/electronics_products/tvscreens/tv$productIndex/1.png';
+
+      return ProductsViewsModel(
+        id: apiProduct.id,
+        title: apiProduct.name,
+        price: apiProduct.price,
+        originalPrice: apiProduct.originalPrice,
+        rating: 4.5,
+        reviewCount: 100,
+        brand: productBrands[apiProduct.id] ?? 'Generic', // Use actual brand
+        imagePaths: [imagePath],
+        soldBy: 'PickPay',
+        isPickPayFulfilled: true,
+        hasFreeDelivery: true,
+      );
+    }).toList();
   }
 
   Widget? _findDetailPageById(String productId) {

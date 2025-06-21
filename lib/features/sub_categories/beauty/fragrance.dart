@@ -36,19 +36,29 @@ class _FragranceState extends State<Fragrance> {
   Future<List<ProductsViewsModel>> _loadProducts() async {
     final apiProducts = await ApiService().loadProducts();
 
+    // Define actual brands for Fragrance products
+    final Map<String, String> productBrands = {
+      '682b00d16977bd89257c0e8e': 'L\'Oréal Paris', // BeautyProduct1
+      '682b00d16977bd89257c0e8f': 'L\'Oréal Paris', // BeautyProduct2
+      '682b00d16977bd89257c0e90': 'Cybele', // BeautyProduct3
+      '682b00d16977bd89257c0e91': 'Eva', // BeautyProduct4
+      '682b00d16977bd89257c0e92': 'MAYBELLINE', // BeautyProduct5
+    };
+
     return apiProducts
-        .where((product) => detailPages.containsKey(product.id))
+        .where((apiProduct) => detailPages.containsKey(apiProduct.id))
         .map((apiProduct) {
-      final imagePath =
-          'assets/beauty_products/fragrance_${detailPages.keys.toList().indexOf(apiProduct.id) + 1}/1.png';
+      final productIndex = detailPages.keys.toList().indexOf(apiProduct.id) + 1;
+      final imagePath = 'assets/beauty_products/fragrance_$productIndex/1.png';
 
       return ProductsViewsModel(
         id: apiProduct.id,
         title: apiProduct.name,
         price: apiProduct.price,
         originalPrice: apiProduct.originalPrice,
-        rating: apiProduct.rating ?? 4.5,
-        reviewCount: apiProduct.reviewCount ?? 100,
+        rating: 4.5,
+        reviewCount: 100,
+        brand: productBrands[apiProduct.id] ?? 'Generic', // Use actual brand
         imagePaths: [imagePath],
         soldBy: 'PickPay',
         isPickPayFulfilled: true,

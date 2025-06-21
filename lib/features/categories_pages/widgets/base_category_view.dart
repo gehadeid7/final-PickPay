@@ -163,6 +163,13 @@ class _BaseCategoryViewState extends State<BaseCategoryView>
 
     // Apply other filters
     filtered = filtered.where((product) {
+      // Debug logging for brand filtering
+      if (_selectedBrand != null && _selectedBrand != 'All Brands') {
+        print('Filtering - Selected Brand: $_selectedBrand');
+        print('Filtering - Product Brand: ${product.brand}');
+        print('Filtering - Brand Match: ${product.brand == _selectedBrand}');
+      }
+
       final brandMatch = _selectedBrand == null ||
           _selectedBrand!.isEmpty ||
           _selectedBrand == 'All Brands' ||
@@ -190,13 +197,21 @@ class _BaseCategoryViewState extends State<BaseCategoryView>
           product.rating != null && product.rating! >= _minRating;
       final priceMatch = product.price >= _priceRange.start &&
           product.price <= _priceRange.end;
-      return brandMatch &&
+
+      final result = brandMatch &&
           sellerMatch &&
           fulfillmentMatch &&
           dealMatch &&
           deliveryMatch &&
           ratingMatch &&
           priceMatch;
+
+      // Debug logging for overall filter result
+      if (_selectedBrand != null && _selectedBrand != 'All Brands') {
+        print('Filtering - Overall Result: $result');
+      }
+
+      return result;
     }).toList();
 
     // Apply sorting
@@ -649,6 +664,8 @@ class _BaseCategoryViewState extends State<BaseCategoryView>
                                       selectedBrand: _selectedBrand,
                                       currentCategory: widget.categoryName,
                                       onBrandChanged: (brand) {
+                                        print(
+                                            'BaseCategoryView - Brand changed to: $brand');
                                         setState(() => _selectedBrand = brand);
                                         Navigator.pop(context);
                                       },

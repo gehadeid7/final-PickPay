@@ -15,9 +15,9 @@ class BrandFilterWidget extends StatelessWidget {
     this.currentCategory,
   });
 
-  // Static brand lists organized by category
-  static const Map<String, List<String>> categoryBrands = {
-    'Electronics': <String>[
+  // Simple category to brands mapping
+  static final Map<String, List<String>> categoryBrands = {
+    'Electronics': [
       'SAMSUNG',
       'LG',
       'Xiaomi',
@@ -28,7 +28,7 @@ class BrandFilterWidget extends StatelessWidget {
       'CANSHN',
       'Generic',
     ],
-    'Appliances': <String>[
+    'Appliances': [
       'Koldair',
       'Fresh',
       'Midea',
@@ -38,7 +38,7 @@ class BrandFilterWidget extends StatelessWidget {
       'Tornado',
       'deime',
     ],
-    'Beauty': <String>[
+    'Beauty': [
       'L\'Oréal Paris',
       'MAYBELLINE',
       'La Roche-Posay',
@@ -55,7 +55,7 @@ class BrandFilterWidget extends StatelessWidget {
       'Jacques Bogart',
       'Avon',
     ],
-    'Home': <String>[
+    'Home': [
       'oliruim',
       'Pasabahce',
       'P&P CHEF',
@@ -71,147 +71,73 @@ class BrandFilterWidget extends StatelessWidget {
       'Amotpo',
       'Generic',
     ],
-    'VideoGames': <String>[
+    'VideoGames': [
       'Likorlove',
       'fanxiang',
       'Mcbazel',
       'PlayStation',
       'Nintendo',
     ],
-    'Fashion': <String>[
-      // Fashion products don't have brands in the current data
-      // Add any fashion brands if they exist in the future
-    ],
+    'Fashion': [],
   };
 
-  // Helper method to map specific category names to brand categories
-  String? _mapCategoryToBrandCategory(String? categoryName) {
+  // Simple category mapping
+  String? _getCategoryKey(String? categoryName) {
     if (categoryName == null) return null;
 
-    // Normalize the category name for comparison
-    final normalizedCategory = categoryName.toLowerCase().trim();
+    final normalized = categoryName.toLowerCase().trim();
 
-    // Map specific category names to brand categories
-    switch (normalizedCategory) {
-      // Electronics and its subcategories
-      case 'electronics':
-      case 'mobile & tablets':
-      case 'mobile and tablets':
-      case 'tvs':
-      case 'laptops':
-      case 'laptop':
-        return 'Electronics';
-
-      // Appliances and its subcategories
-      case 'appliances':
-      case 'large appliances':
-      case 'small appliances':
-        return 'Appliances';
-
-      // Beauty and its subcategories
-      case 'beauty':
-      case 'fragrance':
-      case 'makeup':
-      case 'haircare':
-      case 'skincare':
-      case 'skin care':
-        return 'Beauty';
-
-      // Home and its subcategories
-      case 'home':
-      case 'furniture':
-      case 'bath & bedding':
-      case 'bath and bedding':
-      case 'home decor':
-      case 'home decoration':
-      case 'kitchen & dining':
-      case 'kitchen and dining':
-        return 'Home';
-
-      // Video Games and its subcategories
-      case 'video games':
-      case 'videogames':
-      case 'video games':
-      case 'console':
-      case 'accessories':
-      case 'controllers':
-        return 'VideoGames';
-
-      // Fashion and its subcategories
-      case 'fashion':
-      case 'women\'s fashion':
-      case 'womens fashion':
-      case 'men\'s fashion':
-      case 'mens fashion':
-      case 'kids\' fashion':
-      case 'kids fashion':
-        return 'Fashion';
-
-      default:
-        // If no exact match, try partial matching
-        if (normalizedCategory.contains('electronics') ||
-            normalizedCategory.contains('mobile') ||
-            normalizedCategory.contains('tv') ||
-            normalizedCategory.contains('laptop')) {
-          return 'Electronics';
-        }
-        if (normalizedCategory.contains('appliance')) {
-          return 'Appliances';
-        }
-        if (normalizedCategory.contains('beauty') ||
-            normalizedCategory.contains('fragrance') ||
-            normalizedCategory.contains('makeup') ||
-            normalizedCategory.contains('hair') ||
-            normalizedCategory.contains('skin')) {
-          return 'Beauty';
-        }
-        if (normalizedCategory.contains('home') ||
-            normalizedCategory.contains('furniture') ||
-            normalizedCategory.contains('bath') ||
-            normalizedCategory.contains('kitchen')) {
-          return 'Home';
-        }
-        if (normalizedCategory.contains('video') ||
-            normalizedCategory.contains('game') ||
-            normalizedCategory.contains('console')) {
-          return 'VideoGames';
-        }
-        if (normalizedCategory.contains('fashion')) {
-          return 'Fashion';
-        }
-
-        return null;
+    if (normalized.contains('electronics') ||
+        normalized.contains('mobile') ||
+        normalized.contains('tv') ||
+        normalized.contains('laptop')) {
+      return 'Electronics';
     }
+    if (normalized.contains('appliance')) {
+      return 'Appliances';
+    }
+    if (normalized.contains('beauty') ||
+        normalized.contains('fragrance') ||
+        normalized.contains('makeup') ||
+        normalized.contains('hair') ||
+        normalized.contains('skin')) {
+      return 'Beauty';
+    }
+    if (normalized.contains('home') ||
+        normalized.contains('furniture') ||
+        normalized.contains('bath') ||
+        normalized.contains('kitchen')) {
+      return 'Home';
+    }
+    if (normalized.contains('video') ||
+        normalized.contains('game') ||
+        normalized.contains('console')) {
+      return 'VideoGames';
+    }
+    if (normalized.contains('fashion')) {
+      return 'Fashion';
+    }
+
+    return null;
   }
 
-  // Helper method to get relevant brands based on category and subcategory
   List<String> _getRelevantBrands() {
-    if (currentCategory == null) {
-      // If no category specified, fall back to dynamic generation from products
-      final dynamicBrands = products
-          .map((p) => p.brand)
-          .where((brand) => brand != null && brand.isNotEmpty)
-          .map((brand) => brand!) // Convert String? to String
-          .toSet()
-          .toList();
+    // Get brands from actual products in the current view (excluding Generic)
+    final productBrands = products
+        .map((p) => p.brand)
+        .where(
+            (brand) => brand != null && brand.isNotEmpty && brand != 'Generic')
+        .map((brand) => brand!)
+        .toSet();
 
-      // Create a new modifiable list and sort it
-      final sortedBrands = List<String>.from(dynamicBrands);
-      sortedBrands.sort();
-      return sortedBrands;
-    }
+    // Convert to list and sort
+    final sortedBrands = productBrands.toList()..sort();
 
-    // Map the current category to the appropriate brand category
-    final brandCategory = _mapCategoryToBrandCategory(currentCategory);
+    // Debug logging
+    print('BrandFilterWidget - Total products: ${products.length}');
+    print('BrandFilterWidget - Available brands: $sortedBrands');
+    print('BrandFilterWidget - Selected brand: $selectedBrand');
 
-    // Get brands for the mapped category only (no dynamic product brands)
-    final categoryBrandList = brandCategory != null
-        ? (categoryBrands[brandCategory] ?? []).cast<String>()
-        : <String>[];
-
-    // Create a new modifiable list and sort it
-    final sortedBrands = List<String>.from(categoryBrandList);
-    sortedBrands.sort();
     return sortedBrands;
   }
 
@@ -220,7 +146,6 @@ class BrandFilterWidget extends StatelessWidget {
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
 
-    // Get only relevant brands for the current view
     final brands = _getRelevantBrands();
     final allBrands = ['All Brands', ...brands];
 
@@ -279,11 +204,11 @@ class BrandFilterWidget extends StatelessWidget {
               filled: true,
               fillColor: isDarkMode ? Colors.grey.shade900 : Colors.white,
             ),
-            items: allBrands.map((String? brand) {
+            items: allBrands.map((String brand) {
               return DropdownMenuItem<String>(
                 value: brand,
                 child: Text(
-                  brand ?? 'Unknown Brand',
+                  brand,
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
@@ -294,7 +219,11 @@ class BrandFilterWidget extends StatelessWidget {
               );
             }).toList(),
             onChanged: (String? newValue) {
-              onBrandChanged(newValue == 'All Brands' ? null : newValue);
+              print('BrandFilterWidget - onChanged called with: $newValue');
+              final finalValue = newValue == 'All Brands' ? null : newValue;
+              print(
+                  'BrandFilterWidget - Final value being passed: $finalValue');
+              onBrandChanged(finalValue);
             },
             icon: Icon(
               Icons.keyboard_arrow_down_rounded,

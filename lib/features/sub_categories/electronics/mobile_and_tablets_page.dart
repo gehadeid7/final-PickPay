@@ -35,28 +35,38 @@ class _MobileAndTabletsPageState extends State<MobileAndTabletsPage> {
 
   Future<List<ProductsViewsModel>> _loadProducts() async {
     final apiProducts = await ApiService().loadProducts();
+
+    // Define actual brands for Mobile & Tablets products
+    final Map<String, String> productBrands = {
+      '6819e22b123a4faad16613be':
+          'SAMSUNG', // Product1View - Samsung Galaxy Tab A9
+      '6819e22b123a4faad16613bf': 'Xiaomi', // Product2View - Xiaomi device
+      '6819e22b123a4faad16613c0': 'Xiaomi', // Product3View - Xiaomi device
+      '6819e22b123a4faad16613c1': 'CANSHN', // Product4View - CANSHN device
+      '6819e22b123a4faad16613c3': 'Oraimo', // Product5View - Oraimo device
+    };
+
     return apiProducts
         .where((apiProduct) => detailPages.containsKey(apiProduct.id))
         .map((apiProduct) {
-          final productIndex =
-              detailPages.keys.toList().indexOf(apiProduct.id) + 1;
-          final imagePath =
-              'assets/electronics_products/mobile_and_tablet/mobile_and_tablet$productIndex/1.png';
+      final productIndex = detailPages.keys.toList().indexOf(apiProduct.id) + 1;
+      final imagePath =
+          'assets/electronics_products/mobile_and_tablet/mobile_and_tablet$productIndex/1.png';
 
-          return ProductsViewsModel(
-            id: apiProduct.id,
-            title: apiProduct.name,
-            price: apiProduct.price,
-            originalPrice: apiProduct.originalPrice,
-            rating: 4.5,
-            reviewCount: 100,
-            brand: 'Generic',
-            imagePaths: [imagePath],
-            soldBy: 'PickPay',
-            isPickPayFulfilled: true,
-            hasFreeDelivery: true,
-          );
-        }).toList();
+      return ProductsViewsModel(
+        id: apiProduct.id,
+        title: apiProduct.name,
+        price: apiProduct.price,
+        originalPrice: apiProduct.originalPrice,
+        rating: 4.5,
+        reviewCount: 100,
+        brand: productBrands[apiProduct.id] ?? 'Generic', // Use actual brand
+        imagePaths: [imagePath],
+        soldBy: 'PickPay',
+        isPickPayFulfilled: true,
+        hasFreeDelivery: true,
+      );
+    }).toList();
   }
 
   Widget? _findDetailPageById(String productId) {

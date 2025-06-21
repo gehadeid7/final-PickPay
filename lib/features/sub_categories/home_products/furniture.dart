@@ -35,26 +35,37 @@ class _FurnitureViewState extends State<FurnitureView> {
 
   Future<List<ProductsViewsModel>> _loadProducts() async {
     final apiProducts = await ApiService().loadProducts();
-    
-    return apiProducts
-        .where((product) => detailPages.containsKey(product.id))
-        .map((apiProduct) {
-          final imagePath = 'assets/Home_products/furniture/furniture${detailPages.keys.toList().indexOf(apiProduct.id) + 1}/1.png';
 
-          return ProductsViewsModel(
-            id: apiProduct.id,
-            title: apiProduct.name,
-            price: apiProduct.price,
-            originalPrice: apiProduct.originalPrice,
-            rating: apiProduct.rating ?? 4.5,
-            reviewCount: apiProduct.reviewCount ?? 100,
-            imagePaths: [imagePath],
-            soldBy: 'PickPay',
-            isPickPayFulfilled: true,
-            hasFreeDelivery: true,
-          );
-        })
-        .toList();
+    // Define actual brands for Furniture products
+    final Map<String, String> productBrands = {
+      '682b00c26977bd89257c0e8e': 'Generic', // HomeProduct1 - Furniture
+      '682b00c26977bd89257c0e8f': 'Generic', // HomeProduct2 - Furniture
+      '682b00c26977bd89257c0e90': 'Generic', // HomeProduct3 - Furniture
+      '682b00c26977bd89257c0e91': 'Furgle', // HomeProduct4 - Furniture
+      '682b00c26977bd89257c0e92': 'Janssen', // HomeProduct5 - Furniture
+    };
+
+    return apiProducts
+        .where((apiProduct) => detailPages.containsKey(apiProduct.id))
+        .map((apiProduct) {
+      final productIndex = detailPages.keys.toList().indexOf(apiProduct.id) + 1;
+      final imagePath =
+          'assets/Home_products/furniture/furniture$productIndex/1.png';
+
+      return ProductsViewsModel(
+        id: apiProduct.id,
+        title: apiProduct.name,
+        price: apiProduct.price,
+        originalPrice: apiProduct.originalPrice,
+        rating: 4.5,
+        reviewCount: 100,
+        brand: productBrands[apiProduct.id] ?? 'Generic', // Use actual brand
+        imagePaths: [imagePath],
+        soldBy: 'PickPay',
+        isPickPayFulfilled: true,
+        hasFreeDelivery: true,
+      );
+    }).toList();
   }
 
   Widget? _findDetailPageById(String productId) {

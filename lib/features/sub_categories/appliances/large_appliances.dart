@@ -35,34 +35,39 @@ class _LargeAppliancesState extends State<LargeAppliances> {
 
   Future<List<ProductsViewsModel>> _loadProducts() async {
     final apiProducts = await ApiService().loadProducts();
-    return apiProducts
-        .where((product) =>
-            product.name.toLowerCase().contains('refrigerator') ||
-            product.name.toLowerCase().contains('washing machine') ||
-            product.name.toLowerCase().contains('dispenser') ||
-            product.name.toLowerCase().contains('dishwasher') ||
-            product.name.toLowerCase().contains('jumbo'))
-        .map((apiProduct) {
-          final productIndex =
-              detailPages.keys.toList().indexOf(apiProduct.id) + 1;
-          final imagePath = 'assets/appliances/product$productIndex/1.png';
 
-          return ProductsViewsModel(
-            id: apiProduct.id,
-            title: apiProduct.name,
-            price: apiProduct.price,
-            originalPrice: apiProduct.originalPrice,
-            rating: 4.5,
-            reviewCount: 100,
-            brand: 'Generic',
-            imagePaths: [imagePath],
-            soldBy: 'PickPay',
-            isPickPayFulfilled: true,
-            hasFreeDelivery: true,
-          );
-        })
-        .where((product) => detailPages.containsKey(product.id))
-        .toList();
+    // Define actual brands for Large Appliances products
+    final Map<String, String> productBrands = {
+      '68252918a68b49cb06164204':
+          'Koldair', // AppliancesProduct1 - Water Dispenser
+      '68252918a68b49cb06164205':
+          'Fresh', // AppliancesProduct2 - Washing Machine
+      '68252918a68b49cb06164206': 'Midea', // AppliancesProduct3 - Refrigerator
+      '68252918a68b49cb06164207':
+          'Zanussi', // AppliancesProduct4 - Washing Machine
+      '68252918a68b49cb06164208': 'Midea', // AppliancesProduct5 - Dishwasher
+    };
+
+    return apiProducts
+        .where((apiProduct) => detailPages.containsKey(apiProduct.id))
+        .map((apiProduct) {
+      final productIndex = detailPages.keys.toList().indexOf(apiProduct.id) + 1;
+      final imagePath = 'assets/appliances/product$productIndex/1.png';
+
+      return ProductsViewsModel(
+        id: apiProduct.id,
+        title: apiProduct.name,
+        price: apiProduct.price,
+        originalPrice: apiProduct.originalPrice,
+        rating: 4.5,
+        reviewCount: 100,
+        brand: productBrands[apiProduct.id] ?? 'Generic', // Use actual brand
+        imagePaths: [imagePath],
+        soldBy: 'PickPay',
+        isPickPayFulfilled: true,
+        hasFreeDelivery: true,
+      );
+    }).toList();
   }
 
   Widget? _findDetailPageById(String productId) {

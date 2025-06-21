@@ -36,30 +36,36 @@ class _LaptopPageState extends State<LaptopPage> {
   Future<List<ProductsViewsModel>> _loadProducts() async {
     final apiProducts = await ApiService().loadProducts();
 
-    // Only include products that exist in the detailPages map
-    final filteredProducts = apiProducts.where((product) {
-      return detailPages.containsKey(product.id);
-    }).map((product) {
-      final productIndex = detailPages.keys.toList().indexOf(product.id) + 1;
+    // Define actual brands for Laptops products
+    final Map<String, String> productBrands = {
+      '6819e22b123a4faad16613c9': 'Lenovo', // Laptop1
+      '6819e22b123a4faad16613ca': 'Lenovo', // Laptop2
+      '6819e22b123a4faad16613cb': 'HP', // Laptop3
+      '6819e22b123a4faad16613cc': 'HP', // Laptop4
+      '6819e22b123a4faad16613cd': 'Generic', // Laptop5
+    };
+
+    return apiProducts
+        .where((apiProduct) => detailPages.containsKey(apiProduct.id))
+        .map((apiProduct) {
+      final productIndex = detailPages.keys.toList().indexOf(apiProduct.id) + 1;
       final imagePath =
           'assets/electronics_products/Laptop/Laptop$productIndex/1.png';
 
       return ProductsViewsModel(
-        id: product.id,
-        title: product.name,
-        price: product.price,
-        originalPrice: product.originalPrice,
+        id: apiProduct.id,
+        title: apiProduct.name,
+        price: apiProduct.price,
+        originalPrice: apiProduct.originalPrice,
         rating: 4.5,
         reviewCount: 100,
-        brand: 'Generic',
+        brand: productBrands[apiProduct.id] ?? 'Generic', // Use actual brand
         imagePaths: [imagePath],
         soldBy: 'PickPay',
         isPickPayFulfilled: true,
         hasFreeDelivery: true,
       );
     }).toList();
-
-    return filteredProducts;
   }
 
   Widget? _findDetailPageById(String productId) {

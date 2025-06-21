@@ -56,6 +56,25 @@ class _AppliancesViewBodyState extends State<AppliancesViewBody> {
   Future<List<ProductsViewsModel>> _loadProducts() async {
     final apiProducts = await ApiService().loadProducts();
 
+    // Define the actual brands for each product based on the product files
+    final Map<String, String> productBrands = {
+      '68252918a68b49cb06164204': 'Koldair', // AppliancesProduct1
+      '68252918a68b49cb06164205': 'Fresh', // AppliancesProduct2
+      '68252918a68b49cb06164206': 'Midea', // AppliancesProduct3
+      '68252918a68b49cb06164207': 'Zanussi', // AppliancesProduct4
+      '68252918a68b49cb06164208': 'Midea', // AppliancesProduct5
+      '68252918a68b49cb06164209': 'deime', // AppliancesProduct6
+      '68252918a68b49cb0616420a': 'Black & Decker', // AppliancesProduct7
+      '68252918a68b49cb0616420b': 'Black & Decker', // AppliancesProduct8
+      '68252918a68b49cb0616420c': 'Panasonic', // AppliancesProduct9
+      '68252918a68b49cb0616420d': 'Fresh', // AppliancesProduct10
+      '68252918a68b49cb0616420e': 'Fresh', // AppliancesProduct11
+      '68252918a68b49cb0616420f': 'Tornado', // AppliancesProduct12
+      '68252918a68b49cb06164210': 'Black & Decker', // AppliancesProduct13
+      '68252918a68b49cb06164211': 'Black & Decker', // AppliancesProduct14
+      '68252918a68b49cb06164212': 'Black & Decker', // AppliancesProduct15
+    };
+
     // Filter for appliance products and map them to our model
     return apiProducts
         .map((apiProduct) {
@@ -72,6 +91,8 @@ class _AppliancesViewBodyState extends State<AppliancesViewBody> {
                 4.5, // Default rating - could be fetched from a reviews service
             reviewCount:
                 100, // Default review count - could be fetched from a reviews service
+            brand: productBrands[apiProduct.id] ??
+                'Generic', // Use actual brand from product files
             imagePaths: [imagePath],
           );
         })

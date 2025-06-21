@@ -56,6 +56,25 @@ class _ElectronicsViewBodyState extends State<ElectronicsViewBody> {
   Future<List<ProductsViewsModel>> _loadProducts() async {
     final apiProducts = await ApiService().loadProducts();
 
+    // Define the actual brands for each product based on the product files
+    final Map<String, String> productBrands = {
+      '6819e22b123a4faad16613be': 'SAMSUNG', // Product1View
+      '6819e22b123a4faad16613bf': 'Xiaomi', // Product2View
+      '6819e22b123a4faad16613c0': 'Xiaomi', // Product3View
+      '6819e22b123a4faad16613c1': 'CANSHN', // Product4View
+      '6819e22b123a4faad16613c3': 'Oraimo', // Product5View
+      '6819e22b123a4faad16613c4': 'SAMSUNG', // Product6View
+      '6819e22b123a4faad16613c5': 'SAMSUNG', // Product7View
+      '6819e22b123a4faad16613c6': 'SAMSUNG', // Product8View
+      '6819e22b123a4faad16613c7': 'SAMSUNG', // Product9View
+      '6819e22b123a4faad16613c8': 'LG', // Product10View
+      '6819e22b123a4faad16613c9': 'Lenovo', // Product11View
+      '6819e22b123a4faad16613ca': 'Lenovo', // Product12View
+      '6819e22b123a4faad16613cb': 'HP', // Product13View
+      '6819e22b123a4faad16613cc': 'HP', // Product14View
+      '6819e22b123a4faad16613cd': 'Generic', // Product15View
+    };
+
     // Filter for electronics products and map them to our model
     return apiProducts
         .map((apiProduct) {
@@ -87,6 +106,8 @@ class _ElectronicsViewBodyState extends State<ElectronicsViewBody> {
                 4.5, // Default rating - could be fetched from a reviews service
             reviewCount:
                 100, // Default review count - could be fetched from a reviews service
+            brand: productBrands[apiProduct.id] ??
+                'Generic', // Use actual brand from product files
             imagePaths: [imagePath],
           );
         })
