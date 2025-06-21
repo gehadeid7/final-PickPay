@@ -456,7 +456,6 @@ class _ProductDetailViewState extends State<ProductDetailView>
                 scentOption: product.scentOption!,
                 showLabel: true,
                 onScentSelected: (selectedScentName) {
-                  debugPrint("Scent: $selectedScentName");
                 },
               ),
               const SizedBox(height: 16),
@@ -467,7 +466,6 @@ class _ProductDetailViewState extends State<ProductDetailView>
                 showLabel: true,
                 sizeAvailability: product.sizeAvailability,
                 onSizeSelected: (selectedSize) {
-                  debugPrint("Size: $selectedSize");
                 },
               ),
             ],

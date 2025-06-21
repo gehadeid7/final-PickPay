@@ -73,7 +73,6 @@ class WishlistCubit extends Cubit<WishlistState> {
 
       emit(WishlistLoaded(items: List.from(_wishlistItems)));
     } catch (e) {
-      print('Error loading wishlist data: $e');
       final wishlistJson = Prefs.getString(_wishlistKey);
       if (wishlistJson.isNotEmpty) {
         final List<dynamic> wishlistList = jsonDecode(wishlistJson);
@@ -95,8 +94,7 @@ class WishlistCubit extends Cubit<WishlistState> {
       final wishlistList = _wishlistItems.map((item) => item.toJson()).toList();
       final wishlistJson = jsonEncode(wishlistList);
       await Prefs.setString(key, wishlistJson);
-    } catch (e) {
-      print('Error saving wishlist data: $e');
+    } catch (e) {//
     }
   }
 
@@ -120,7 +118,6 @@ class WishlistCubit extends Cubit<WishlistState> {
           await _saveWishlistData();
         } else {
           // Revert on failure
-          print('Failed to add product to wishlist: ${response.statusCode}');
           newList.removeWhere((item) => item.id == product.id);
           _wishlistItems = newList;
           emit(WishlistLoaded(
@@ -130,7 +127,6 @@ class WishlistCubit extends Cubit<WishlistState> {
         }
       } catch (e) {
         // Revert on error
-        print('Error adding product to wishlist: $e');
         newList.removeWhere((item) => item.id == product.id);
         _wishlistItems = newList;
         emit(WishlistLoaded(
@@ -162,7 +158,6 @@ class WishlistCubit extends Cubit<WishlistState> {
         await _saveWishlistData();
       } else {
         // Revert on failure
-        print('Failed to remove product from wishlist: ${response.statusCode}');
         newList.add(removedProduct);
         _wishlistItems = newList;
         emit(WishlistLoaded(
@@ -172,7 +167,6 @@ class WishlistCubit extends Cubit<WishlistState> {
       }
     } catch (e) {
       // Revert on error
-      print('Error removing product from wishlist: $e');
       newList.add(removedProduct);
       _wishlistItems = newList;
       emit(WishlistLoaded(

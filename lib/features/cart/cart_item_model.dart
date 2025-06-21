@@ -1,5 +1,4 @@
 import 'package:pickpay/features/categories_pages/models/product_model.dart';
-import 'dart:developer' as dev;
 
 class CartItemModel {
   final ProductsViewsModel product;
@@ -375,9 +374,7 @@ class CartItemModel {
         product: product,
         quantity: quantity is int ? quantity : int.parse(quantity.toString()),
       );
-    } catch (e, stackTrace) {
-      dev.log('Error creating CartItemModel: $e\n$stackTrace',
-          name: 'CartItemModel', error: e);
+    } catch (e) {
       rethrow;
     }
   }

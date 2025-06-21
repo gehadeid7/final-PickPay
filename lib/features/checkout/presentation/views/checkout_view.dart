@@ -293,7 +293,6 @@ class _CheckoutViewState extends State<CheckoutView> {
                                   setState(() {
                                     _shippingInfo = _shippingFormKey.currentState?.getCurrentInfo() ?? _shippingInfo;
                                   });
-                                  print('Shipping info being sent: \nName: \${_shippingInfo.name}, Address: \${_shippingInfo.address}, City: \${_shippingInfo.city}, State: \${_shippingInfo.state}, Zip: \${_shippingInfo.zipCode}, Phone: \${_shippingInfo.phone}, Email: \${_shippingInfo.email}');
                                   _processCheckout(context, items, subtotal);
                                 },
                           buttonText: state is CheckoutLoading
@@ -506,7 +505,6 @@ class _CheckoutViewState extends State<CheckoutView> {
         : subtotal + shippingFee;
 
     try {
-      print('🚨 Calling placeOrder...');
       await checkoutCubit.placeOrder(
         items: items,
         total: totalToSend,
@@ -514,13 +512,10 @@ class _CheckoutViewState extends State<CheckoutView> {
         paymentInfo: paymentInfo,
         cartCubit: context.read<CartCubit>(),
       );
-      print('🚨 placeOrder finished.');
 
       final cartState = cartCubit.state;
-      print('🚨 cartState: $cartState');
       if (cartState is CartLoaded && cartState.cartId != null) {
         final cartId = cartState.cartId!;
-        print('🚨 About to call addOrderFromBackend with cartId: $cartId');
         await orderCubit.addOrderFromBackend(
           cartId,
           {
@@ -534,13 +529,9 @@ class _CheckoutViewState extends State<CheckoutView> {
           },
           cartCubit,
         );
-        print('🚨 addOrderFromBackend finished.');
         await orderCubit.loadOrders();
-      } else {
-        print('❌ cartState is not CartLoaded or cartId is null');
       }
     } catch (e) {
-      print('❌ Error during checkout: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Checkout failed: $e')),
       );

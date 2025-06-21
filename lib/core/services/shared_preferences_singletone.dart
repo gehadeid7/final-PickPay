@@ -46,9 +46,7 @@ class Prefs {
     try {
       final jsonString = jsonEncode(user.toMap());
       await setString(_userKey, jsonString);
-      print('✅ User data saved to local storage: ${user.toMap()}');
     } catch (e) {
-      print('❌ Error saving user data to local storage: $e');
       rethrow;
     }
   }
@@ -58,42 +56,32 @@ class Prefs {
     try {
       final jsonString = getString(_userKey);
       if (jsonString.isEmpty) {
-        print('ℹ️ No user data found in local storage');
         return null;
       }
 
       final Map<String, dynamic> userMap = jsonDecode(jsonString);
       final user = UserModel.fromMap(userMap);
-      print('✅ User data loaded from local storage: ${user.toMap()}');
       return user;
     } catch (e) {
-      print('❌ Error loading user data from local storage: $e');
       return null;
     }
   }
 
-  // Remove cached user
   static Future<void> clearUser() async {
     try {
       await remove(_userKey);
-      print('✅ User data cleared from local storage');
     } catch (e) {
-      print('❌ Error clearing user data from local storage: $e');
       rethrow;
     }
   }
 
-  // مفتاح التخزين لقائمة الرغبات
   static const _wishlistKey = 'wishlist';
 
-  // حفظ قائمة الرغبات (تخزينها كـ JSON String)
   static Future<void> saveWishlist(List<dynamic> wishlist) async {
     try {
       final jsonString = jsonEncode(wishlist);
       await setString(_wishlistKey, jsonString);
-      print('✅ Wishlist saved to local storage');
     } catch (e) {
-      print('❌ Error saving wishlist to local storage: $e');
       rethrow;
     }
   }
@@ -103,14 +91,11 @@ class Prefs {
     try {
       final jsonString = getString(_wishlistKey);
       if (jsonString.isEmpty) {
-        print('ℹ️ No wishlist found in local storage');
         return null;
       }
       final List<dynamic> wishlist = jsonDecode(jsonString);
-      print('✅ Wishlist loaded from local storage');
       return wishlist;
     } catch (e) {
-      print('❌ Error loading wishlist from local storage: $e');
       return null;
     }
   }
@@ -119,9 +104,7 @@ class Prefs {
   static Future<void> clearWishlist() async {
     try {
       await remove(_wishlistKey);
-      print('✅ Wishlist cleared from local storage');
     } catch (e) {
-      print('❌ Error clearing wishlist from local storage: $e');
       rethrow;
     }
   }
@@ -136,9 +119,7 @@ class Prefs {
       final key = '${_orderKey}_$userId';
       final jsonString = jsonEncode(orders);
       await setString(key, jsonString);
-      print('✅ Orders saved to local storage for user: $userId');
     } catch (e) {
-      print('❌ Error saving orders to local storage: $e');
       rethrow;
     }
   }
@@ -149,14 +130,11 @@ class Prefs {
       final key = '${_orderKey}_$userId';
       final jsonString = getString(key);
       if (jsonString.isEmpty) {
-        print('ℹ️ No orders found in local storage for user: $userId');
         return null;
       }
       final List<dynamic> orders = jsonDecode(jsonString);
-      print('✅ Orders loaded from local storage for user: $userId');
       return orders;
     } catch (e) {
-      print('❌ Error loading orders from local storage: $e');
       return null;
     }
   }
@@ -166,9 +144,7 @@ class Prefs {
     try {
       final key = '${_orderKey}_$userId';
       await remove(key);
-      print('✅ Orders cleared from local storage for user: $userId');
     } catch (e) {
-      print('❌ Error clearing orders from local storage: $e');
       rethrow;
     }
   }

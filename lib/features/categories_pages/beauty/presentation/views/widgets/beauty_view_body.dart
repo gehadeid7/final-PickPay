@@ -66,8 +66,6 @@ class _BeautyViewBodyState extends State<BeautyViewBody> {
   Future<List<ProductsViewsModel>> _loadProducts() async {
     final apiProducts = await ApiService().loadProducts();
 
-    // Debug: print how many products are coming
-    print('Loaded ${apiProducts.length} products from API');
 
     // Map product ID to image path
     final Map<String, String> productImagePaths = {
@@ -97,10 +95,6 @@ class _BeautyViewBodyState extends State<BeautyViewBody> {
         .where((apiProduct) => detailPages.containsKey(apiProduct.id))
         .map((apiProduct) {
       final imagePath = productImagePaths[apiProduct.id] ?? '';
-
-      // Debug: print each product mapping
-      print(
-          'Mapping product ${apiProduct.name} (${apiProduct.id}) to image: $imagePath');
 
       return ProductsViewsModel(
         id: apiProduct.id,

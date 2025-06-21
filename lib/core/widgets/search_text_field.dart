@@ -215,10 +215,8 @@ class _SearchTextFieldState extends State<SearchTextField>
     try {
       _aiService = AISearchService(apiService: ApiService());
       _aiService.initialize().catchError((error) {
-        print('❌ Failed to initialize AI service: $error');
       });
     } catch (e) {
-      print('❌ Error initializing AI service: $e');
     }
   }
 
@@ -279,22 +277,18 @@ class _SearchTextFieldState extends State<SearchTextField>
         onStatus: _onSpeechStatus,
         onError: _onSpeechError,
       );
-      print('🎤 Speech recognition available: $_speechAvailable');
     } catch (e) {
-      print('❌ Speech initialization error: $e');
       _speechAvailable = false;
     }
   }
 
   void _onSpeechStatus(String status) {
-    print('🎤 Speech status: $status');
     if (status == 'done' || status == 'notListening') {
       setState(() => _isListening = false);
     }
   }
 
   void _onSpeechError(dynamic error) {
-    print('❌ Speech error: $error');
     setState(() => _isListening = false);
     if (mounted) {
       _showSnackBar('Voice search error. Please try again.', isError: true);
@@ -321,7 +315,7 @@ class _SearchTextFieldState extends State<SearchTextField>
         setState(() => _recentSearches = searches);
       }
     } catch (e) {
-      print('❌ Error loading recent searches: $e');
+      //
     }
   }
 
@@ -370,7 +364,6 @@ class _SearchTextFieldState extends State<SearchTextField>
 
       await prefs.setStringList(_recentSearchesKey, _recentSearches);
     } catch (e) {
-      print('❌ Error adding recent search: $e');
     }
   }
 
@@ -380,7 +373,6 @@ class _SearchTextFieldState extends State<SearchTextField>
       setState(() => _recentSearches.clear());
       await prefs.remove(_recentSearchesKey);
     } catch (e) {
-      print('❌ Error clearing recent searches: $e');
     }
   }
 
@@ -393,7 +385,6 @@ class _SearchTextFieldState extends State<SearchTextField>
       });
       await prefs.setStringList(_recentSearchesKey, _recentSearches);
     } catch (e) {
-      print('❌ Error removing recent search: $e');
       _showSnackBar('Failed to remove search history item', isError: true);
     }
   }
@@ -740,7 +731,6 @@ class _SearchTextFieldState extends State<SearchTextField>
         _showSnackBar('Product details not found', isError: true);
       }
     } catch (e) {
-      print('❌ Error loading product: $e');
       _showSnackBar('Failed to load product details', isError: true);
     } finally {
       if (mounted) {
@@ -845,8 +835,6 @@ class _SearchTextFieldState extends State<SearchTextField>
           });
         }
       } catch (e) {
-        print('❌ Search error: $e');
-        _logErrorEvent(e.toString());
         if (mounted) {
           setState(() {
             _isLoading = false;
@@ -1084,7 +1072,6 @@ class _SearchTextFieldState extends State<SearchTextField>
         );
       }
     } catch (e) {
-      print('❌ Voice search error: $e');
       setState(() => _isListening = false);
       _showSnackBar('Voice search failed', isError: true);
     }
@@ -1129,8 +1116,7 @@ class _SearchTextFieldState extends State<SearchTextField>
         _searchProducts(voiceText);
       }
     } catch (e) {
-      print('❌ Voice search processing error: $e');
-      // Fallback to regular search on error
+                 // Fallback to regular search on error
       _searchProducts(voiceText);
     }
   }

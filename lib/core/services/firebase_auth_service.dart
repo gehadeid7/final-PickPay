@@ -18,7 +18,6 @@ class FirebaseAuthService {
       }
       await user.delete();
     } catch (e, stackTrace) {
-      log('Error @deleteUser: $e', stackTrace: stackTrace);
       throw CustomException(message: 'حدث خطأ أثناء حذف الحساب.');
     }
   }
@@ -42,9 +41,6 @@ class FirebaseAuthService {
 
       return credential.user!;
     } on FirebaseAuthException catch (e, stackTrace) {
-      log('FirebaseAuthException @createUserWithEmailAndPassword: ${e.code}',
-          stackTrace: stackTrace);
-
       switch (e.code) {
         case 'weak-password':
           throw CustomException(message: 'كلمة المرور ضعيفة جداً.');
@@ -59,8 +55,6 @@ class FirebaseAuthService {
           throw CustomException(message: 'حدث خطأ، حاول مرة أخرى.');
       }
     } catch (e, stackTrace) {
-      log('Unexpected error @createUserWithEmailAndPassword: $e',
-          stackTrace: stackTrace);
       throw CustomException(message: 'حدث خطأ غير متوقع، حاول لاحقًا.');
     }
   }
@@ -79,8 +73,6 @@ class FirebaseAuthService {
 
       return credential.user!;
     } on FirebaseAuthException catch (e, stackTrace) {
-      log("FirebaseAuthException @signInWithEmailAndPassword: ${e.code}",
-          stackTrace: stackTrace);
       switch (e.code) {
         case 'user-not-found':
         case 'wrong-password':
@@ -93,8 +85,6 @@ class FirebaseAuthService {
           throw CustomException(message: 'حدث خطأ، حاول مجددًا.');
       }
     } catch (e, stackTrace) {
-      log("Unexpected error @signInWithEmailAndPassword: $e",
-          stackTrace: stackTrace);
       throw CustomException(message: 'حدث خطأ، حاول مرة أخرى.');
     }
   }
@@ -123,8 +113,15 @@ class FirebaseAuthService {
       }
 
       return userCredential.user!;
-    } catch (e, stackTrace) {
-      log("Error signing in with Google: $e", stackTrace: stackTrace);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'account-exists-with-different-credential') {
+        throw CustomException(
+          message:
+              'هذا البريد الإلكتروني مرتبط بمزود آخر. يرجى تسجيل الدخول أولاً باستخدام المزود المرتبط ثم ربط Google من إعدادات الحساب.',
+        );
+      }
+      rethrow;
+    } catch (e) {
       rethrow;
     }
   }
@@ -178,8 +175,15 @@ class FirebaseAuthService {
       }
 
       return userCredential.user!;
-    } catch (e, stackTrace) {
-      log("Error signing in with Facebook: $e", stackTrace: stackTrace);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'account-exists-with-different-credential') {
+        throw CustomException(
+          message:
+              'هذا البريد الإلكتروني مرتبط بمزود آخر. يرجى تسجيل الدخول أولاً باستخدام المزود المرتبط ثم ربط Facebook من إعدادات الحساب.',
+        );
+      }
+      rethrow;
+    } catch (e) {
       rethrow;
     }
   }
@@ -196,16 +200,11 @@ class FirebaseAuthService {
           await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
       if (methods.isEmpty) {
         // Log the message but don't throw an error.
-        log("No user found for email: $email, but proceeding to send reset link.");
       }
 
       // Send the reset password email
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
-      log("Password reset email sent.");
     } on FirebaseAuthException catch (e, stackTrace) {
-      log('FirebaseAuthException @sendPasswordResetEmail: ${e.code}',
-          stackTrace: stackTrace);
-
       switch (e.code) {
         case 'invalid-email':
           throw CustomException(message: 'صيغة البريد الإلكتروني غير صحيحة.');
@@ -217,8 +216,6 @@ class FirebaseAuthService {
           throw CustomException(message: 'حدث خطأ، حاول مرة أخرى.');
       }
     } catch (e, stackTrace) {
-      log('Unexpected error @sendPasswordResetEmail: $e',
-          stackTrace: stackTrace);
       throw CustomException(message: 'حدث خطأ غير متوقع، حاول لاحقًا.');
     }
   }
@@ -227,7 +224,6 @@ class FirebaseAuthService {
     try {
       await FirebaseAuth.instance.signOut();
     } catch (e, stackTrace) {
-      log('Error signing out: $e', stackTrace: stackTrace);
       throw CustomException(message: 'حدث خطأ أثناء تسجيل الخروج.');
     }
   }

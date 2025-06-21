@@ -46,11 +46,6 @@ class Review {
     String id = json['id'] as String? ?? json['_id'] as String? ?? '';
     String? productId = json['productId'] as String? ?? json['product'] as String?;
 
-    if (id.isEmpty || (productId == null || productId.isEmpty)) {
-      // ignore: avoid_print
-      print('[Review.fromJson] WARNING: Missing id or productId in review json: ' + json.toString());
-    }
-
     return Review(
       id: id,
       userId: userId,

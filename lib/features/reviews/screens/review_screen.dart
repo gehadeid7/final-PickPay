@@ -97,11 +97,6 @@ class _ReviewScreenState extends State<ReviewScreen> {
             });
           }
           final reviews = state is ReviewsLoaded ? state.reviews : (_reviewCubit.state as ReviewsLoaded).reviews;
-          // DEBUG LOG: Print all reviews and their content
-          for (final review in reviews) {
-            // ignore: avoid_print
-            print('[ReviewScreen] Review by: \\${review.userName} | Content: \\${review.content} | Rating: \\${review.rating}');
-          }
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -244,10 +239,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
                           ],
                         ),
                       ),
-                    // Debug print for all reviews
                     ...reviews.map((r) {
-                      // ignore: avoid_print
-                      print('[DEBUG] ReviewCard: reviewId="${r.id}", productId="${r.productId}"');
                       return const SizedBox.shrink();
                     }),
                     ReviewList(

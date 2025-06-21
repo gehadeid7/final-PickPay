@@ -105,7 +105,6 @@ class AuthRepoImplementation extends AuthRepo {
       return right(null);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        log('No user found for email: $email, but sent reset if exists.');
         return right(null);
       } else {
         return left(ServerFailure(
@@ -264,17 +263,9 @@ class AuthRepoImplementation extends AuthRepo {
   @override
   Future<Either<Failure, void>> saveUserData({required UserEntity user}) async {
     try {
-      // ignore: avoid_print
-      print('🔄 Saving user data to local storage:');
-      // ignore: avoid_print
-      print('📋 User data: ${user.toMap()}');
       await Prefs.saveUser(UserModel.fromEntity(user));
-      // ignore: avoid_print
-      print('✅ User data saved successfully');
       return right(null);
     } catch (e) {
-      // ignore: avoid_print
-      print('❌ Failed to save user data: $e');
       return left(ServerFailure('Failed to save user data: ${e.toString()}'));
     }
   }
@@ -286,56 +277,31 @@ class AuthRepoImplementation extends AuthRepo {
   Future<Either<Failure, UserEntity>> getUserData(
       {required String userId}) async {
     try {
-      // ignore: avoid_print
-      print('🔄 Getting user data for userId: $userId');
       final response = await apiService.get(
         endpoint: BackendEndpoints.getMe,
         authorized: true,
       );
 
-      // ignore: avoid_print
-      print('📥 User data response status: ${response.statusCode}');
-      // ignore: avoid_print
-      print('📥 User data response body: ${response.body}');
-
       if (response.statusCode != 200) {
-        // ignore: avoid_print
-        print('❌ Failed to get user data:');
-        // ignore: avoid_print
-        print('❌ Status: ${response.statusCode}');
-        // ignore: avoid_print
-        print('❌ Response: ${response.body}');
         return left(ServerFailure(
             'Backend error ${response.statusCode}: ${response.body}'));
       }
 
       final responseData = jsonDecode(response.body);
-      // ignore: avoid_print
-      print('✅ Got response data: $responseData');
 
       if (!responseData.containsKey('data')) {
-        print('❌ No data field in response');
         return left(
             ServerFailure('Invalid response format: missing data field'));
       }
 
       final userData = responseData['data'];
-      // ignore: avoid_print
-      print('✅ Got user data: $userData');
 
       final userModel = UserModel.fromJson(userData);
-      print('✅ Created user model: ${userModel.toMap()}');
 
-      // Always update cache with fresh data
-      print('🔄 Updating local cache with fresh data');
       await Prefs.saveUser(userModel);
-      print('✅ Cache updated successfully');
 
       return right(userModel);
     } catch (e, stack) {
-      print('❌ Exception in getUserData:');
-      print('❌ Error: ${e.toString()}');
-      print('❌ Stack trace: $stack');
       return left(ServerFailure('Failed to get user data: ${e.toString()}'));
     }
   }
@@ -349,82 +315,51 @@ class AuthRepoImplementation extends AuthRepo {
     Map<String, dynamic>? requestBody,
   }) async {
     try {
-      print('🔄 updateUserData started for userId: ${user.uId}');
-
       final currentUser = FirebaseAuth.instance.currentUser;
       if (currentUser == null) {
-        print('❌ No logged-in user found in updateUserData');
         return left(ServerFailure('No logged-in user'));
       }
-      print('✅ Current Firebase user found: ${currentUser.uid}');
 
       String? photoUrl = user.photoUrl;
-      print(
-          '📋 Incoming user data: fullName="${user.fullName}", email="${user.email}", photoUrl="$photoUrl"');
 
-      // Upload profile image if local path (not URL)
       if (photoUrl != null &&
           photoUrl.isNotEmpty &&
           !photoUrl.startsWith('http')) {
-        print(
-            '🖼️ Detected local image path: "$photoUrl" (length: ${photoUrl.length})');
-
         final file = File(photoUrl);
         final exists = await file.exists();
-        print('📂 Checking if file exists at path: $photoUrl -> $exists');
         if (!exists) {
-          print('❌ File does NOT exist at path: $photoUrl');
           return left(ServerFailure(
               'صورة الملف غير موجودة في المسار المحدد: $photoUrl'));
         }
 
-        print('⬆️ Uploading profile image...');
         final uploadResult = await uploadProfileImage(currentUser.uid, file);
 
         final updatedPhotoUrlOrFailure =
             uploadResult.fold<Either<Failure, String>>(
           (failure) {
-            // ignore: avoid_print
-            print(
-                '❌ Image upload failed in updateUserData: ${failure.message}');
             return left(failure);
           },
           (url) {
-            // ignore: avoid_print
-            print('✅ Profile image uploaded successfully. New URL: $url');
             photoUrl = url;
             return right(url);
           },
         );
 
         if (updatedPhotoUrlOrFailure.isLeft()) {
-          // ignore: avoid_print
-          print('❌ Returning failure from image upload');
           return left(updatedPhotoUrlOrFailure
               .swap()
               .getOrElse(() => ServerFailure('فشل رفع الصورة')));
         }
-      } else {
-        // ignore: avoid_print
-        print(
-            'ℹ️ No need to upload profile image. Using existing URL or empty path.');
       }
 
-      // ignore: avoid_print
-      print(
-          '🔄 Updating FirebaseAuth profile with displayName: "${user.fullName}", photoUrl: $photoUrl');
       await currentUser.updateDisplayName(user.fullName);
       if (photoUrl != null) {
         await currentUser.updatePhotoURL(photoUrl);
       }
       await currentUser.reload();
-      print('✅ FirebaseAuth profile updated and reloaded.');
 
-      print('🌐 Preparing to update backend profile for userId: ${user.uId}');
       final idToken = await currentUser.getIdToken();
-      print('🔐 Retrieved Firebase ID token for authorization.');
 
-      // Create the request body with all user data
       final Map<String, dynamic> finalRequestBody = {
         'fullName': user.fullName,
         'email': user.email,
@@ -438,14 +373,9 @@ class AuthRepoImplementation extends AuthRepo {
               photoUrl!.contains('/') ? photoUrl!.split('/').last : photoUrl,
       };
 
-      // Merge with any additional request body data
       if (requestBody != null) {
         finalRequestBody.addAll(requestBody);
       }
-
-      print(
-          '📤 PUT Request to backend at endpoint: ${BackendEndpoints.updateMe}');
-      print('📤 Request body: $finalRequestBody');
 
       final response = await apiService.put(
         endpoint: BackendEndpoints.updateMe,
@@ -456,42 +386,25 @@ class AuthRepoImplementation extends AuthRepo {
         },
       );
 
-      print('📥 Received response with status code: ${response.statusCode}');
-      print('📥 Response body: ${response.body}');
       if (response.statusCode == 200) {
-        print('✅ Backend profile updated successfully.');
-
-        // Parse the response to see what we got back
         try {
           final responseData = jsonDecode(response.body);
-          print('📥 Parsed response data: $responseData');
           if (responseData.containsKey('data')) {
             final userData = responseData['data'];
-            print('📥 User data from response: $userData');
-            // Update cache with the response data instead of what we sent
             final updatedUser = UserModel.fromJson(userData);
-            print(
-                '📥 Created user model from response: ${updatedUser.toMap()}');
             await Prefs.saveUser(updatedUser);
-            print('✅ Local cache updated with response data');
           } else {
-            print('⚠️ No data field in response, using sent data as fallback');
             await Prefs.saveUser(UserModel.fromEntity(user));
           }
         } catch (e) {
-          print('⚠️ Error parsing response, using sent data as fallback: $e');
           await Prefs.saveUser(UserModel.fromEntity(user));
         }
 
         return right(null);
       } else {
-        print(
-            '❌ Backend profile update failed with status ${response.statusCode}: ${response.body}');
         return left(ServerFailure('فشل تحديث البيانات: ${response.body}'));
       }
     } catch (e, stack) {
-      print('⛔ Exception in updateUserData: ${e.toString()}');
-      print('📄 Stacktrace:\n$stack');
       return left(ServerFailure('فشل تحديث البيانات: ${e.toString()}'));
     }
   }
@@ -509,7 +422,7 @@ class AuthRepoImplementation extends AuthRepo {
     try {
       await firebaseAuthService.signOut();
       await Prefs.remove(kUserData);
-      await Prefs.remove(kCartData); // Clear cart data on sign out
+      await Prefs.remove(kCartData);
       return right(null);
     } catch (e) {
       return left(ServerFailure('Sign out failed: ${e.toString()}'));
@@ -566,25 +479,19 @@ class AuthRepoImplementation extends AuthRepo {
   @override
   Future<Either<Failure, bool>> checkUserExists(String email) async {
     try {
-      // Check sign-in methods from Firebase Auth
       final methods =
           await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
-      print('Firebase methods: $methods'); // Debug print
 
       if (methods.isNotEmpty) return right(true);
 
-      // Check if user exists in backend
       final response = await apiService.post(
         endpoint: BackendEndpoints.checkUserExists,
         body: {'email': email},
       );
 
-      print('Backend response: ${response.body}'); // Debug print
-
       final data = jsonDecode(response.body);
       return right(data['exists'] == true);
     } catch (e) {
-      print('Error in checkUserExists: ${e.toString()}');
       return left(
           ServerFailure('فشل التحقق من وجود المستخدم: ${e.toString()}'));
     }
@@ -594,15 +501,7 @@ class AuthRepoImplementation extends AuthRepo {
   Future<Either<Failure, String>> uploadProfileImage(
       String userId, File image) async {
     try {
-      print('\n=== 📤 UPLOAD IMAGE REQUEST START ===');
-      print(
-          '⬆️ uploadImage: Starting upload to ${BackendEndpoints.uploadUserPhoto}');
-      print('⬆️ uploadImage: File path: ${image.path}');
-      print('⬆️ uploadImage: File exists: ${image.existsSync()}');
-      print('⬆️ uploadImage: File size: ${await image.length()} bytes');
-
       if (!image.existsSync()) {
-        print('❌ File does not exist at path: ${image.path}');
         return left(
             ServerFailure('File does not exist at path: ${image.path}'));
       }
@@ -614,51 +513,30 @@ class AuthRepoImplementation extends AuthRepo {
         authorized: true,
       );
 
-      print('📦 Read file bytes: ${await image.length()} bytes');
-      print('📎 Added multipart file with field name "profileImg"');
-
       final response = await http.Response.fromStream(streamedResponse);
-      print('\n=== 📥 RESPONSE DETAILS ===');
-      print('📥 Upload response status: ${response.statusCode}');
-      print('📥 Raw response body: ${response.body}');
 
       if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body);
-        print('\n=== 🔍 BACKEND RESPONSE ANALYSIS ===');
-        print('📥 Full response data: $responseData');
 
-        // Get the filename from the response
         final profileImg = responseData['profileImg'];
         if (profileImg == null || profileImg.isEmpty) {
-          print('❌ Error: Backend did not return profileImg');
-          print('❌ Full response data: $responseData');
           return left(ServerFailure('Backend did not return profileImg'));
         }
 
-        // Use the profileImgUrl from the response if available, otherwise construct it
         String fullImageUrl = responseData['profileImgUrl'];
         if (fullImageUrl == null || fullImageUrl.isEmpty) {
-          // Construct the full URL using the base URL from the API service
           final baseUrl = ApiService.baseUrl
               .replaceAll('/api/v1/', '')
               .replaceAll(RegExp(r'/$'), '');
           fullImageUrl = '$baseUrl/uploads/users/$profileImg';
         }
 
-        print('✅ Upload successful!');
-        print('✅ Filename: $profileImg');
-        print('✅ Full URL: $fullImageUrl');
         return right(fullImageUrl);
       } else {
-        print('❌ Upload failed with status ${response.statusCode}');
-        print('❌ Error response: ${response.body}');
         return left(ServerFailure(
             'Upload failed with status ${response.statusCode}: ${response.body}'));
       }
     } catch (e, stack) {
-      print('❌ Exception during image upload:');
-      print('❌ Error: ${e.toString()}');
-      print('❌ Stack trace: $stack');
       return left(
           ServerFailure('Failed to upload profile image: ${e.toString()}'));
     }
@@ -667,62 +545,41 @@ class AuthRepoImplementation extends AuthRepo {
   Future<Either<Failure, UserEntity>> uploadProfileImageAndUpdate(
       File image) async {
     try {
-      print('\n=== 🔄 UPLOAD AND UPDATE PROFILE START ===');
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) {
-        print('❌ No authenticated user found');
         return left(ServerFailure('No authenticated user found'));
       }
 
-      print('👤 Authenticated user ID: ${user.uid}');
-      print('📤 Starting image upload...');
-
-      // Ensure image has correct extension
       final ext = image.path.split('.').last.toLowerCase();
       if (!['jpg', 'jpeg', 'png'].contains(ext)) {
-        print('❌ Invalid image format: $ext');
         return left(
             ServerFailure('Invalid image format. Please use JPG or PNG.'));
       }
 
-      // Upload the image
       final uploadResult = await uploadProfileImage(user.uid, image);
 
       return await uploadResult.fold(
         (failure) {
-          print('❌ Image upload failed: ${failure.message}');
           return left(failure);
         },
         (imageUrl) async {
-          print('✅ Image uploaded successfully. URL: $imageUrl');
-
-          // Get current user data
-          print('🔄 Fetching current user data...');
           final currentUserResponse = await apiService.get(
             endpoint: BackendEndpoints.getMe,
             authorized: true,
           );
 
           if (currentUserResponse.statusCode != 200) {
-            print('❌ Failed to get current user data:');
-            print('❌ Status: ${currentUserResponse.statusCode}');
-            print('❌ Response: ${currentUserResponse.body}');
             return left(ServerFailure('Failed to get current user data'));
           }
 
           final currentUserData = jsonDecode(currentUserResponse.body);
-          print('✅ Got current user data: $currentUserData');
           final currentUser = UserModel.fromJson(currentUserData['data']);
 
-          // Extract filename from the upload response URL
           String profileImg = imageUrl;
           if (imageUrl.contains('/')) {
             profileImg = imageUrl.split('/').last;
           }
-          print('📸 Using filename from upload response: $profileImg');
 
-          // Update backend with just the filename
-          print('🔄 Updating backend profile...');
           final updateResponse = await apiService.put(
             endpoint: BackendEndpoints.updateMe,
             body: {
@@ -731,25 +588,13 @@ class AuthRepoImplementation extends AuthRepo {
             authorized: true,
           );
 
-          print(
-              '📥 Profile update response status: ${updateResponse.statusCode}');
-          print('📥 Profile update response body: ${updateResponse.body}');
-
           if (updateResponse.statusCode == 200) {
-            print('✅ Backend profile updated successfully');
-
-            // Get the full URL from the update response
             final updateData = jsonDecode(updateResponse.body);
             final fullImageUrl = updateData['data']['profileImg'];
-            print('🖼️ Full image URL from backend: $fullImageUrl');
 
-            // Update Firebase Auth profile with the full URL
-            print('🔄 Updating Firebase Auth profile...');
             await user.updatePhotoURL(fullImageUrl);
             await user.reload();
-            print('✅ Firebase Auth profile updated');
 
-            // Create updated user with the full URL
             final updatedUser = UserEntity(
               uId: currentUser.uId,
               email: currentUser.email,
@@ -763,26 +608,15 @@ class AuthRepoImplementation extends AuthRepo {
               address: currentUser.address,
             );
 
-            // Save to local storage
-            print('💾 Saving to local storage...');
             await saveUserData(user: updatedUser);
-            print('✅ Local storage updated');
-
-            print('✅ Profile update completed successfully');
             return right(updatedUser);
           } else {
-            print('❌ Profile update failed:');
-            print('❌ Status: ${updateResponse.statusCode}');
-            print('❌ Response: ${updateResponse.body}');
             return left(
                 ServerFailure('Profile update failed: ${updateResponse.body}'));
           }
         },
       );
     } catch (e, stack) {
-      print('❌ Unexpected error during profile update:');
-      print('❌ Error: ${e.toString()}');
-      print('❌ Stack trace: $stack');
       return left(ServerFailure('Unexpected error: ${e.toString()}'));
     }
   }
@@ -791,15 +625,12 @@ class AuthRepoImplementation extends AuthRepo {
   Future<Either<Failure, bool>> checkIfImageExists(String imageUrl) async {
     try {
       final fileName = Uri.parse(imageUrl).pathSegments.last;
-      print('🔍 checkIfImageExists ➜ fileName: $fileName');
 
       final response = await apiService.post(
         endpoint: BackendEndpoints.checkImageExists,
         body: {'fileName': fileName},
-        authorized: true, // أضف التوكن إذا كان المسار محميًّا
+        authorized: true,
       );
-
-      print('🔍 Response ${response.statusCode}: ${response.body}');
 
       if (response.statusCode != 200) {
         return left(ServerFailure(
@@ -810,11 +641,9 @@ class AuthRepoImplementation extends AuthRepo {
       final exists = data['exists'] == true;
       return right(exists);
     } catch (e) {
-      print('❌ Exception in checkIfImageExists: $e');
       return left(ServerFailure('فشل التحقق من وجود الصورة: ${e.toString()}'));
     }
   }
-  // Add this to AuthRepoImplementation or preferably a ProductRepoImplementation
 
   Future<Either<Failure, ProductsViewsModel>> getProductById(
       String productId) async {

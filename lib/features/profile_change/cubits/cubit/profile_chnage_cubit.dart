@@ -4,7 +4,6 @@ import 'dart:io';
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:logger/logger.dart';
 import 'package:pickpay/core/services/firebase_auth_service.dart';
 import 'package:pickpay/core/services/shared_preferences_singletone.dart';
 import 'package:pickpay/features/auth/data/models/user_model.dart';
@@ -19,7 +18,6 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   UserEntity? _loadedUser;
   bool _isBusy = false;
-  static final Logger _logger = Logger(printer: PrettyPrinter(methodCount: 0));
 
   ProfileCubit({
     required AuthRepo authRepo,
@@ -29,17 +27,6 @@ class ProfileCubit extends Cubit<ProfileState> {
         super(const ProfileState()) {
     // Load cached data immediately
     loadCachedUserProfile();
-  }
-
-  void _logError(String message, [Object? error, StackTrace? st]) =>
-      _logger.e(message, error: error, stackTrace: st);
-
-  void _logInfo(String message) => _logger.i(message);
-
-  UserEntity _getCurrentUserOrThrow() {
-    final fbUser = _firebaseAuthService.getCurrentUser();
-    if (fbUser == null) throw StateError('لم يتم تسجيل الدخول');
-    return UserEntity.fromFirebaseUser(fbUser);
   }
 
   void resetStatus() => emit(state.copyWith(
@@ -61,26 +48,13 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   Future<void> loadCachedUserProfile() async {
     try {
-      _logInfo('🔄 Loading cached user profile...');
       final cachedUser = Prefs.getUser();
       if (cachedUser != null) {
         _loadedUser = cachedUser;
-        _logInfo('✅ Loaded cached user: ${cachedUser.toMap()}');
-        
         // Verify the cached user has valid data
         if (cachedUser.uId.isEmpty || cachedUser.email.isEmpty) {
-          _logInfo('⚠️ Cached user has invalid data, skipping cache');
           return;
         }
-        
-        // Log image URL details
-        _logInfo('📸 Cached user image URL: ${cachedUser.photoUrl}');
-        if (cachedUser.photoUrl != null && cachedUser.photoUrl!.isNotEmpty) {
-          _logInfo('✅ Valid image URL found in cache');
-        } else {
-          _logInfo('ℹ️ No image URL in cache');
-        }
-        
         emit(state.copyWith(
           status: ProfileStatus.loadSuccess,
           name: cachedUser.fullName,
@@ -93,12 +67,9 @@ class ProfileCubit extends Cubit<ProfileState> {
           profileImageUrl: cachedUser.photoUrl ?? '',
           errorMessage: '',
         ));
-        _logInfo('✅ Updated state with cached user data');
-      } else {
-        _logInfo('ℹ️ No cached user found');
       }
     } catch (e, st) {
-      _logError('Error loading cached profile', e, st);
+      // No logging
     }
   }
 
@@ -120,7 +91,6 @@ class ProfileCubit extends Cubit<ProfileState> {
 
       final fbUser = _firebaseAuthService.getCurrentUser();
       if (fbUser == null) {
-        _logError('❌ No authenticated user found');
         emit(state.copyWith(
           status: ProfileStatus.error,
           errorMessage: 'لم يتم تسجيل الدخول',
@@ -129,21 +99,17 @@ class ProfileCubit extends Cubit<ProfileState> {
       }
 
       // Load fresh data from backend with timeout
-      _logInfo('🔄 Loading fresh data from backend');
       final result = await _authRepo.getUserData(userId: fbUser.uid).timeout(
-        const Duration(seconds: 30),  // Increased timeout for better reliability
+        const Duration(seconds: 30),
         onTimeout: () {
-          _logError('❌ Backend request timed out');
           throw TimeoutException('Backend request timed out');
         },
       );
       
       result.fold(
         (failure) {
-          _logError('❌ Failed to get user data from backend', failure.message);
           // Keep using cached data if available
           if (_loadedUser != null) {
-            _logInfo('ℹ️ Keeping cached user data after backend failure');
             emit(state.copyWith(
               status: ProfileStatus.loadSuccess,
               errorMessage: 'تعذر تحميل بعض المعلومات. عرض البيانات المخزنة مؤقتاً.',
@@ -156,21 +122,9 @@ class ProfileCubit extends Cubit<ProfileState> {
           }
         },
         (user) async {
-          _logInfo('✅ Got fresh user data from backend: ${user.toMap()}');
           _loadedUser = user;
-          
           // Cache the updated user data
           await Prefs.saveUser(UserModel.fromEntity(user));
-          _logInfo('✅ Cached updated user data');
-          
-          // Log image URL details
-          _logInfo('📸 Backend user image URL: ${user.photoUrl}');
-          if (user.photoUrl != null && user.photoUrl!.isNotEmpty) {
-            _logInfo('✅ Valid image URL from backend');
-          } else {
-            _logInfo('ℹ️ No image URL from backend');
-          }
-          
           // Update state with fresh data
           emit(state.copyWith(
             status: ProfileStatus.loadSuccess,
@@ -187,10 +141,8 @@ class ProfileCubit extends Cubit<ProfileState> {
         },
       );
     } catch (e, st) {
-      _logError('Exception in loadUserProfile', e, st);
       // Keep using cached data if available
       if (_loadedUser != null) {
-        _logInfo('ℹ️ Keeping cached user data after exception');
         emit(state.copyWith(
           status: ProfileStatus.loadSuccess,
           errorMessage: 'تعذر تحميل بعض المعلومات. عرض البيانات المخزنة مؤقتاً.',
@@ -216,9 +168,6 @@ class ProfileCubit extends Cubit<ProfileState> {
     String? address,
     required String editedField,
   }) {
-    _logInfo('🔄 Updating field: $editedField');
-    _logInfo('Current state before update: ${state.toMap()}');
-    
     final newState = state.copyWith(
       name: name ?? state.name,
       email: email ?? state.email,
@@ -230,16 +179,12 @@ class ProfileCubit extends Cubit<ProfileState> {
       fieldBeingEdited: editedField,
       errorMessage: '',
     );
-    
-    _logInfo('New state after update: ${newState.toMap()}');
     emit(newState);
   }
 
   // Field update helpers with validation
   void updateName(String v) {
-    _logInfo('📝 Updating name to: $v');
     if (v.trim().isEmpty) {
-      _logInfo('❌ Name update failed: empty value');
       emit(state.copyWith(
         errorMessage: 'الاسم لا يمكن أن يكون فارغاً',
         fieldBeingEdited: 'name',
@@ -250,10 +195,8 @@ class ProfileCubit extends Cubit<ProfileState> {
   }
 
   void updatePhone(String v) {
-    _logInfo('📝 Updating phone to: $v');
     final normalizedPhone = _normalizeAndValidatePhone(v.trim());
     if (v.trim().isNotEmpty && normalizedPhone == null) {
-      _logInfo('❌ Phone update failed: invalid format');
       emit(state.copyWith(
         errorMessage: 'رقم الهاتف غير صالح',
         fieldBeingEdited: 'phone',
@@ -264,9 +207,7 @@ class ProfileCubit extends Cubit<ProfileState> {
   }
 
   void updateGender(String v) {
-    _logInfo('📝 Updating gender to: $v');
     if (v.isEmpty) {
-      _logInfo('❌ Gender update failed: empty value');
       emit(state.copyWith(
         errorMessage: 'الرجاء اختيار النوع',
         fieldBeingEdited: 'gender',
@@ -277,9 +218,7 @@ class ProfileCubit extends Cubit<ProfileState> {
   }
 
   void updateAddress(String v) {
-    _logInfo('📝 Updating address to: $v');
     if (v.trim().isEmpty) {
-      _logInfo('❌ Address update failed: empty value');
       emit(state.copyWith(
         errorMessage: 'العنوان لا يمكن أن يكون فارغاً',
         fieldBeingEdited: 'address',
@@ -290,9 +229,7 @@ class ProfileCubit extends Cubit<ProfileState> {
   }
 
   void updateDob(String d, String a) {
-    _logInfo('📝 Updating DOB to: $d and age to: $a');
     if (d.isEmpty) {
-      _logInfo('❌ DOB update failed: empty value');
       emit(state.copyWith(
         errorMessage: 'تاريخ الميلاد مطلوب',
         fieldBeingEdited: 'dob',
@@ -303,17 +240,13 @@ class ProfileCubit extends Cubit<ProfileState> {
   }
 
   void updateProfileImage(File? img) {
-    _logInfo('📸 Updating profile image');
     if (img != null) {
-      _logInfo('✅ New image selected: ${img.path}');
-      // Keep the current URL until upload succeeds
       emit(state.copyWith(
         profileImage: img,
         fieldBeingEdited: 'photoUrl',
         status: ProfileStatus.loading,
       ));
     } else {
-      _logInfo('ℹ️ Image selection cleared');
       emit(state.copyWith(
         profileImage: null,
         fieldBeingEdited: 'photoUrl',
@@ -333,14 +266,10 @@ class ProfileCubit extends Cubit<ProfileState> {
       status: ProfileStatus.loading,
       fieldBeingEdited: 'save',
     ));
-    _logInfo('🔄 Starting profile save process...');
-    _logInfo('Current state before save: ${state.toMap()}');
-    _logInfo('Loaded user before save: ${_loadedUser?.toMap()}');
 
     try {
       final fbUser = _firebaseAuthService.getCurrentUser();
       if (fbUser == null) {
-        _logError('❌ No authenticated user found');
         emit(state.copyWith(
           status: ProfileStatus.error,
           errorMessage: 'لم يتم تسجيل الدخول.',
@@ -350,19 +279,16 @@ class ProfileCubit extends Cubit<ProfileState> {
 
       // Handle image upload if new image selected
       if (state.profileImage != null) {
-        _logInfo('📤 Starting image upload for file: ${state.profileImage!.path}');
         try {
           final uploadRes = await _authRepo.uploadProfileImageAndUpdate(state.profileImage!).timeout(
             const Duration(seconds: 30),
             onTimeout: () {
-              _logError('❌ Image upload timed out');
               throw TimeoutException('Image upload timed out');
             },
           );
           
           uploadRes.fold(
             (failure) {
-              _logError('❌ Image upload failed', failure.message);
               emit(state.copyWith(
                 status: ProfileStatus.error,
                 errorMessage: 'فشل تحميل الصورة: ${failure.message}',
@@ -373,18 +299,14 @@ class ProfileCubit extends Cubit<ProfileState> {
             },
             (userWithPhoto) {
               photoUrl = userWithPhoto.photoUrl;
-              _logInfo('✅ Image uploaded successfully. New URL: $photoUrl');
-              
               // Cache the updated user with new photo URL
               if (_loadedUser != null) {
                 final updatedUser = _loadedUser!.copyWith(photoUrl: photoUrl);
                 Prefs.saveUser(UserModel.fromEntity(updatedUser));
-                _logInfo('✅ Cached user data with new photo URL');
               }
             },
           );
         } catch (e, st) {
-          _logError('Exception during image upload', e, st);
           emit(state.copyWith(
             status: ProfileStatus.error,
             errorMessage: 'حدث خطأ أثناء تحميل الصورة. يرجى المحاولة مرة أخرى.',
@@ -421,13 +343,10 @@ class ProfileCubit extends Cubit<ProfileState> {
         if (photoUrl != null) 'profileImg': photoUrl!.split('/').last,
       };
       
-      _logInfo('📤 Sending request body to backend: $requestBody');
-      
       final updateRes = await _authRepo.updateUserData(updatedUser, requestBody: requestBody);
       
       updateRes.fold(
         (f) {
-          _logError('❌ Failed to update user data', f.message);
           emit(state.copyWith(
             status: ProfileStatus.error,
             errorMessage: 'فشل تحديث الملف الشخصي: ${f.message}',
@@ -435,16 +354,10 @@ class ProfileCubit extends Cubit<ProfileState> {
           ));
         },
         (_) async {
-          _logInfo('✅ Successfully updated user data in backend');
-          
           // Update local user immediately
           _loadedUser = updatedUser;
-          _logInfo('Updated local user data: ${_loadedUser?.toMap()}');
-          
           // Cache the updated user data
           await Prefs.saveUser(UserModel.fromEntity(updatedUser));
-          _logInfo('✅ Cached updated user data');
-          
           // Update state with the new data
           emit(state.copyWith(
             status: ProfileStatus.saveSuccess,
@@ -463,7 +376,6 @@ class ProfileCubit extends Cubit<ProfileState> {
         },
       );
     } catch (e, st) {
-      _logError('Unexpected error during profile save', e, st);
       emit(state.copyWith(
         status: ProfileStatus.error,
         errorMessage: 'حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.',
@@ -504,7 +416,6 @@ class ProfileCubit extends Cubit<ProfileState> {
       
       result.fold(
         (failure) {
-          _logError('❌ Failed to upload image', failure.message);
           emit(state.copyWith(
             status: ProfileStatus.error,
             errorMessage: failure.message,
@@ -512,7 +423,6 @@ class ProfileCubit extends Cubit<ProfileState> {
           ));
         },
         (updatedUser) {
-          _logInfo('✅ Image uploaded successfully');
           emit(state.copyWith(
             status: ProfileStatus.saveSuccess,
             profileImageUrl: updatedUser.photoUrl ?? '',
@@ -523,7 +433,6 @@ class ProfileCubit extends Cubit<ProfileState> {
         },
       );
     } catch (e, st) {
-      _logError('Error saving profile image', e, st);
       emit(state.copyWith(
         status: ProfileStatus.error,
         errorMessage: e.toString(),
@@ -575,29 +484,20 @@ class ProfileCubit extends Cubit<ProfileState> {
         'address': updatedUser.address,
       };
       
-      _logInfo('📤 Sending request body to backend: $requestBody');
-      
       final updateRes = await _authRepo.updateUserData(updatedUser, requestBody: requestBody);
       
       updateRes.fold(
         (f) {
-          _logError('❌ Failed to update user data', f.message);
           emit(state.copyWith(
             status: ProfileStatus.error,
             errorMessage: 'فشل تحديث الملف الشخصي: ${f.message}',
           ));
         },
         (_) async {
-          _logInfo('✅ Successfully updated user data in backend');
-          
           // Update local user immediately
           _loadedUser = updatedUser;
-          _logInfo('Updated local user data: ${_loadedUser?.toMap()}');
-          
           // Cache the updated user data
           await Prefs.saveUser(UserModel.fromEntity(updatedUser));
-          _logInfo('✅ Cached updated user data');
-          
           // Update state with the new data
           emit(state.copyWith(
             status: ProfileStatus.saveSuccess,
@@ -614,7 +514,6 @@ class ProfileCubit extends Cubit<ProfileState> {
         },
       );
     } catch (e, st) {
-      _logError('Unexpected error during profile save', e, st);
       emit(state.copyWith(
         status: ProfileStatus.error,
         errorMessage: 'حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.',

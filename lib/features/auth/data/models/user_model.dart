@@ -39,9 +39,7 @@ class UserModel extends UserEntity {
   }
 
   /// Create from a JSON object (API response)
-  factory UserModel.fromJson(Map<String, dynamic> json) {
-    print('🔄 Creating UserModel from JSON: $json');
-    
+  factory UserModel.fromJson(Map<String, dynamic> json) {    
     // Handle both backend and Firebase user data formats
     final fullName = json['fullName'] ?? json['name'] ?? 'Unknown';
     final email = json['email'] ?? 'Unknown';
@@ -61,28 +59,17 @@ class UserModel extends UserEntity {
         photoUrl = json['profileImg'];
         // Only construct URL if profileImg is not already a full URL
         if (photoUrl != null && !photoUrl.startsWith('http')) {
-          print('ℹ️ Constructing full URL from filename: $photoUrl');
           // Get base URL without trailing slash and remove /api/v1
           final baseUrl = ApiService.baseUrl.replaceAll('/api/v1/', '').replaceAll(RegExp(r'/$'), '');
           photoUrl = '$baseUrl/uploads/users/$photoUrl';
-          print('✅ Constructed full URL: $photoUrl');
         } else {
-          print('ℹ️ Using provided URL as is: $photoUrl');
         }
       } else {
-        print('ℹ️ Using profileImgUrl from response: $photoUrl');
       }
     } else {
-      print('ℹ️ Using photoUrl from response: $photoUrl');
     }
     
-    print('✅ Parsed user data:');
-    print('✅ fullName: $fullName');
-    print('✅ email: $email');
-    print('✅ uId: $uId');
-    print('✅ emailVerified: $emailVerified');
-    print('✅ photoUrl: $photoUrl');
-    
+
     return UserModel(
       fullName: fullName,
       email: email,
