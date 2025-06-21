@@ -27,6 +27,15 @@ class _LargeAppliancesState extends State<LargeAppliances> {
     '68252918a68b49cb06164208': const AppliancesProduct5(), // Dishwasher
   };
 
+  // Map product IDs to their corresponding image numbers
+  static final Map<String, int> productImageNumbers = {
+    '68252918a68b49cb06164204': 1, // Water Dispenser
+    '68252918a68b49cb06164205': 2, // Stainless Steel Cooker
+    '68252918a68b49cb06164206': 3, // Refrigerator
+    '68252918a68b49cb06164207': 4, // Washing Machine
+    '68252918a68b49cb06164208': 5, // Dishwasher
+  };
+
   @override
   void initState() {
     super.initState();
@@ -51,14 +60,14 @@ class _LargeAppliancesState extends State<LargeAppliances> {
     final filteredProducts = apiProducts
         .where((apiProduct) => detailPages.containsKey(apiProduct.id))
         .map((apiProduct) {
-      final productIndex = detailPages.keys.toList().indexOf(apiProduct.id) + 1;
-      final imagePath = 'assets/appliances/product$productIndex/1.png';
+      final productNumber = productImageNumbers[apiProduct.id] ?? 1;
+      final imagePath = 'assets/appliances/product$productNumber/1.png';
 
       final assignedBrand = productBrands[apiProduct.id] ?? 'Generic';
 
       // Debug logging
       print(
-          'Large Appliances - Product ID: ${apiProduct.id}, Assigned Brand: $assignedBrand');
+          'Large Appliances - Product ID: ${apiProduct.id}, Product Number: $productNumber, Assigned Brand: $assignedBrand');
 
       return ProductsViewsModel(
         id: apiProduct.id,

@@ -80,14 +80,14 @@ class _SmallAppliancesState extends State<SmallAppliances> {
     final filteredProducts = apiProducts
         .where((apiProduct) => detailPages.containsKey(apiProduct.id))
         .map((apiProduct) {
-      final productIndex = detailPages.keys.toList().indexOf(apiProduct.id) + 1;
-      final imagePath = 'assets/appliances/product$productIndex/1.png';
+      final productNumber = productImageNumbers[apiProduct.id] ?? 1;
+      final imagePath = 'assets/appliances/product$productNumber/1.png';
 
       final assignedBrand = productBrands[apiProduct.id] ?? 'Generic';
 
       // Debug logging
       print(
-          'Small Appliances - Product ID: ${apiProduct.id}, Assigned Brand: $assignedBrand');
+          'Small Appliances - Product ID: ${apiProduct.id}, Product Number: $productNumber, Assigned Brand: $assignedBrand');
 
       return ProductsViewsModel(
         id: apiProduct.id,

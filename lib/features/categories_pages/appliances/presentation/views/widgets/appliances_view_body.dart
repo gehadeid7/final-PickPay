@@ -47,6 +47,25 @@ class _AppliancesViewBodyState extends State<AppliancesViewBody> {
     '68252918a68b49cb06164212': const AppliancesProduct15(),
   };
 
+  // Map product IDs to their corresponding image numbers
+  static final Map<String, int> productImageNumbers = {
+    '68252918a68b49cb06164204': 1, // Water Dispenser
+    '68252918a68b49cb06164205': 2, // Stainless Steel Cooker
+    '68252918a68b49cb06164206': 3, // Refrigerator
+    '68252918a68b49cb06164207': 4, // Washing Machine
+    '68252918a68b49cb06164208': 5, // Dishwasher
+    '68252918a68b49cb06164209': 6, // Air Fryer
+    '68252918a68b49cb0616420a': 7, // Coffee Maker
+    '68252918a68b49cb0616420b': 8, // Toaster
+    '68252918a68b49cb0616420c': 9, // Iron
+    '68252918a68b49cb0616420d': 10, // Vacuum Cleaner
+    '68252918a68b49cb0616420e': 11, // Fan
+    '68252918a68b49cb0616420f': 12, // Water Heater
+    '68252918a68b49cb06164210': 13, // Blender
+    '68252918a68b49cb06164211': 14, // Kettle
+    '68252918a68b49cb06164212': 15, // Dough Mixer
+  };
+
   @override
   void initState() {
     super.initState();
@@ -80,7 +99,7 @@ class _AppliancesViewBodyState extends State<AppliancesViewBody> {
         .map((apiProduct) {
           // Generate a default image path based on product ID
           final imagePath =
-              'assets/appliances/product${detailPages.keys.toList().indexOf(apiProduct.id) + 1}/1.png';
+              'assets/appliances/product${productImageNumbers[apiProduct.id]}/1.png';
 
           return ProductsViewsModel(
             id: apiProduct.id,
