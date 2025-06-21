@@ -40,7 +40,7 @@ class CheckoutData extends CheckoutState {
     return CheckoutData(
       total: total ?? this.total,
       discount: discount ?? this.discount,
-      totalAfterDiscount: totalAfterDiscount ?? this.totalAfterDiscount,
+      totalAfterDiscount: totalAfterDiscount,
       couponCode: couponCode ?? this.couponCode,
     );
   }

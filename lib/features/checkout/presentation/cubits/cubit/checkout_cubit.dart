@@ -9,10 +9,24 @@ part 'checkout_state.dart';
 class CheckoutCubit extends Cubit<CheckoutState> {
   CheckoutCubit() : super(CheckoutData(total: 0));
 
-  void updateTotal(double total) {
+  void updateTotal(double newTotal) {
     final currentState = state;
     if (currentState is CheckoutData) {
-      emit(currentState.copyWith(total: total));
+      double? newTotalAfterDiscount;
+      // If a discount was already applied, recalculate the total after discount
+      if (currentState.discount != null && currentState.discount! > 0) {
+        newTotalAfterDiscount = newTotal - currentState.discount!;
+      }
+
+      emit(
+        currentState.copyWith(
+          total: newTotal,
+          totalAfterDiscount: newTotalAfterDiscount,
+        ),
+      );
+    } else {
+      // For any other state, just initialize with the new total.
+      emit(CheckoutData(total: newTotal));
     }
   }
 
@@ -22,7 +36,7 @@ class CheckoutCubit extends Cubit<CheckoutState> {
       final newTotal = currentState.total - discount;
       emit(currentState.copyWith(
         discount: discount,
-        totalAfterDiscount: newTotal,
+        totalAfterDiscount: newTotal > 0 ? newTotal : 0,
         couponCode: couponCode,
       ));
     }
