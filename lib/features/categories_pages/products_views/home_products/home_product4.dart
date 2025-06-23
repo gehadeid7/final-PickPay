@@ -21,7 +21,7 @@ class HomeProduct4 extends StatelessWidget {
       price: 9696.00,
       originalPrice: 9988.00,
       rating: 3.1,
-      reviewCount: 81228,
+      reviewCount: 1,
       category: 'home',
       subcategory: 'Furniture',
       colorOptions: ['Black'],
