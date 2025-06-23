@@ -100,8 +100,7 @@ class _SplashViewBodyState extends State<SplashViewBody>
   Future<void> _playSplashSound() async {
     try {
       await _audioPlayer.play(AssetSource('sounds/pickpay_jingle.wav'));
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   Future<void> _navigateAfterSplash() async {
@@ -194,9 +193,7 @@ class _SplashViewBodyState extends State<SplashViewBody>
                           // Lottie animation (behind the logo)
                           SizedBox(
                             child: Lottie.asset(
-                              isDark
-                                  ? 'assets/animations/splashhhh.json'
-                                  : 'assets/animations/splash2.json',
+                              'assets/animations/splash2.json',
                               fit: BoxFit.contain,
                               repeat: true,
                               animate: true,
