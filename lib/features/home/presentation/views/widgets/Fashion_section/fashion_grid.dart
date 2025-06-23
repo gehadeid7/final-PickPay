@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product12.dart';
-import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product2.dart';
+import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product10.dart';
+import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product13.dart';
+import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product14.dart';
+import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product15.dart';
+import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product3.dart';
+import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product4.dart';
 import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product5.dart';
-import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product6.dart';
+import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product9.dart';
 import 'package:pickpay/features/home/presentation/views/widgets/card_item.dart';
 
 class FashionGrid extends StatefulWidget {
@@ -19,29 +23,12 @@ class _FashionGridState extends State<FashionGrid> {
   final List<Map<String, dynamic>> items = [
     {
       'imagePath':
-          'assets/Fashion_products/Men_Fashion/men_fashion1/navy/1.png',
-      'productName':
-          'DeFacto Man Modern Fit Polo Neck Short Sleeve B6374AX Polo T-Shirt',
-      'price': '352.00',
-      'rating': 5.0,
-      'reviewCount': 954,
-      'detailPage': const FashionProduct6(),
-    },
-    {
-      'imagePath': 'assets/Fashion_products/Women_Fashion/women_fashion2/1.png',
-      'productName': 'adidas womens ULTIMASHOW Shoes',
-      'price': '1456.53',
-      'rating': 4.0,
-      'reviewCount': 1288,
-      'detailPage': const FashionProduct2(),
-    },
-    {
-      'imagePath': 'assets/Fashion_products/Kids_Fashion/kids_fashion2/1.png',
-      'productName': 'Kidzo Boys Pajamas',
-      'price': '580.00',
-      'rating': 4.6,
-      'reviewCount': 1735,
-      'detailPage': const FashionProduct12(),
+          "assets/Fashion_products/Men_Fashion/men_fashion4/black/1.png",
+      'productName': "Timberland Ek Larchmont Ftm_Chelsea, Men's Boots",
+      'price': '10499.00',
+      'rating': 4.3,
+      'reviewCount': 57,
+      'detailPage': const FashionProduct9(),
     },
     {
       'imagePath': 'assets/Fashion_products/Women_Fashion/women_fashion5/1.png',
@@ -50,6 +37,57 @@ class _FashionGridState extends State<FashionGrid> {
       'rating': 4.9,
       'reviewCount': 1893,
       'detailPage': const FashionProduct5(),
+    },
+    {
+      'imagePath': "assets/Fashion_products/Women_Fashion/women_fashion4/1.png",
+      'productName': 'Dejavu womens JAL-DJTF-058 Sandal',
+      'price': '1259.00',
+      'rating': 5.0,
+      'reviewCount': 88,
+      'detailPage': const FashionProduct4(),
+    },
+    {
+      'imagePath': 'assets/Fashion_products/Women_Fashion/women_fashion3/1.png',
+      'productName': 'American Eagle Womens Low-Rise Baggy Wide-Leg Jean',
+      'price': '2700.00',
+      'rating': 3.1,
+      'reviewCount': 9,
+      'detailPage': const FashionProduct3(),
+    },
+    {
+      'imagePath': "assets/Fashion_products/Kids_Fashion/kids_fashion5/1.png",
+      'productName': "MIX & MAX, Ballerina Shoes, girls, Ballet Flat",
+      'price': '354.00',
+      'rating': 5.0,
+      'reviewCount': 1,
+      'detailPage': const FashionProduct15(),
+    },
+    {
+      'imagePath': "assets/Fashion_products/Kids_Fashion/kids_fashion4/1.png",
+      'productName':
+          'Baby Boys Jacket Fashion Comfortable High Quality Plush Full Warmth Jacket for Your Baby',
+      'price': '425.00',
+      'rating': 5.0,
+      'reviewCount': 1,
+      'detailPage': const FashionProduct14(),
+    },
+    {
+      'imagePath': "assets/Fashion_products/Kids_Fashion/kids_fashion3/1.png",
+      'productName':
+          'DeFacto Girls Cropped Fit Long Sleeve B9857A8 Denim Jacket',
+      'price': '899.00',
+      'rating': 5.0,
+      'reviewCount': 1,
+      'detailPage': const FashionProduct13(),
+    },
+    {
+      'imagePath': "assets/Fashion_products/Men_Fashion/men_fashion5/1.png",
+      'productName':
+          "Timberland Men's Leather Trifold Wallet Hybrid, Brown/Black, One Size",
+      'price': ' 1399.33',
+      'rating': 4.6,
+      'reviewCount': 1118,
+      'detailPage': const FashionProduct10(),
     },
   ];
 

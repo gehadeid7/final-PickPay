@@ -39,7 +39,7 @@ class _FashionProduct14State extends State<FashionProduct14> {
       price: 425,
       originalPrice: 475,
       rating: 5.0,
-      reviewCount: 19,
+      reviewCount: 1,
       category: 'Fashion',
       subcategory: "Kids' Fashion",
       colorOptions: [

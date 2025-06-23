@@ -16,8 +16,7 @@ class FashionProduct10 extends StatelessWidget {
         "assets/Fashion_products/Men_Fashion/men_fashion5/2.png",
         "assets/Fashion_products/Men_Fashion/men_fashion5/3.png"
       ],
-      price: 1399,
-      originalPrice: 1511,
+      price: 1399.33,
       rating: 4.6,
       reviewCount: 1118,
       category: 'Fashion',

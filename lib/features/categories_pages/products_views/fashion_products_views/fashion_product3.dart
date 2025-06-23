@@ -17,8 +17,8 @@ class FashionProduct3 extends StatelessWidget {
       ],
       price: 2700,
       originalPrice: 2850,
-      rating: 5.0,
-      reviewCount: 88,
+      rating: 3.1,
+      reviewCount: 9,
       category: 'Fashion',
       subcategory: "Women's Fashion",
       availableSizes: [

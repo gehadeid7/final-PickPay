@@ -56,10 +56,9 @@ class _FashionProduct15State extends State<FashionProduct15> {
       title: "MIX & MAX, Ballerina Shoes, girls, Ballet Flat",
       imagePaths: colorImages[_selectedColor],
       colorImages: colorImages,
-      price: 429.00,
-      originalPrice: 429.00,
+      price: 354.00,
       rating: 5.0,
-      reviewCount: 19,
+      reviewCount: 1,
       category: 'Fashion',
       subcategory: "Kids' Fashion",
       colorOptions: [

@@ -3,11 +3,9 @@ import 'package:pickpay/features/categories_pages/products_views/video_games/vid
 import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product10.dart';
 import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product11.dart';
 import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product13.dart';
-import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product14.dart';
 import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product3.dart';
 import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product5.dart';
 import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product6.dart';
-import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product7.dart';
 import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product8.dart';
 import 'package:pickpay/features/home/presentation/views/widgets/card_item.dart';
 
