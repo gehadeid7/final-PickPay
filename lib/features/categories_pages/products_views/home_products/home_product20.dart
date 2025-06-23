@@ -17,7 +17,6 @@ class HomeProduct20 extends StatelessWidget {
         'assets/Home_products/bath_and_bedding/bath5/3.png',
       ],
       price: 948.00,
-      originalPrice: 989.00,
       rating: 3.8,
       reviewCount: 84,
       category: 'Home',
