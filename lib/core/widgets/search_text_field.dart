@@ -110,6 +110,11 @@ import 'package:pickpay/features/categories_pages/products_views/video_games/vid
 import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product13.dart';
 import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product14.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:pickpay/features/home/presentation/views/widgets/category_navigation_helper.dart';
+import 'package:pickpay/features/home/presentation/views/main_navigation_screen.dart';
+import 'package:pickpay/features/tracking_orders/views/order_view.dart';
+import 'package:pickpay/features/wishlist/wishlist_view.dart';
+import 'package:pickpay/features/profile_change/views/profile_change_view.dart';
 
 class SearchTextField extends StatefulWidget {
   final TextEditingController controller;
@@ -187,9 +192,20 @@ class _SearchTextFieldState extends State<SearchTextField>
   List<String> _trendingSearches = [];
   List<String> _favoriteSearches = [];
   String _selectedSort = 'Price: Low to High';
-  List<String> _sortOptions = ['Price: Low to High', 'Price: High to Low', 'Rating'];
+  List<String> _sortOptions = [
+    'Price: Low to High',
+    'Price: High to Low',
+    'Rating'
+  ];
   List<String> _activeFilters = [];
-  List<String> _availableFilters = ['Electronics', 'Beauty', 'Fashion', 'Home', 'Appliances', 'Video Games']; // Example categories
+  List<String> _availableFilters = [
+    'Electronics',
+    'Beauty',
+    'Fashion',
+    'Home',
+    'Appliances',
+    'Video Games'
+  ]; // Example categories
 
   // 1. Add state for error and skeleton loading
   bool _hasError = false;
@@ -214,10 +230,8 @@ class _SearchTextFieldState extends State<SearchTextField>
   void _initializeServices() {
     try {
       _aiService = AISearchService(apiService: ApiService());
-      _aiService.initialize().catchError((error) {
-      });
-    } catch (e) {
-    }
+      _aiService.initialize().catchError((error) {});
+    } catch (e) {}
   }
 
   void _setupAnimations() {
@@ -325,7 +339,8 @@ class _SearchTextFieldState extends State<SearchTextField>
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Clear Search History'),
-        content: const Text('Are you sure you want to clear all recent search history? This action cannot be undone.'),
+        content: const Text(
+            'Are you sure you want to clear all recent search history? This action cannot be undone.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
@@ -363,8 +378,7 @@ class _SearchTextFieldState extends State<SearchTextField>
       });
 
       await prefs.setStringList(_recentSearchesKey, _recentSearches);
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   Future<void> _clearRecentSearches() async {
@@ -372,8 +386,7 @@ class _SearchTextFieldState extends State<SearchTextField>
       final prefs = await SharedPreferences.getInstance();
       setState(() => _recentSearches.clear());
       await prefs.remove(_recentSearchesKey);
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   // Remove a single recent search item
@@ -769,7 +782,8 @@ class _SearchTextFieldState extends State<SearchTextField>
   }
 
   // 3. Update _searchProducts to handle error and log events
-  Future<void> _searchProducts(String query, {bool fromSuggestion = false}) async {
+  Future<void> _searchProducts(String query,
+      {bool fromSuggestion = false}) async {
     final trimmedQuery = query.trim();
     if (trimmedQuery.isEmpty) {
       _clearSearchState();
@@ -841,7 +855,8 @@ class _SearchTextFieldState extends State<SearchTextField>
             _hasError = true;
             _errorMessage = 'Search failed. Please check your connection.';
           });
-          _showSnackBar('Search failed. Please check your connection.', isError: true);
+          _showSnackBar('Search failed. Please check your connection.',
+              isError: true);
         }
       }
     });
@@ -1081,6 +1096,15 @@ class _SearchTextFieldState extends State<SearchTextField>
   Future<void> _processVoiceSearch(String voiceText) async {
     if (voiceText.trim().isEmpty) return;
 
+    // Try to handle navigation commands first
+    if (_handleVoiceNavigation(voiceText)) {
+      setState(() {
+        _isLoading = false;
+        _showDropdown = false;
+      });
+      return;
+    }
+
     setState(() {
       _isLoading = true;
       _showDropdown = true;
@@ -1116,7 +1140,7 @@ class _SearchTextFieldState extends State<SearchTextField>
         _searchProducts(voiceText);
       }
     } catch (e) {
-                 // Fallback to regular search on error
+      // Fallback to regular search on error
       _searchProducts(voiceText);
     }
   }
@@ -1326,6 +1350,7 @@ class _SearchTextFieldState extends State<SearchTextField>
       setState(() => _didYouMean = []);
     }
   }
+
   Future<void> _fetchTrendingAndFavorites() async {
     // Simulate trending/favorite searches (replace with backend call)
     setState(() {
@@ -1362,6 +1387,7 @@ class _SearchTextFieldState extends State<SearchTextField>
       ),
     );
   }
+
   Widget _buildSortDropdown() {
     if (_sortOptions.isEmpty) return SizedBox.shrink();
     return DropdownButton<String>(
@@ -1392,7 +1418,8 @@ class _SearchTextFieldState extends State<SearchTextField>
       children: [
         _buildSectionHeader('Did you mean?', icon: Icons.spellcheck),
         ..._didYouMean.map((suggestion) => _buildListItem(
-              leading: Icon(Icons.spellcheck, color: Colors.orange[400], size: 20),
+              leading:
+                  Icon(Icons.spellcheck, color: Colors.orange[400], size: 20),
               title: suggestion,
               onTap: () {
                 widget.controller.text = suggestion;
@@ -1403,6 +1430,7 @@ class _SearchTextFieldState extends State<SearchTextField>
       ],
     );
   }
+
   Widget _buildTrendingSection() {
     if (_trendingSearches.isEmpty) return SizedBox.shrink();
     return Column(
@@ -1410,7 +1438,8 @@ class _SearchTextFieldState extends State<SearchTextField>
       children: [
         _buildSectionHeader('Trending', icon: Icons.trending_up),
         ..._trendingSearches.map((search) => _buildListItem(
-              leading: Icon(Icons.trending_up, color: Colors.purple[400], size: 20),
+              leading:
+                  Icon(Icons.trending_up, color: Colors.purple[400], size: 20),
               title: search,
               onTap: () {
                 widget.controller.text = search;
@@ -1445,9 +1474,10 @@ class _SearchTextFieldState extends State<SearchTextField>
     }
     return Container(
       constraints: BoxConstraints(
-        maxHeight: (_suggestions.isNotEmpty || _searchResults.isNotEmpty || showRecent)
-            ? 500
-            : double.infinity,
+        maxHeight:
+            (_suggestions.isNotEmpty || _searchResults.isNotEmpty || showRecent)
+                ? 500
+                : double.infinity,
       ),
       margin: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
@@ -1540,7 +1570,9 @@ class _SearchTextFieldState extends State<SearchTextField>
                       onTap: () {
                         // Try to find a product in _searchResults that matches the suggestion
                         final matchedProduct = _searchResults.firstWhere(
-                          (product) => (product['title'] ?? '').toLowerCase() == suggestion.toLowerCase(),
+                          (product) =>
+                              (product['title'] ?? '').toLowerCase() ==
+                              suggestion.toLowerCase(),
                           orElse: () => <String, dynamic>{},
                         );
                         if (matchedProduct.isNotEmpty) {
@@ -1609,7 +1641,8 @@ class _SearchTextFieldState extends State<SearchTextField>
                 // 3. Add advanced filter section
                 if (_showAdvancedFilters)
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -1618,7 +1651,8 @@ class _SearchTextFieldState extends State<SearchTextField>
                           width: double.infinity,
                           child: Row(
                             children: [
-                              Text('Price Range: ', style: TextStyles.regular13),
+                              Text('Price Range: ',
+                                  style: TextStyles.regular13),
                               Expanded(
                                 child: RangeSlider(
                                   values: _priceRange,
@@ -1642,7 +1676,9 @@ class _SearchTextFieldState extends State<SearchTextField>
                           width: double.infinity,
                           child: Row(
                             children: [
-                              Text('Min Rating: \\${_minRating.toStringAsFixed(1)}', style: TextStyles.regular13),
+                              Text(
+                                  'Min Rating: \\${_minRating.toStringAsFixed(1)}',
+                                  style: TextStyles.regular13),
                               Expanded(
                                 child: Slider(
                                   value: _minRating,
@@ -1670,7 +1706,8 @@ class _SearchTextFieldState extends State<SearchTextField>
                             ),
                             ..._searchResults
                                 .map((product) => product['brand'] as String?)
-                                .where((brand) => brand != null && brand.isNotEmpty)
+                                .where((brand) =>
+                                    brand != null && brand.isNotEmpty)
                                 .toSet()
                                 .map((brand) => DropdownMenuItem(
                                       value: brand,
@@ -1701,73 +1738,76 @@ class _SearchTextFieldState extends State<SearchTextField>
         padding: const EdgeInsets.all(24),
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          children: List.generate(3, (index) => Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: 56,
-                  height: 56,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: double.infinity,
-                        height: 14,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[300],
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Container(
-                        width: 120 + (index * 20),
-                        height: 12,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Row(
-                        children: [
-                          Container(
-                            width: 60,
-                            height: 10,
-                            decoration: BoxDecoration(
-                              color: Colors.grey[200],
-                              borderRadius: BorderRadius.circular(6),
-                            ),
+          children: List.generate(
+              3,
+              (index) => Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: 56,
+                          height: 56,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                          const SizedBox(width: 12),
-                          Container(
-                            width: 40,
-                            height: 10,
-                            decoration: BoxDecoration(
-                              color: Colors.grey[300],
-                              borderRadius: BorderRadius.circular(6),
-                            ),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: double.infinity,
+                                height: 14,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Container(
+                                width: 120 + (index * 20),
+                                height: 12,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[200],
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Row(
+                                children: [
+                                  Container(
+                                    width: 60,
+                                    height: 10,
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[200],
+                                      borderRadius: BorderRadius.circular(6),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Container(
+                                    width: 40,
+                                    height: 10,
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[300],
+                                      borderRadius: BorderRadius.circular(6),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          )),
+                        ),
+                      ],
+                    ),
+                  )),
         ),
       ),
     );
   }
+
   Widget _buildErrorWidget() {
     return Container(
       padding: const EdgeInsets.all(32),
@@ -1841,7 +1881,8 @@ class _SearchTextFieldState extends State<SearchTextField>
                   builder: (context, child) => Transform.scale(
                     scale: _scaleAnimation.value,
                     child: Container(
-                      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 8, horizontal: 16),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30),
                         boxShadow: [
@@ -1873,7 +1914,8 @@ class _SearchTextFieldState extends State<SearchTextField>
                             child: Icon(
                               Icons.search,
                               size: 22,
-                              color: _isFocused ? primaryColor : Colors.grey[600],
+                              color:
+                                  _isFocused ? primaryColor : Colors.grey[600],
                             ),
                           ),
                           suffixIcon: Row(
@@ -1887,8 +1929,8 @@ class _SearchTextFieldState extends State<SearchTextField>
                                     height: 20,
                                     child: CircularProgressIndicator(
                                       strokeWidth: 2,
-                                      valueColor:
-                                          AlwaysStoppedAnimation<Color>(primaryColor),
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          primaryColor),
                                     ),
                                   ),
                                 )
@@ -1896,7 +1938,8 @@ class _SearchTextFieldState extends State<SearchTextField>
                                 _buildVoiceButton(),
                               if (widget.controller.text.isNotEmpty)
                                 IconButton(
-                                  icon: Icon(Icons.clear, color: Colors.grey[600]),
+                                  icon: Icon(Icons.clear,
+                                      color: Colors.grey[600]),
                                   onPressed: () {
                                     widget.controller.clear();
                                     _clearSearchState();
@@ -1909,15 +1952,18 @@ class _SearchTextFieldState extends State<SearchTextField>
                           fillColor: surfaceColor,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30),
-                            borderSide: BorderSide(color: borderColor!, width: 1),
+                            borderSide:
+                                BorderSide(color: borderColor!, width: 1),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30),
-                            borderSide: BorderSide(color: borderColor, width: 1),
+                            borderSide:
+                                BorderSide(color: borderColor, width: 1),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30),
-                            borderSide: BorderSide(color: primaryColor, width: 2),
+                            borderSide:
+                                BorderSide(color: primaryColor, width: 2),
                           ),
                           contentPadding: const EdgeInsets.symmetric(
                             horizontal: 24,
@@ -1944,14 +1990,15 @@ class _SearchTextFieldState extends State<SearchTextField>
                           height: 20,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(primaryColor),
                           ),
                         ),
                         const SizedBox(width: 12),
                         Text(
                           'Loading product...',
-                          style:
-                              TextStyles.regular13.copyWith(color: Colors.grey[600]),
+                          style: TextStyles.regular13
+                              .copyWith(color: Colors.grey[600]),
                         ),
                       ],
                     ),
@@ -2529,8 +2576,9 @@ class _SearchTextFieldState extends State<SearchTextField>
                             Text(
                               rating.toStringAsFixed(1),
                               style: TextStyles.regular13.copyWith(
-                                color:
-                                    isDark ? Colors.grey[200] : Colors.grey[700],
+                                color: isDark
+                                    ? Colors.grey[200]
+                                    : Colors.grey[700],
                               ),
                             ),
                             if (reviewCount > 0) ...[
@@ -2558,8 +2606,9 @@ class _SearchTextFieldState extends State<SearchTextField>
                             child: Text(
                               inStock ? 'In Stock' : 'Out of Stock',
                               style: TextStyles.bold13.copyWith(
-                                color:
-                                    inStock ? Colors.green[700] : Colors.red[700],
+                                color: inStock
+                                    ? Colors.green[700]
+                                    : Colors.red[700],
                               ),
                             ),
                           ),
@@ -2584,17 +2633,134 @@ class _SearchTextFieldState extends State<SearchTextField>
   }
 
   // 4. Filter _searchResults before displaying
-  List<Map<String, dynamic>> _applyAdvancedFilters(List<Map<String, dynamic>> results) {
+  List<Map<String, dynamic>> _applyAdvancedFilters(
+      List<Map<String, dynamic>> results) {
     return results.where((product) {
       final price = product['price'] as num? ?? 0;
       final rating = product['rating'] as num? ?? 0;
       final brand = product['brand'] as String? ?? '';
       final category = product['category'] as String? ?? '';
-      final categoryMatch = _activeFilters.isEmpty || _activeFilters.contains(category);
+      final categoryMatch =
+          _activeFilters.isEmpty || _activeFilters.contains(category);
       final priceMatch = price >= _priceRange.start && price <= _priceRange.end;
       final ratingMatch = rating >= _minRating;
       final brandMatch = _selectedBrand == null || brand == _selectedBrand;
       return categoryMatch && priceMatch && ratingMatch && brandMatch;
     }).toList();
+  }
+
+  // Helper: Parse and handle voice navigation commands
+  bool _handleVoiceNavigation(String voiceText) {
+    final text = voiceText.toLowerCase().trim();
+    // Main categories
+    const mainCategories = [
+      'electronics',
+      'appliances',
+      'fashion',
+      'beauty',
+      'home',
+      'video games'
+    ];
+    for (final cat in mainCategories) {
+      if (text == cat || text == 'go to $cat') {
+        navigateToCategory(context, cat);
+        return true;
+      }
+    }
+    // Subcategories and their variations
+    final subcategoryMap = {
+      'mobile phones': 'mobile & tablets',
+      'mobile and tablets': 'mobile & tablets',
+      'tablets': 'mobile & tablets',
+      'tvs': 'tvs',
+      'laptops': 'laptop',
+      'furniture': 'furniture',
+      'makeup': 'makeup',
+      'skincare': 'skincare',
+      'haircare': 'haircare',
+      'fragrance': 'fragrance',
+      'large appliances': 'large appliances',
+      'small appliances': 'small appliances',
+      'gaming console': 'console',
+      'console': 'console',
+      'controller': 'controllers',
+      'controllers': 'controllers',
+      'accessories': 'accessories',
+      "women's fashion": "women's fashion",
+      'woman': "women's fashion",
+      "men's fashion": "men's fashion",
+      'men': "men's fashion",
+      "kids' fashion": "kids' fashion",
+      'kids': "kids' fashion",
+      'home decor': 'home decor',
+      'bath and bedding': 'bath & bedding',
+      'kitchen dining': 'kitchen & dining',
+      'kitchen and dining': 'kitchen & dining',
+    };
+    for (final entry in subcategoryMap.entries) {
+      if (text == entry.key || text == 'go to ${entry.key}') {
+        navigateToCategory(context, entry.value);
+        return true;
+      }
+    }
+    // Subcategories navigation to categories view
+    if (text == 'go to subcategories' ||
+        text == 'subcategories' ||
+        text == 'go to categories' ||
+        text == 'categories') {
+      MainNavigationScreen.navigateToTab(
+          context, MainNavigationScreen.categoriesTab);
+      return true;
+    }
+    // Wishlist navigation
+    if (text == 'go to wishlist' || text == 'wishlist') {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (_) => const WishlistView()));
+      return true;
+    }
+    // Account navigation
+    if (text == 'open my profile' || text == 'go to my profile') {
+      MainNavigationScreen.navigateToTab(
+          context, MainNavigationScreen.accountTab);
+      return true;
+    }
+    if (text == 'go to my orders' || text == 'open my orders') {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (_) => const OrderView()));
+      return true;
+    }
+    // Cart navigation
+    if (text == 'open cart' ||
+        text == 'go to cart' ||
+        text == 'cart' ||
+        text == 'show cart' ||
+        text == 'my cart' ||
+        text == 'view cart') {
+      MainNavigationScreen.navigateToTab(context, MainNavigationScreen.cartTab);
+      return true;
+    }
+    // Profile navigation (edit profile page)
+    if (text == 'profile' ||
+        text == 'my profile' ||
+        text == 'open profile' ||
+        text == 'edit profile' ||
+        text == 'go to profile' ||
+        text == 'open my profile' ||
+        text == 'go to my profile') {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (_) => const ProfileChangeView()));
+      return true;
+    }
+    // Account navigation (account tab)
+    if (text == 'account' ||
+        text == 'my account' ||
+        text == 'open account' ||
+        text == 'go to account' ||
+        text == 'account tab') {
+      MainNavigationScreen.navigateToTab(
+          context, MainNavigationScreen.accountTab);
+      return true;
+    }
+    return false;
   }
 }
