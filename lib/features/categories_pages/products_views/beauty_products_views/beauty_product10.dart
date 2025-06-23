@@ -9,7 +9,8 @@ class BeautyProduct10 extends StatelessWidget {
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
       id: "682b00d16977bd89257c0ea6",
-      title: 'L’Oréal Paris Hyaluron Expert Eye Serum - 20ml',
+      title:
+          'L’Oréal Paris Hyaluron Expert Eye Serum with 2.5% Hyaluronic Acid, Caffeine and Niacinamide - 20ml',
       imagePaths: [
         'assets/beauty_products/skincare_5/1.png',
         'assets/beauty_products/skincare_5/2.png',
@@ -18,7 +19,6 @@ class BeautyProduct10 extends StatelessWidget {
         'assets/beauty_products/skincare_5/5.png',
       ],
       price: 341,
-      originalPrice: 400,
       rating: 4.2,
       reviewCount: 899,
       category: 'Beauty',

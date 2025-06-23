@@ -18,7 +18,6 @@ class BeautyProduct5 extends StatelessWidget {
         // 'assets/beauty_products/makeup_5/5.png',
       ],
       price: 430,
-      originalPrice: 510,
       rating: 4.5,
       reviewCount: 17782,
       category: 'Beauty',

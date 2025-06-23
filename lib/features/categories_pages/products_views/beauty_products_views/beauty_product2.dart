@@ -19,8 +19,8 @@ class BeautyProduct2 extends StatelessWidget {
       ],
       price: 509.00,
       originalPrice: 575.00,
-      rating: 5.0,
-      reviewCount: 88,
+      rating: 4.2,
+      reviewCount: 4470,
       category: 'Beauty',
       subcategory: 'Makeup',
       colorOptions: [

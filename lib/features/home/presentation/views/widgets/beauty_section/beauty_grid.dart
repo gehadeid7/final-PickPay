@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product1.dart';
-import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product16.dart';
-import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product3.dart';
-import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product6.dart';
+import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product10.dart';
+import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product13.dart';
+import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product17.dart';
+import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product2.dart';
+import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product5.dart';
+import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product7.dart';
+import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product8.dart';
 import 'package:pickpay/features/home/presentation/views/widgets/card_item.dart';
 
 class BeautyGrid extends StatefulWidget {
@@ -18,14 +22,6 @@ class _BeautyGridState extends State<BeautyGrid> {
 
   final List<Map<String, dynamic>> items = [
     {
-      'imagePath': 'assets/beauty_products/fragrance_1/1.png',
-      'productName': 'Avon Far Away for Women, Floral Eau de Parfum 50ml',
-      'price': '534.51',
-      'rating': 5.0,
-      'reviewCount': 954,
-      'detailPage': const BeautyProduct16(),
-    },
-    {
       'imagePath': 'assets/beauty_products/makeup_1/1.png',
       'productName':
           'L’Oréal Paris Volume Million Lashes Panorama Mascara in Black, 9.9 ml',
@@ -35,20 +31,66 @@ class _BeautyGridState extends State<BeautyGrid> {
       'detailPage': const BeautyProduct1(),
     },
     {
-      'imagePath': 'assets/beauty_products/makeup_3/1.png',
-      'productName': 'Cybele Smooth N`Wear Powder Blush Corail 17 - 3.7gm',
-      'price': '227.20',
-      'rating': 4.6,
-      'reviewCount': 1735,
-      'detailPage': const BeautyProduct3(),
+      'imagePath': 'assets/beauty_products/makeup_2/1.png',
+      'productName':
+          'L\'Oréal Paris Infaillible 24H Matte Cover Foundation 200 Sable Dore - Oil Control, High Coverage',
+      'price': '509.00',
+      'rating': 4.2,
+      'reviewCount': 4470,
+      'detailPage': const BeautyProduct2(),
     },
     {
-      'imagePath': 'assets/beauty_products/skincare_1/1.png',
-      'productName': 'Care & More Soft Cream With Glycerin Mixed berries 75 ML',
-      'price': '31.00',
-      'rating': 4.9,
-      'reviewCount': 1893,
-      'detailPage': const BeautyProduct6(),
+      'imagePath': 'assets/beauty_products/makeup_5/1.png',
+      'productName': 'Maybelline New York Lifter Lip Gloss, 005 Petal',
+      'price': '430.00',
+      'rating': 4.5,
+      'reviewCount': 17782,
+      'detailPage': const BeautyProduct5(),
+    },
+    {
+      'imagePath': 'assets/beauty_products/skincare_2/1.png',
+      'productName':
+          'La Roche-Posay Anthelios XL Non-perfumed Dry Touch oil control gel cream SPF50+ 50ml',
+      'price': '1168.70',
+      'rating': 4.3,
+      'reviewCount': 81,
+      'detailPage': const BeautyProduct7(),
+    },
+    {
+      'imagePath': 'assets/beauty_products/skincare_3/1.png',
+      'productName':
+          'Eva Aloe skin clinic anti-ageing collagen toner for firmed and refined skin - 200ml',
+      'price': '158.00',
+      'rating': 4.4,
+      'reviewCount': 317,
+      'detailPage': const BeautyProduct8(),
+    },
+    {
+      'imagePath': 'assets/beauty_products/skincare_5/1.png',
+      'productName':
+          'L’Oréal Paris Hyaluron Expert Eye Serum with 2.5% Hyaluronic Acid, Caffeine and Niacinamide - 20ml',
+      'price': '341.00',
+      'rating': 4.2,
+      'reviewCount': 899,
+      'detailPage': const BeautyProduct10(),
+    },
+    {
+      'imagePath': 'assets/beauty_products/haircare_3/1.png',
+      'productName':
+          'Garnier Color Naturals Permanent Crème Hair Color - 8.1 Light Ash Blonde',
+      'price': '131.55',
+      'rating': 4.2,
+      'reviewCount': 160,
+      'detailPage': const BeautyProduct13(),
+    },
+    {
+      'imagePath': 'assets/beauty_products/fragrance_2/1.png',
+      'productName':
+          'Memwa Coco Memwa Long Lasting Perfume Fragrance Luxury Eau De Parfum EDP Perfume for Women',
+      'price': '608.00',
+      'rating': 3.4,
+      'reviewCount': 2,
+      'detailPage': const BeautyProduct17(),
     },
   ];
 

@@ -143,6 +143,7 @@ class _CardItemState extends State<CardItem>
                     '(${widget.reviewCount} reviews)',
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.hintColor,
+                      fontSize: 11,
                     ),
                   ),
                 ],
