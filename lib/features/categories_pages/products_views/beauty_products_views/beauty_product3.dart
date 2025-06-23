@@ -19,17 +19,6 @@ class BeautyProduct3 extends StatelessWidget {
       reviewCount: 88,
       category: 'Beauty',
       subcategory: 'Makeup',
-      colorOptions: [
-        'Terre',
-        'Rose Tendresse',
-        'Rose Couture',
-        'Rose',
-        'Orangette',
-        'Cuivre',
-        'Brun',
-        'Bois de Rose',
-        'Corail'
-      ],
       itemform: 'Powder',
       filtertype: 'Natural',
       brand: 'Cybele',

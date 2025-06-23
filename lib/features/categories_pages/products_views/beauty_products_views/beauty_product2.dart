@@ -23,17 +23,6 @@ class BeautyProduct2 extends StatelessWidget {
       reviewCount: 4470,
       category: 'Beauty',
       subcategory: 'Makeup',
-      colorOptions: [
-        '200 Sable',
-        '130 Beige',
-        '135 Vanil',
-        '155 Natural Rose',
-        '175 Sand',
-        '230 Miel',
-        '260 Solei',
-        '320 Cool Undertone',
-        'ivory Pink/Rose Ivory'
-      ],
       itemform: 'Cream',
       skintype: 'All',
       brand: 'L’Oréal Paris',
