@@ -2706,8 +2706,8 @@ class _SearchTextFieldState extends State<SearchTextField>
     // Subcategories navigation to categories view
     if (text == 'go to subcategories' ||
         text == 'subcategories' ||
-        text == 'go to categories' ||
-        text == 'categories') {
+        text == 'go to subcategories' ||
+        text == 'subcategories') {
       MainNavigationScreen.navigateToTab(
           context, MainNavigationScreen.categoriesTab);
       return true;
