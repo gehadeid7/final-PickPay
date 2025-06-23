@@ -9,8 +9,7 @@ class VideoGamesProduct1 extends StatelessWidget {
   Widget build(BuildContext context) {
     final product = ProductsViewsModel(
       id: '682b00a46977bd89257c0e80',
-      title:
-          'Sony PlayStation 5 SLIM Disc [ NEW 2023 Model ] - International Version',
+      title: 'PlayStation 5 Digital Console (Slim)',
       imagePaths: [
         'assets/videogames_products/Consoles/console1/1.png',
         'assets/videogames_products/Consoles/console1/2.png',

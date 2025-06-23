@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:pickpay/features/categories_pages/products_views/home_products/home_product1.dart';
-import 'package:pickpay/features/categories_pages/products_views/home_products/home_product11.dart';
 import 'package:pickpay/features/categories_pages/products_views/home_products/home_product12.dart';
 import 'package:pickpay/features/categories_pages/products_views/home_products/home_product16.dart';
 import 'package:pickpay/features/categories_pages/products_views/home_products/home_product18.dart';
-import 'package:pickpay/features/categories_pages/products_views/home_products/home_product2.dart';
 import 'package:pickpay/features/categories_pages/products_views/home_products/home_product20.dart';
 import 'package:pickpay/features/categories_pages/products_views/home_products/home_product4.dart';
 import 'package:pickpay/features/categories_pages/products_views/home_products/home_product6.dart';
-import 'package:pickpay/features/categories_pages/products_views/home_products/home_product8.dart';
 import 'package:pickpay/features/categories_pages/products_views/home_products/home_product9.dart';
 import 'package:pickpay/features/home/presentation/views/widgets/card_item.dart';
 

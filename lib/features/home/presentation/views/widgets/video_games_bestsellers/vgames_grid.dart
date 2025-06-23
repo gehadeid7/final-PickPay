@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product1.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product10.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product11.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product13.dart';
 import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product14.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product3.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product5.dart';
+import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product6.dart';
 import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product7.dart';
 import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product8.dart';
 import 'package:pickpay/features/home/presentation/views/widgets/card_item.dart';
@@ -18,6 +24,39 @@ class _VgamesGridState extends State<VgamesGrid> {
 
   final List<Map<String, dynamic>> items = [
     {
+      'imagePath': 'assets/videogames_products/Consoles/console1/2.png',
+      'productName': 'PlayStation 5 Digital Console (Slim)',
+      'price': '27750.00',
+      'rating': 4.6,
+      'reviewCount': 893,
+      'detailPage': const VideoGamesProduct1(),
+    },
+    {
+      'imagePath': 'assets/videogames_products/Consoles/console3/1.png',
+      'productName': 'PlayStation 5 Digital Edition Slim (Nordic)',
+      'price': '28799.00',
+      'rating': 4.8,
+      'reviewCount': 36,
+      'detailPage': const VideoGamesProduct3(),
+    },
+    {
+      'imagePath': 'assets/videogames_products/Controllers/controller1/1.png',
+      'productName': 'Sony PlayStation 5 DualSense Wireless Controller',
+      'price': '4499.00',
+      'rating': 5.0,
+      'reviewCount': 3,
+      'detailPage': const VideoGamesProduct5(),
+    },
+    {
+      'imagePath': 'assets/videogames_products/Controllers/controller2/1.png',
+      'productName':
+          'PlayStation Sony DualSense wireless controller for PS5 White',
+      'price': '4536.00',
+      'rating': 4.4,
+      'reviewCount': 2313,
+      'detailPage': const VideoGamesProduct6(),
+    },
+    {
       'imagePath': 'assets/videogames_products/Controllers/controller4/1.png',
       'productName':
           'PlayStation 5 DualSense Edge Wireless Controller (UAE Version)',
@@ -27,30 +66,31 @@ class _VgamesGridState extends State<VgamesGrid> {
       'detailPage': const VideoGamesProduct8(),
     },
     {
-      'imagePath': 'assets/videogames_products/Accessories/accessories5/1.png',
+      'imagePath': 'assets/videogames_products/Accessories/accessories1/1.png',
       'productName':
-          'EA SPORTS FC 25 Standard Edition PS5 | VideoGame | English',
-      'price': '1128.00',
-      'rating': 4.0,
-      'reviewCount': 1288,
-      'detailPage': const VideoGamesProduct14(),
+          'Likorlove PS5 Controller Quick Charger, Dual USB Fast Charging Dock Station Stand for Playstation 5 DualSense Controllers Console with LED Indicator USB Type C Ports, White [2.5-3 Hours]',
+      'price': '576.00',
+      'rating': 4.3,
+      'reviewCount': 185,
+      'detailPage': const VideoGamesProduct10(),
     },
     {
-      'imagePath': 'assets/videogames_products/Consoles/console1/2.png',
+      'imagePath': 'assets/videogames_products/Accessories/accessories2/1.png',
       'productName':
-          'Sony PlayStation 5 SLIM Disc [ NEW 2023 Model ] - International Version',
-      'price': '27.750',
+          'OIVO PS5 Charging Station, 2H Fast PS5 Controller Charger for Playstation 5 Dualsense Controller, Upgrade PS5 Charging Dock with 2 Types of Cable, PS5 Charger for Dual PS5 Controller',
+      'price': '1200.00',
       'rating': 4.6,
-      'reviewCount': 1735,
-      'detailPage': const VideoGamesProduct1(),
+      'reviewCount': 1573,
+      'detailPage': const VideoGamesProduct11(),
     },
     {
-      'imagePath': 'assets/videogames_products/Controllers/controller3/1.png',
-      'productName': 'PlayStation 5 Dual Sense Wireless Controller Cosmic Red',
-      'price': ' 4.498',
-      'rating': 4.9,
-      'reviewCount': 1893,
-      'detailPage': const VideoGamesProduct7(),
+      'imagePath': 'assets/videogames_products/Accessories/accessories4/1.png',
+      'productName':
+          'Mcbazel PS5 Cooling Station and Charging Station, 3 Speed Fan, Controller Dock with LED Indicator and 11 Storage Discs - White(Not for PS5 Pro)',
+      'price': '1999.00',
+      'rating': 3.9,
+      'reviewCount': 38,
+      'detailPage': const VideoGamesProduct13(),
     },
   ];
 
