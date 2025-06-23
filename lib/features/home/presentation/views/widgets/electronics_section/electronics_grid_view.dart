@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product11.dart';
-import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product14.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product1.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product12.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product13.dart';
 import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product3.dart';
-import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product4.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product5.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product6.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product7.dart';
+import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product9.dart';
 import 'package:pickpay/features/home/presentation/views/widgets/card_item.dart';
 
 class ElectronicsCarouselView extends StatefulWidget {
@@ -19,6 +23,16 @@ class _ElectronicsCarouselView extends State<ElectronicsCarouselView> {
   final List<Map<String, dynamic>> items = [
     {
       'imagePath':
+          'assets/electronics_products/mobile_and_tablet/mobile_and_tablet1/1.png',
+      'productName':
+          'Samsung Galaxy Tab A9 4G LTE, 8.7 Inch Android Tablet, 8GB RAM, 128GB Storage, 8MP Rear Camera, Navy-1 Year Warranty/Local Version',
+      'price': '9399.00',
+      'rating': 3.1,
+      'reviewCount': 9,
+      'detailPage': const Product1View(),
+    },
+    {
+      'imagePath':
           'assets/electronics_products/mobile_and_tablet/mobile_and_tablet3/1.png',
       'productName': 'Apple iPhone 16 (128GB) - Ultramarine',
       'price': '57555.00',
@@ -28,28 +42,58 @@ class _ElectronicsCarouselView extends State<ElectronicsCarouselView> {
     },
     {
       'imagePath':
-          'assets/electronics_products/mobile_and_tablet/mobile_and_tablet4/1.png',
-      'productName': 'CANSHN Magnetic iPhone 16 Pro Max Case, Clear',
-      'price': '141.25',
-      'rating': 4.6,
-      'reviewCount': 92,
-      'detailPage': const Product4View(),
+          'assets/electronics_products/mobile_and_tablet/mobile_and_tablet5/1.png',
+      'productName':
+          "Oraimo 18W USB Type-C Dual Output Super Fast Charger Wall Adapter QC3.0& PD3.0 & PE2.0 Compatible for iPhone 15/15 Plus/15 Pro/15 Pro Max, 14/13/12 Series, Galaxy, Pixel 4/3, iPad and More",
+      'price': '199.00',
+      'rating': 4.7,
+      'reviewCount': 380,
+      'detailPage': const Product5View(),
     },
     {
-      'imagePath': 'assets/electronics_products/Laptop/Laptop1/1.png',
-      'productName': 'LENOVO Ideapad Slim3 15IRH8',
-      'price': '24313.00',
-      'rating': 4.9,
-      'reviewCount': 19,
-      'detailPage': const Product11View(),
+      'imagePath': 'assets/electronics_products/tvscreens/tv1/1.png',
+      'productName':
+          "Samsung 55 Inch QLED Smart TV Neural HDR Quantum Processor Lite 4K - QA55QE1DAUXEG [2024 Model]",
+      'price': '23499.00',
+      'rating': 4.5,
+      'reviewCount': 46,
+      'detailPage': const Product6View(),
     },
     {
-      'imagePath': 'assets/electronics_products/Laptop/Laptop4/1.png',
-      'productName': 'HP OfficeJet Pro 9720 Printer',
-      'price': '7199.00',
-      'rating': 4.4,
-      'reviewCount': 19,
-      'detailPage': const Product14View(),
+      'imagePath': 'assets/electronics_products/tvscreens/tv2/1.png',
+      'productName':
+          'Xiaomi TV A 43 2025, 43", FHD, HDR, Cinematic Smart TV, 43-Inch Screen Size Google Assistant platform built-in receiver and Chromecast, metal finish Dolby Atoms 2 years local warranty',
+      'price': '9999.00',
+      'rating': 3.8,
+      'reviewCount': 264,
+      'detailPage': const Product7View(),
+    },
+    {
+      'imagePath': 'assets/electronics_products/tvscreens/tv4/1.png',
+      'productName':
+          'SHARP 4K Smart Frameless TV 55 Inch Built-In Receiver 4T-C55FL6EX',
+      'price': '17849.00',
+      'rating': 4.7,
+      'reviewCount': 4,
+      'detailPage': const Product9View(),
+    },
+    {
+      'imagePath': 'assets/electronics_products/Laptop/Laptop2/1.png',
+      'productName':
+          'Lenovo Legion 5 15ACH6 Gaming Laptop - Ryzen 5-5600H, 16 GB RAM, 512 GB SSD, NVIDIA GeForce RTX 3050 Ti 4GB GDDR6 Graphics, 15.6" FHD (1920x1080) IPS 120Hz, Backlit Keyboard, WIN 11',
+      'price': '38749.00',
+      'rating': 3.4,
+      'reviewCount': 14,
+      'detailPage': const Product12View(),
+    },
+    {
+      'imagePath': 'assets/electronics_products/Laptop/Laptop3/1.png',
+      'productName':
+          'HP Victus Gaming Laptop 15-fb1004ne, CPU: Ryzen 5-7535HS, 16GB RAM,512GB SSD, Graphics Card: NVIDIA GeForce RTX 2050, VRAM: 4GB, Display: 15.6 FHD Antiglare IPS 250 nits 144Hz, Windows 11',
+      'price': '29999.00',
+      'rating': 4.2,
+      'reviewCount': 13,
+      'detailPage': const Product13View(),
     },
   ];
 
