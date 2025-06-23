@@ -18,7 +18,6 @@ class Product13View extends StatelessWidget {
         'assets/electronics_products/Laptop/Laptop3/4.png',
       ],
       price: 29999.00,
-      originalPrice: 30888.00,
       rating: 4.2,
       reviewCount: 13,
       screenSize: '15.6 Inches',

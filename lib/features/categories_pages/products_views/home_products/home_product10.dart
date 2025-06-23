@@ -18,7 +18,6 @@ class HomeProduct10 extends StatelessWidget {
         'assets/Home_products/home-decor/home_decor5/4.png',
       ],
       price: 400.00,
-      originalPrice: 450.00,
       rating: 4.3,
       reviewCount: 43,
       category: 'Home',

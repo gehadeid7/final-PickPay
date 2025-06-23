@@ -34,8 +34,8 @@ class _FashionGridState extends State<FashionGrid> {
       'imagePath': 'assets/Fashion_products/Women_Fashion/women_fashion5/1.png',
       'productName': 'Aldo Caraever Ladies Satchel Handbags, Khaki, Khaki',
       'price': '5190.00',
-      'rating': 4.9,
-      'reviewCount': 1893,
+      'rating': 3.1,
+      'reviewCount': 9,
       'detailPage': const FashionProduct5(),
     },
     {

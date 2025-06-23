@@ -70,8 +70,8 @@ class _AppliancesGridState extends State<AppliancesGrid> {
       'imagePath': 'assets/appliances/product7/1.png',
       'productName': 'Black & Decker DCM25N-B5 Coffee Maker, Black - 1 Cup',
       'price': '930',
-      'rating': 4.7,
-      'reviewCount': 1288,
+      'rating': 3.1,
+      'reviewCount': 9,
       'detailPage': const AppliancesProduct7(),
     },
     {
@@ -79,8 +79,8 @@ class _AppliancesGridState extends State<AppliancesGrid> {
       'productName':
           'deime Air Fryer 6.2 Quart, Large Air Fryer for Families, 5 Cooking Functions AirFryer, 400°F Temp Controls in 5° Increments, Ceramic Coated Nonstick',
       'price': '3629',
-      'rating': 4.5,
-      'reviewCount': 954,
+      'rating': 3.9,
+      'reviewCount': 9,
       'detailPage': const AppliancesProduct6(),
     },
     {

@@ -78,7 +78,7 @@ class _VgamesGridState extends State<VgamesGrid> {
           'OIVO PS5 Charging Station, 2H Fast PS5 Controller Charger for Playstation 5 Dualsense Controller, Upgrade PS5 Charging Dock with 2 Types of Cable, PS5 Charger for Dual PS5 Controller',
       'price': '1200.00',
       'rating': 4.6,
-      'reviewCount': 1573,
+      'reviewCount': 15736,
       'detailPage': const VideoGamesProduct11(),
     },
     {

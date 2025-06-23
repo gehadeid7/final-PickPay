@@ -34,8 +34,8 @@ class _HomeSectionGridState extends State<HomeSectionGrid> {
       'productName':
           'Bedsure 100% Cotton Blankets Queen Size for Bed - Waffle Weave Blankets for Summer, Lightweight and Breathable Soft Woven Blankets for Spring, Mint, 90x90 Inches ',
       'price': '604.00',
-      'rating': 4.9,
-      'reviewCount': 1893,
+      'rating': 4.4,
+      'reviewCount': 20938,
       'detailPage': const HomeProduct18(),
     },
     {
@@ -68,9 +68,9 @@ class _HomeSectionGridState extends State<HomeSectionGrid> {
       'imagePath': 'assets/Home_products/home-decor/home_decor1/1.png',
       'productName':
           'Golden Lighting LED Gold Lampshade + 1 Crystal Cylinder Bulb.',
-      'price': '1128.00',
-      'rating': 4.0,
-      'reviewCount': 1288,
+      'price': '527.86',
+      'rating': 3.9,
+      'reviewCount': 58,
       'detailPage': const HomeProduct6(),
     },
     {

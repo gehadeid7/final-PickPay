@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product9.dart';
 import 'package:pickpay/features/categories_pages/products_views/electronics_products_views/product13.dart';
 import 'package:pickpay/features/categories_pages/products_views/home_products/home_product15.dart';
+import 'package:pickpay/features/categories_pages/products_views/home_products/home_product20.dart';
 import 'package:pickpay/features/home/presentation/views/widgets/card_item.dart';
 
 class RecommendedForuGridView extends StatefulWidget {
@@ -38,9 +39,9 @@ class _RecommendedForuGridView extends State<RecommendedForuGridView> {
       'imagePath': 'assets/electronics_products/Laptop/Laptop3/1.png',
       'productName':
           'HP Victus Gaming Laptop (15-fb1004ne), CPU: Ryzen 5-7535HS, 16GB DDR5 2DM 4800, NVIDIA RTX 2050, 15.6" FHD 144Hz, 512GB, Windows 11',
-      'price': '33.199',
-      'rating': 4.6,
-      'reviewCount': 150,
+      'price': '29999.00',
+      'rating': 4.2,
+      'reviewCount': 13,
       'detailPage': Product13View(),
     },
     {
@@ -50,7 +51,7 @@ class _RecommendedForuGridView extends State<RecommendedForuGridView> {
       'price': ' 948.00',
       'rating': 3.8,
       'reviewCount': 84,
-      'detailPage': HomeProduct15(),
+      'detailPage': HomeProduct20(),
     },
   ];
 
@@ -106,7 +107,8 @@ class _RecommendedForuGridView extends State<RecommendedForuGridView> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (_) => items[firstIndex]['detailPage']));
+                                  builder: (_) =>
+                                      items[firstIndex]['detailPage']));
                         },
                         child: CardItem(
                           imagePath: items[firstIndex]['imagePath'],
@@ -125,7 +127,8 @@ class _RecommendedForuGridView extends State<RecommendedForuGridView> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (_) => items[secondIndex]['detailPage']));
+                                    builder: (_) =>
+                                        items[secondIndex]['detailPage']));
                           },
                           child: CardItem(
                             imagePath: items[secondIndex]['imagePath'],

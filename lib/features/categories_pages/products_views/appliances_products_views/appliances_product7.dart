@@ -18,7 +18,7 @@ class AppliancesProduct7 extends StatelessWidget {
       price: 930,
       originalPrice: 1680,
       rating: 3.1,
-      reviewCount: 1288,
+      reviewCount: 9,
       category: 'Appliances',
       subcategory: 'Small Appliances',
       brand: 'Black & Decker',

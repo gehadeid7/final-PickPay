@@ -34,10 +34,10 @@ class _ElectronicsCarouselView extends State<ElectronicsCarouselView> {
     {
       'imagePath':
           'assets/electronics_products/mobile_and_tablet/mobile_and_tablet3/1.png',
-      'productName': 'Apple iPhone 16 (128GB) - Ultramarine',
-      'price': '57555.00',
-      'rating': 4.8,
-      'reviewCount': 88,
+      'productName': 'Apple iPhone 16 (128GB)',
+      'price': '53550.00',
+      'rating': 4.7,
+      'reviewCount': 330,
       'detailPage': const Product3View(),
     },
     {

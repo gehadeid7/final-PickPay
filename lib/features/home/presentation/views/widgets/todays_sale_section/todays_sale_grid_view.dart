@@ -74,8 +74,8 @@ class _TodaysSaleGridViewState extends State<TodaysSaleGridView>
         'productName':
             'Black & Decker 1050W 2-Slice Stainless Steel Toaster, Silver/Black',
         'price': '2540.00',
-        'rating': 4.8,
-        'reviewCount': 200,
+        'rating': 3.1,
+        'reviewCount': 9,
         'detailPage': const AppliancesProduct8(),
       },
       {
