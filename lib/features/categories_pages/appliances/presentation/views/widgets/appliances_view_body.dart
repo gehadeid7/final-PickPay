@@ -106,12 +106,10 @@ class _AppliancesViewBodyState extends State<AppliancesViewBody> {
             title: apiProduct.name,
             price: apiProduct.price,
             originalPrice: apiProduct.originalPrice,
-            rating:
-                4.5, // Default rating - could be fetched from a reviews service
+            rating: apiProduct.rating, // Use actual rating from API
             reviewCount:
-                100, // Default review count - could be fetched from a reviews service
-            brand: productBrands[apiProduct.id] ??
-                'Generic', // Use actual brand from product files
+                apiProduct.reviewCount, // Use actual review count from API
+            brand: productBrands[apiProduct.id] ?? 'Generic',
             imagePaths: [imagePath],
           );
         })
