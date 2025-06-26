@@ -65,19 +65,19 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
 
   Widget _buildCardBrandIcon() {
     if (_cardBrand == 'Visa') {
-      return Padding(
-        padding: const EdgeInsets.only(right: 8),
-        child: Image.asset('assets/icons/visa.png', height: 24),
+      return const Padding(
+        padding: EdgeInsets.only(right: 8),
+        child: Icon(Icons.credit_card, color: Colors.blue, size: 28),
       );
     } else if (_cardBrand == 'MasterCard') {
-      return Padding(
-        padding: const EdgeInsets.only(right: 8),
-        child: Image.asset('assets/icons/mastercard.png', height: 24),
+      return const Padding(
+        padding: EdgeInsets.only(right: 8),
+        child: Icon(Icons.credit_card, color: Colors.red, size: 28),
       );
     } else if (_cardBrand == 'American Express') {
-      return Padding(
-        padding: const EdgeInsets.only(right: 8),
-        child: Image.asset('assets/icons/amex.png', height: 24),
+      return const Padding(
+        padding: EdgeInsets.only(right: 8),
+        child: Icon(Icons.credit_card, color: Colors.green, size: 28),
       );
     }
     return const SizedBox(width: 32);
@@ -105,7 +105,8 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.check_circle, color: colorScheme.primary, size: 64),
+                  Icon(Icons.check_circle,
+                      color: colorScheme.primary, size: 64),
                   const SizedBox(height: 12),
                   Text('Payment information saved!',
                       style: theme.textTheme.titleMedium?.copyWith(
@@ -154,8 +155,8 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: colorScheme.outline),
                         ),
-                        contentPadding:
-                            const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 8),
                       ),
                       style: TextStyle(color: colorScheme.onSurface),
                       dropdownColor: colorScheme.surface,
@@ -171,20 +172,26 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
                               decoration: InputDecoration(
                                 labelText: 'Card Number',
                                 labelStyle: TextStyle(
-                                    color: colorScheme.onSurface.withOpacity(0.7)),
+                                    color:
+                                        colorScheme.onSurface.withOpacity(0.7)),
                                 prefixIcon: Icon(Icons.credit_card,
-                                    color: colorScheme.onSurface.withOpacity(0.7)),
+                                    color:
+                                        colorScheme.onSurface.withOpacity(0.7)),
                                 suffixIcon: _buildCardBrandIcon(),
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
-                                      color: colorScheme.outline.withOpacity(0.5)),
+                                      color:
+                                          colorScheme.outline.withOpacity(0.5)),
                                 ),
                                 focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: colorScheme.primary),
+                                  borderSide:
+                                      BorderSide(color: colorScheme.primary),
                                 ),
                                 helperText: '16 digits, numbers only',
                               ),
-                              autofillHints: const [AutofillHints.creditCardNumber],
+                              autofillHints: const [
+                                AutofillHints.creditCardNumber
+                              ],
                               textInputAction: TextInputAction.next,
                               onFieldSubmitted: (_) => focusScope.nextFocus(),
                               keyboardType: TextInputType.number,
@@ -220,19 +227,25 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
                               decoration: InputDecoration(
                                 labelText: 'Expiry Date (MM/YY)',
                                 labelStyle: TextStyle(
-                                    color: colorScheme.onSurface.withOpacity(0.7)),
+                                    color:
+                                        colorScheme.onSurface.withOpacity(0.7)),
                                 prefixIcon: Icon(Icons.date_range,
-                                    color: colorScheme.onSurface.withOpacity(0.7)),
+                                    color:
+                                        colorScheme.onSurface.withOpacity(0.7)),
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
-                                      color: colorScheme.outline.withOpacity(0.5)),
+                                      color:
+                                          colorScheme.outline.withOpacity(0.5)),
                                 ),
                                 focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: colorScheme.primary),
+                                  borderSide:
+                                      BorderSide(color: colorScheme.primary),
                                 ),
                                 helperText: 'MM/YY',
                               ),
-                              autofillHints: const [AutofillHints.creditCardExpirationDate],
+                              autofillHints: const [
+                                AutofillHints.creditCardExpirationDate
+                              ],
                               textInputAction: TextInputAction.next,
                               onFieldSubmitted: (_) => focusScope.nextFocus(),
                               keyboardType: TextInputType.number,
@@ -244,7 +257,8 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
                                 if (value == null || value.isEmpty) {
                                   return 'Please enter expiry date';
                                 }
-                                if (!RegExp(r'^(0[1-9]|1[0-2])\/\d{2}$').hasMatch(value)) {
+                                if (!RegExp(r'^(0[1-9]|1[0-2])\/\d{2}$')
+                                    .hasMatch(value)) {
                                   return 'Invalid expiry date';
                                 }
                                 // Check if expiry is in the future
@@ -255,7 +269,8 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
                                   if (month != null && year != null) {
                                     final now = DateTime.now();
                                     final fourDigitYear = 2000 + year;
-                                    final expiry = DateTime(fourDigitYear, month + 1, 0);
+                                    final expiry =
+                                        DateTime(fourDigitYear, month + 1, 0);
                                     if (!expiry.isAfter(now)) {
                                       return 'Expiry must be in the future';
                                     }
@@ -273,19 +288,25 @@ class _PaymentMethodSelectorState extends State<PaymentMethodSelector> {
                               decoration: InputDecoration(
                                 labelText: 'CVV',
                                 labelStyle: TextStyle(
-                                    color: colorScheme.onSurface.withOpacity(0.7)),
+                                    color:
+                                        colorScheme.onSurface.withOpacity(0.7)),
                                 prefixIcon: Icon(Icons.lock,
-                                    color: colorScheme.onSurface.withOpacity(0.7)),
+                                    color:
+                                        colorScheme.onSurface.withOpacity(0.7)),
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
-                                      color: colorScheme.outline.withOpacity(0.5)),
+                                      color:
+                                          colorScheme.outline.withOpacity(0.5)),
                                 ),
                                 focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: colorScheme.primary),
+                                  borderSide:
+                                      BorderSide(color: colorScheme.primary),
                                 ),
                                 helperText: '3 or 4 digits',
                               ),
-                              autofillHints: const [AutofillHints.creditCardSecurityCode],
+                              autofillHints: const [
+                                AutofillHints.creditCardSecurityCode
+                              ],
                               textInputAction: TextInputAction.done,
                               onFieldSubmitted: (_) => focusScope.unfocus(),
                               keyboardType: TextInputType.number,
