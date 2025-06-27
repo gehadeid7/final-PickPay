@@ -106,6 +106,8 @@ class _FashionCategoryViewBodyState extends State<FashionCategoryViewBody> {
         reviewCount: apiProduct.reviewCount,
         brand: assignedBrand,
         imagePaths: [imagePath],
+        soldBy: 'PickPay',
+        isPickPayFulfilled: true,
       );
     }).toList();
 

@@ -109,6 +109,8 @@ class _ElectronicsViewBodyState extends State<ElectronicsViewBody> {
             brand: productBrands[apiProduct.id] ??
                 'Generic', // Use actual brand from product files
             imagePaths: [imagePath],
+            soldBy: 'PickPay',
+            isPickPayFulfilled: true,
           );
         })
         .where((product) => detailPages.containsKey(product.id))

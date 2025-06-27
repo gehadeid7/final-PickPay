@@ -112,6 +112,8 @@ class _AppliancesViewBodyState extends State<AppliancesViewBody> {
                 apiProduct.reviewCount, // Use actual review count from API
             brand: productBrands[apiProduct.id] ?? 'Generic',
             imagePaths: [imagePath],
+            soldBy: 'PickPay',
+            isPickPayFulfilled: true,
           );
         })
         .where((product) => detailPages.containsKey(product.id))

@@ -86,6 +86,8 @@ class _BeautyViewBodyState extends State<BeautyViewBody> {
         reviewCount: apiProduct.reviewCount ?? 100,
         brand: assignedBrand,
         imagePaths: [imagePath],
+        soldBy: 'PickPay',
+        isPickPayFulfilled: true,
       );
     }).toList();
 
