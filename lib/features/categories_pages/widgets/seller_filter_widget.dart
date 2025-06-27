@@ -25,7 +25,11 @@ class SellerFilterWidget extends StatelessWidget {
         .toList()
       ..sort();
 
-    final allSellers = ['All Sellers', ...sellers.whereType<String>()];
+    final allSellers = [
+      'All Sellers',
+      'PickPay',
+      ...sellers.whereType<String>().where((s) => s != 'PickPay')
+    ];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
