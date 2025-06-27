@@ -1,27 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pickpay/features/categories_pages/models/product_model.dart';
-import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product1.dart';
-import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product10.dart';
-import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product11.dart';
-import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product12.dart';
-import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product13.dart';
-import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product14.dart';
-import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product15.dart';
-import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product16.dart';
-import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product17.dart';
-import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product18.dart';
-import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product19.dart';
-import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product2.dart';
-import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product20.dart';
-import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product3.dart';
-import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product4.dart';
-import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product5.dart';
-import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product6.dart';
-import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product7.dart';
-import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product8.dart';
-import 'package:pickpay/features/categories_pages/products_views/beauty_products_views/beauty_product9.dart';
-
 import 'package:pickpay/features/categories_pages/widgets/base_category_view.dart';
+import 'package:pickpay/features/categories_pages/products_views/product_detail_view.dart';
 import 'package:pickpay/services/api_service.dart';
 
 class BeautyViewBody extends StatefulWidget {
@@ -34,29 +14,6 @@ class BeautyViewBody extends StatefulWidget {
 class _BeautyViewBodyState extends State<BeautyViewBody> {
   late Future<List<ProductsViewsModel>> _productsFuture;
 
-  static final Map<String, Widget> detailPages = {
-    '682b00d16977bd89257c0e9d': const BeautyProduct1(),
-    '682b00d16977bd89257c0e9e': const BeautyProduct2(),
-    '682b00d16977bd89257c0e9f': const BeautyProduct3(),
-    '682b00d16977bd89257c0ea0': const BeautyProduct4(),
-    '682b00d16977bd89257c0ea1': const BeautyProduct5(),
-    '682b00d16977bd89257c0ea2': const BeautyProduct6(),
-    '682b00d16977bd89257c0ea3': const BeautyProduct7(),
-    '682b00d16977bd89257c0ea4': const BeautyProduct8(),
-    '682b00d16977bd89257c0ea5': const BeautyProduct9(),
-    '682b00d16977bd89257c0ea6': const BeautyProduct10(),
-    '682b00d16977bd89257c0ea7': const BeautyProduct11(),
-    '682b00d16977bd89257c0ea8': const BeautyProduct12(),
-    '682b00d16977bd89257c0ea9': const BeautyProduct13(),
-    '682b00d16977bd89257c0eaa': const BeautyProduct14(),
-    '682b00d16977bd89257c0eab': const BeautyProduct15(),
-    '682b00d16977bd89257c0eac': const BeautyProduct16(),
-    '682b00d16977bd89257c0ead': const BeautyProduct17(),
-    '682b00d16977bd89257c0eae': const BeautyProduct18(),
-    '682b00d16977bd89257c0eaf': const BeautyProduct19(),
-    '682b00d16977bd89257c0eb0': const BeautyProduct20(),
-  };
-
   @override
   void initState() {
     super.initState();
@@ -68,32 +25,26 @@ class _BeautyViewBodyState extends State<BeautyViewBody> {
 
     // Define actual brands for Beauty products
     final Map<String, String> productBrands = {
-      '682b00d16977bd89257c0e9d':
-          'L\'Oréal Paris', // BeautyProduct1 - Makeup (Mascara)
-      '682b00d16977bd89257c0e9e':
-          'L\'Oréal Paris', // BeautyProduct2 - Makeup (Foundation)
-      '682b00d16977bd89257c0e9f': 'Cybele', // BeautyProduct3 - Makeup (Blush)
-      '682b00d16977bd89257c0ea0': 'Eva', // BeautyProduct4 - Makeup (Wipes)
-      '682b00d16977bd89257c0ea1':
-          'MAYBELLINE', // BeautyProduct5 - Makeup (Lip Gloss)
-      '682b00d16977bd89257c0ea2': 'La Roche-Posay', // BeautyProduct6 - Skincare
-      '682b00d16977bd89257c0ea3': 'Eucerin', // BeautyProduct7 - Skincare
-      '682b00d16977bd89257c0ea4': 'Care & More', // BeautyProduct8 - Skincare
-      '682b00d16977bd89257c0ea5': 'NIVEA', // BeautyProduct9 - Skincare
-      '682b00d16977bd89257c0ea6': 'Garnier', // BeautyProduct10 - Skincare
-      '682b00d16977bd89257c0ea7':
-          'L\'Oréal Paris', // BeautyProduct11 - Haircare
-      '682b00d16977bd89257c0ea8': 'Garnier', // BeautyProduct12 - Haircare
-      '682b00d16977bd89257c0ea9': 'NIVEA', // BeautyProduct13 - Haircare
-      '682b00d16977bd89257c0eaa': 'Raw African', // BeautyProduct14 - Haircare
-      '682b00d16977bd89257c0eab': 'Gulf Orchid', // BeautyProduct15 - Haircare
-      '682b00d16977bd89257c0eac': 'Avon', // BeautyProduct16 - Fragrance
-      '682b00d16977bd89257c0ead': 'Gulf Orchid', // BeautyProduct17 - Fragrance
-      '682b00d16977bd89257c0eae':
-          '9Street Corner', // BeautyProduct18 - Fragrance
-      '682b00d16977bd89257c0eaf': 'NIVEA', // BeautyProduct19 - Fragrance
-      '682b00d16977bd89257c0eb0':
-          'Jacques Bogart', // BeautyProduct20 - Fragrance
+      '682b00d16977bd89257c0e9d': 'L\'Oréal Paris',
+      '682b00d16977bd89257c0e9e': 'L\'Oréal Paris',
+      '682b00d16977bd89257c0e9f': 'Cybele',
+      '682b00d16977bd89257c0ea0': 'Eva',
+      '682b00d16977bd89257c0ea1': 'MAYBELLINE',
+      '682b00d16977bd89257c0ea2': 'La Roche-Posay',
+      '682b00d16977bd89257c0ea3': 'Eucerin',
+      '682b00d16977bd89257c0ea4': 'Care & More',
+      '682b00d16977bd89257c0ea5': 'NIVEA',
+      '682b00d16977bd89257c0ea6': 'Garnier',
+      '682b00d16977bd89257c0ea7': 'L\'Oréal Paris',
+      '682b00d16977bd89257c0ea8': 'Garnier',
+      '682b00d16977bd89257c0ea9': 'NIVEA',
+      '682b00d16977bd89257c0eaa': 'Raw African',
+      '682b00d16977bd89257c0eab': 'Gulf Orchid',
+      '682b00d16977bd89257c0eac': 'Avon',
+      '682b00d16977bd89257c0ead': 'Gulf Orchid',
+      '682b00d16977bd89257c0eae': '9Street Corner',
+      '682b00d16977bd89257c0eaf': 'NIVEA',
+      '682b00d16977bd89257c0eb0': 'Jacques Bogart',
     };
 
     // Map product ID to image path
@@ -121,14 +72,10 @@ class _BeautyViewBodyState extends State<BeautyViewBody> {
     };
 
     final filteredProducts = apiProducts
-        .where((apiProduct) => detailPages.containsKey(apiProduct.id))
+        .where((apiProduct) => productImagePaths.containsKey(apiProduct.id))
         .map((apiProduct) {
       final imagePath = productImagePaths[apiProduct.id] ?? '';
       final assignedBrand = productBrands[apiProduct.id] ?? 'Generic';
-
-      // Debug logging
-      print(
-          'Beauty - Product ID: ${apiProduct.id}, Assigned Brand: $assignedBrand');
 
       return ProductsViewsModel(
         id: apiProduct.id,
@@ -137,20 +84,12 @@ class _BeautyViewBodyState extends State<BeautyViewBody> {
         originalPrice: apiProduct.originalPrice,
         rating: apiProduct.rating ?? 4.5,
         reviewCount: apiProduct.reviewCount ?? 100,
-        brand: assignedBrand, // Use actual brand
+        brand: assignedBrand,
         imagePaths: [imagePath],
       );
     }).toList();
 
-    // Debug logging for final brands
-    final finalBrands = filteredProducts.map((p) => p.brand).toSet();
-    print('Beauty - Final brands in products: $finalBrands');
-
     return filteredProducts;
-  }
-
-  Widget? _findDetailPageById(String productId) {
-    return detailPages[productId];
   }
 
   @override
@@ -198,10 +137,23 @@ class _BeautyViewBodyState extends State<BeautyViewBody> {
           categoryName: 'Beauty',
           products: snapshot.data!,
           productDetailBuilder: (productId) {
-            final detailPage = _findDetailPageById(productId);
-            if (detailPage != null) {
-              return detailPage;
+            final product = snapshot.data!.firstWhere(
+              (p) => p.id == productId,
+              orElse: () => ProductsViewsModel(
+                id: '',
+                title: 'Unknown Product',
+                price: 0,
+                originalPrice: 0,
+                imagePaths: [],
+                rating: 0.0,
+                reviewCount: 0,
+              ),
+            );
+
+            if (product.id.isNotEmpty) {
+              return ProductDetailView(product: product);
             }
+
             return Scaffold(
               appBar: AppBar(title: const Text('Product Not Found')),
               body: const Center(child: Text('Product details not available')),

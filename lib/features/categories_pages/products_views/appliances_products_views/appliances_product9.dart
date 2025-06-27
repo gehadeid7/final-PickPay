@@ -3,7 +3,15 @@ import 'package:pickpay/features/categories_pages/models/product_model.dart';
 import 'package:pickpay/features/categories_pages/products_views/product_detail_view.dart';
 
 class AppliancesProduct9 extends StatelessWidget {
-  const AppliancesProduct9({super.key});
+  final double rating;
+  final int reviewCount;
+
+  const AppliancesProduct9({
+    super.key,
+    double? rating,
+    int? reviewCount,
+  })  : rating = rating ?? 0.0,
+        reviewCount = reviewCount ?? 0; 
 
   @override
   Widget build(BuildContext context) {
