@@ -22,7 +22,8 @@ class FashionCategoryViewBody extends StatefulWidget {
   const FashionCategoryViewBody({super.key});
 
   @override
-  State<FashionCategoryViewBody> createState() => _FashionCategoryViewBodyState();
+  State<FashionCategoryViewBody> createState() =>
+      _FashionCategoryViewBodyState();
 }
 
 class _FashionCategoryViewBodyState extends State<FashionCategoryViewBody> {
@@ -65,21 +66,36 @@ class _FashionCategoryViewBodyState extends State<FashionCategoryViewBody> {
   };
 
   static final Map<String, String> productImagePaths = {
-    '682b00c26977bd89257c0e8e': 'assets/Fashion_products/Women_Fashion/women_fashion1/1.png',
-    '682b00c26977bd89257c0e8f': 'assets/Fashion_products/Women_Fashion/women_fashion2/1.png',
-    '682b00c26977bd89257c0e90': 'assets/Fashion_products/Women_Fashion/women_fashion3/1.png',
-    '682b00c26977bd89257c0e91': 'assets/Fashion_products/Women_Fashion/women_fashion4/1.png',
-    '682b00c26977bd89257c0e92': 'assets/Fashion_products/Women_Fashion/women_fashion5/1.png',
-    '682b00c26977bd89257c0e93': 'assets/Fashion_products/Men_Fashion/men_fashion1/navy/1.png',
-    '682b00c26977bd89257c0e94': 'assets/Fashion_products/Men_Fashion/men_fashion2/light_blue/1.png',
-    '682b00c26977bd89257c0e95': 'assets/Fashion_products/Men_Fashion/men_fashion3/1.png',
-    '682b00c26977bd89257c0e96': 'assets/Fashion_products/Men_Fashion/men_fashion4/black/1.png',
-    '682b00c26977bd89257c0e97': 'assets/Fashion_products/Men_Fashion/men_fashion5/1.png',
-    '682b00c26977bd89257c0e98': 'assets/Fashion_products/Kids_Fashion/kids_fashion1/1.png',
-    '682b00c26977bd89257c0e99': 'assets/Fashion_products/Kids_Fashion/kids_fashion2/1.png',
-    '682b00c26977bd89257c0e9a': 'assets/Fashion_products/Kids_Fashion/kids_fashion3/1.png',
-    '682b00c26977bd89257c0e9b': 'assets/Fashion_products/Kids_Fashion/kids_fashion4/1.png',
-    '682b00c26977bd89257c0e9c': 'assets/Fashion_products/Kids_Fashion/kids_fashion5/1.png',
+    '682b00c26977bd89257c0e8e':
+        'assets/Fashion_products/Women_Fashion/women_fashion1/1.png',
+    '682b00c26977bd89257c0e8f':
+        'assets/Fashion_products/Women_Fashion/women_fashion2/1.png',
+    '682b00c26977bd89257c0e90':
+        'assets/Fashion_products/Women_Fashion/women_fashion3/1.png',
+    '682b00c26977bd89257c0e91':
+        'assets/Fashion_products/Women_Fashion/women_fashion4/1.png',
+    '682b00c26977bd89257c0e92':
+        'assets/Fashion_products/Women_Fashion/women_fashion5/1.png',
+    '682b00c26977bd89257c0e93':
+        'assets/Fashion_products/Men_Fashion/men_fashion1/navy/1.png',
+    '682b00c26977bd89257c0e94':
+        'assets/Fashion_products/Men_Fashion/men_fashion2/light_blue/1.png',
+    '682b00c26977bd89257c0e95':
+        'assets/Fashion_products/Men_Fashion/men_fashion3/1.png',
+    '682b00c26977bd89257c0e96':
+        'assets/Fashion_products/Men_Fashion/men_fashion4/black/1.png',
+    '682b00c26977bd89257c0e97':
+        'assets/Fashion_products/Men_Fashion/men_fashion5/1.png',
+    '682b00c26977bd89257c0e98':
+        'assets/Fashion_products/Kids_Fashion/kids_fashion1/1.png',
+    '682b00c26977bd89257c0e99':
+        'assets/Fashion_products/Kids_Fashion/kids_fashion2/1.png',
+    '682b00c26977bd89257c0e9a':
+        'assets/Fashion_products/Kids_Fashion/kids_fashion3/1.png',
+    '682b00c26977bd89257c0e9b':
+        'assets/Fashion_products/Kids_Fashion/kids_fashion4/1.png',
+    '682b00c26977bd89257c0e9c':
+        'assets/Fashion_products/Kids_Fashion/kids_fashion5/1.png',
   };
 
   @override
@@ -102,8 +118,8 @@ class _FashionCategoryViewBodyState extends State<FashionCategoryViewBody> {
         title: apiProduct.name,
         price: apiProduct.price,
         originalPrice: apiProduct.originalPrice,
-        rating: apiProduct.rating,
-        reviewCount: apiProduct.reviewCount,
+        rating: apiProduct.rating ?? 4.5,
+        reviewCount: apiProduct.reviewCount ?? 100,
         brand: assignedBrand,
         imagePaths: [imagePath],
         soldBy: 'PickPay',

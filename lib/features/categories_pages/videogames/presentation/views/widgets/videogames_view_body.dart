@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:pickpay/features/categories_pages/models/product_model.dart';
-
 import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product1.dart';
 import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product2.dart';
 import 'package:pickpay/features/categories_pages/products_views/video_games/video_games_product3.dart';
@@ -54,65 +53,38 @@ class _VideogamesViewBodyState extends State<VideogamesViewBody> {
   Future<List<ProductsViewsModel>> _loadProducts() async {
     final apiProducts = await ApiService().loadProducts();
 
-    // Define actual brands for Video Games products
     final Map<String, String> productBrands = {
-      '682b00a46977bd89257c0e80': 'Sony', // VideoGamesProduct1 - Console (PS5)
-      '682b00a46977bd89257c0e81': 'Sony', // VideoGamesProduct2 - Console (PS4)
-      '682b00a46977bd89257c0e82':
-          'PlayStation', // VideoGamesProduct3 - Console (PS5 Digital)
-      '682b00a46977bd89257c0e83':
-          'Nintendo', // VideoGamesProduct4 - Console (Switch OLED)
-      '682b00a46977bd89257c0e84':
-          'Sony', // VideoGamesProduct5 - Controllers (PS5)
-      '682b00a46977bd89257c0e85':
-          'PlayStation', // VideoGamesProduct6 - Controllers (PS5)
-      '682b00a46977bd89257c0e86':
-          'PlayStation', // VideoGamesProduct7 - Controllers (PS5)
-      '682b00a46977bd89257c0e87':
-          'PlayStation', // VideoGamesProduct8 - Controllers (PS5 Edge)
-      '682b00a46977bd89257c0e88':
-          'Nintendo', // VideoGamesProduct9 - Controllers (Joy-Con)
-      '682b00a46977bd89257c0e89':
-          'Likorlove', // VideoGamesProduct10 - Accessories (Charger)
-      '682b00a46977bd89257c0e8a':
-          'OIVO', // VideoGamesProduct11 - Accessories (Charger)
-      '682b00a46977bd89257c0e8b':
-          'fanxiang', // VideoGamesProduct12 - Accessories (SSD)
-      '682b00a46977bd89257c0e8c':
-          'Generic', // VideoGamesProduct13 - Accessories
-      '682b00a46977bd89257c0e8d':
-          'Generic', // VideoGamesProduct14 - Accessories
+      '682b00a46977bd89257c0e80': 'Sony',
+      '682b00a46977bd89257c0e81': 'Sony',
+      '682b00a46977bd89257c0e82': 'PlayStation',
+      '682b00a46977bd89257c0e83': 'Nintendo',
+      '682b00a46977bd89257c0e84': 'Sony',
+      '682b00a46977bd89257c0e85': 'PlayStation',
+      '682b00a46977bd89257c0e86': 'PlayStation',
+      '682b00a46977bd89257c0e87': 'PlayStation',
+      '682b00a46977bd89257c0e88': 'Nintendo',
+      '682b00a46977bd89257c0e89': 'Likorlove',
+      '682b00a46977bd89257c0e8a': 'OIVO',
+      '682b00a46977bd89257c0e8b': 'fanxiang',
+      '682b00a46977bd89257c0e8c': 'Generic',
+      '682b00a46977bd89257c0e8d': 'Generic',
     };
 
     final Map<String, String> productImagePaths = {
-      '682b00a46977bd89257c0e80':
-          'assets/videogames_products/Consoles/console1/1.png',
-      '682b00a46977bd89257c0e81':
-          'assets/videogames_products/Consoles/console2/1.png',
-      '682b00a46977bd89257c0e82':
-          'assets/videogames_products/Consoles/console3/1.png',
-      '682b00a46977bd89257c0e83':
-          'assets/videogames_products/Consoles/console4/1.png',
-      '682b00a46977bd89257c0e84':
-          'assets/videogames_products/Controllers/controller1/1.png',
-      '682b00a46977bd89257c0e85':
-          'assets/videogames_products/Controllers/controller2/1.png',
-      '682b00a46977bd89257c0e86':
-          'assets/videogames_products/Controllers/controller3/1.png',
-      '682b00a46977bd89257c0e87':
-          'assets/videogames_products/Controllers/controller4/1.png',
-      '682b00a46977bd89257c0e88':
-          'assets/videogames_products/Controllers/controller5/1.png',
-      '682b00a46977bd89257c0e89':
-          'assets/videogames_products/Accessories/accessories1/1.png',
-      '682b00a46977bd89257c0e8a':
-          'assets/videogames_products/Accessories/accessories2/1.png',
-      '682b00a46977bd89257c0e8b':
-          'assets/videogames_products/Accessories/accessories3/1.png',
-      '682b00a46977bd89257c0e8c':
-          'assets/videogames_products/Accessories/accessories4/1.png',
-      '682b00a46977bd89257c0e8d':
-          'assets/videogames_products/Accessories/accessories5/1.png',
+      '682b00a46977bd89257c0e80': 'assets/videogames_products/Consoles/console1/1.png',
+      '682b00a46977bd89257c0e81': 'assets/videogames_products/Consoles/console2/1.png',
+      '682b00a46977bd89257c0e82': 'assets/videogames_products/Consoles/console3/1.png',
+      '682b00a46977bd89257c0e83': 'assets/videogames_products/Consoles/console4/1.png',
+      '682b00a46977bd89257c0e84': 'assets/videogames_products/Controllers/controller1/1.png',
+      '682b00a46977bd89257c0e85': 'assets/videogames_products/Controllers/controller2/1.png',
+      '682b00a46977bd89257c0e86': 'assets/videogames_products/Controllers/controller3/1.png',
+      '682b00a46977bd89257c0e87': 'assets/videogames_products/Controllers/controller4/1.png',
+      '682b00a46977bd89257c0e88': 'assets/videogames_products/Controllers/controller5/1.png',
+      '682b00a46977bd89257c0e89': 'assets/videogames_products/Accessories/accessories1/1.png',
+      '682b00a46977bd89257c0e8a': 'assets/videogames_products/Accessories/accessories2/1.png',
+      '682b00a46977bd89257c0e8b': 'assets/videogames_products/Accessories/accessories3/1.png',
+      '682b00a46977bd89257c0e8c': 'assets/videogames_products/Accessories/accessories4/1.png',
+      '682b00a46977bd89257c0e8d': 'assets/videogames_products/Accessories/accessories5/1.png',
     };
 
     final filteredProducts = apiProducts
@@ -121,10 +93,6 @@ class _VideogamesViewBodyState extends State<VideogamesViewBody> {
       final imagePath = productImagePaths[apiProduct.id] ?? '';
       final assignedBrand = productBrands[apiProduct.id] ?? 'Generic';
 
-      // Debug logging
-      print(
-          'Video Games - Product ID: ${apiProduct.id}, Assigned Brand: $assignedBrand');
-
       return ProductsViewsModel(
         id: apiProduct.id,
         title: apiProduct.name,
@@ -132,16 +100,12 @@ class _VideogamesViewBodyState extends State<VideogamesViewBody> {
         originalPrice: apiProduct.originalPrice,
         rating: apiProduct.rating ?? 4.5,
         reviewCount: apiProduct.reviewCount ?? 100,
-        brand: assignedBrand, // Use actual brand
+        brand: assignedBrand,
         imagePaths: [imagePath],
         soldBy: 'PickPay',
         isPickPayFulfilled: true,
       );
     }).toList();
-
-    // Debug logging for final brands
-    final finalBrands = filteredProducts.map((p) => p.brand).toSet();
-    print('Video Games - Final brands in products: $finalBrands');
 
     return filteredProducts;
   }
@@ -167,7 +131,7 @@ class _VideogamesViewBodyState extends State<VideogamesViewBody> {
                 const Icon(Icons.error_outline, color: Colors.red, size: 60),
                 const SizedBox(height: 16),
                 Text(
-                  'Error: ${snapshot.error}',
+                  'Error: \${snapshot.error}',
                   style: const TextStyle(fontSize: 16),
                   textAlign: TextAlign.center,
                 ),
