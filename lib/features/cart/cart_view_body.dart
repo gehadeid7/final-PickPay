@@ -126,20 +126,6 @@ class CartViewBody extends StatelessWidget {
         onBackPressed: () {
           Navigator.pushNamed(context, '/main-navigation');
         },
-        actions: [
-          BlocBuilder<CartCubit, CartState>(
-            builder: (context, state) {
-              if (state is CartLoaded && state.cartItems.isNotEmpty) {
-                return IconButton(
-                  icon: const Icon(Icons.delete_sweep),
-                  onPressed: () => context.read<CartCubit>().clearCart(),
-                  tooltip: 'Clear Cart',
-                );
-              }
-              return const SizedBox.shrink();
-            },
-          ),
-        ],
       ),
       body: BlocConsumer<CartCubit, CartState>(
         listener: (context, state) {
