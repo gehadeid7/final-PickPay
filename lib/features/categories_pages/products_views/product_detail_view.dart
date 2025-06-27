@@ -414,7 +414,8 @@ class _ProductDetailViewState extends State<ProductDetailView>
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               ProductRating(
-                rating: product.rating ?? 0.0,
+                rating:
+                    double.parse((product.rating ?? 0.0).toStringAsFixed(1)),
                 reviewCount: product.reviewCount ?? 0,
               ),
               Text(
@@ -455,8 +456,7 @@ class _ProductDetailViewState extends State<ProductDetailView>
               ScentOption(
                 scentOption: product.scentOption!,
                 showLabel: true,
-                onScentSelected: (selectedScentName) {
-                },
+                onScentSelected: (selectedScentName) {},
               ),
               const SizedBox(height: 16),
             ],
@@ -465,8 +465,7 @@ class _ProductDetailViewState extends State<ProductDetailView>
                 availableSizes: product.availableSizes!,
                 showLabel: true,
                 sizeAvailability: product.sizeAvailability,
-                onSizeSelected: (selectedSize) {
-                },
+                onSizeSelected: (selectedSize) {},
               ),
             ],
           ],

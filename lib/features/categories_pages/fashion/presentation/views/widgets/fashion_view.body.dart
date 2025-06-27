@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pickpay/features/categories_pages/models/product_model.dart';
-
+import 'package:pickpay/features/categories_pages/widgets/base_category_view.dart';
+import 'package:pickpay/services/api_service.dart';
 import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product1.dart';
-import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product10.dart';
-import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product11.dart';
-import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product12.dart';
-import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product13.dart';
-import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product14.dart';
-import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product15.dart';
 import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product2.dart';
 import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product3.dart';
 import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product4.dart';
@@ -16,15 +11,18 @@ import 'package:pickpay/features/categories_pages/products_views/fashion_product
 import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product7.dart';
 import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product8.dart';
 import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product9.dart';
-import 'package:pickpay/features/categories_pages/widgets/base_category_view.dart';
-import 'package:pickpay/services/api_service.dart';
+import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product10.dart';
+import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product11.dart';
+import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product12.dart';
+import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product13.dart';
+import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product14.dart';
+import 'package:pickpay/features/categories_pages/products_views/fashion_products_views/fashion_product15.dart';
 
 class FashionCategoryViewBody extends StatefulWidget {
   const FashionCategoryViewBody({super.key});
 
   @override
-  State<FashionCategoryViewBody> createState() =>
-      _FashionCategoryViewBodyState();
+  State<FashionCategoryViewBody> createState() => _FashionCategoryViewBodyState();
 }
 
 class _FashionCategoryViewBodyState extends State<FashionCategoryViewBody> {
@@ -48,6 +46,42 @@ class _FashionCategoryViewBodyState extends State<FashionCategoryViewBody> {
     '682b00c26977bd89257c0e9c': const FashionProduct15(),
   };
 
+  static final Map<String, String> productBrands = {
+    '682b00c26977bd89257c0e8e': 'Zara',
+    '682b00c26977bd89257c0e8f': 'H&M',
+    '682b00c26977bd89257c0e90': 'Mango',
+    '682b00c26977bd89257c0e91': 'Forever 21',
+    '682b00c26977bd89257c0e92': 'Uniqlo',
+    '682b00c26977bd89257c0e93': 'Nike',
+    '682b00c26977bd89257c0e94': 'Adidas',
+    '682b00c26977bd89257c0e95': 'Puma',
+    '682b00c26977bd89257c0e96': 'Under Armour',
+    '682b00c26977bd89257c0e97': 'Reebok',
+    '682b00c26977bd89257c0e98': 'Carter\'s',
+    '682b00c26977bd89257c0e99': 'Gap Kids',
+    '682b00c26977bd89257c0e9a': 'OshKosh B\'gosh',
+    '682b00c26977bd89257c0e9b': 'Children\'s Place',
+    '682b00c26977bd89257c0e9c': 'Old Navy Kids',
+  };
+
+  static final Map<String, String> productImagePaths = {
+    '682b00c26977bd89257c0e8e': 'assets/Fashion_products/Women_Fashion/women_fashion1/1.png',
+    '682b00c26977bd89257c0e8f': 'assets/Fashion_products/Women_Fashion/women_fashion2/1.png',
+    '682b00c26977bd89257c0e90': 'assets/Fashion_products/Women_Fashion/women_fashion3/1.png',
+    '682b00c26977bd89257c0e91': 'assets/Fashion_products/Women_Fashion/women_fashion4/1.png',
+    '682b00c26977bd89257c0e92': 'assets/Fashion_products/Women_Fashion/women_fashion5/1.png',
+    '682b00c26977bd89257c0e93': 'assets/Fashion_products/Men_Fashion/men_fashion1/navy/1.png',
+    '682b00c26977bd89257c0e94': 'assets/Fashion_products/Men_Fashion/men_fashion2/light_blue/1.png',
+    '682b00c26977bd89257c0e95': 'assets/Fashion_products/Men_Fashion/men_fashion3/1.png',
+    '682b00c26977bd89257c0e96': 'assets/Fashion_products/Men_Fashion/men_fashion4/black/1.png',
+    '682b00c26977bd89257c0e97': 'assets/Fashion_products/Men_Fashion/men_fashion5/1.png',
+    '682b00c26977bd89257c0e98': 'assets/Fashion_products/Kids_Fashion/kids_fashion1/1.png',
+    '682b00c26977bd89257c0e99': 'assets/Fashion_products/Kids_Fashion/kids_fashion2/1.png',
+    '682b00c26977bd89257c0e9a': 'assets/Fashion_products/Kids_Fashion/kids_fashion3/1.png',
+    '682b00c26977bd89257c0e9b': 'assets/Fashion_products/Kids_Fashion/kids_fashion4/1.png',
+    '682b00c26977bd89257c0e9c': 'assets/Fashion_products/Kids_Fashion/kids_fashion5/1.png',
+  };
+
   @override
   void initState() {
     super.initState();
@@ -57,92 +91,25 @@ class _FashionCategoryViewBodyState extends State<FashionCategoryViewBody> {
   Future<List<ProductsViewsModel>> _loadProducts() async {
     final apiProducts = await ApiService().loadProducts();
 
-    // Define actual brands for Fashion products
-    final Map<String, String> productBrands = {
-      '682b00c26977bd89257c0e8e': 'Zara', // FashionProduct1 - Women's Fashion
-      '682b00c26977bd89257c0e8f': 'H&M', // FashionProduct2 - Women's Fashion
-      '682b00c26977bd89257c0e90': 'Mango', // FashionProduct3 - Women's Fashion
-      '682b00c26977bd89257c0e91':
-          'Forever 21', // FashionProduct4 - Women's Fashion
-      '682b00c26977bd89257c0e92': 'Uniqlo', // FashionProduct5 - Women's Fashion
-      '682b00c26977bd89257c0e93': 'Nike', // FashionProduct6 - Men's Fashion
-      '682b00c26977bd89257c0e94': 'Adidas', // FashionProduct7 - Men's Fashion
-      '682b00c26977bd89257c0e95': 'Puma', // FashionProduct8 - Men's Fashion
-      '682b00c26977bd89257c0e96':
-          'Under Armour', // FashionProduct9 - Men's Fashion
-      '682b00c26977bd89257c0e97': 'Reebok', // FashionProduct10 - Men's Fashion
-      '682b00c26977bd89257c0e98':
-          'Carter\'s', // FashionProduct11 - Kids' Fashion
-      '682b00c26977bd89257c0e99':
-          'Gap Kids', // FashionProduct12 - Kids' Fashion
-      '682b00c26977bd89257c0e9a':
-          'OshKosh B\'gosh', // FashionProduct13 - Kids' Fashion
-      '682b00c26977bd89257c0e9b':
-          'Children\'s Place', // FashionProduct14 - Kids' Fashion
-      '682b00c26977bd89257c0e9c':
-          'Old Navy Kids', // FashionProduct15 - Kids' Fashion
-    };
-
-    final Map<String, String> productImagePaths = {
-      '682b00c26977bd89257c0e8e':
-          'assets/Fashion_products/Women_Fashion/women_fashion1/1.png',
-      '682b00c26977bd89257c0e8f':
-          'assets/Fashion_products/Women_Fashion/women_fashion2/1.png',
-      '682b00c26977bd89257c0e90':
-          'assets/Fashion_products/Women_Fashion/women_fashion3/1.png',
-      '682b00c26977bd89257c0e91':
-          'assets/Fashion_products/Women_Fashion/women_fashion4/1.png',
-      '682b00c26977bd89257c0e92':
-          'assets/Fashion_products/Women_Fashion/women_fashion5/1.png',
-      '682b00c26977bd89257c0e93':
-          'assets/Fashion_products/Men_Fashion/men_fashion1/navy/1.png',
-      '682b00c26977bd89257c0e94':
-          'assets/Fashion_products/Men_Fashion/men_fashion2/light_blue/1.png',
-      '682b00c26977bd89257c0e95':
-          'assets/Fashion_products/Men_Fashion/men_fashion3/1.png',
-      '682b00c26977bd89257c0e96':
-          'assets/Fashion_products/Men_Fashion/men_fashion4/black/1.png',
-      '682b00c26977bd89257c0e97':
-          'assets/Fashion_products/Men_Fashion/men_fashion5/1.png',
-      '682b00c26977bd89257c0e98':
-          'assets/Fashion_products/Kids_Fashion/kids_fashion1/1.png',
-      '682b00c26977bd89257c0e99':
-          'assets/Fashion_products/Kids_Fashion/kids_fashion2/1.png',
-      '682b00c26977bd89257c0e9a':
-          'assets/Fashion_products/Kids_Fashion/kids_fashion3/1.png',
-      '682b00c26977bd89257c0e9b':
-          'assets/Fashion_products/Kids_Fashion/kids_fashion4/1.png',
-      '682b00c26977bd89257c0e9c':
-          'assets/Fashion_products/Kids_Fashion/kids_fashion5/1.png',
-    };
-
     final filteredProducts = apiProducts
         .where((apiProduct) => detailPages.containsKey(apiProduct.id))
         .map((apiProduct) {
       final imagePath = productImagePaths[apiProduct.id] ?? '';
       final assignedBrand = productBrands[apiProduct.id] ?? 'Generic';
 
-      // Debug logging
-      print(
-          'Fashion - Product ID: ${apiProduct.id}, Assigned Brand: $assignedBrand');
-
       return ProductsViewsModel(
         id: apiProduct.id,
         title: apiProduct.name,
         price: apiProduct.price,
         originalPrice: apiProduct.originalPrice,
-        rating: apiProduct.rating ?? 4.5,
-        reviewCount: apiProduct.reviewCount ?? 100,
-        brand: assignedBrand, // Use actual brand
+        rating: apiProduct.rating,
+        reviewCount: apiProduct.reviewCount,
+        brand: assignedBrand,
         imagePaths: [imagePath],
         soldBy: 'PickPay',
         isPickPayFulfilled: true,
       );
     }).toList();
-
-    // Debug logging for final brands
-    final finalBrands = filteredProducts.map((p) => p.brand).toSet();
-    print('Fashion - Final brands in products: $finalBrands');
 
     return filteredProducts;
   }

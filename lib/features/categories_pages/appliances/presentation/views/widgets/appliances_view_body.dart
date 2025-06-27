@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pickpay/features/categories_pages/models/product_model.dart';
+import 'package:pickpay/features/categories_pages/products_views/product_detail_view.dart';
 import 'package:pickpay/features/categories_pages/widgets/base_category_view.dart';
 import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product1.dart';
 import 'package:pickpay/features/categories_pages/products_views/appliances_products_views/appliances_product2.dart';
@@ -165,19 +166,31 @@ class _AppliancesViewBodyState extends State<AppliancesViewBody> {
         }
 
         return BaseCategoryView(
-          categoryName: 'Appliances',
-          products: snapshot.data!,
-          productDetailBuilder: (productId) {
-            final detailPage = _findDetailPageById(productId);
-            if (detailPage != null) {
-              return detailPage;
-            }
-            return Scaffold(
-              appBar: AppBar(title: const Text('Product Not Found')),
-              body: const Center(child: Text('Product details not available')),
-            );
-          },
-        );
+            categoryName: 'Appliances',
+            products: snapshot.data!,
+            productDetailBuilder: (productId) {
+              final product = snapshot.data!.firstWhere(
+                (p) => p.id == productId,
+                orElse: () => ProductsViewsModel(
+                  id: '',
+                  title: 'Unknown Product',
+                  price: 0,
+                  originalPrice: 0,
+                  imagePaths: [],
+                  rating: 0.0,
+                  reviewCount: 0,
+                ),
+              );
+
+              if (product.id.isNotEmpty) {
+                return ProductDetailView(product: product);
+              }
+              return Scaffold(
+                appBar: AppBar(title: const Text('Product Not Found')),
+                body:
+                    const Center(child: Text('Product details not available')),
+              );
+            });
       },
     );
   }
